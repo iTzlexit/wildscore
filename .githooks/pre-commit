@@ -1,0 +1,23 @@
+#!/bin/sh
+# Runs format, analyze and the test suite before every commit (~20s).
+# Enable once per clone:  git config core.hooksPath .githooks
+#
+# To bypass in a genuine emergency:  git commit --no-verify
+# If you find yourself doing that twice, fix the test instead.
+
+echo "Running checks before commit..."
+
+if command -v pwsh >/dev/null 2>&1; then
+  pwsh -NoProfile -File "$(dirname "$0")/../scripts/check.ps1"
+else
+  powershell -NoProfile -ExecutionPolicy Bypass -File "$(dirname "$0")/../scripts/check.ps1"
+fi
+
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "Commit blocked: checks failed. Fix them, or use --no-verify if you"
+  echo "genuinely mean to commit broken code."
+  exit 1
+fi
+
+exit 0

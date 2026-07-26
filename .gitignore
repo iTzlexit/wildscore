@@ -1,0 +1,40 @@
+# Flutter / Dart
+app/.dart_tool/
+app/.flutter-plugins
+app/.flutter-plugins-dependencies
+app/build/
+app/.packages
+
+# Note: app/pubspec.lock is intentionally NOT ignored. This is an application,
+# not a library — committing the lock file is what makes your builds and CI
+# reproducible. Same reasoning as committing packages.lock.json in .NET.
+
+# Android
+app/android/.gradle/
+app/android/local.properties
+app/android/key.properties
+app/android/app/*.jks
+app/android/app/*.keystore
+*.apk
+*.aab
+
+# iOS
+app/ios/Pods/
+app/ios/.symlinks/
+app/ios/Flutter/Flutter.framework
+app/ios/Flutter/Flutter.podspec
+app/ios/Flutter/ephemeral/
+*.ipa
+
+# IDE
+.idea/
+*.iml
+.vscode/launch.json
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Secrets — never commit these
+.env
+*.env.local
