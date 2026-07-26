@@ -2,19 +2,20 @@
 
 ## Do next — the actual list
 
-Ordered. Items 1–4 are Alex-only: they need a GUI, an account, or a human.
-
-1. **Install Android Studio** — <https://developer.android.com/studio>. Needed
-   for the Android SDK and an emulator, even though you'll code in VS Code.
-   Then add the command-line tools: *Settings → Languages & Frameworks →
-   Android SDK → SDK Tools → Android SDK Command-line Tools (latest)*.
-2. **Create a Pixel emulator** — Device Manager → **+** → Pixel 8 → latest
+1. **Add `C:\src\flutter\bin` to your user PATH.** Flutter 3.44.8 is already
+   installed there; only the PATH entry is missing, so `flutter` won't resolve
+   in your own terminal yet. Start menu → "environment variables" → edit `Path`
+   → add it → reopen the terminal.
+2. **Enable the pre-commit hook** — once per clone:
+   `git config core.hooksPath .githooks`
+3. **Install Android Studio** — <https://developer.android.com/studio>. Needed
+   for the Android SDK and an emulator. Then add the command-line tools:
+   *Settings → Languages & Frameworks → Android SDK → SDK Tools → Android SDK
+   Command-line Tools (latest)*.
+4. **Create a Pixel emulator** — Device Manager → **+** → Pixel 8 → latest
    system image with Google Play.
-3. **`flutter doctor --android-licenses`** — accept all of them.
-4. **`flutter run`** from `app/`, and report whatever breaks.
-5. Add `C:\src\flutter\bin` to your user PATH so `flutter` works in your own
-   terminal. It is already installed there; only the PATH entry is missing.
-6. `git init` and a first commit. There is no version control on this yet.
+5. **`flutter doctor --android-licenses`** — accept all of them.
+6. **`flutter run`** from `app/`, and report whatever breaks.
 7. Get the rarity tiers and regional ranges reviewed by someone who knows the
    park. This is the data most likely to be quietly wrong, and it is the data
    your best users will judge you on.
@@ -31,31 +32,29 @@ In parallel, and independent of any code (see [docs/VISION.md](docs/VISION.md)):
 
 ## Current status
 
-**Phase 1 — Species Codex.** Written, statically audited, **not yet compiled** —
-Flutter is not installed on this machine. Expect to fix a small number of
-analyzer complaints on the first `flutter run`. That is normal.
+**Phase 1 — Species Codex. Compiled, tested and running.**
 
-What was verified without a compiler:
+- Flutter **3.44.8** / Dart 3.12.2 installed at `C:\src\flutter`
+- `flutter analyze` — no issues
+- `flutter test` — **39 passing**
+- `flutter build web --release` — builds clean in ~40s
+- Verified at runtime in a browser: boots, fetches `species.json` (HTTP 200),
+  parses all 71 species, renders, no console errors
 
-- All 71 species parse; every enum string, region and tag matches the Dart enums
-- No duplicate ids, no empty required fields, no species without a region
-- Every relative import resolves; every referenced type exists
-- Brackets balance in all 15 Dart files
+Not yet run on Android or iOS — that needs the Android SDK (item 3 below).
+The web build is a **verification and preview target only**; the product ships
+to Android and iOS.
 
-Three defects were found and fixed in that audit:
+### Defects found and fixed getting here
 
-1. `ThemeData.inputDecorationTheme` took `InputDecorationTheme`, deprecated
-   during 2025 and at risk of removal on a current SDK. Moved to a plain
-   `InputDecoration` passed straight to the widget, which works on every version.
-2. The points banner set both `color` and `gradient` on one `BoxDecoration`.
-   Flutter paints only the gradient, so the fade would have shown the scaffold
-   background instead of the card surface. Split into two layers.
-3. `SpeciesImage` passed a species into the locked placeholder that never used
-   it — dead parameter, removed.
-
-Next action: work through [docs/00-SETUP.md](docs/00-SETUP.md), then run the app.
-Run `dart format .` first — the audit fixes left some indentation ragged, and
-formatting is cosmetic only.
+| # | Found by | Defect |
+|---|---|---|
+| 1 | Static audit | `ThemeData.inputDecorationTheme` took `InputDecorationTheme`, deprecated during 2025. Moved to a plain `InputDecoration` on the widget, which works on every Flutter version. |
+| 2 | Static audit | Points banner set both `color` and `gradient` on one `BoxDecoration`. Flutter paints only the gradient, so the fade showed the scaffold background instead of the card surface. Split into two layers. |
+| 3 | Static audit | Dead parameter on the locked-species placeholder. |
+| 4 | `flutter test` | **Real layout bug**: the points banner Row used a fixed Column plus a `Spacer`, overflowing by 139px when text is wider than expected — which is exactly what happens at large accessibility font scales. Now `Expanded` with an ellipsis. |
+| 5 | `flutter test` | Widget tests did real file I/O inside Flutter's fake-async zone, so they passed individually and timed out as a suite. Fixed by injecting the repository into `CodexScreen` — better design regardless. |
+| 6 | `flutter test` | `flutter create` left a template `widget_test.dart` referencing a non-existent `MyApp`; its compile failure took down the shared test compiler and cascaded into 14 unrelated failures. Deleted. |
 
 ---
 
@@ -77,7 +76,9 @@ formatting is cosmetic only.
 - [x] Species detail screen with field notes and a regional distribution strip
 - [x] Placeholder artwork that looks deliberate, so the app demos without photos
 - [x] Locked/silhouette rendering path wired up for Phase 2
-- [ ] **Compile and run it** — see docs/00-SETUP.md
+- [x] Compiles, analyzes clean, 39 tests passing
+- [x] Regression suite + `scripts/check.ps1` + pre-commit hook
+- [ ] Run it on Android — needs the Android SDK
 - [ ] Review rarity tiers and regional ranges with someone who knows the park
 - [ ] Artwork for the 15 rarest species
 
