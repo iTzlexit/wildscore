@@ -111,9 +111,19 @@ Edge. Installing the APK and using it is the outstanding test.
 **This phase is the product.** Everything before it is setup and everything
 after it is amplification. See the core loop in [docs/VISION.md](docs/VISION.md).
 
+Build order matters here — see [docs/TESTING.md](docs/TESTING.md). Define the
+hardware interfaces and their fakes **first**, so the interesting parts stay
+testable from a desk. Camera last.
+
+- [ ] `CaptureSource` and `LocationSource` interfaces + fakes + debug simulator
+- [ ] Scoring engine, exhaustively unit-tested before anything can score
+- [ ] `sqflite` sightings table, photos on disk via `path_provider`
+- [ ] **Downscale photos on capture** and generate thumbnails — full-res camera
+      images are 3–12 MB each and will fill a phone in a weekend
+- [ ] Collection screen: silhouettes until caught, then **the player's own
+      photo** becomes the card art
 - [ ] `camera` package, in-app capture only — no gallery import, ever
 - [ ] Camera reachable in **one tap from anywhere** — it is the primary action
-- [ ] `sqflite` sightings table, photos on disk via `path_provider`
 - [ ] Shoot-first flow: photo saved with GPS and timestamp before identification
 - [ ] Fast species picker — large thumbnails, searchable, ordered by plausibility
 - [ ] **The reveal.** Card flip, sound, score counting up, scaled to rarity. This
