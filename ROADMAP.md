@@ -116,7 +116,11 @@ hardware interfaces and their fakes **first**, so the interesting parts stay
 testable from a desk. Camera last.
 
 - [ ] `CaptureSource` and `LocationSource` interfaces + fakes + debug simulator
-- [ ] Scoring engine, exhaustively unit-tested before anything can score
+- [ ] Scoring engine, exhaustively unit-tested before anything can score:
+      first-sighting full points, repeats at 10%, one-hour per-species cooldown,
+      photos inside the cooldown attaching to the existing encounter
+- [ ] Unidentified sightings — skip identification, name it later, score
+      against the original capture time
 - [ ] `sqflite` sightings table, photos on disk via `path_provider`
 - [ ] **Downscale photos on capture** and generate thumbnails — full-res camera
       images are 3–12 MB each and will fill a phone in a weekend
@@ -192,6 +196,9 @@ testable from a desk. Camera last.
 | 2026-07-26 | Three tabs: Profile, Dex, Leaderboard | Your own achievement first, the goal second, other people third. Profile opens on lifetime score; tapping it lists catches newest-first. |
 | 2026-07-26 | Profile is lifetime; leaderboard is seasonal | Seasons reset so newcomers always have a reason to start. The collection never resets — permanence is one of the three feelings the product protects. |
 | 2026-07-26 | Nicknames on caught animals | Nearly free to build; a named animal is one you are attached to, and attachment is what makes a collection worth keeping. |
+| 2026-07-26 | One sighting = one encounter, not one shutter press | Everyone takes eight photos of a leopard. Photos inside the cooldown attach to the existing sighting rather than creating eight zero-point entries. |
+| 2026-07-26 | A species scores once per hour, per player | One leopard in a tree for twenty minutes would otherwise be a hundred scoring photographs. Photos inside the cooldown are **never rejected** — you keep every picture, you are just not paid twice. |
+| 2026-07-26 | Identification is skippable | Not knowing is the normal condition of someone new to the bush. Photo saves as Unidentified with capture-time GPS and timestamp; scores nothing until named, then scores against the original capture time. |
 | 2026-07-26 | **Rarity belongs to species-in-reserve, not to species** | A cheetah is Rare in Kruger and near-guaranteed in the Masai Mara. A global rating would let one trip to Kenya top a Kruger leaderboard. Schema must carry a `reserve` table from Phase 4 with one row in it; the feature waits. |
 | 2026-07-26 | v1 verification is camera + GPS + timestamp, no ML | A trustworthy species classifier is its own project. This is already far stronger than paper. |
 | 2026-07-26 | Rhino and pangolin locations never rendered anywhere | Poaching risk. Not a setting, not a later feature request. |

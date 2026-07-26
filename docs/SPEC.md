@@ -45,6 +45,78 @@ not by how famous it is. Lions are easier to find than Sable.
   rewards breadth without making repeats worthless.
 - **First Find bonus** — see below.
 
+## Repeat sightings of the same species
+
+You will see leopard more than once. Every one of those photographs belongs in
+your profile — the collection is a record of what you have seen, and deleting
+your second leopard because you already had one would be absurd.
+
+So the profile shows a species with **every encounter listed beneath it**:
+
+```
+Leopard  ·  3 encounters
+  ├─ 12 Jul 2027, 06:14   Sabie River      photo   50 pts   ✓ verified
+  ├─ 12 Jul 2027, 17:40   Nkuhlu           photo    5 pts   ✓ verified
+  └─ 14 Jul 2027, 05:52   Lower Sabie      photo    5 pts   ✓ verified
+```
+
+### Scoring: first one counts, the rest are keepsakes
+
+- **First ever sighting of a species:** full points
+- **Every later sighting:** 10% (a repeat leopard is 5 points, not 50)
+
+That keeps breadth worth chasing without making a second leopard worthless.
+
+### The cooldown
+
+**A species scores at most once per hour, per player.**
+
+Without this, one leopard lying in a tree for twenty minutes is a hundred
+photographs and a wrecked leaderboard. The cooldown is the whole defence.
+
+**Crucially, a photo taken inside the cooldown is never rejected.** It attaches
+to the existing sighting as another photo of that encounter. You keep every
+picture; you simply do not get paid twice for the same animal.
+
+That is also the right model conceptually: **one sighting is one encounter**,
+not one shutter press. Everybody takes eight photos of a leopard. Eight
+zero-point entries cluttering a profile would be worse than useless.
+
+### Refinement worth adding later, not now
+
+An hour is crude. You could genuinely drive 40km and find a different leopard
+within it. Once GPS is in (Phase 3), the rule becomes:
+
+> The cooldown ends after **one hour, or once you have moved more than ~2 km**,
+> whichever comes first.
+
+Kruger's speed limit is 50 km/h and roads are slow, so 2 km is several minutes
+of real driving — not something you can fake sitting at one sighting. Ship the
+flat hour first; add the distance escape once there are coordinates to use.
+
+## "Not sure what it was"
+
+Sometimes you photograph something and genuinely do not know what it is. A
+mongoose at forty metres; an eagle against the sun. Forcing a guess produces
+wrong data and an anxious player.
+
+So identification is **skippable**. The photo is saved with its GPS and
+timestamp, and sits in the profile as **Unidentified** until named. Identify it
+that evening in camp, or a week later at home, with the Codex to hand.
+
+Two rules:
+
+1. The **timestamp and location are captured at the shutter**, not at
+   identification. Naming it later must never let someone claim a sighting from
+   somewhere they were not.
+2. An unidentified photo **scores nothing until it is identified**, then scores
+   normally against its original capture time — including for the cooldown and
+   First Find checks.
+
+This also makes the app better at the thing a field guide is for. Not knowing
+is the normal condition of a person new to the bush, and an app that punishes it
+teaches them nothing.
+
 ## Solo finds vs. joining a sighting
 
 In Kruger, most people see lions because fifteen cars are already parked there.
