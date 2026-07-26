@@ -1,0 +1,121 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:wildscore/domain/tracker_profile.dart';
+import 'package:wildscore/features/onboarding/onboarding_screen.dart';
+import 'package:wildscore/shared/theme.dart';
+
+/// The first twenty seconds of the app. If this breaks, nobody reaches
+/// anything else, so it is worth covering properly.
+void main() {
+  late TrackerProfile? completed;
+
+  Future<void> pumpOnboarding(WidgetTester tester) async {
+    completed = null;
+    await tester.binding.setSurfaceSize(const Size(430, 950));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildAppTheme(),
+        home: OnboardingScreen(onComplete: (TrackerProfile p) => completed = p),
+      ),
+    );
+    await tester.pumpAndSettle();
+  }
+
+  testWidgets('opens on the welcome step', (WidgetTester tester) async {
+    await pumpOnboarding(tester);
+
+    expect(find.text('Wild Score'), findsOneWidget);
+    expect(find.text('Begin'), findsOneWidget);
+    expect(find.text('No account. No email. Works offline.'), findsOneWidget);
+  });
+
+  testWidgets('Begin moves to the name step', (WidgetTester tester) async {
+    await pumpOnboarding(tester);
+
+    await tester.tap(find.text('Begin'));
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('call you'), findsOneWidget);
+    expect(find.byType(TextField), findsOneWidget);
+  });
+
+  testWidgets('an empty name is rejected and does not advance', (
+    WidgetTester tester,
+  ) async {
+    await pumpOnboarding(tester);
+    await tester.tap(find.text('Begin'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Every tracker needs a name.'), findsOneWidget);
+    expect(find.text('Enter the park'), findsNothing);
+    expect(completed, isNull);
+  });
+
+  testWidgets('a one-character name is rejected', (WidgetTester tester) async {
+    await pumpOnboarding(tester);
+    await tester.tap(find.text('Begin'));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'A');
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('at least'), findsOneWidget);
+    expect(completed, isNull);
+  });
+
+  testWidgets('the error clears as soon as you type again', (
+    WidgetTester tester,
+  ) async {
+    await pumpOnboarding(tester);
+    await tester.tap(find.text('Begin'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+    expect(find.text('Every tracker needs a name.'), findsOneWidget);
+
+    await tester.enterText(find.byType(TextField), 'Al');
+    await tester.pumpAndSettle();
+    expect(find.text('Every tracker needs a name.'), findsNothing);
+  });
+
+  testWidgets('a valid name reveals the tracker card', (
+    WidgetTester tester,
+  ) async {
+    await pumpOnboarding(tester);
+    await tester.tap(find.text('Begin'));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'Alex');
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('TRACKER'), findsOneWidget);
+    expect(find.text('Alex'), findsOneWidget);
+    expect(find.text('SPECIES'), findsOneWidget);
+    expect(find.text('Enter the park'), findsOneWidget);
+  });
+
+  testWidgets('entering the park hands back the finished profile', (
+    WidgetTester tester,
+  ) async {
+    await pumpOnboarding(tester);
+    await tester.tap(find.text('Begin'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), '  Alex  ');
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Enter the park'));
+    await tester.pumpAndSettle();
+
+    expect(completed, isNotNull);
+    expect(completed!.name, 'Alex', reason: 'name should be sanitised');
+    expect(completed!.seasonYear, DateTime.now().year);
+  });
+}

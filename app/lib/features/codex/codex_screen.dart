@@ -5,6 +5,7 @@ import '../../domain/park_region.dart';
 import '../../domain/rarity_tier.dart';
 import '../../domain/species.dart';
 import '../../domain/species_category.dart';
+import '../../domain/tracker_profile.dart';
 import '../../shared/theme.dart';
 import 'species_detail_screen.dart';
 import 'widgets/species_card.dart';
@@ -16,7 +17,15 @@ import 'widgets/species_card.dart';
 /// and three filters, it is the correct amount of machinery. Riverpod arrives
 /// in Phase 2, when sightings have to be visible from several screens at once.
 class CodexScreen extends StatefulWidget {
-  const CodexScreen({this.repository = const SpeciesRepository(), super.key});
+  const CodexScreen({
+    this.repository = const SpeciesRepository(),
+    this.profile,
+    super.key,
+  });
+
+  /// Null in tests that only exercise the list. When present, the tracker strip
+  /// sits above the title.
+  final TrackerProfile? profile;
 
   /// Injected so widget tests can supply an in-memory catalogue.
   ///
@@ -110,6 +119,11 @@ class _CodexScreenState extends State<CodexScreen> {
 
                 return Column(
                   children: <Widget>[
+                    if (widget.profile != null)
+                      _TrackerStrip(
+                        profile: widget.profile!,
+                        totalSpecies: all.length,
+                      ),
                     _Header(total: all.length),
                     _SearchBar(
                       controller: _searchController,
@@ -161,6 +175,123 @@ class _CodexScreenState extends State<CodexScreen> {
               },
         ),
       ),
+    );
+  }
+}
+
+/// Who you are, and how you are doing. Zeroes for now — Phase 2 fills these in
+/// from the local sightings table, and watching them climb is the point.
+class _TrackerStrip extends StatelessWidget {
+  const _TrackerStrip({required this.profile, required this.totalSpecies});
+
+  final TrackerProfile profile;
+  final int totalSpecies;
+
+  // Hard zeros until Phase 2 has a sightings table to count. Deliberately not
+  // constructor parameters yet — an unused parameter is a lie about what the
+  // widget can do.
+  static const int points = 0;
+  static const int speciesFound = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.outline),
+      ),
+      child: Row(
+        children: <Widget>[
+          Container(
+            width: 38,
+            height: 38,
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(
+              color: Color(0x26D9A441),
+              shape: BoxShape.circle,
+            ),
+            child: Text(
+              profile.initial,
+              style: const TextStyle(
+                color: AppColors.accent,
+                fontSize: 17,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  profile.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  'Tracker · Season ${profile.seasonYear}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: AppColors.textMuted,
+                    fontSize: 11.5,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 10),
+          const _StripStat(value: '$points', label: 'PTS'),
+          const SizedBox(width: 16),
+          _StripStat(value: '$speciesFound/$totalSpecies', label: 'FOUND'),
+        ],
+      ),
+    );
+  }
+}
+
+class _StripStat extends StatelessWidget {
+  const _StripStat({required this.value, required this.label});
+
+  final String value;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: <Widget>[
+        Text(
+          value,
+          style: const TextStyle(
+            color: AppColors.accent,
+            fontSize: 15,
+            fontWeight: FontWeight.w900,
+            height: 1,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Text(
+          label,
+          style: const TextStyle(
+            color: AppColors.textMuted,
+            fontSize: 8.5,
+            fontWeight: FontWeight.w800,
+            letterSpacing: 1,
+            height: 1,
+          ),
+        ),
+      ],
     );
   }
 }

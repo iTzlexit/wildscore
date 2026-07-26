@@ -43,6 +43,52 @@ not by how famous it is. Lions are easier to find than Sable.
 - Night-drive sightings of nocturnal species: ×1.5.
 - First sighting of a species: full points. Repeats: 10%, so the collection still
   rewards breadth without making repeats worthless.
+- **First Find bonus** — see below.
+
+## Solo finds vs. joining a sighting
+
+In Kruger, most people see lions because fifteen cars are already parked there.
+Finding an animal yourself is a completely different achievement from driving up
+to a traffic jam, and if both score the same then the leaderboard rewards
+whoever passed the most crowds.
+
+**This is detectable.** Sightings of the same species within a few hundred
+metres and a couple of hours are one *sighting event*. The earliest capture
+timestamp in that cluster is the finder; the rest joined.
+
+Design rules, in order of importance:
+
+1. **Capture the data from day one, ship the feature much later.** Every
+   sighting stores a precise GPS fix and capture timestamp from Phase 3. Clusters
+   can be computed retrospectively over historical data at any point; data you
+   never captured is gone forever. This is the only part that must be right now.
+2. **It needs density to work.** Fifty users across 20,000 km² will essentially
+   never cluster. The feature improves as the app grows, which makes it a reward
+   for growth rather than a launch dependency. Do not block Phase 5 on it.
+3. **Bonus, never penalty.** The first finder gets a *First Find* bonus. Joiners
+   are not docked — they did see the leopard, and it belongs in their collection.
+   The collection records what you have seen in your life and must stay honest;
+   the score records difficulty. Keeping those separate is what makes both feel
+   fair.
+4. **Ordering is server-assigned.** A device timestamp is a number a phone can be
+   made to say anything. Capture time is recorded on device out of necessity —
+   you are offline — but rank within a cluster is validated server-side at sync.
+
+### The safety rule this creates
+
+**Reward finding. Never reward arriving.**
+
+A bonus for getting somewhere first is a bonus for speeding, for crowding
+animals, and for cutting people off at a sighting. There must therefore be:
+
+- No live feed of other people's sightings
+- No "lion reported 4km north"
+- No visible race, countdown or contested state
+
+The bonus is computed quietly at sync. **You find out you were first when you
+get home.** This is consistent with the ban on live sighting maps in
+[VISION.md](VISION.md), and for the same reason: chasing animals is bad for the
+park, and it would end any SANParks relationship before it started.
 
 ## Verification
 

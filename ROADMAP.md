@@ -158,6 +158,11 @@ Edge. Installing the APK and using it is the outstanding test.
 | 2026-07-26 | RevenueCat for payments | Two store billing APIs and two receipt-validation flows is where homegrown IAP leaks money. Free below ~$2.5k/month. |
 | 2026-07-26 | Non-renewing season pass, not a subscription | People visit Kruger once a year. A subscription breeds cancellations; a season pass matches the annual leaderboard reset. |
 | 2026-07-26 | Rarity by difficulty of sighting, not by fame | Lions are easier to find than sable. Scoring only feels earned if it tracks reality. |
+| 2026-07-26 | Player is a "Tracker", not a "Trainer" | A tracker is the person who finds the animals in SA safari culture — authentic, descriptive, and not borrowed from Pokémon's own vocabulary. |
+| 2026-07-26 | Onboarding asks for a name and nothing else | A family at the gate must be playing in twenty seconds. A password field here loses half of them. Real accounts arrive in Phase 4 when sightings need to survive a lost phone. |
+| 2026-07-26 | `shared_preferences` added — first third-party package | A handful of bytes that must survive a restart is exactly what it is for. Sightings still go to sqflite in Phase 2; they grow without limit and need querying. |
+| 2026-07-26 | First Find bonus via spatio-temporal clustering; capture data now, ship feature later | Finding an animal yourself differs entirely from joining a traffic jam. Clusters can be recomputed retrospectively; ungathered GPS and timestamps are gone forever. Needs user density, so it cannot block launch. |
+| 2026-07-26 | Reward finding, never reward arriving | A first-to-arrive bonus is a bonus for speeding and crowding animals. No live sighting feed, no race UI; the bonus is computed quietly at sync. |
 | 2026-07-26 | v1 verification is camera + GPS + timestamp, no ML | A trustworthy species classifier is its own project. This is already far stronger than paper. |
 | 2026-07-26 | Rhino and pangolin locations never rendered anywhere | Poaching risk. Not a setting, not a later feature request. |
 | 2026-07-26 | Rarity styling uses baked-in ARGB values | `withOpacity` / `withValues` churned across Flutter releases; literal colours compile everywhere and are inspectable. |

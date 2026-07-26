@@ -152,6 +152,43 @@ ThemeData buildAppTheme() {
 /// `InputDecorationThemeData` during 2025, and a theme-level assignment is the
 /// kind of thing that stops compiling on a newer SDK. Passing decoration
 /// straight to the widget works on every Flutter version there has ever been.
+InputDecoration nameFieldDecoration(String? errorText) {
+  return InputDecoration(
+    hintText: 'Your name',
+    errorText: errorText,
+    counterText: '',
+    filled: true,
+    fillColor: AppColors.surface,
+    hintStyle: const TextStyle(
+      color: AppColors.textMuted,
+      fontSize: 22,
+      fontWeight: FontWeight.w700,
+    ),
+    errorStyle: const TextStyle(color: AppColors.danger, fontSize: 12.5),
+    contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(15),
+      borderSide: const BorderSide(color: AppColors.outline),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(15),
+      borderSide: const BorderSide(color: AppColors.outline),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(15),
+      borderSide: const BorderSide(color: AppColors.accent, width: 1.6),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(15),
+      borderSide: const BorderSide(color: AppColors.danger),
+    ),
+    focusedErrorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(15),
+      borderSide: const BorderSide(color: AppColors.danger, width: 1.6),
+    ),
+  );
+}
+
 InputDecoration searchFieldDecoration(String hint) {
   return InputDecoration(
     hintText: hint,

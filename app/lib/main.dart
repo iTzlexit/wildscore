@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'features/codex/codex_screen.dart';
+import 'features/app_root.dart';
 import 'shared/theme.dart';
 
 void main() {
@@ -32,9 +32,9 @@ class WildScoreApp extends StatelessWidget {
       title: 'Wild Score',
       debugShowCheckedModeBanner: false,
       theme: buildAppTheme(),
-      // Two screens, pushed with Navigator. go_router arrives in Phase 2 with
-      // the bottom navigation bar and deep links into a shared sighting.
-      home: const CodexScreen(),
+      // AppRoot picks onboarding or the Codex depending on whether a tracker
+      // profile exists on this device.
+      home: const AppRoot(),
     );
   }
 }
