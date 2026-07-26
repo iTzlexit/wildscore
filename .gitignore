@@ -29,7 +29,7 @@ app/ios/Flutter/ephemeral/
 # IDE
 .idea/
 *.iml
-.vscode/launch.json
+
 
 # OS
 Thumbs.db

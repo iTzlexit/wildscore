@@ -16,6 +16,7 @@ with the scoring made honest and the bragging made shareable.
 |---|---|
 | **[docs/VISION.md](docs/VISION.md)** | **The end goal.** What we are building and why. Read before any phase. |
 | **[docs/00-SETUP.md](docs/00-SETUP.md)** | Install Flutter and run the app. Start here to build. |
+| **[docs/DEV-WORKFLOW.md](docs/DEV-WORKFLOW.md)** | Day to day: connecting a phone, hot reload, what to run before committing |
 | [docs/SPEC.md](docs/SPEC.md) | What the product is, how scoring works, how sightings are verified |
 | [docs/TECH-STACK.md](docs/TECH-STACK.md) | Every technology choice and the reasoning behind it |
 | [docs/REVIEW-CHECKLIST.md](docs/REVIEW-CHECKLIST.md) | Run before merging anything. What the tests cover, and what only you can check |
