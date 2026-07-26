@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../data/attribution_repository.dart';
 import '../../data/species_repository.dart';
 import '../../domain/park_region.dart';
 import '../../domain/rarity_tier.dart';
@@ -48,6 +49,7 @@ class _CodexScreenState extends State<CodexScreen> {
   RarityTier? _tier;
   ParkRegion? _region;
   bool _filtersExpanded = false;
+  Map<String, String> _credits = const <String, String>{};
 
   int get _activeFilterCount =>
       (_category == null ? 0 : 1) +
@@ -61,6 +63,15 @@ class _CodexScreenState extends State<CodexScreen> {
     // times per second. This trips up almost everyone coming from the server
     // side, where a request handler runs exactly once.
     _speciesFuture = widget.repository.loadAll();
+
+    // Credits are decorative to the list and only needed when a photo is
+    // opened, so this is deliberately not awaited — the Codex renders without
+    // waiting on it.
+    const AttributionRepository().loadAll().then((Map<String, String> credits) {
+      if (mounted) {
+        setState(() => _credits = credits);
+      }
+    });
   }
 
   @override
@@ -91,8 +102,10 @@ class _CodexScreenState extends State<CodexScreen> {
   void _openDetail(Species species) {
     Navigator.of(context).push<void>(
       MaterialPageRoute<void>(
-        builder: (BuildContext context) =>
-            SpeciesDetailScreen(species: species),
+        builder: (BuildContext context) => SpeciesDetailScreen(
+          species: species,
+          photoCredit: _credits[species.id],
+        ),
       ),
     );
   }

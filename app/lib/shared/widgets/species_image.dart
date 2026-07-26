@@ -11,13 +11,22 @@ import '../theme.dart';
 /// deliberate rather than broken — the app should be presentable to a tester
 /// before a single image has been licensed.
 class SpeciesImage extends StatelessWidget {
-  const SpeciesImage({required this.species, this.locked = false, super.key});
+  const SpeciesImage({
+    required this.species,
+    this.locked = false,
+    this.fit = BoxFit.cover,
+    super.key,
+  });
 
   final Species species;
 
   /// Phase 2: species the player has not yet photographed render as
   /// silhouettes. Wired up now so the layout never has to change.
   final bool locked;
+
+  /// `cover` for thumbnails and heroes; `contain` in the full-screen viewer,
+  /// where cropping the animal out of its own photograph would be absurd.
+  final BoxFit fit;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +36,7 @@ class SpeciesImage extends StatelessWidget {
 
     return Image.asset(
       species.imageAsset,
-      fit: BoxFit.cover,
+      fit: fit,
       errorBuilder: (BuildContext context, Object error, StackTrace? stack) {
         return _MonogramPlate(species: species);
       },

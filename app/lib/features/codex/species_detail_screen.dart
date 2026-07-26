@@ -5,6 +5,7 @@ import '../../domain/species_tag.dart';
 import '../../shared/theme.dart';
 import '../../shared/widgets/pill.dart';
 import '../../shared/widgets/species_image.dart';
+import 'photo_viewer_screen.dart';
 import 'widgets/region_strip.dart';
 
 /// The species card, full screen.
@@ -14,9 +15,17 @@ import 'widgets/region_strip.dart';
 /// hierarchy right now: image, then points, then who it is, then where to find
 /// it.
 class SpeciesDetailScreen extends StatelessWidget {
-  const SpeciesDetailScreen({required this.species, super.key});
+  const SpeciesDetailScreen({
+    required this.species,
+    this.photoCredit,
+    super.key,
+  });
 
   final Species species;
+
+  /// Photographer and licence, shown in the full-screen viewer. Required by
+  /// CC-BY; null when the species has no sourced photograph.
+  final String? photoCredit;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +41,7 @@ class SpeciesDetailScreen extends StatelessWidget {
             surfaceTintColor: Colors.transparent,
             iconTheme: const IconThemeData(color: AppColors.textPrimary),
             flexibleSpace: FlexibleSpaceBar(
-              background: _HeroImage(species: species),
+              background: _HeroImage(species: species, credit: photoCredit),
             ),
           ),
           SliverToBoxAdapter(
@@ -97,9 +106,10 @@ class SpeciesDetailScreen extends StatelessWidget {
 }
 
 class _HeroImage extends StatelessWidget {
-  const _HeroImage({required this.species});
+  const _HeroImage({required this.species, this.credit});
 
   final Species species;
+  final String? credit;
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +118,10 @@ class _HeroImage extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: <Widget>[
-        SpeciesImage(species: species),
+        Hero(
+          tag: 'species-photo-${species.id}',
+          child: SpeciesImage(species: species),
+        ),
         // Scrim, so the app bar icons stay legible over any photograph.
         const DecoratedBox(
           decoration: BoxDecoration(
@@ -121,6 +134,36 @@ class _HeroImage extends StatelessWidget {
                 Color(0xFF0E1210),
               ],
               stops: <double>[0, 0.45, 1],
+            ),
+          ),
+        ),
+        // Tap the photo to open it full screen. Sits above the scrim so the
+        // whole image area is the target, not just the uncovered part.
+        Positioned.fill(
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => Navigator.of(
+                context,
+              ).push(PhotoViewerScreen.route(species, credit: credit)),
+            ),
+          ),
+        ),
+        Positioned(
+          right: 12,
+          bottom: 12,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: const Color(0x8C000000),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Padding(
+              padding: EdgeInsets.all(7),
+              child: Icon(
+                Icons.zoom_out_map_rounded,
+                size: 16,
+                color: Colors.white,
+              ),
             ),
           ),
         ),
