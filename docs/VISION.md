@@ -3,6 +3,53 @@
 > This is the north star. When a technical decision is genuinely close, the one
 > that better serves this document wins. Re-read it before starting any phase.
 
+---
+
+## The core loop — this *is* the app
+
+Everything below this line is detail. This is the product:
+
+> **You photograph an animal in the park. The moment the shutter fires, it is
+> caught. It is scored by how hard it was to find, it lands permanently on your
+> profile, and your position on the leaderboard moves.**
+
+Four things, in a loop, and nothing may get between them:
+
+| | |
+|---|---|
+| **Catch** | Camera only, in the park. The shutter is the catch. |
+| **Score** | Points by rarity. An impala is 5. A pangolin is 500. |
+| **Profile** | Your permanent collection and your total. It is *yours*, and it grows for years. |
+| **Rank** | A seasonal leaderboard of verified sightings. Your standing among other trackers. |
+
+The reason a player drives one more loop road at last light, and the reason they
+come back to Kruger next winter, is that **there are rare animals out there that
+are not yet on their profile.** Every feature either serves that sentence or it
+does not belong in the app.
+
+### The catch moment
+
+This is the Pokémon comparison made literal, and it is the single most important
+interaction in the product. When the shutter fires:
+
+1. **The animal is caught.** Not "submitted", not "pending review". Caught.
+2. The app **stops** — the whole screen is the catch. Nothing else on it.
+3. A card turns over revealing the species, its tier and its points.
+4. **The score counts up.** Visibly, with sound, at a speed set by rarity.
+5. If it is new to the collection, it says so loudly. First ones matter most.
+6. One tap to show someone.
+
+A pangolin must not resemble an impala at any point in that sequence. Common
+species get a brief, satisfying acknowledgement. Legendary ones get a
+full-screen event that a person in the car will lean over to watch.
+
+**Nothing may sit between the shutter and the reveal.** No loading spinner, no
+network call, no "syncing". The verification, the GPS write and the eventual
+upload all happen behind the celebration. The player never waits to find out
+what they caught.
+
+---
+
 ## Where it came from
 
 A family trip to Kruger, and a scorecard on paper. Everyone in the car keeping

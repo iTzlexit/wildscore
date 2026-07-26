@@ -108,10 +108,18 @@ Edge. Installing the APK and using it is the outstanding test.
 
 ## Phase 2 — Capture & collection
 
+**This phase is the product.** Everything before it is setup and everything
+after it is amplification. See the core loop in [docs/VISION.md](docs/VISION.md).
+
 - [ ] `camera` package, in-app capture only — no gallery import, ever
+- [ ] Camera reachable in **one tap from anywhere** — it is the primary action
 - [ ] `sqflite` sightings table, photos on disk via `path_provider`
+- [ ] Shoot-first flow: photo saved with GPS and timestamp before identification
+- [ ] Fast species picker — large thumbnails, searchable, ordered by plausibility
 - [ ] **The reveal.** Card flip, sound, score counting up, scaled to rarity. This
       is the product, not polish — a pangolin must feel different from an impala
+- [ ] Nothing between shutter and reveal — no spinner, no network call
+- [ ] Profile screen: total score, collection, personal bests
 - [ ] Collection view: found species in colour, unfound as silhouettes
 - [ ] One-tap share card, good enough to post without editing
 - [ ] Riverpod, once sightings are needed on more than one screen
@@ -163,6 +171,9 @@ Edge. Installing the APK and using it is the outstanding test.
 | 2026-07-26 | `shared_preferences` added — first third-party package | A handful of bytes that must survive a restart is exactly what it is for. Sightings still go to sqflite in Phase 2; they grow without limit and need querying. |
 | 2026-07-26 | First Find bonus via spatio-temporal clustering; capture data now, ship feature later | Finding an animal yourself differs entirely from joining a traffic jam. Clusters can be recomputed retrospectively; ungathered GPS and timestamps are gone forever. Needs user density, so it cannot block launch. |
 | 2026-07-26 | Reward finding, never reward arriving | A first-to-arrive bonus is a bonus for speeding and crowding animals. No live sighting feed, no race UI; the bonus is computed quietly at sync. |
+| 2026-07-26 | Shoot first, identify second | Animals do not wait. Missing the photograph is far worse than a two-second delay before the reveal. The catch is at the shutter; the ceremony is at identification. |
+| 2026-07-26 | Tier-gated verification | Common sightings count instantly — nobody fakes an impala. Legendary ones enter the collection immediately but reach the public leaderboard only after review. Integrity where it matters, no friction where it does not. |
+| 2026-07-26 | ML routes to review, never rejects | Wrongly rejecting a real pangolin would be unforgivable. "This does not look like a pangolin" is an easy problem; "identify this animal" is a hard one. |
 | 2026-07-26 | v1 verification is camera + GPS + timestamp, no ML | A trustworthy species classifier is its own project. This is already far stronger than paper. |
 | 2026-07-26 | Rhino and pangolin locations never rendered anywhere | Poaching risk. Not a setting, not a later feature request. |
 | 2026-07-26 | Rarity styling uses baked-in ARGB values | `withOpacity` / `withValues` churned across Flutter releases; literal colours compile everywhere and are inspectable. |

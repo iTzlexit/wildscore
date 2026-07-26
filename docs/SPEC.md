@@ -90,6 +90,33 @@ get home.** This is consistent with the ban on live sighting maps in
 [VISION.md](VISION.md), and for the same reason: chasing animals is bad for the
 park, and it would end any SANParks relationship before it started.
 
+## The capture flow
+
+The shutter is the catch. But the app still has to learn *which* animal it is,
+and in v1 there is no ML to tell it. Two possible orders:
+
+| | Flow | Problem |
+|---|---|---|
+| A | Pick the species, then shoot | You are scrolling a list while the leopard walks off. |
+| B | **Shoot, then pick the species** | The reveal is two taps away instead of instant. |
+
+**We do B.** Animals do not wait. Missing the photograph entirely is a far worse
+outcome than a two-second delay before the celebration, and a player who has
+missed a shot because the app made them navigate a menu will not forgive it.
+
+So:
+
+1. Camera is **one tap from anywhere in the app.** Treat it like the shutter
+   button on a phone's lock screen — it is the primary action.
+2. Shoot. The photo is safe on disk immediately, with GPS and timestamp.
+3. A fast species picker appears: large thumbnails, searchable, ordered by what
+   is plausible here and now (region, time of day, recently logged).
+4. Selection fires **the reveal** — see [VISION.md](VISION.md).
+
+The catch is conceptually at the shutter; the ceremony is at identification.
+If a player closes the app between the two, the photo is still there, waiting
+to be named. Never lose someone's sighting because they got distracted.
+
 ## Verification
 
 v1 is deliberately not machine learning. Three signals, all cheap and all honest:
@@ -103,9 +130,32 @@ locally and sync when the phone reconnects. The GPS fix and timestamp are captur
 at the moment of the photo, so an offline sighting is exactly as trustworthy as an
 online one.
 
-Community review (Phase 6) handles the leaderboard tail: top-ranked players' rare
-sightings are visible to other players, who can flag them. Cheating a leaderboard
-nobody can see is not fun; cheating one everybody can see is hard.
+### The hole this leaves, and how it closes
+
+Since the player names the species themselves, someone can photograph a bush and
+call it a pangolin. Worth stating plainly rather than pretending otherwise.
+
+It matters far less than it sounds, for one reason: **the photo is the receipt.**
+It sits on their profile and on every share card. A fake pangolin is a picture of
+a bush that they have to show people. The whole point of the app is showing off,
+and you cannot show off a lie.
+
+Beyond that, three defences, cheapest first:
+
+1. **Tier-gated verification.** Common and Frequent sightings count instantly —
+   nobody fakes an impala. **Legendary and Very Rare sightings enter the
+   collection immediately but do not hit the public leaderboard until reviewed.**
+   The player gets their reveal and their card straight away; the leaderboard
+   just settles a bit later. Integrity where it matters, no friction where it
+   does not.
+2. **Community flagging** (Phase 6). Rare sightings by top-ranked players are
+   visible and flaggable. Cheating a leaderboard nobody can see is not fun;
+   cheating one everybody can see is hard.
+3. **ML as a sanity check, not an oracle** (Phase 6+). Not "identify this
+   animal", which is a hard problem — just "this does not look like a pangolin",
+   which is an easy one. Use it to route things to review, never to reject a
+   sighting outright. A model that wrongly rejects a real pangolin would be
+   unforgivable; one that quietly asks a human is fine.
 
 ## Sensitive species
 
