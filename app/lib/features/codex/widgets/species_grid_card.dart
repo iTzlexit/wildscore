@@ -13,11 +13,12 @@ import '../../../shared/widgets/species_image.dart';
 /// tile looking obviously different from an Impala tile is the single most
 /// important visual decision in the app — and a uniform grid of white cards
 /// would throw that away.
-class SpeciesGridCard extends StatelessWidget {
+class SpeciesGridCard extends StatefulWidget {
   const SpeciesGridCard({
     required this.species,
     required this.onTap,
     this.locked = false,
+    this.sightingCount = 0,
     super.key,
   });
 
@@ -29,79 +30,177 @@ class SpeciesGridCard extends StatelessWidget {
   final VoidCallback onTap;
   final bool locked;
 
+  /// Lifetime catches of this species. Zero until Phase 2 has a sightings
+  /// table; the badge simply does not render at zero.
+  final int sightingCount;
+
+  @override
+  State<SpeciesGridCard> createState() => _SpeciesGridCardState();
+}
+
+class _SpeciesGridCardState extends State<SpeciesGridCard> {
+  bool _pressed = false;
+
   @override
   Widget build(BuildContext context) {
+    final Species species = widget.species;
+    final bool locked = widget.locked;
     final RarityStyle style = species.rarityTier.style;
 
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: style.border, width: style.borderWidth),
-        boxShadow: style.glow == null
-            ? null
-            : <BoxShadow>[
-                BoxShadow(
-                  color: style.glow!,
-                  blurRadius: 16,
-                  spreadRadius: -4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(13),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: onTap,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Expanded(
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: <Widget>[
-                      SpeciesImage(species: species, locked: locked),
-                      // Softens the join between photo and label strip so the
-                      // tile reads as one object rather than two stacked.
-                      const DecoratedBox(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.center,
-                            end: Alignment.bottomCenter,
-                            colors: <Color>[
-                              Colors.transparent,
-                              Color(0x99161C19),
-                            ],
+    // A card that dips under the thumb feels like an object you picked up.
+    // Cheap, and it does more for the "collectible" feeling than any amount
+    // of decoration.
+    return AnimatedScale(
+      scale: _pressed ? 0.96 : 1,
+      duration: const Duration(milliseconds: 110),
+      curve: Curves.easeOut,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: style.border, width: style.borderWidth),
+          boxShadow: style.glow == null
+              ? null
+              : <BoxShadow>[
+                  BoxShadow(
+                    color: style.glow!,
+                    blurRadius: 16,
+                    spreadRadius: -4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(13),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: widget.onTap,
+              onTapDown: (_) => setState(() => _pressed = true),
+              onTapUp: (_) => setState(() => _pressed = false),
+              onTapCancel: () => setState(() => _pressed = false),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Expanded(
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: <Widget>[
+                        SpeciesImage(species: species, locked: locked),
+                        // Softens the join between photo and label strip so the
+                        // tile reads as one object rather than two stacked.
+                        const DecoratedBox(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.center,
+                              end: Alignment.bottomCenter,
+                              colors: <Color>[
+                                Colors.transparent,
+                                Color(0x99161C19),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      Positioned(
-                        top: 6,
-                        left: 6,
-                        child: _PointsBadge(species: species),
-                      ),
-                      if (species.tags.contains(SpeciesTag.bigFive))
-                        const Positioned(
+                        // Foil sheen on the exalted tiers only. A diagonal
+                        // gloss is the oldest trading-card trick there is, and
+                        // it makes a Legendary tile read as a *thing* rather
+                        // than a database row. Static, not animated — eighteen
+                        // shimmering cards in a scrolling grid would be both
+                        // distracting and expensive.
+                        if (style.isExalted)
+                          const IgnorePointer(
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: <Color>[
+                                    Color(0x00FFFFFF),
+                                    Color(0x1AFFFFFF),
+                                    Color(0x00FFFFFF),
+                                    Color(0x00FFFFFF),
+                                  ],
+                                  stops: <double>[0.18, 0.34, 0.52, 1],
+                                ),
+                              ),
+                            ),
+                          ),
+                        Positioned(
                           top: 6,
-                          right: 6,
-                          child: _CornerBadge(label: 'BIG 5'),
-                        )
-                      else if (species.tags.contains(SpeciesTag.bigSixBirds))
-                        const Positioned(
-                          top: 6,
-                          right: 6,
-                          child: _CornerBadge(label: 'BIG 6'),
+                          left: 6,
+                          child: _PointsBadge(species: species),
                         ),
-                    ],
+                        if (species.tags.contains(SpeciesTag.bigFive))
+                          const Positioned(
+                            top: 6,
+                            right: 6,
+                            child: _CornerBadge(label: 'BIG 5'),
+                          )
+                        else if (species.tags.contains(SpeciesTag.bigSixBirds))
+                          const Positioned(
+                            top: 6,
+                            right: 6,
+                            child: _CornerBadge(label: 'BIG 6'),
+                          ),
+                        if (widget.sightingCount > 0)
+                          Positioned(
+                            bottom: 6,
+                            right: 6,
+                            child: _CaughtTag(count: widget.sightingCount),
+                          ),
+                      ],
+                    ),
                   ),
-                ),
-                _Label(species: species, style: style),
-              ],
+                  _Label(species: species, style: style),
+                ],
+              ),
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// How many times this species has been caught, ever.
+///
+/// Only shown once the count is at least one — a grid of "×0" badges would
+/// read as failure, where an absent badge simply reads as "not yet". The
+/// number matters because a second leopard is still worth having even though
+/// it scores a tenth: this is the difference between a score and a collection.
+class _CaughtTag extends StatelessWidget {
+  const _CaughtTag({required this.count});
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+      decoration: BoxDecoration(
+        color: const Color(0xE60E1210),
+        borderRadius: BorderRadius.circular(7),
+        border: Border.all(color: const Color(0xFF5AA46F), width: 1.2),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          const Icon(
+            Icons.check_circle_rounded,
+            size: 10,
+            color: Color(0xFF5AA46F),
+          ),
+          const SizedBox(width: 3),
+          Text(
+            '$count',
+            style: const TextStyle(
+              color: Color(0xFF5AA46F),
+              fontSize: 10.5,
+              fontWeight: FontWeight.w900,
+              height: 1,
+            ),
+          ),
+        ],
       ),
     );
   }

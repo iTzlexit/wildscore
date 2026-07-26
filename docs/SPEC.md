@@ -278,10 +278,16 @@ this is the first thing to revisit.
 
 Two mitigations, both worth building in from the start:
 
-1. **The picker must be fast enough not to matter** — large thumbnails, search,
-   and ordered by what is plausible *here and now*: this park region, this time
-   of day, what has been logged recently. In practice the animal you are looking
-   at should be in the first six tiles.
+1. **The picker must be fast enough not to matter.** A search field above a grid
+   of species tiles — the *same tiles as the Codex*, so the app teaches the
+   picker for free and there is one card design to maintain.
+
+   **Search is the fallback, not the primary action.** Tiles are ordered by what
+   is plausible here and now — this park region, this time of day, what has been
+   logged recently, what you have caught before. Done properly, the animal you
+   are looking at is in the first six tiles and no typing happens at all. If a
+   player has to search on most captures, the ordering is wrong and that is the
+   bug to fix.
 2. **A "shoot now, name later" escape.** A prominent *Not sure / just shoot*
    option on the picker goes straight to the camera and saves the photo as
    Unidentified. That is the same mechanism as the "Not sure what it was" flow
