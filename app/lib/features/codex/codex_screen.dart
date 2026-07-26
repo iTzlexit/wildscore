@@ -9,7 +9,7 @@ import '../../domain/species_category.dart';
 import '../../domain/tracker_profile.dart';
 import '../../shared/theme.dart';
 import 'species_detail_screen.dart';
-import 'widgets/species_card.dart';
+import 'widgets/species_grid_card.dart';
 
 /// The Codex — every species in the park, searchable and filterable.
 ///
@@ -170,13 +170,23 @@ class _CodexScreenState extends State<CodexScreen> {
                     Expanded(
                       child: visible.isEmpty
                           ? const _EmptyState()
-                          : ListView.builder(
+                          : GridView.builder(
                               padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+                              // maxCrossAxisExtent rather than a fixed column
+                              // count, so a small phone gets 2 columns and a
+                              // tablet gets 4 without any breakpoint logic.
+                              gridDelegate:
+                                  const SliverGridDelegateWithMaxCrossAxisExtent(
+                                    maxCrossAxisExtent: 190,
+                                    mainAxisSpacing: 12,
+                                    crossAxisSpacing: 12,
+                                    childAspectRatio:
+                                        SpeciesGridCard.aspectRatio,
+                                  ),
                               itemCount: visible.length,
-                              itemExtent: SpeciesCard.listExtent,
                               itemBuilder: (BuildContext context, int index) {
                                 final Species species = visible[index];
-                                return SpeciesCard(
+                                return SpeciesGridCard(
                                   species: species,
                                   onTap: () => _openDetail(species),
                                 );
@@ -686,7 +696,7 @@ class _ResultBar extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Text(
-            count == total ? 'Rarest first' : '$count of $total species',
+            count == total ? 'All $total species' : '$count of $total species',
             style: const TextStyle(
               color: AppColors.textMuted,
               fontSize: 11.5,

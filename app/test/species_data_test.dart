@@ -4,6 +4,7 @@ import 'package:wildscore/domain/conservation_status.dart';
 import 'package:wildscore/domain/park_region.dart';
 import 'package:wildscore/domain/rarity_tier.dart';
 import 'package:wildscore/domain/species.dart';
+import 'package:wildscore/domain/species_category.dart';
 import 'package:wildscore/domain/species_tag.dart';
 
 /// Guards the species catalogue.
@@ -33,14 +34,41 @@ void main() {
     expect(ids.length, species.length, reason: 'duplicate id in species.json');
   });
 
-  test('sorted rarest first', () {
+  test('sorted by dex number', () {
     for (int i = 1; i < species.length; i++) {
       expect(
-        species[i - 1].points,
-        greaterThanOrEqualTo(species[i].points),
+        species[i - 1].dexNumber,
+        lessThan(species[i].dexNumber),
         reason: '${species[i].commonName} is out of order',
       );
     }
+  });
+
+  test('dex numbers are unique and contiguous from 1', () {
+    // A gap or a duplicate means the catalogue was edited by hand rather than
+    // regenerated, and someone's collection would show two No. 042s.
+    final List<int> numbers = species.map((Species s) => s.dexNumber).toList()
+      ..sort();
+
+    expect(numbers.first, 1);
+    expect(numbers.last, species.length);
+    expect(numbers.toSet().length, species.length, reason: 'duplicate number');
+  });
+
+  test('dex numbers group mammals, then birds, then reptiles', () {
+    // The grouping is the reason the numbers are worth having — flicking to
+    // No. 060 should land you among the birds.
+    int lastMammal = 0;
+    int firstBird = 999;
+    for (final Species s in species) {
+      if (s.category == SpeciesCategory.mammal) {
+        lastMammal = s.dexNumber > lastMammal ? s.dexNumber : lastMammal;
+      }
+      if (s.category == SpeciesCategory.bird) {
+        firstBird = s.dexNumber < firstBird ? s.dexNumber : firstBird;
+      }
+    }
+    expect(lastMammal, lessThan(firstBird));
   });
 
   test('points always derive from the rarity tier', () {

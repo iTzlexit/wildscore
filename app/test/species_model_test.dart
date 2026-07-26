@@ -8,6 +8,7 @@ import 'package:wildscore/domain/species_category.dart';
 Map<String, dynamic> _json({String rarityTier = 'legendary'}) {
   return <String, dynamic>{
     'id': 'test-beast',
+    'dexNumber': 999,
     'commonName': 'Test Beast',
     'scientificName': 'Bestia probata',
     'afrikaansName': 'Toetsbees',
@@ -38,6 +39,8 @@ void main() {
       expect(s.isNocturnal, isTrue);
       expect(s.isBigFive, isFalse);
       expect(s.points, 500);
+      expect(s.dexNumber, 999);
+      expect(s.dexLabel, '999');
       expect(s.imageAsset, 'assets/species/test-beast.jpg');
     });
 

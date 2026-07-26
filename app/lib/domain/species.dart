@@ -12,6 +12,7 @@ import 'species_tag.dart';
 class Species {
   const Species({
     required this.id,
+    required this.dexNumber,
     required this.commonName,
     required this.scientificName,
     required this.afrikaansName,
@@ -37,6 +38,7 @@ class Species {
 
     return Species(
       id: id,
+      dexNumber: json['dexNumber'] as int,
       commonName: json['commonName'] as String,
       scientificName: json['scientificName'] as String,
       afrikaansName: json['afrikaansName'] as String,
@@ -78,6 +80,12 @@ class Species {
   }
 
   final String id;
+
+  /// Permanent catalogue number, as on a Pokédex entry. Assigned once —
+  /// mammals, then birds, then reptiles, alphabetical within each — and never
+  /// reshuffled, because a dex number is an identity. New species are appended.
+  final int dexNumber;
+
   final String commonName;
   final String scientificName;
   final String afrikaansName;
@@ -112,9 +120,13 @@ class Species {
   bool get isNocturnal => tags.contains(SpeciesTag.nocturnal);
   bool get occursParkWide => parkRegions.length == ParkRegion.values.length;
 
+  /// Zero-padded for display: `001`, `042`, `071`.
+  String get dexLabel => dexNumber.toString().padLeft(3, '0');
+
   Species copyWith({bool? discovered}) {
     return Species(
       id: id,
+      dexNumber: dexNumber,
       commonName: commonName,
       scientificName: scientificName,
       afrikaansName: afrikaansName,

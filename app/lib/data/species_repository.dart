@@ -25,15 +25,10 @@ class SpeciesRepository {
         .map((dynamic entry) => Species.fromJson(entry as Map<String, dynamic>))
         .toList();
 
-    // Rarest first — the interesting animals should be what you see when the
-    // screen opens, not forty pages of impala.
-    species.sort((Species a, Species b) {
-      final int byPoints = b.points.compareTo(a.points);
-      if (byPoints != 0) {
-        return byPoints;
-      }
-      return a.commonName.compareTo(b.commonName);
-    });
+    // Dex order, like a field guide or a Pokédex. Rarity is still obvious at a
+    // glance because it drives the card's colour and frame — it does not need
+    // to drive the ordering as well.
+    species.sort((Species a, Species b) => a.dexNumber.compareTo(b.dexNumber));
 
     return species;
   }
