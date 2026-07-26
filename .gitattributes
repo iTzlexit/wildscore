@@ -1,0 +1,29 @@
+# Normalise line endings so the repo is LF everywhere, regardless of who
+# clones it or on what OS. Without this, Windows and the Linux CI runner can
+# disagree about whether a file has changed — which produces a `dart format`
+# failure that looks like a real problem and is not.
+#
+# `text=auto eol=lf` means: detect text files, store them as LF, and check them
+# out as LF even on Windows. Every modern Windows editor handles LF fine.
+* text=auto eol=lf
+
+# Binaries — never touch these.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
+*.ttf binary
+*.otf binary
+*.apk binary
+*.aab binary
+*.jks binary
+*.keystore binary
+
+# Windows-only scripts genuinely need CRLF.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Shell scripts and git hooks must be LF or they will not execute.
+*.sh text eol=lf
+.githooks/* text eol=lf
