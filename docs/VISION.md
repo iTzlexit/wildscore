@@ -181,8 +181,13 @@ breeds cancellations and resentment; a pass matches the rhythm of the thing.
 - **Not AR, not live maps of other people's sightings.** Chasing other players
   to a leopard is bad for the animals and bad for the park, and it would end
   any relationship with SANParks before it started.
-- **Not multi-park at launch.** Kruger, done properly, by someone who knows it.
-  Addo and the Kgalagadi are what version 3 looks like if version 1 works.
+- **Not multi-reserve at launch** — though it is genuinely coming. Kruger first,
+  done properly, by someone who knows it. Okavango Delta, Masai Mara and Addo
+  are the Pokémon-regions equivalent and are the obvious growth path, but the
+  *schema* must allow for them from Phase 4 while the *feature* waits. Rarity is
+  reserve-specific — a cheetah is a prize in Kruger and routine in the Mara — so
+  a global rating would break every leaderboard. See
+  [SPEC.md](SPEC.md#future-multiple-reserves).
 
 ## The test
 

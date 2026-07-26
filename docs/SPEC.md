@@ -90,6 +90,51 @@ get home.** This is consistent with the ban on live sighting maps in
 [VISION.md](VISION.md), and for the same reason: chasing animals is bad for the
 park, and it would end any SANParks relationship before it started.
 
+## Screen structure
+
+Three tabs. The order matters: your own achievement first, the goal second,
+other people third.
+
+### 1. Profile — *your* record
+
+Opens on **your lifetime score**, large and unmissable. That single number is
+the summary of everything you have ever found, and it is what a player checks
+first.
+
+Tapping the score opens **everything you have ever caught**, newest first. A
+recency sort, not alphabetical — the most recent catch is the one you want to
+show someone, and the one you are still pleased about.
+
+Tapping any entry opens **the card of the animal you caught**: your photograph,
+the species, the date, your nickname for it, its rating, and a **verified
+check mark**.
+
+That check mark is doing real work. It is the visible proof that this was
+photographed by you, in the park, on that date — the thing the paper scorecard
+could never do. It must never appear on anything unverified.
+
+**Lifetime, not seasonal.** The leaderboard resets each season; the profile
+never does. See [VISION.md](VISION.md) — permanence is one of the three feelings
+the product exists to protect.
+
+### 2. Animal Dex — the goal
+
+Every species in the park: photograph, dex number, short summary, points. Free,
+offline, useful before you have caught anything. The hook.
+
+### 3. Leaderboard — everyone else
+
+Other trackers ranked on verified sightings for the current season. Phase 5.
+
+## Nicknames
+
+Players can name what they catch. "Skukuza Queen" for your first leopard.
+
+Costs almost nothing to build and does a disproportionate amount of work: a
+named animal is one you are attached to, and attachment is what makes a
+collection worth keeping. Optional, editable, never shown on the leaderboard
+without the species name alongside it.
+
 ## The capture flow
 
 The shutter is the catch. But the app still has to learn *which* animal it is,
@@ -190,6 +235,53 @@ The same rule applies to any species flagged `isSensitive` in the dataset.
 
 Phases 1–3 are a complete, sellable, offline product on their own. If the project
 stops at Phase 3 it is still worth having built.
+
+## Future: multiple reserves
+
+Not built now. Kruger ships first, done properly. But the intent is real —
+Okavango Delta, Masai Mara, Etosha, Addo — and it is the direct analogue of
+Pokémon's regions, each with its own dex.
+
+**The decision that must be made now is the data model, not the feature.**
+Retrofitting a second reserve onto a schema that assumes Kruger is a rewrite;
+allowing for one costs almost nothing today.
+
+### The trap: rarity is reserve-specific
+
+This is the part that would quietly break everything.
+
+A cheetah is **Rare (100 points)** in Kruger — a genuine piece of luck. In the
+**Masai Mara it is close to guaranteed** on a three-day trip. A sable is a
+northern-Kruger prize and essentially absent from the Mara. Wildebeest are
+ordinary in Kruger and the entire reason people visit the Mara in season.
+
+So **`rarityTier` cannot live on the species.** It belongs on the pairing of
+species and reserve. A single global rating would make the Mara trivially
+farmable and destroy any shared leaderboard — the first person to fly to Kenya
+would top a Kruger table with 40 cheetah sightings.
+
+Same for `parkRegions`: `southern / central / northern` are Kruger's regions,
+defined by its two rivers. They mean nothing in the Delta.
+
+### What that implies
+
+| Concept | Today | With reserves |
+|---|---|---|
+| Species | Rarity, points, regions on the record | Identity only: names, description, IUCN status, photo |
+| Reserve | — | Kruger, Okavango, Mara… each with its own boundary, regions and dex |
+| Species-in-reserve | — | Rarity, points, local regions, seasonality, dex number |
+| Leaderboard | One | **Per reserve.** A global one is meaningless when points are not comparable |
+| Dex number | Global | **Per reserve**, exactly like Pokémon's regional dexes |
+
+Your collection stays global and lifetime — you caught a leopard, wherever you
+were. Only *scoring* is reserve-scoped.
+
+### When to do it
+
+Not before Kruger is live and someone other than you has played it. But when
+Phase 4 designs the backend schema, **design it with a `reserve` table from the
+start**, even with exactly one row in it. That is a few hours then, and a
+migration nobody wants later.
 
 ## Data accuracy
 

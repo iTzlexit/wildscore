@@ -146,6 +146,10 @@ testable from a desk. Camera last.
 
 ## Phase 4 — Accounts & sync
 
+- [ ] **Schema carries a `reserve` table from day one**, with exactly one row
+      (Kruger). Rarity and dex numbers hang off species-in-reserve, not species.
+      A few hours now; a migration nobody wants later — see
+      [docs/SPEC.md](docs/SPEC.md#future-multiple-reserves)
 - [ ] Supabase project, schema, row-level security
 - [ ] Auth, offline-first sync queue
 - [ ] Server-side score calculation — never trust a client total
@@ -184,6 +188,11 @@ testable from a desk. Camera last.
 | 2026-07-26 | Shoot first, identify second | Animals do not wait. Missing the photograph is far worse than a two-second delay before the reveal. The catch is at the shutter; the ceremony is at identification. |
 | 2026-07-26 | Tier-gated verification | Common sightings count instantly — nobody fakes an impala. Legendary ones enter the collection immediately but reach the public leaderboard only after review. Integrity where it matters, no friction where it does not. |
 | 2026-07-26 | ML routes to review, never rejects | Wrongly rejecting a real pangolin would be unforgivable. "This does not look like a pangolin" is an easy problem; "identify this animal" is a hard one. |
+| 2026-07-26 | Codex is a grid with permanent dex numbers | Reads as a guidebook rather than a database. Numbers assigned once (mammals, birds, reptiles; alphabetical within) and never reshuffled — a dex number is an identity, and collection screenshots would go stale. |
+| 2026-07-26 | Three tabs: Profile, Dex, Leaderboard | Your own achievement first, the goal second, other people third. Profile opens on lifetime score; tapping it lists catches newest-first. |
+| 2026-07-26 | Profile is lifetime; leaderboard is seasonal | Seasons reset so newcomers always have a reason to start. The collection never resets — permanence is one of the three feelings the product protects. |
+| 2026-07-26 | Nicknames on caught animals | Nearly free to build; a named animal is one you are attached to, and attachment is what makes a collection worth keeping. |
+| 2026-07-26 | **Rarity belongs to species-in-reserve, not to species** | A cheetah is Rare in Kruger and near-guaranteed in the Masai Mara. A global rating would let one trip to Kenya top a Kruger leaderboard. Schema must carry a `reserve` table from Phase 4 with one row in it; the feature waits. |
 | 2026-07-26 | v1 verification is camera + GPS + timestamp, no ML | A trustworthy species classifier is its own project. This is already far stronger than paper. |
 | 2026-07-26 | Rhino and pangolin locations never rendered anywhere | Poaching risk. Not a setting, not a later feature request. |
 | 2026-07-26 | Rarity styling uses baked-in ARGB values | `withOpacity` / `withValues` churned across Flutter releases; literal colours compile everywhere and are inspectable. |
