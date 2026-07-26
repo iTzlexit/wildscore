@@ -38,12 +38,36 @@ In parallel, and independent of any code (see [docs/VISION.md](docs/VISION.md)):
 - `flutter analyze` — no issues
 - `flutter test` — **39 passing**
 - `flutter build web --release` — builds clean in ~40s
+- `flutter build apk --release` — **builds**, Android toolchain green
 - Verified at runtime in a browser: boots, fetches `species.json` (HTTP 200),
   parses all 71 species, renders, no console errors
 
-Not yet run on Android or iOS — that needs the Android SDK (item 3 below).
 The web build is a **verification and preview target only**; the product ships
 to Android and iOS.
+
+### Android build
+
+Toolchain installed without Android Studio: JDK 21 at `C:\src\jdk-21.0.11+10`,
+SDK 36 at `C:\src\android-sdk` (cmdline-tools, platform-tools, build-tools,
+NDK 28, CMake). All licences accepted. `flutter config` already points at both.
+
+| Artefact | Size | Use |
+|---|---|---|
+| `app-arm64-v8a-release.apk` | 15.8 MB | Any modern phone — sideload this one |
+| `app-armeabi-v7a-release.apk` | 13.3 MB | Older 32-bit devices |
+| `app-x86_64-release.apk` | 17.2 MB | Emulators |
+| `app-release.apk` | 45.5 MB | Universal, all ABIs. Avoid — three engines in one file |
+
+Built with `--split-per-abi`. For the Play Store you ship an **App Bundle**
+(`flutter build appbundle`) instead and Google does the splitting per device.
+
+**These are debug-signed.** Fine for sideloading, and they can never go to the
+Play Store. Release signing is a Phase 5 task: you generate a keystore and guard
+it, because losing it means you can never update your own app again.
+
+**Still unverified: nobody has run this on a physical phone.** No Android device
+is attached to this machine — `flutter devices` sees only Windows, Chrome and
+Edge. Installing the APK and using it is the outstanding test.
 
 ### Defects found and fixed getting here
 
