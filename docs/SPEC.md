@@ -198,6 +198,50 @@ offline, useful before you have caught anything. The hook.
 
 Other trackers ranked on verified sightings for the current season. Phase 5.
 
+Each row shows:
+
+| Stat | Why it is there |
+|---|---|
+| **Rank** | The point of the screen |
+| **Tracker name** | Who |
+| **Season score** | The primary ranking |
+| **Species held** | Breadth — `43 / 71`. A different achievement from raw score |
+| **Trips** | Times entered the park this season |
+| **Rarest catch** | The single best animal. The bragging line |
+| **First Finds** | How often they found it before anyone else |
+
+Tapping a row opens that tracker's public profile: their collection, their
+rarest finds, their season. **Never their sighting locations**, and never
+anything for a sensitive species beyond the fact that they have one.
+
+#### Counting trips without extra tracking
+
+A **trip** is derived from sightings, not from a separate check-in: a new trip
+begins when more than 48 hours pass with no sighting. No GPS geofence to
+maintain, no button to forget to press, and it works entirely offline.
+
+Someone who spends a day in the park and logs nothing records no trip. That is
+correct — the game only knows about you when you play.
+
+#### One board is not enough
+
+Ranking on season score alone makes this a **wealth leaderboard**: whoever can
+afford ten trips a year beats whoever manages one, regardless of skill. Rewarding
+visits is deliberate — it is the whole incentive — but if a family who comes once
+a year can never place anywhere, they stop playing, and they are most of the
+market.
+
+So there are several boards, and a casual visitor can win the ones that matter to
+them:
+
+- **Season score** — the main board. Rewards frequency and skill together
+- **Best single trip** — one visit, one score. A once-a-year visitor can top this
+- **Collection** — species held as a percentage. Rewards years, not money
+- **Rarest find of the season** — one lucky pangolin beats a hundred impala
+
+Friends-and-family groups (Phase 6) matter more than the global board for most
+people. The paper scorecard was always five people in one car.
+
 ## Nicknames
 
 Players can name what they catch. "Skukuza Queen" for your first leopard.

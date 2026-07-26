@@ -21,7 +21,9 @@ class PhotoViewerScreen extends StatelessWidget {
   static Route<void> route(Species species, {String? credit}) {
     return PageRouteBuilder<void>(
       opaque: false,
-      barrierColor: const Color(0xF2000000),
+      // Fully opaque. At 0xF2 the 5% of light leaking through was enough to
+      // show the detail screen's text faintly behind the photograph.
+      barrierColor: const Color(0xFF000000),
       transitionDuration: const Duration(milliseconds: 260),
       pageBuilder: (BuildContext context, _, _) =>
           PhotoViewerScreen(species: species, credit: credit),
