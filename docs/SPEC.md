@@ -234,6 +234,26 @@ The catch is conceptually at the shutter; the ceremony is at identification.
 If a player closes the app between the two, the photo is still there, waiting
 to be named. Never lose someone's sighting because they got distracted.
 
+## What does *not* affect points
+
+Two things that look like they should score, and must not.
+
+**Photo quality.** The app never grades your photograph. A blurry, badly-lit
+pangolin at forty metres in the dark is worth 500. A magazine-quality impala
+portrait is worth 5.
+
+Reward photo quality and you have built a different product — a wildlife
+photography contest, won by whoever owns a 600mm lens and a beanbag. This is a
+*spotting* game. The skill being rewarded is **finding the animal**, which is
+what people are actually competing at. The photograph's only jobs are to prove
+you were there and to be worth showing someone.
+
+**Distance travelled.** Distance is used solely to decide whether a second
+sighting is a genuinely different animal — it releases the cooldown, it never
+awards anything. Paying for distance would reward driving hard and fast through
+a park with a 50 km/h limit and animals on the road, which is precisely the
+behaviour the app must not encourage.
+
 ## Verification
 
 v1 is deliberately not machine learning. Three signals, all cheap and all honest:
