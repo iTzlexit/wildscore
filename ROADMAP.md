@@ -1,5 +1,47 @@
 # Roadmap
 
+## Resuming work — read this first
+
+**Where everything is**
+
+| | |
+|---|---|
+| Repo | `C:\dev\wildscore` — **not** the KrugerPoke folder |
+| Remote | `github.com/iTzlexit/wildscore` (private), branch `main` |
+| Flutter 3.44.8 | `C:\src\flutter` — **not on PATH**, prefix commands or add it |
+| JDK 21 | `C:\src\jdk-21.0.11+10` |
+| Android SDK 36 | `C:\src\android-sdk` — licences accepted, no Android Studio |
+
+**Commands** (from `C:\dev\wildscore\app`, with Flutter on PATH):
+
+```bash
+flutter run
+```
+
+```bash
+pwsh scripts/check.ps1
+```
+
+Web preview for quick visual checks — `flutter build web --release`, serve
+`build/web` on :8080, open in a browser. It is a **verification target only**;
+the product is Android and iOS.
+
+**Read before building anything:** [docs/VISION.md](docs/VISION.md) for the core
+loop and the non-negotiables, then [docs/SPEC.md](docs/SPEC.md) for the phase
+you are on.
+
+**Next task:** Phase 2. Start with the hardware interfaces and their fakes, then
+the scoring engine — see [docs/TESTING.md](docs/TESTING.md) for why that order.
+Camera last.
+
+**Open questions for Alex, not for code:**
+- Final name. `Krugermon` / `Krugerdex` were rejected on trademark grounds;
+  `Spoor` recommended. Nothing renamed yet — the package is still
+  `com.wildscore`
+- Nobody has run the app on a physical phone
+- Rarity tiers and regional ranges still need a Kruger guide's review
+- 12 Google Play closed testers not yet recruited
+
 ## Do next — the actual list
 
 1. **Add `C:\src\flutter\bin` to your user PATH.** Flutter 3.44.8 is already
@@ -32,11 +74,28 @@ In parallel, and independent of any code (see [docs/VISION.md](docs/VISION.md)):
 
 ## Current status
 
-**Phase 1 — Species Codex. Compiled, tested and running.**
+**Phase 1 complete, plus onboarding and the navigation shell.**
 
-- Flutter **3.44.8** / Dart 3.12.2 installed at `C:\src\flutter`
+Built and working:
+
+- **Onboarding** — name yourself a Tracker, no account, persisted locally
+- **Three tabs** — Profile, Animal Dex, Leaderboard; camera is a gold FAB that
+  currently shows a "next update" snackbar
+- **Profile** — score with a Today/Lifetime toggle, and a collection grid of all
+  71 species darkened until caught
+- **Animal Dex** — Pokédex-style grid, permanent dex numbers, real photographs,
+  search across English/Afrikaans/scientific names, filters by category, region
+  and rarity
+- **Species detail** — hero photo, tier-styled points banner, field notes,
+  regional distribution, sensitive-species notice
+- **Photo viewer** — tap the hero, pinch to zoom, photographer credit
+- **71 CC0/CC-BY photographs** bundled (6.7 MB), attribution enforced by a test
+
+**Not built yet:** camera, sightings storage, scoring engine, GPS, backend,
+payments, nicknames, share cards.
+
 - `flutter analyze` — no issues
-- `flutter test` — **39 passing**
+- `flutter test` — **66 passing**
 - `flutter build web --release` — builds clean in ~40s
 - `flutter build apk --release` — **builds**, Android toolchain green
 - Verified at runtime in a browser: boots, fetches `species.json` (HTTP 200),
