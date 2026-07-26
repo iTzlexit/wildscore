@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../data/profile_repository.dart';
 import '../domain/tracker_profile.dart';
 import '../shared/theme.dart';
-import 'codex/codex_screen.dart';
+import 'home_shell.dart';
 import 'onboarding/onboarding_screen.dart';
 
 /// Decides what the app opens on: onboarding for a new tracker, the Codex for
@@ -60,7 +60,7 @@ class _AppRootState extends State<AppRoot> {
         if (profile == null) {
           return OnboardingScreen(onComplete: _completeOnboarding);
         }
-        return CodexScreen(profile: profile);
+        return HomeShell(profile: profile);
       },
     );
   }

@@ -101,11 +101,55 @@ have worked out how to fake a purchase.
 
 ## What you sell
 
+The split is **play free, pay to compete.**
+
 | Tier | Price | Contains |
 |---|---|---|
-| **Free** | — | The Codex. A genuinely useful field guide, offline, forever. This is the hook, and being useful is what gets it recommended. |
-| **Season Pass** | ~R249/year | Sightings, the collection, the leaderboard, share cards |
+| **Free** | — | The Codex, the camera, and your own collection. Catch what you like, keep it forever, offline. |
+| **Season Pass** | ~R249/year, non-renewing | The leaderboard, share cards, full stats, and submitting your day |
 | **Later** | | Regional challenge packs, printed end-of-season cards, guided-operator tie-ins |
+
+### Why the free tier includes catching
+
+It is tempting to paywall the camera. Do not.
+
+A free player who has caught forty animals has **forty reasons to pay** — their
+collection is already real, and the pass is what lets them show it to anyone.
+A free player who has caught nothing has none, and will delete the app at the
+gate.
+
+The collection is also the retention mechanism. Someone with three years of
+sightings does not switch to a competitor.
+
+### Where the paywall appears
+
+**At "Submit today's score."**
+
+This is the right moment and it is worth being deliberate about it. At the end
+of a day in the park, a player has just found something good and wants it to
+count. That is the point of maximum motivation — not a splash screen on first
+launch, when they have nothing invested and no reason to care.
+
+So: catch freely all day. When you tap *Submit today's score* and you have no
+pass, you get one screen that says what a pass costs and what it unlocks. Buy
+or dismiss; the sightings are saved either way and can be submitted later if
+you buy the pass before the season ends.
+
+**Never nag.** One paywall, at one moment, tied to one action the player chose
+to take. No interstitials, no countdowns, no "3 free submissions remaining"
+counters. The app is used in a place people go to get away from that.
+
+### Per-submission payment: considered and rejected
+
+Charging per submitted day was considered. It is rejected because:
+
+- Consumable IAP means constant transaction friction at exactly the moment the
+  app should feel good
+- It makes the leaderboard a function of spending, not skill — which breaks
+  the no-pay-to-win rule
+- It punishes the best days, which is precisely backwards
+
+The season pass gets the same "pay when you care" timing without any of that.
 
 **Never pay-to-win.** Money buys access and cosmetics. It never buys points,
 multipliers or leaderboard position. A leaderboard you can buy is not worth

@@ -101,9 +101,37 @@ score that resets. Seasons reset; the collection never does. What you found in
 
 > **A discipline note.** Pokémon is our internal design reference and nothing
 > more. No public-facing name, icon, tagline, screenshot or store listing should
-> evoke it — not "poke", not "dex", not "gotta catch". Nintendo enforces
-> aggressively and a takedown after launch would be fatal. The inspiration is
-> private; the product is its own thing.
+> evoke it — not "poke", not "dex", not "mon", not "gotta catch". Nintendo
+> enforces aggressively and a takedown after launch would be fatal. The
+> inspiration is private; the product is its own thing.
+
+## Naming
+
+**Rejected: `Krugermon`, `Krugerdex`, `KrugerPoke`.** Three separate problems,
+any one of which is disqualifying:
+
+1. **`-mon` and `-dex` are Pokémon's own morphemes.** Attached to a
+   collect-and-show-off creature game, that is over the line, not near it.
+   Nintendo pursues indie developers as a matter of routine, and app store
+   review can reject for apparent infringement after all the work is done.
+2. **Unregistrable.** You could never own or defend the name, so every rand of
+   brand equity would be built on someone else's asset.
+3. **`Kruger-` does not survive the roadmap.** Okavango and the Masai Mara are
+   the stated growth path. Do not name the company after the first product.
+
+**Recommended: `Spoor`.** The track an animal leaves — the thing you follow to
+find it. Everyday South African English, authentic rather than borrowed, one
+syllable, and it means exactly what the app does. It also travels: spoor is used
+across southern and east African safari, so it still fits in the Delta.
+
+Runners-up: `Sighted`, `Bushtally`, or keeping `Wild Score`.
+
+Pair the brand with a plain descriptor rather than baking the park into the
+name — *"Spoor — Kruger Wildlife Tracker"*. That survives expansion and avoids
+implying SANParks endorsement, which we do not have and would rather negotiate
+for properly.
+
+Before committing: check CIPC, both app stores, and a trademark search.
 
 ## What "finished" looks like
 

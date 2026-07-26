@@ -253,30 +253,43 @@ without the species name alongside it.
 
 ## The capture flow
 
-The shutter is the catch. But the app still has to learn *which* animal it is,
-and in v1 there is no ML to tell it. Two possible orders:
+Tap camera → **choose the species** → shoot → **review** → save.
 
-| | Flow | Problem |
+The review step matters: after the shutter, the player sees the shot and either
+keeps it or retakes. Nobody wants their pangolin recorded as a blurred smear
+because the app saved the first frame automatically.
+
+### The order, and the risk in it
+
+There are two possible orders, and this is a genuine trade-off:
+
+| | Flow | Cost |
 |---|---|---|
-| A | Pick the species, then shoot | You are scrolling a list while the leopard walks off. |
-| B | **Shoot, then pick the species** | The reveal is two taps away instead of instant. |
+| A | **Pick species, then shoot** | You are scrolling a list while the leopard walks off |
+| B | Shoot, then pick species | The reveal is two taps away instead of instant |
 
-**We do B.** Animals do not wait. Missing the photograph entirely is a far worse
-outcome than a two-second delay before the celebration, and a player who has
-missed a shot because the app made them navigate a menu will not forgive it.
+**We do A**, as specified above — it is the clearer mental model and it is what
+the app is being designed around.
 
-So:
+**The risk, stated plainly:** animals leave. A player who misses a leopard
+because the app made them scroll a menu first will be angrier than one who had
+to tap twice after the shot. If field testing shows people missing sightings,
+this is the first thing to revisit.
 
-1. Camera is **one tap from anywhere in the app.** Treat it like the shutter
-   button on a phone's lock screen — it is the primary action.
-2. Shoot. The photo is safe on disk immediately, with GPS and timestamp.
-3. A fast species picker appears: large thumbnails, searchable, ordered by what
-   is plausible here and now (region, time of day, recently logged).
-4. Selection fires **the reveal** — see [VISION.md](VISION.md).
+Two mitigations, both worth building in from the start:
 
-The catch is conceptually at the shutter; the ceremony is at identification.
-If a player closes the app between the two, the photo is still there, waiting
-to be named. Never lose someone's sighting because they got distracted.
+1. **The picker must be fast enough not to matter** — large thumbnails, search,
+   and ordered by what is plausible *here and now*: this park region, this time
+   of day, what has been logged recently. In practice the animal you are looking
+   at should be in the first six tiles.
+2. **A "shoot now, name later" escape.** A prominent *Not sure / just shoot*
+   option on the picker goes straight to the camera and saves the photo as
+   Unidentified. That is the same mechanism as the "Not sure what it was" flow
+   below, and it means nobody ever loses a sighting to a menu.
+
+Whichever order, two things never change: the photo is written to disk with GPS
+and timestamp **at the shutter**, and nothing sits between saving and the
+reveal — no spinner, no network call.
 
 ## What does *not* affect points
 
