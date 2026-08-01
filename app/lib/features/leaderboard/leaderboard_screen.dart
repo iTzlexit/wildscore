@@ -144,7 +144,7 @@ class _BoardPreview extends StatelessWidget {
             height: 36,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: AppColors.surfaceRaised,
+              color: AppColors.surfaceAlt,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(icon, size: 17, color: AppColors.accent),

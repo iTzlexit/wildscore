@@ -414,7 +414,7 @@ class _PointsBanner extends StatelessWidget {
                         style: AppText.overline.copyWith(color: style.accent),
                       ),
                       const SizedBox(height: Space.xs),
-                      const Text(
+                      Text(
                         'Value of a verified sighting',
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -509,7 +509,7 @@ class _InfoTile extends StatelessWidget {
             height: 38,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: AppColors.surfaceRaised,
+              color: AppColors.surfaceAlt,
               borderRadius: BorderRadius.circular(Radii.chip),
             ),
             child: Icon(icon, size: 18, color: AppColors.textSecondary),
@@ -592,7 +592,7 @@ class _LogSightingTeaser extends StatelessWidget {
             style: AppText.bodyStrong.copyWith(fontSize: 14),
           ),
           const SizedBox(height: 3),
-          const Text(
+          Text(
             'Camera capture arrives in the next update',
             style: AppText.caption,
           ),

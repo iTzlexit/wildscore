@@ -3,148 +3,125 @@ import 'package:flutter/material.dart';
 import '../domain/conservation_status.dart';
 import '../domain/rarity_tier.dart';
 
-/// The design system. See docs/DESIGN-DIRECTION.md for the reasoning.
+/// The design system. See docs/DESIGN-DIRECTION.md.
 ///
-/// Governing idea: the photo is the prize, the frame is the ceremony. The
-/// interface is a case for photographs and must never compete with them —
-/// which is why almost all colour here is either near-black or carried by
-/// rarity.
+/// **Light, single-typeface, green.** The previous dark-and-gold direction read
+/// as generic — near-black everywhere, one warm accent, hairline borders. This
+/// one follows current practice: a warm near-white ground, real elevation from
+/// soft shadows rather than outlines, one typeface carrying hierarchy through
+/// weight and size, and colour reserved almost entirely for rarity.
 
-/// Bushveld palette. Near-black with a green cast, never pure black — pure
-/// black makes photo edges look cut out.
+/// Warm neutrals. Never pure white for the ground — pure white is clinical and
+/// makes photographs look pasted on. The page is a shade warmer than the cards
+/// sitting on it, which is what lets cards read as raised without heavy shadow.
 abstract final class AppColors {
-  static const Color background = Color(0xFF0D1110);
-  static const Color surface = Color(0xFF161B18);
-  static const Color surfaceRaised = Color(0xFF1E2521);
-  static const Color outline = Color(0xFF2E3833);
-  static const Color outlineStrong = Color(0xFF3F4A44);
+  static const Color background = Color(0xFFF6F6F3);
+  static const Color surface = Color(0xFFFFFFFF);
+  static const Color surfaceAlt = Color(0xFFEFF0EC);
+  static const Color outline = Color(0xFFE2E4DE);
+  static const Color outlineStrong = Color(0xFFCBCFC7);
 
-  /// Warm off-white. Pure white on near-black is harsh and reads as cheap.
-  static const Color textPrimary = Color(0xFFF1EFE8);
-  static const Color textSecondary = Color(0xFFA6AFA2);
-  static const Color textMuted = Color(0xFF6E7A70);
+  static const Color textPrimary = Color(0xFF151A17);
+  static const Color textSecondary = Color(0xFF5C665F);
+  static const Color textMuted = Color(0xFF8A938C);
 
-  /// Brass — late afternoon light. The *only* interface accent. A second
-  /// accent is how dark themes start to look like dashboards.
-  static const Color accent = Color(0xFFDCA84A);
-  static const Color accentInk = Color(0xFF14100A);
+  /// Deep bushveld green. Natural, current, and unmistakably not gold.
+  static const Color accent = Color(0xFF1B7A54);
+  static const Color accentInk = Color(0xFFFFFFFF);
+  static const Color accentWash = Color(0x141B7A54);
 
-  static const Color verified = Color(0xFF5FA96B);
-  static const Color danger = Color(0xFFE0736B);
+  static const Color verified = Color(0xFF1B7A54);
+  static const Color danger = Color(0xFFC0392B);
+
+  /// Elevation on light comes from shadow, not from a lighter surface.
+  static const List<BoxShadow> shadowSm = <BoxShadow>[
+    BoxShadow(color: Color(0x0D151A17), blurRadius: 3, offset: Offset(0, 1)),
+    BoxShadow(color: Color(0x0A151A17), blurRadius: 8, offset: Offset(0, 2)),
+  ];
+
+  static const List<BoxShadow> shadowMd = <BoxShadow>[
+    BoxShadow(color: Color(0x14151A17), blurRadius: 6, offset: Offset(0, 2)),
+    BoxShadow(color: Color(0x0F151A17), blurRadius: 18, offset: Offset(0, 8)),
+  ];
 }
 
-/// Both families are variable fonts, so weight comes from [FontVariation]
-/// rather than [FontWeight]. Bundled, never fetched — `google_fonts` downloads
-/// at runtime and this app has no network for days at a time.
+/// One family. Inter Variable is the current default for mobile UI for good
+/// reason — it holds up at 10pt in sunlight, which is the real reading
+/// condition here. Hierarchy comes from weight and size, not from a second
+/// typeface. Dropping the display serif also removed 352 KB from the bundle.
 abstract final class AppFonts {
-  /// Warm editorial serif. Species names, titles, scores. It is what makes the
-  /// app read as *field guide* rather than *app*.
-  static const String display = 'Fraunces';
-
-  /// Interface face. Exceptional legibility at small sizes and in bright sun,
-  /// which is the actual reading condition here.
   static const String ui = 'Inter';
 
   static List<FontVariation> weight(double w) => <FontVariation>[
     FontVariation('wght', w),
   ];
-
-  /// Fraunces' SOFT axis low and WONK off — characterful, not novelty.
-  static List<FontVariation> displayWeight(double w) => <FontVariation>[
-    FontVariation('wght', w),
-    const FontVariation('SOFT', 0),
-    const FontVariation('WONK', 0),
-    const FontVariation('opsz', 40),
-  ];
 }
 
-/// The type scale — 1.25 ratio, rounded. See DESIGN-DIRECTION.md.
+TextStyle _inter(
+  double size,
+  double weight,
+  double height,
+  Color color, {
+  double? spacing,
+}) {
+  return TextStyle(
+    fontFamily: AppFonts.ui,
+    fontSize: size,
+    height: height,
+    color: color,
+    letterSpacing: spacing,
+    fontVariations: <FontVariation>[FontVariation('wght', weight)],
+  );
+}
+
+/// Type scale. Headings are deliberately much heavier than body — a 1.6x size
+/// jump plus a 400-weight jump is what reads as hierarchy without a second face.
 abstract final class AppText {
-  static const TextStyle display = TextStyle(
-    fontFamily: AppFonts.display,
-    fontSize: 46,
-    height: 1,
-    color: AppColors.textPrimary,
-    fontVariations: <FontVariation>[
-      FontVariation('wght', 700),
-      FontVariation('SOFT', 0),
-      FontVariation('WONK', 0),
-    ],
+  static final TextStyle display = _inter(
+    44,
+    800,
+    1.02,
+    AppColors.textPrimary,
+    spacing: -1.4,
+  );
+  static final TextStyle title1 = _inter(
+    28,
+    800,
+    1.14,
+    AppColors.textPrimary,
+    spacing: -0.7,
+  );
+  static final TextStyle title2 = _inter(
+    20,
+    700,
+    1.2,
+    AppColors.textPrimary,
+    spacing: -0.3,
+  );
+  static final TextStyle title3 = _inter(16, 700, 1.3, AppColors.textPrimary);
+  static final TextStyle body = _inter(15, 400, 1.5, AppColors.textSecondary);
+  static final TextStyle bodyStrong = _inter(
+    15,
+    600,
+    1.5,
+    AppColors.textPrimary,
+  );
+  static final TextStyle label = _inter(13, 500, 1.25, AppColors.textSecondary);
+  static final TextStyle caption = _inter(12, 500, 1.35, AppColors.textMuted);
+  static final TextStyle overline = _inter(
+    10.5,
+    700,
+    1.2,
+    AppColors.textMuted,
+    spacing: 1.1,
   );
 
-  static const TextStyle title1 = TextStyle(
-    fontFamily: AppFonts.display,
-    fontSize: 30,
-    height: 1.13,
-    color: AppColors.textPrimary,
-    fontVariations: <FontVariation>[
-      FontVariation('wght', 700),
-      FontVariation('SOFT', 0),
-      FontVariation('WONK', 0),
-    ],
-  );
-
-  static const TextStyle title2 = TextStyle(
-    fontFamily: AppFonts.display,
-    fontSize: 22,
-    height: 1.18,
-    color: AppColors.textPrimary,
-    fontVariations: <FontVariation>[
-      FontVariation('wght', 600),
-      FontVariation('SOFT', 0),
-      FontVariation('WONK', 0),
-    ],
-  );
-
-  static const TextStyle body = TextStyle(
-    fontFamily: AppFonts.ui,
-    fontSize: 15,
-    height: 1.47,
-    color: AppColors.textSecondary,
-    fontVariations: <FontVariation>[FontVariation('wght', 400)],
-  );
-
-  static const TextStyle bodyStrong = TextStyle(
-    fontFamily: AppFonts.ui,
-    fontSize: 15,
-    height: 1.47,
-    color: AppColors.textPrimary,
-    fontVariations: <FontVariation>[FontVariation('wght', 600)],
-  );
-
-  static const TextStyle label = TextStyle(
-    fontFamily: AppFonts.ui,
-    fontSize: 13,
-    height: 1.23,
-    color: AppColors.textSecondary,
-    fontVariations: <FontVariation>[FontVariation('wght', 500)],
-  );
-
-  static const TextStyle caption = TextStyle(
-    fontFamily: AppFonts.ui,
-    fontSize: 11,
-    height: 1.27,
-    color: AppColors.textMuted,
-    fontVariations: <FontVariation>[FontVariation('wght', 500)],
-  );
-
-  static const TextStyle overline = TextStyle(
-    fontFamily: AppFonts.ui,
-    fontSize: 10,
-    height: 1.2,
-    letterSpacing: 1.6,
-    color: AppColors.textMuted,
-    fontVariations: <FontVariation>[FontVariation('wght', 800)],
-  );
-
-  /// Tabular figures, for anything that changes. A score counting up must not
-  /// jitter as digit widths shift.
   static const List<FontFeature> tabular = <FontFeature>[
     FontFeature.tabularFigures(),
   ];
 }
 
-/// 4pt base grid. These are the only permitted spacing values.
+/// 8pt grid, with 4 available for tight pairings.
 abstract final class Space {
   static const double xs = 4;
   static const double sm = 8;
@@ -152,82 +129,73 @@ abstract final class Space {
   static const double lg = 16;
   static const double screen = 20;
   static const double xl = 24;
-  static const double section = 28;
-  static const double xxl = 32;
+  static const double section = 32;
+  static const double xxl = 40;
 }
 
-/// Generous radii. Tight corners on a dark surface read as a data table; the
-/// softer the corner, the more the thing reads as an object you could pick up.
 abstract final class Radii {
-  static const double chip = 10;
-  static const double card = 18;
-  static const double sheet = 30;
+  static const double chip = 12;
+  static const double card = 20;
+  static const double sheet = 32;
 }
 
 /// How one rarity tier is drawn.
 ///
-/// Rarity escalates across **five redundant channels** — colour, border width,
-/// wash, glow and frame treatment — because colour alone fails for the ~8% of
-/// men with colour vision deficiency and washes out in direct sun. The tier
-/// sequence is also ordered by temperature so it reads correctly in greyscale.
+/// Rarity escalates across colour, border, wash, glow and frame shape — five
+/// redundant channels, because colour alone fails for the ~8% of men with
+/// colour vision deficiency and washes out in direct sun.
 class RarityStyle {
   const RarityStyle({
     required this.accent,
     required this.fill,
-    required this.border,
     required this.borderWidth,
     required this.glow,
     required this.notched,
     required this.foil,
   });
 
+  /// Text, badges, the header field. Tuned for contrast on near-white.
   final Color accent;
+
+  /// Wash behind a card label.
   final Color fill;
-  final Color border;
+
   final double borderWidth;
 
-  /// Top of the detail-screen colour field. Saturated — this is the tier
-  /// asserting itself across half the screen, not a hairline border.
-  Color get headerTop => Color.lerp(accent, const Color(0xFF0D1110), 0.28)!;
-
-  /// Bottom of that field, and the scaffold behind the sheet.
-  Color get headerInk => Color.lerp(accent, const Color(0xFF0D1110), 0.72)!;
-
-  /// Only for Very rare and above. Glow is never decoration — if it appears
-  /// anywhere not conveying rarity, it is wrong.
+  /// Only Very rare and above. Glow is never decoration.
   final Color? glow;
 
-  /// Cut corners, from Rare upward.
   final bool notched;
-
-  /// Diagonal gloss, from Exceptional upward.
   final bool foil;
 
   bool get isExalted => glow != null;
+
+  Color get border => accent;
+
+  /// Detail-screen colour field. Light enough to read dark text on for the
+  /// muted tiers, so the header adapts rather than forcing white everywhere.
+  Color get headerTop => accent;
+  Color get headerInk => Color.lerp(accent, const Color(0xFF0B0F0D), 0.28)!;
 }
 
 extension RarityTierStyling on RarityTier {
-  /// Styles are positional — tier 1 through 7 — so this survives the pending
-  /// rename. The enum still carries the old names and values
-  /// (`uncommon`, `scarce`, and the wrong point values); the migration to
-  /// Common / Frequent / Notable / Rare / Very rare / Exceptional / Legendary
-  /// happens with the guide's re-tiering. See docs/DIVERGENCES.md §5.
+  /// Positional — tier 1 through 7 — so this survives the pending rename to
+  /// Common / Frequent / Notable / Rare / Very rare / Exceptional / Legendary.
+  /// See docs/DIVERGENCES.md.
   RarityStyle get style => switch (this) {
-    // Deliberately hueless. Stone says "not the interesting one" more clearly
-    // than any colour, and it makes everything above read as a step up.
+    // Hueless on purpose. Stone says "not the interesting one" better than any
+    // colour, and it makes everything above it read as a step up.
     RarityTier.common => const RarityStyle(
-      accent: Color(0xFF8A8F86),
-      fill: Color(0x00000000),
-      border: Color(0xFF2E3833),
+      accent: Color(0xFF77817A),
+      fill: Color(0x0F77817A),
       borderWidth: 1,
       glow: null,
       notched: false,
       foil: false,
     ),
     RarityTier.frequent => const RarityStyle(
-      accent: Color(0xFF5FA96B),
-      fill: Color(0x145FA96B),
-      border: Color(0xFF35483A),
+      accent: Color(0xFF2E8B57),
+      fill: Color(0x142E8B57),
       borderWidth: 1,
       glow: null,
       notched: false,
@@ -235,50 +203,45 @@ extension RarityTierStyling on RarityTier {
     ),
     // → Notable
     RarityTier.uncommon => const RarityStyle(
-      accent: Color(0xFF4A93C7),
-      fill: Color(0x1C4A93C7),
-      border: Color(0xFF3A5468),
-      borderWidth: 1.4,
+      accent: Color(0xFF2372A8),
+      fill: Color(0x1A2372A8),
+      borderWidth: 1.3,
       glow: null,
       notched: false,
       foil: false,
     ),
     // → Rare
     RarityTier.scarce => const RarityStyle(
-      accent: Color(0xFF8B72D6),
-      fill: Color(0x248B72D6),
-      border: Color(0xFF493C6C),
-      borderWidth: 1.6,
+      accent: Color(0xFF6B47C0),
+      fill: Color(0x1F6B47C0),
+      borderWidth: 1.5,
       glow: null,
       notched: true,
       foil: false,
     ),
     // → Very rare
     RarityTier.rare => const RarityStyle(
-      accent: Color(0xFFE08238),
-      fill: Color(0x2BE08238),
-      border: Color(0xFF7A4A22),
-      borderWidth: 2,
-      glow: Color(0x33E08238),
+      accent: Color(0xFFC26A15),
+      fill: Color(0x24C26A15),
+      borderWidth: 1.8,
+      glow: Color(0x2EC26A15),
       notched: true,
       foil: false,
     ),
     // → Exceptional
     RarityTier.veryRare => const RarityStyle(
-      accent: Color(0xFFE0503A),
-      fill: Color(0x36E0503A),
-      border: Color(0xFF8A3325),
-      borderWidth: 2.2,
-      glow: Color(0x4AE0503A),
+      accent: Color(0xFFC0392B),
+      fill: Color(0x2BC0392B),
+      borderWidth: 2,
+      glow: Color(0x38C0392B),
       notched: true,
       foil: true,
     ),
     RarityTier.legendary => const RarityStyle(
-      accent: Color(0xFFE8C15A),
-      fill: Color(0x40E8C15A),
-      border: Color(0xFFB08D2E),
-      borderWidth: 2.6,
-      glow: Color(0x5CE8C15A),
+      accent: Color(0xFF9C6B10),
+      fill: Color(0x2E9C6B10),
+      borderWidth: 2.4,
+      glow: Color(0x479C6B10),
       notched: true,
       foil: true,
     ),
@@ -287,16 +250,15 @@ extension RarityTierStyling on RarityTier {
 
 extension ConservationStatusStyling on ConservationStatus {
   Color get color => switch (this) {
-    ConservationStatus.leastConcern => const Color(0xFF5FA96B),
-    ConservationStatus.nearThreatened => const Color(0xFF9FB25A),
-    ConservationStatus.vulnerable => const Color(0xFFE0B23A),
-    ConservationStatus.endangered => const Color(0xFFE08238),
-    ConservationStatus.criticallyEndangered => const Color(0xFFE0503A),
+    ConservationStatus.leastConcern => const Color(0xFF2E8B57),
+    ConservationStatus.nearThreatened => const Color(0xFF6E8C1F),
+    ConservationStatus.vulnerable => const Color(0xFFB8860B),
+    ConservationStatus.endangered => const Color(0xFFC26A15),
+    ConservationStatus.criticallyEndangered => const Color(0xFFC0392B),
   };
 }
 
 /// Interface motion is invisible; ceremony is reserved for the reveal.
-/// Nothing here bounces — easeOutBack on a filter chip is a toy.
 abstract final class Motion {
   static const Duration press = Duration(milliseconds: 110);
   static const Duration chip = Duration(milliseconds: 180);
@@ -308,31 +270,33 @@ abstract final class Motion {
 }
 
 ThemeData buildAppTheme() {
-  const ColorScheme scheme = ColorScheme.dark(
-    primary: AppColors.accent,
-    onPrimary: AppColors.accentInk,
-    secondary: AppColors.verified,
-    onSecondary: Color(0xFF0B140E),
-    surface: AppColors.surface,
-    onSurface: AppColors.textPrimary,
-    error: AppColors.danger,
-    onError: Color(0xFF1A0C0B),
-    outline: AppColors.outline,
-  );
+  final ColorScheme scheme =
+      ColorScheme.fromSeed(
+        seedColor: AppColors.accent,
+        brightness: Brightness.light,
+      ).copyWith(
+        primary: AppColors.accent,
+        onPrimary: AppColors.accentInk,
+        surface: AppColors.surface,
+        onSurface: AppColors.textPrimary,
+        error: AppColors.danger,
+        outline: AppColors.outline,
+      );
 
   return ThemeData(
     useMaterial3: true,
-    brightness: Brightness.dark,
+    brightness: Brightness.light,
     colorScheme: scheme,
     scaffoldBackgroundColor: AppColors.background,
     fontFamily: AppFonts.ui,
     splashFactory: InkRipple.splashFactory,
-    appBarTheme: const AppBarTheme(
+    appBarTheme: AppBarTheme(
       backgroundColor: AppColors.background,
       surfaceTintColor: Colors.transparent,
       elevation: 0,
       centerTitle: false,
       titleTextStyle: AppText.title2,
+      iconTheme: const IconThemeData(color: AppColors.textPrimary),
     ),
     dividerColor: AppColors.outline,
   );
@@ -350,9 +314,9 @@ InputDecoration nameFieldDecoration(String? errorText) {
     contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
     border: _fieldBorder(AppColors.outline),
     enabledBorder: _fieldBorder(AppColors.outline),
-    focusedBorder: _fieldBorder(AppColors.accent, 1.6),
+    focusedBorder: _fieldBorder(AppColors.accent, 1.8),
     errorBorder: _fieldBorder(AppColors.danger),
-    focusedErrorBorder: _fieldBorder(AppColors.danger, 1.6),
+    focusedErrorBorder: _fieldBorder(AppColors.danger, 1.8),
   );
 }
 
@@ -367,10 +331,10 @@ InputDecoration searchFieldDecoration(String hint) {
       color: AppColors.textMuted,
       size: 20,
     ),
-    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
     border: _fieldBorder(AppColors.outline),
     enabledBorder: _fieldBorder(AppColors.outline),
-    focusedBorder: _fieldBorder(AppColors.accent, 1.4),
+    focusedBorder: _fieldBorder(AppColors.accent, 1.6),
   );
 }
 

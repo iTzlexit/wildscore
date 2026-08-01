@@ -58,7 +58,7 @@ class _MonogramPlate extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: <Color>[style.fill, AppColors.surfaceRaised],
+          colors: <Color>[style.fill, AppColors.surfaceAlt],
         ),
       ),
       child: Center(
@@ -110,11 +110,12 @@ class _LockedPlate extends StatelessWidget {
 
   final Species species;
 
-  /// Greyscale, then crushed to roughly 18% brightness. Fallback only.
+  /// Greyscale, then lifted and flattened toward the plate colour, so a
+  /// fallback photograph reads as a ghost rather than a picture. Fallback only.
   static const ColorFilter _crush = ColorFilter.matrix(<double>[
-    0.04, 0.13, 0.02, 0, 0, //
-    0.04, 0.13, 0.02, 0, 0, //
-    0.04, 0.13, 0.02, 0, 0, //
+    0.09, 0.30, 0.05, 0, 118, //
+    0.09, 0.30, 0.05, 0, 120, //
+    0.09, 0.30, 0.05, 0, 116, //
     0, 0, 0, 1, 0, //
   ]);
 
@@ -123,15 +124,16 @@ class _LockedPlate extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: <Widget>[
-        const ColoredBox(color: Color(0xFF0B0F0D)),
+        const ColoredBox(color: AppColors.surfaceAlt),
         Padding(
           padding: const EdgeInsets.all(14),
           child: Image.asset(
             species.silhouetteAsset,
             fit: BoxFit.contain,
-            // PhyloPic silhouettes are black on transparent; tint them to a
-            // dim grey so they read against the near-black plate.
-            color: const Color(0xFF39443D),
+            // PhyloPic silhouettes are black on transparent; tint to a mid
+            // grey-green so the shape reads on a light plate without going
+            // heavy enough to look like a solid block.
+            color: const Color(0xFFA8B0A9),
             errorBuilder:
                 (BuildContext context, Object error, StackTrace? stack) =>
                     ColorFiltered(
@@ -153,7 +155,7 @@ class _LockedPlate extends StatelessWidget {
           alignment: Alignment(0, 0.72),
           child: Icon(
             Icons.question_mark_rounded,
-            color: Color(0x59FFFFFF),
+            color: Color(0x73151A17),
             size: 20,
           ),
         ),

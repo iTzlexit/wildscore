@@ -46,7 +46,7 @@ class _HomeShellState extends State<HomeShell> {
       ..hideCurrentSnackBar()
       ..showSnackBar(
         const SnackBar(
-          backgroundColor: AppColors.surfaceRaised,
+          backgroundColor: AppColors.surfaceAlt,
           behavior: SnackBarBehavior.floating,
           margin: EdgeInsets.fromLTRB(16, 0, 16, 96),
           content: Text(
@@ -135,7 +135,7 @@ class _BottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: const BoxDecoration(
-        color: Color(0xF2101614),
+        color: Color(0xFAFFFFFF),
         border: Border(top: BorderSide(color: AppColors.outline)),
       ),
       child: SafeArea(

@@ -225,7 +225,7 @@ class _ProgressCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: Space.xs),
-          const Text('POINTS', style: AppText.overline),
+          Text('POINTS', style: AppText.overline),
           const SizedBox(height: Space.screen),
           Row(
             children: <Widget>[
@@ -247,7 +247,7 @@ class _ProgressCard extends StatelessWidget {
             child: LinearProgressIndicator(
               value: fraction,
               minHeight: 6,
-              backgroundColor: AppColors.surfaceRaised,
+              backgroundColor: AppColors.surfaceAlt,
               valueColor: const AlwaysStoppedAnimation<Color>(AppColors.accent),
             ),
           ),
@@ -407,7 +407,7 @@ class _CategoryBar extends StatelessWidget {
             child: LinearProgressIndicator(
               value: fraction,
               minHeight: 4,
-              backgroundColor: AppColors.surfaceRaised,
+              backgroundColor: AppColors.surfaceAlt,
               valueColor: const AlwaysStoppedAnimation<Color>(AppColors.accent),
             ),
           ),

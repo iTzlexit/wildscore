@@ -27,9 +27,6 @@ flutter:
     - family: Inter
       fonts:
         - asset: assets/fonts/Inter-Variable.ttf
-    - family: Fraunces
-      fonts:
-        - asset: assets/fonts/Fraunces-Variable.ttf
   assets:
     - assets/data/
     - assets/species/
