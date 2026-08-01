@@ -159,15 +159,21 @@ class _CodexScreenState extends State<CodexScreen> {
                       onToggleFilters: () =>
                           setState(() => _filtersExpanded = !_filtersExpanded),
                     ),
-                    _CategoryRow(
-                      selected: _category,
-                      onSelected: (SpeciesCategory? value) =>
-                          setState(() => _category = value),
-                    ),
-                    _GroupRow(
-                      selected: _tag,
-                      onSelected: (SpeciesTag? value) =>
-                          setState(() => _tag = value),
+                    _QuickFilterRow(
+                      category: _category,
+                      tag: _tag,
+                      onCategory: (SpeciesCategory? value) => setState(() {
+                        _category = value;
+                        _tag = null;
+                      }),
+                      onTag: (SpeciesTag? value) => setState(() {
+                        _tag = value;
+                        _category = null;
+                      }),
+                      onClear: () => setState(() {
+                        _category = null;
+                        _tag = null;
+                      }),
                     ),
                     _SpottedRow(
                       selected: _spotted,
@@ -525,30 +531,57 @@ class _FilterToggle extends StatelessWidget {
   }
 }
 
-class _CategoryRow extends StatelessWidget {
-  const _CategoryRow({required this.selected, required this.onSelected});
+/// One row, two axes — collection groups and categories together.
+///
+/// Three separate chip rows put ~120pt of chrome between the search field and
+/// the first animal, which is most of a phone screen. Mixing axes in one row
+/// is slightly impure but it is what every field-guide app does, and it is
+/// what a player expects: these are all just "show me a subset".
+///
+/// Selecting from one axis clears the other, which is the behaviour a single
+/// row implies anyway.
+class _QuickFilterRow extends StatelessWidget {
+  const _QuickFilterRow({
+    required this.category,
+    required this.tag,
+    required this.onCategory,
+    required this.onTag,
+    required this.onClear,
+  });
 
-  final SpeciesCategory? selected;
-  final ValueChanged<SpeciesCategory?> onSelected;
+  final SpeciesCategory? category;
+  final SpeciesTag? tag;
+  final ValueChanged<SpeciesCategory?> onCategory;
+  final ValueChanged<SpeciesTag?> onTag;
+  final VoidCallback onClear;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 38,
+      height: 34,
       child: ListView(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: Space.screen),
         children: <Widget>[
           FilterPill(
             label: 'All',
-            selected: selected == null,
-            onTap: () => onSelected(null),
+            selected: category == null && tag == null,
+            onTap: onClear,
           ),
-          for (final SpeciesCategory category in SpeciesCategory.values)
+          // Groups first — "have you got the Big Five yet" is the question
+          // every visitor is asked.
+          for (final SpeciesTag value in SpeciesTag.values)
+            if (value.isFilter)
+              FilterPill(
+                label: value.label,
+                selected: tag == value,
+                onTap: () => onTag(tag == value ? null : value),
+              ),
+          for (final SpeciesCategory value in SpeciesCategory.values)
             FilterPill(
-              label: category.label,
-              selected: selected == category,
-              onTap: () => onSelected(selected == category ? null : category),
+              label: value.label,
+              selected: category == value,
+              onTap: () => onCategory(category == value ? null : value),
             ),
         ],
       ),
@@ -585,52 +618,25 @@ class _SpottedRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 38,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: Space.lg),
-        children: <Widget>[
-          for (final SpottedFilter value in SpottedFilter.values)
-            FilterPill(
-              label: value.label,
-              selected: selected == value,
-              accent: value == SpottedFilter.spotted
-                  ? AppColors.verified
-                  : null,
-              onTap: () => onSelected(value),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Collection groupings — the lists people actually keep. "Have you got the Big
-/// Five yet" is the question every visitor is asked, so it deserves to be one
-/// tap rather than buried in an advanced panel.
-class _GroupRow extends StatelessWidget {
-  const _GroupRow({required this.selected, required this.onSelected});
-
-  final SpeciesTag? selected;
-  final ValueChanged<SpeciesTag?> onSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 38,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: Space.lg),
-        children: <Widget>[
-          for (final SpeciesTag tag in SpeciesTag.values)
-            if (tag.isFilter)
+    return Padding(
+      padding: const EdgeInsets.only(top: Space.sm),
+      child: SizedBox(
+        height: 34,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: Space.screen),
+          children: <Widget>[
+            for (final SpottedFilter value in SpottedFilter.values)
               FilterPill(
-                label: tag.label,
-                selected: selected == tag,
-                onTap: () => onSelected(selected == tag ? null : tag),
+                label: value.label,
+                selected: selected == value,
+                accent: value == SpottedFilter.spotted
+                    ? AppColors.verified
+                    : null,
+                onTap: () => onSelected(value),
               ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -747,28 +753,26 @@ class FilterPill extends StatelessWidget {
     final Color tint = accent ?? AppColors.accent;
 
     return Padding(
-      padding: const EdgeInsets.only(right: 8),
+      padding: const EdgeInsets.only(right: 6),
       child: Material(
         color: selected ? tint : AppColors.surface,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(17),
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(17),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(17),
               border: Border.all(color: selected ? tint : AppColors.outline),
             ),
             child: Text(
               label,
-              style: TextStyle(
-                color: selected
-                    ? const Color(0xFF11150F)
-                    : AppColors.textSecondary,
-                fontSize: 12.5,
-                fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
+              style: AppText.label.copyWith(
+                fontSize: 12,
+                color: selected ? AppColors.accentInk : AppColors.textSecondary,
+                fontVariations: AppFonts.weight(selected ? 700 : 500),
               ),
             ),
           ),

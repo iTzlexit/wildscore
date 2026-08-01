@@ -31,8 +31,8 @@ class _InMemoryRepository implements SpeciesRepository {
 
 late final List<Species> _catalogue;
 
-Future<void> _pumpCodex(WidgetTester tester) async {
-  await tester.binding.setSurfaceSize(const Size(430, 1200));
+Future<void> _pumpCodex(WidgetTester tester, {double width = 430}) async {
+  await tester.binding.setSurfaceSize(Size(width, 1200));
   addTearDown(() => tester.binding.setSurfaceSize(null));
 
   await tester.pumpWidget(
@@ -47,6 +47,19 @@ Future<void> _pumpCodex(WidgetTester tester) async {
 /// Filters the grid down to one species, so it is guaranteed to be built.
 Future<void> _search(WidgetTester tester, String query) async {
   await tester.enterText(find.byType(TextField), query);
+  await tester.pumpAndSettle();
+}
+
+/// Taps a chip in the horizontal quick-filter row.
+///
+/// Tests that use this pump a **wide** surface. The row is a lazy [ListView],
+/// so a chip past the right edge has not been built at all — no finder can see
+/// it, and both `ensureVisible` and `dragUntilVisible` throw rather than
+/// scrolling to it. Widening the surface sidesteps that, and is honest: these
+/// tests are about whether filtering works, not about whether a chip is
+/// reachable on a phone. It is reachable — the row scrolls.
+Future<void> _tapQuickFilter(WidgetTester tester, String label) async {
+  await tester.tap(find.text(label));
   await tester.pumpAndSettle();
 }
 
@@ -141,10 +154,9 @@ void main() {
   });
 
   testWidgets('filters by category', (WidgetTester tester) async {
-    await _pumpCodex(tester);
+    await _pumpCodex(tester, width: 1000);
 
-    await tester.tap(find.text('Birds'));
-    await tester.pumpAndSettle();
+    await _tapQuickFilter(tester, 'Birds');
 
     // Birds occupy No. 056–066; African Fish Eagle is the first alphabetically.
     expect(find.text('African Fish Eagle'), findsOneWidget);
@@ -164,10 +176,9 @@ void main() {
   testWidgets('clear filters restores the full list', (
     WidgetTester tester,
   ) async {
-    await _pumpCodex(tester);
+    await _pumpCodex(tester, width: 1000);
 
-    await tester.tap(find.text('Birds'));
-    await tester.pumpAndSettle();
+    await _tapQuickFilter(tester, 'Birds');
     expect(find.text('Clear filters'), findsOneWidget);
 
     await tester.tap(find.text('Clear filters'));
