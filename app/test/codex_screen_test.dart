@@ -231,8 +231,12 @@ void main() {
     expect(find.byType(SpeciesDetailScreen), findsOneWidget);
     expect(find.text('Smutsia temminckii'), findsWidgets);
     expect(find.text('Ietermagog'), findsOneWidget);
+    // Tier appears twice: as a header pill and in the points banner.
     expect(find.text('LEGENDARY'), findsOneWidget);
-    expect(find.text('WHERE TO FIND IT'), findsOneWidget);
+    expect(find.text('Legendary'), findsOneWidget);
+    // Field notes and distribution are tabs now, not stacked sections.
+    expect(find.text('Where to find'), findsOneWidget);
+    expect(find.text('Field notes'), findsOneWidget);
   });
 
   testWidgets('sensitive species show the protection notice', (

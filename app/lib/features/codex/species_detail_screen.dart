@@ -3,17 +3,20 @@ import 'package:flutter/material.dart';
 import '../../domain/species.dart';
 import '../../domain/species_tag.dart';
 import '../../shared/theme.dart';
-import '../../shared/widgets/pill.dart';
 import '../../shared/widgets/species_image.dart';
 import 'photo_viewer_screen.dart';
 import 'widgets/region_strip.dart';
 
 /// The species card, full screen.
 ///
-/// This layout is the skeleton of the reveal moment in Phase 2 — when you
-/// photograph a pangolin, this is the card that flips over. Worth getting the
-/// hierarchy right now: image, then points, then who it is, then where to find
-/// it.
+/// Structure: the rarity colour **owns the top of the screen**, with the
+/// photograph straddling the boundary into a rounded sheet below. That is the
+/// single change that stops a detail screen reading as a form — a timid
+/// coloured border says "database row"; a full-bleed colour field says "card".
+///
+/// This layout is also the skeleton of the Phase 2 reveal. When you photograph
+/// a pangolin, this is the card that turns over, so the hierarchy is worth
+/// getting right now: colour, then who it is, then what it is worth.
 class SpeciesDetailScreen extends StatelessWidget {
   const SpeciesDetailScreen({
     required this.species,
@@ -32,70 +35,147 @@ class SpeciesDetailScreen extends StatelessWidget {
     final RarityStyle style = species.rarityTier.style;
 
     return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            expandedHeight: 280,
-            pinned: true,
-            backgroundColor: AppColors.background,
-            surfaceTintColor: Colors.transparent,
-            iconTheme: const IconThemeData(color: AppColors.textPrimary),
-            flexibleSpace: FlexibleSpaceBar(
-              background: _HeroImage(species: species, credit: photoCredit),
+      backgroundColor: style.headerInk,
+      body: DefaultTabController(
+        length: 3,
+        child: Column(
+          children: <Widget>[
+            _Header(species: species, credit: photoCredit),
+            Expanded(child: _Sheet(species: species)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  const _Header({required this.species, this.credit});
+
+  final Species species;
+  final String? credit;
+
+  @override
+  Widget build(BuildContext context) {
+    final RarityStyle style = species.rarityTier.style;
+
+    return SizedBox(
+      height: 300,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: <Widget>[
+          // The colour field. A vertical gradient rather than a flat fill so
+          // the photograph has somewhere darker to sit against.
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: <Color>[style.headerTop, style.headerInk],
+                ),
+              ),
             ),
           ),
-          SliverToBoxAdapter(
+          SafeArea(
+            bottom: false,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+              padding: const EdgeInsets.fromLTRB(
+                Space.sm,
+                Space.sm,
+                Space.screen,
+                0,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  _Names(species: species),
-                  const SizedBox(height: 20),
-                  _PointsBanner(species: species),
-                  const SizedBox(height: 16),
-                  _Badges(species: species),
-                  if (species.isSensitive) ...<Widget>[
-                    const SizedBox(height: 16),
-                    const _SensitiveNotice(),
-                  ],
-                  const SizedBox(height: 24),
-                  Text(
-                    species.description,
-                    style: const TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 14.5,
-                      height: 1.55,
+                  Row(
+                    children: <Widget>[
+                      IconButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: const Icon(Icons.arrow_back_rounded),
+                        color: Colors.white,
+                      ),
+                      const Spacer(),
+                      Text(
+                        '#${species.dexLabel}',
+                        style: AppText.title2.copyWith(
+                          color: const Color(0x8CFFFFFF),
+                          fontFeatures: AppText.tabular,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: Space.md),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          species.commonName,
+                          style: AppText.title1.copyWith(
+                            color: Colors.white,
+                            fontSize: 32,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          species.scientificName,
+                          style: AppText.caption.copyWith(
+                            color: const Color(0xB3FFFFFF),
+                            fontSize: 13,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                        const SizedBox(height: Space.md),
+                        Wrap(
+                          spacing: Space.sm,
+                          runSpacing: Space.sm,
+                          children: <Widget>[
+                            _HeaderPill(
+                              label: species.rarityTier.label,
+                              solid: true,
+                            ),
+                            for (final SpeciesTag tag in species.tags)
+                              _HeaderPill(label: tag.label, solid: false),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 26),
-                  const _SectionLabel('FIELD NOTES'),
-                  const SizedBox(height: 12),
-                  _InfoRow(
-                    icon: Icons.park_rounded,
-                    label: 'Habitat',
-                    value: species.habitat,
-                  ),
-                  const SizedBox(height: 12),
-                  _InfoRow(
-                    icon: Icons.schedule_rounded,
-                    label: 'Best time to spot',
-                    value: species.bestTimeToSpot,
-                  ),
-                  const SizedBox(height: 12),
-                  _InfoRow(
-                    icon: Icons.shield_moon_rounded,
-                    label: 'Conservation status',
-                    value: species.conservationStatus.label,
-                    valueColor: species.conservationStatus.color,
-                  ),
-                  const SizedBox(height: 28),
-                  const _SectionLabel('WHERE TO FIND IT'),
-                  const SizedBox(height: 14),
-                  RegionStrip(regions: species.parkRegions),
-                  const SizedBox(height: 30),
-                  _LogSightingTeaser(accent: style.accent),
                 ],
+              ),
+            ),
+          ),
+          // The photograph straddles the header/sheet boundary. Overflowing the
+          // seam is what makes the card feel layered rather than stacked.
+          Positioned(
+            right: Space.screen,
+            bottom: -34,
+            child: GestureDetector(
+              onTap: () => Navigator.of(
+                context,
+              ).push(PhotoViewerScreen.route(species, credit: credit)),
+              child: Container(
+                width: 156,
+                height: 156,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: const Color(0x40FFFFFF), width: 3),
+                  boxShadow: const <BoxShadow>[
+                    BoxShadow(
+                      color: Color(0x59000000),
+                      blurRadius: 24,
+                      offset: Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: ClipOval(
+                  child: Hero(
+                    tag: 'species-photo-${species.id}',
+                    child: SpeciesImage(species: species),
+                  ),
+                ),
               ),
             ),
           ),
@@ -105,133 +185,187 @@ class SpeciesDetailScreen extends StatelessWidget {
   }
 }
 
-class _HeroImage extends StatelessWidget {
-  const _HeroImage({required this.species, this.credit});
+class _HeaderPill extends StatelessWidget {
+  const _HeaderPill({required this.label, required this.solid});
+
+  final String label;
+  final bool solid;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: solid ? Colors.white : const Color(0x2EFFFFFF),
+        borderRadius: BorderRadius.circular(20),
+        border: solid ? null : Border.all(color: const Color(0x4DFFFFFF)),
+      ),
+      child: Text(
+        label,
+        style: AppText.caption.copyWith(
+          fontSize: 11.5,
+          color: solid ? const Color(0xFF17201B) : Colors.white,
+          fontVariations: AppFonts.weight(700),
+        ),
+      ),
+    );
+  }
+}
+
+class _Sheet extends StatelessWidget {
+  const _Sheet({required this.species});
 
   final Species species;
-  final String? credit;
 
   @override
   Widget build(BuildContext context) {
     final RarityStyle style = species.rarityTier.style;
 
-    return Stack(
-      fit: StackFit.expand,
-      children: <Widget>[
-        Hero(
-          tag: 'species-photo-${species.id}',
-          child: SpeciesImage(species: species),
-        ),
-        // Scrim, so the app bar icons stay legible over any photograph.
-        const DecoratedBox(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: <Color>[
-                Color(0xB30E1210),
-                Color(0x330E1210),
-                Color(0xFF0E1210),
-              ],
-              stops: <double>[0, 0.45, 1],
-            ),
-          ),
-        ),
-        // Tap the photo to open it full screen. Sits above the scrim so the
-        // whole image area is the target, not just the uncovered part.
-        Positioned.fill(
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () => Navigator.of(
-                context,
-              ).push(PhotoViewerScreen.route(species, credit: credit)),
-            ),
-          ),
-        ),
-        Positioned(
-          right: 12,
-          bottom: 12,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: const Color(0x8C000000),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Padding(
-              padding: EdgeInsets.all(7),
-              child: Icon(
-                Icons.zoom_out_map_rounded,
-                size: 16,
-                color: Colors.white,
+    return Container(
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        color: AppColors.background,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(Radii.sheet)),
+      ),
+      child: Column(
+        children: <Widget>[
+          // Room for the photograph overhanging from the header.
+          const SizedBox(height: Space.section),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TabBar(
+              isScrollable: true,
+              tabAlignment: TabAlignment.start,
+              indicatorColor: style.accent,
+              indicatorWeight: 3,
+              indicatorSize: TabBarIndicatorSize.label,
+              dividerColor: Colors.transparent,
+              labelColor: AppColors.textPrimary,
+              unselectedLabelColor: AppColors.textMuted,
+              labelStyle: AppText.label.copyWith(
+                fontVariations: AppFonts.weight(700),
               ),
+              unselectedLabelStyle: AppText.label,
+              padding: const EdgeInsets.symmetric(horizontal: Space.md),
+              tabs: const <Widget>[
+                Tab(text: 'About'),
+                Tab(text: 'Field notes'),
+                Tab(text: 'Where to find'),
+              ],
             ),
           ),
+          Expanded(
+            child: TabBarView(
+              children: <Widget>[
+                _AboutTab(species: species),
+                _FieldNotesTab(species: species),
+                _WhereTab(species: species),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AboutTab extends StatelessWidget {
+  const _AboutTab({required this.species});
+
+  final Species species;
+
+  @override
+  Widget build(BuildContext context) {
+    final RarityStyle style = species.rarityTier.style;
+
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(
+        Space.screen,
+        Space.screen,
+        Space.screen,
+        Space.xxl,
+      ),
+      children: <Widget>[
+        _PointsBanner(species: species),
+        if (species.isSensitive) ...<Widget>[
+          const SizedBox(height: Space.lg),
+          const _SensitiveNotice(),
+        ],
+        const SizedBox(height: Space.screen),
+        Text(species.description, style: AppText.body),
+        const SizedBox(height: Space.xl),
+        _Row(label: 'Afrikaans', value: species.afrikaansName),
+        _Row(label: 'Category', value: species.category.singular),
+        _Row(
+          label: 'Conservation',
+          value: species.conservationStatus.label,
+          valueColor: species.conservationStatus.color,
         ),
-        Positioned(
-          left: 0,
-          right: 0,
-          bottom: 0,
-          child: Container(height: 3, color: style.accent),
+        const SizedBox(height: Space.xl),
+        _LogSightingTeaser(accent: style.accent),
+      ],
+    );
+  }
+}
+
+class _FieldNotesTab extends StatelessWidget {
+  const _FieldNotesTab({required this.species});
+
+  final Species species;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(
+        Space.screen,
+        Space.screen,
+        Space.screen,
+        Space.xxl,
+      ),
+      children: <Widget>[
+        _InfoTile(
+          icon: Icons.park_rounded,
+          label: 'Habitat',
+          value: species.habitat,
+        ),
+        const SizedBox(height: Space.md),
+        _InfoTile(
+          icon: Icons.schedule_rounded,
+          label: 'Best time to spot',
+          value: species.bestTimeToSpot,
+        ),
+        const SizedBox(height: Space.md),
+        _InfoTile(
+          icon: Icons.shield_moon_rounded,
+          label: 'Conservation status',
+          value: species.conservationStatus.label,
+          valueColor: species.conservationStatus.color,
         ),
       ],
     );
   }
 }
 
-class _Names extends StatelessWidget {
-  const _Names({required this.species});
+class _WhereTab extends StatelessWidget {
+  const _WhereTab({required this.species});
 
   final Species species;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(
+        Space.screen,
+        Space.screen,
+        Space.screen,
+        Space.xxl,
+      ),
       children: <Widget>[
-        Text(
-          species.commonName,
-          style: const TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 29,
-            fontWeight: FontWeight.w800,
-            letterSpacing: -0.8,
-            height: 1.1,
-          ),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          species.scientificName,
-          style: const TextStyle(
-            color: AppColors.textMuted,
-            fontSize: 14,
-            fontStyle: FontStyle.italic,
-          ),
-        ),
-        const SizedBox(height: 10),
-        Row(
-          children: <Widget>[
-            const Text(
-              'AFRIKAANS',
-              style: TextStyle(
-                color: AppColors.textMuted,
-                fontSize: 9,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 1.2,
-              ),
-            ),
-            const SizedBox(width: 8),
-            Flexible(
-              child: Text(
-                species.afrikaansName,
-                style: const TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 13.5,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
-        ),
+        RegionStrip(regions: species.parkRegions),
+        if (species.isSensitive) ...<Widget>[
+          const SizedBox(height: Space.screen),
+          const _SensitiveNotice(),
+        ],
       ],
     );
   }
@@ -246,14 +380,10 @@ class _PointsBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final RarityStyle style = species.rarityTier.style;
 
-    // The solid fill and the gradient wash live on separate layers on purpose.
-    // A BoxDecoration given both `color` and `gradient` paints only the
-    // gradient — so the transparent end would fade to the scaffold background
-    // instead of the card surface. Same two-layer structure as SpeciesCard.
     return DecoratedBox(
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(Radii.card),
         border: Border.all(color: style.border, width: style.borderWidth),
         boxShadow: style.glow == null
             ? null
@@ -262,7 +392,7 @@ class _PointsBanner extends StatelessWidget {
               ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(Radii.card - 1),
         child: DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -272,61 +402,42 @@ class _PointsBanner extends StatelessWidget {
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+            padding: const EdgeInsets.all(Space.screen),
             child: Row(
               children: <Widget>[
-                // Expanded rather than a fixed Column plus a Spacer: at large
-                // system font scales the label column would otherwise push the
-                // points off the right edge. Accessibility text scaling is a
-                // real setting real people use, not a theoretical case.
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
                         species.rarityTier.label.toUpperCase(),
-                        style: TextStyle(
-                          color: style.accent,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: 1.6,
-                        ),
+                        style: AppText.overline.copyWith(color: style.accent),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: Space.xs),
                       const Text(
                         'Value of a verified sighting',
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: AppColors.textMuted,
-                          fontSize: 12,
-                        ),
+                        style: AppText.caption,
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: Space.md),
                 Text(
                   '${species.points}',
-                  style: TextStyle(
+                  style: AppText.display.copyWith(
                     color: style.accent,
-                    fontSize: 38,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: -1.6,
-                    height: 1,
+                    fontSize: 40,
+                    fontFeatures: AppText.tabular,
                   ),
                 ),
-                const SizedBox(width: 5),
+                const SizedBox(width: Space.xs),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 4),
+                  padding: const EdgeInsets.only(bottom: 5),
                   child: Text(
                     'PTS',
-                    style: TextStyle(
-                      color: style.accent,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 1,
-                    ),
+                    style: AppText.overline.copyWith(color: style.accent),
                   ),
                 ),
               ],
@@ -338,64 +449,27 @@ class _PointsBanner extends StatelessWidget {
   }
 }
 
-class _Badges extends StatelessWidget {
-  const _Badges({required this.species});
+class _Row extends StatelessWidget {
+  const _Row({required this.label, required this.value, this.valueColor});
 
-  final Species species;
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: <Widget>[
-        for (final SpeciesTag tag in species.tags)
-          Pill(
-            label: tag.label,
-            color: tag == SpeciesTag.nocturnal
-                ? const Color(0xFF7FA6D8)
-                : AppColors.accent,
-            icon: tag == SpeciesTag.nocturnal
-                ? Icons.nightlight_round
-                : Icons.workspace_premium_rounded,
-          ),
-        Pill(label: species.category.singular, color: AppColors.textSecondary),
-        Pill(
-          label:
-              '${species.conservationStatus.code} · ${species.conservationStatus.label}',
-          color: species.conservationStatus.color,
-        ),
-      ],
-    );
-  }
-}
-
-class _SensitiveNotice extends StatelessWidget {
-  const _SensitiveNotice();
+  final String label;
+  final String value;
+  final Color? valueColor;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: const Color(0x1AE0736B),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0x4DE0736B)),
-      ),
-      child: const Row(
+    return Padding(
+      padding: const EdgeInsets.only(bottom: Space.md),
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Icon(Icons.lock_rounded, size: 17, color: AppColors.danger),
-          SizedBox(width: 11),
+          SizedBox(width: 116, child: Text(label, style: AppText.label)),
           Expanded(
             child: Text(
-              'Protected species. Sightings of this animal will never show a '
-              'location — not on your profile, not on the leaderboard, and '
-              'not in a shared card.',
-              style: TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 12.5,
-                height: 1.45,
+              value,
+              style: AppText.bodyStrong.copyWith(
+                fontSize: 14,
+                color: valueColor ?? AppColors.textPrimary,
               ),
             ),
           ),
@@ -405,27 +479,8 @@ class _SensitiveNotice extends StatelessWidget {
   }
 }
 
-class _SectionLabel extends StatelessWidget {
-  const _SectionLabel(this.text);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: const TextStyle(
-        color: AppColors.textMuted,
-        fontSize: 10,
-        fontWeight: FontWeight.w800,
-        letterSpacing: 1.5,
-      ),
-    );
-  }
-}
-
-class _InfoRow extends StatelessWidget {
-  const _InfoRow({
+class _InfoTile extends StatelessWidget {
+  const _InfoTile({
     required this.icon,
     required this.label,
     required this.value,
@@ -439,46 +494,76 @@ class _InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Container(
-          width: 34,
-          height: 34,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: AppColors.surfaceRaised,
-            borderRadius: BorderRadius.circular(9),
+    return Container(
+      padding: const EdgeInsets.all(Space.lg),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(Radii.card),
+        border: Border.all(color: AppColors.outline),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            width: 38,
+            height: 38,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: AppColors.surfaceRaised,
+              borderRadius: BorderRadius.circular(Radii.chip),
+            ),
+            child: Icon(icon, size: 18, color: AppColors.textSecondary),
           ),
-          child: Icon(icon, size: 17, color: AppColors.textSecondary),
-        ),
-        const SizedBox(width: 13),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                label,
-                style: const TextStyle(
-                  color: AppColors.textMuted,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
+          const SizedBox(width: Space.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(label, style: AppText.caption),
+                const SizedBox(height: 3),
+                Text(
+                  value,
+                  style: AppText.bodyStrong.copyWith(
+                    fontSize: 14.5,
+                    color: valueColor ?? AppColors.textPrimary,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 3),
-              Text(
-                value,
-                style: TextStyle(
-                  color: valueColor ?? AppColors.textPrimary,
-                  fontSize: 13.5,
-                  height: 1.35,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
+    );
+  }
+}
+
+class _SensitiveNotice extends StatelessWidget {
+  const _SensitiveNotice();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(Space.lg),
+      decoration: BoxDecoration(
+        color: const Color(0x1AE0736B),
+        borderRadius: BorderRadius.circular(Radii.card),
+        border: Border.all(color: const Color(0x4DE0736B)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          const Icon(Icons.lock_rounded, size: 17, color: AppColors.danger),
+          const SizedBox(width: Space.md),
+          Expanded(
+            child: Text(
+              'Protected species. Sightings of this animal will never show a '
+              'location — not on your profile, not on the leaderboard, and '
+              'not in a shared card.',
+              style: AppText.caption.copyWith(height: 1.5),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -492,28 +577,24 @@ class _LogSightingTeaser extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 18),
+      padding: const EdgeInsets.symmetric(vertical: Space.screen),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.outline),
         color: AppColors.surface,
+        borderRadius: BorderRadius.circular(Radii.card),
+        border: Border.all(color: AppColors.outline),
       ),
       child: Column(
         children: <Widget>[
-          Icon(Icons.photo_camera_rounded, color: accent, size: 22),
-          const SizedBox(height: 9),
-          const Text(
+          Icon(Icons.photo_camera_rounded, size: 22, color: accent),
+          const SizedBox(height: Space.sm),
+          Text(
             'Log a sighting',
-            style: TextStyle(
-              color: AppColors.textSecondary,
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-            ),
+            style: AppText.bodyStrong.copyWith(fontSize: 14),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 3),
           const Text(
             'Camera capture arrives in the next update',
-            style: TextStyle(color: AppColors.textMuted, fontSize: 11.5),
+            style: AppText.caption,
           ),
         ],
       ),

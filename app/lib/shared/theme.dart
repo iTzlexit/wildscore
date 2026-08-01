@@ -156,10 +156,12 @@ abstract final class Space {
   static const double xxl = 32;
 }
 
+/// Generous radii. Tight corners on a dark surface read as a data table; the
+/// softer the corner, the more the thing reads as an object you could pick up.
 abstract final class Radii {
-  static const double chip = 8;
-  static const double card = 14;
-  static const double sheet = 20;
+  static const double chip = 10;
+  static const double card = 18;
+  static const double sheet = 30;
 }
 
 /// How one rarity tier is drawn.
@@ -183,6 +185,13 @@ class RarityStyle {
   final Color fill;
   final Color border;
   final double borderWidth;
+
+  /// Top of the detail-screen colour field. Saturated — this is the tier
+  /// asserting itself across half the screen, not a hairline border.
+  Color get headerTop => Color.lerp(accent, const Color(0xFF0D1110), 0.28)!;
+
+  /// Bottom of that field, and the scaffold behind the sheet.
+  Color get headerInk => Color.lerp(accent, const Color(0xFF0D1110), 0.72)!;
 
   /// Only for Very rare and above. Glow is never decoration — if it appears
   /// anywhere not conveying rarity, it is wrong.
