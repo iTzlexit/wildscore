@@ -66,35 +66,52 @@ ones people screenshot and post.** If any images get commissioned, start there.
 
 ---
 
-## 2. Undiscovered silhouettes
+## 2. Undiscovered silhouettes — solved with PhyloPic
 
 ### You cannot derive a true silhouette from a photograph
 
 A silhouette needs an alpha channel. JPEGs have none, so `srcIn` blending
-produces a black rectangle, not an animal shape.
+produces a black rectangle, not an animal shape. The interim solution was the
+reference photo desaturated and crushed to ~15% brightness — workable, but the
+background still leaks, and a silhouette should tease the *shape* and nothing
+else.
 
-**What is currently built:** the reference photo desaturated and crushed to ~15%
-brightness with a centred `?`. It works, and it ships today at zero extra cost.
+### The source: PhyloPic
 
-**Its weakness:** the background is still faintly visible, so habitat and pose
-leak. A true silhouette teases the *shape* and nothing else, which is a stronger
-hook.
+[PhyloPic](https://www.phylopic.org/) is an open database of organism
+silhouettes — black on transparent, linked to taxonomy, with a
+[public API](http://api-docs.phylopic.org/v2/). Exactly the asset needed, free.
 
-### Options, cheapest first
+**The licence trap, again.** PhyloPic's *primary* image for a taxon is
+frequently **CC BY-NC-SA** — non-commercial, unusable in a paid app. The
+leopard's primary image is. This is the second time this pattern has appeared
+after iNaturalist's CC-BY-NC defaults, and it is worth stating as a rule:
 
-| Approach | Cost | Verdict |
-|---|---|---|
-| **Darkened photo** (current) | R0 | Ships now. Good enough for launch |
-| **ML background removal at build time** — `rembg` / U2Net over the 71 sources, once, producing transparent PNGs | R0, a few hours | **Recommended next.** Build-time only, so no runtime cost or dependency. Quality is good on clear subjects, poor on camera-trap night shots — which is where the current images are weakest anyway |
-| Manual cutout | ~71 × 10 min | Only for the handful ML fails on |
-| Commissioned illustrations with transparency | See §5 | Silhouettes become free as a by-product |
+> **On any open image platform, assume the default licence is non-commercial
+> until proven otherwise. Filter explicitly, every time.**
 
-**Recommendation:** ship the darkened photo, run the ML pass before launch,
-hand-fix the failures. Store silhouettes as separate PNG assets —
-`<id>-silhouette.png` — since they cannot be generated at runtime.
+The fetch uses `filter_license_nc=false&filter_license_sa=false`, which leaves
+only CC0 and public-domain work.
 
-Flat black on transparent compresses to almost nothing: 71 silhouettes should
-add well under 500 KB.
+### API notes, since the documentation is thin
+
+- `filter_name` on `/nodes` is an **exact, lowercase** match. `Panthera pardus`
+  returns nothing; `panthera pardus` returns the taxon
+- `embed_items=true` is rejected unless `page` is also supplied
+- Resolve a taxon to a clade UUID, then query `/images?filter_clade=<uuid>`
+- Every request needs a current `build` number from `/`, or you get **410 Gone**
+- Fall back from species to genus — many species have no silhouette of their
+  own, and a genus-level shape is perfectly adequate for a tease
+
+### What this does not give you
+
+Silhouettes are **generic**. One leopard shape may stand in for several cats,
+and a genus fallback means the impala silhouette is an antelope, not
+specifically an impala. That is fine for an undiscovered slot and would not be
+fine for identification.
+
+Flat black on transparent compresses to almost nothing — 71 silhouettes add well
+under 500 KB.
 
 ---
 

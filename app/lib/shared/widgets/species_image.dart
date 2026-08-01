@@ -97,19 +97,21 @@ class _MonogramPlate extends StatelessWidget {
   }
 }
 
-/// Uncaught species: the photograph desaturated and pushed almost to black,
-/// with a question mark over it.
+/// Uncaught species: a true silhouette, from PhyloPic.
 ///
-/// A true silhouette would need alpha-cut artwork, which the sourced photos do
-/// not have. This reads as the same thing — you can make out a shape, not an
-/// animal — and it is the empty slot that makes a collection worth filling.
+/// Falls back to the reference photograph desaturated and crushed to near-black
+/// when no silhouette exists for that species. The fallback works, but it leaks
+/// the background and the animal's pose — a silhouette teases the *shape* and
+/// nothing else, which is the stronger hook.
+///
+/// The empty slot is what makes a collection worth filling.
 class _LockedPlate extends StatelessWidget {
   const _LockedPlate({required this.species});
 
   final Species species;
 
-  /// Greyscale, then crushed to roughly 18% brightness.
-  static const ColorFilter _filter = ColorFilter.matrix(<double>[
+  /// Greyscale, then crushed to roughly 18% brightness. Fallback only.
+  static const ColorFilter _crush = ColorFilter.matrix(<double>[
     0.04, 0.13, 0.02, 0, 0, //
     0.04, 0.13, 0.02, 0, 0, //
     0.04, 0.13, 0.02, 0, 0, //
@@ -122,21 +124,37 @@ class _LockedPlate extends StatelessWidget {
       fit: StackFit.expand,
       children: <Widget>[
         const ColoredBox(color: Color(0xFF0B0F0D)),
-        ColorFiltered(
-          colorFilter: _filter,
+        Padding(
+          padding: const EdgeInsets.all(14),
           child: Image.asset(
-            species.imageAsset,
-            fit: BoxFit.cover,
+            species.silhouetteAsset,
+            fit: BoxFit.contain,
+            // PhyloPic silhouettes are black on transparent; tint them to a
+            // dim grey so they read against the near-black plate.
+            color: const Color(0xFF39443D),
             errorBuilder:
                 (BuildContext context, Object error, StackTrace? stack) =>
-                    const SizedBox.shrink(),
+                    ColorFiltered(
+                      colorFilter: _crush,
+                      child: Image.asset(
+                        species.imageAsset,
+                        fit: BoxFit.cover,
+                        errorBuilder:
+                            (
+                              BuildContext context,
+                              Object error,
+                              StackTrace? stack,
+                            ) => const SizedBox.shrink(),
+                      ),
+                    ),
           ),
         ),
-        const Center(
+        const Align(
+          alignment: Alignment(0, 0.72),
           child: Icon(
             Icons.question_mark_rounded,
             color: Color(0x59FFFFFF),
-            size: 28,
+            size: 20,
           ),
         ),
       ],

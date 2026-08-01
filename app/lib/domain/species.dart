@@ -116,6 +116,10 @@ class Species {
   /// a generated placeholder, so the app runs before any art exists.
   String get imageAsset => 'assets/species/$id.jpg';
 
+  /// PhyloPic silhouette for the undiscovered state, black on transparent.
+  /// Missing files fall back to the darkened photograph.
+  String get silhouetteAsset => 'assets/silhouettes/$id.png';
+
   bool get isBigFive => tags.contains(SpeciesTag.bigFive);
   bool get isNocturnal => tags.contains(SpeciesTag.nocturnal);
   bool get occursParkWide => parkRegions.length == ParkRegion.values.length;
