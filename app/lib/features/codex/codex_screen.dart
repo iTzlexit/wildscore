@@ -6,6 +6,7 @@ import '../../domain/park_region.dart';
 import '../../domain/rarity_tier.dart';
 import '../../domain/species.dart';
 import '../../domain/species_category.dart';
+import '../../domain/species_tag.dart';
 import '../../domain/tracker_profile.dart';
 import '../../shared/theme.dart';
 import 'species_detail_screen.dart';
@@ -48,13 +49,15 @@ class _CodexScreenState extends State<CodexScreen> {
   SpeciesCategory? _category;
   RarityTier? _tier;
   ParkRegion? _region;
+  SpeciesTag? _tag;
   bool _filtersExpanded = false;
   Map<String, String> _credits = const <String, String>{};
 
   int get _activeFilterCount =>
       (_category == null ? 0 : 1) +
       (_tier == null ? 0 : 1) +
-      (_region == null ? 0 : 1);
+      (_region == null ? 0 : 1) +
+      (_tag == null ? 0 : 1);
 
   @override
   void initState() {
@@ -85,6 +88,7 @@ class _CodexScreenState extends State<CodexScreen> {
       _category = null;
       _tier = null;
       _region = null;
+      _tag = null;
     });
   }
 
@@ -94,7 +98,8 @@ class _CodexScreenState extends State<CodexScreen> {
         if (species.matchesQuery(_query) &&
             (_category == null || species.category == _category) &&
             (_tier == null || species.rarityTier == _tier) &&
-            (_region == null || species.parkRegions.contains(_region)))
+            (_region == null || species.parkRegions.contains(_region)) &&
+            (_tag == null || species.tags.contains(_tag)))
           species,
     ];
   }
@@ -151,6 +156,11 @@ class _CodexScreenState extends State<CodexScreen> {
                       selected: _category,
                       onSelected: (SpeciesCategory? value) =>
                           setState(() => _category = value),
+                    ),
+                    _GroupRow(
+                      selected: _tag,
+                      onSelected: (SpeciesTag? value) =>
+                          setState(() => _tag = value),
                     ),
                     if (_filtersExpanded)
                       _AdvancedFilters(
@@ -528,6 +538,36 @@ class _CategoryRow extends StatelessWidget {
               selected: selected == category,
               onTap: () => onSelected(selected == category ? null : category),
             ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Collection groupings — the lists people actually keep. "Have you got the Big
+/// Five yet" is the question every visitor is asked, so it deserves to be one
+/// tap rather than buried in an advanced panel.
+class _GroupRow extends StatelessWidget {
+  const _GroupRow({required this.selected, required this.onSelected});
+
+  final SpeciesTag? selected;
+  final ValueChanged<SpeciesTag?> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 38,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: Space.lg),
+        children: <Widget>[
+          for (final SpeciesTag tag in SpeciesTag.values)
+            if (tag.isFilter)
+              FilterPill(
+                label: tag.label,
+                selected: selected == tag,
+                onTap: () => onSelected(selected == tag ? null : tag),
+              ),
         ],
       ),
     );

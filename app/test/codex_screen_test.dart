@@ -72,20 +72,49 @@ void main() {
     await _pumpCodex(tester);
 
     // Dex numbers are permanent identities — mammals, then birds, then
-    // reptiles, alphabetical within each. Aardvark is and stays No. 001.
-    expect(find.text('No. 001'), findsOneWidget);
+    // reptiles, alphabetical within each. Aardvark is and stays 001.
+    expect(find.text('001'), findsOneWidget);
     expect(find.text('Aardvark'), findsOneWidget);
   });
 
-  testWidgets('every tile shows a dex number and points', (
+  testWidgets('every tile shows a dex number, tier name and points', (
     WidgetTester tester,
   ) async {
     await _pumpCodex(tester);
     await _search(tester, 'Smutsia');
 
     expect(find.text('Ground Pangolin'), findsOneWidget);
-    expect(find.textContaining('No. '), findsOneWidget);
+    expect(find.text('025'), findsOneWidget);
     expect(find.text('500'), findsOneWidget);
+    // The tier name is the most explicit rarity channel — the other five
+    // require the player to have learned the system first.
+    expect(find.text('LEGENDARY'), findsOneWidget);
+  });
+
+  testWidgets('filters by collection group', (WidgetTester tester) async {
+    await _pumpCodex(tester);
+
+    await tester.tap(find.text('Big Five'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('African Elephant'), findsOneWidget);
+    expect(find.text('Aardvark'), findsNothing);
+  });
+
+  testWidgets('predators filter excludes herbivores', (
+    WidgetTester tester,
+  ) async {
+    await _pumpCodex(tester);
+
+    // The group row scrolls horizontally and Predators sits past the right
+    // edge on a 430pt screen, so it has to be scrolled to first.
+    await tester.ensureVisible(find.text('Predators'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Predators'));
+    await tester.pumpAndSettle();
+    await _search(tester, 'rooibok');
+
+    expect(find.text('Impala'), findsNothing);
   });
 
   testWidgets('searches by Afrikaans name', (WidgetTester tester) async {

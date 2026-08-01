@@ -33,7 +33,8 @@
       "category": "mammal",
       "rarityTier": "veryRare",
       "tags": [
-        "nocturnal"
+        "nocturnal",
+        "predator"
       ],
       "isSensitive": false,
       "description": "A hyena that eats nothing but harvester termites — up to 300,000 in a night. Looks like a slender striped hyena with a raised mane.",
@@ -54,7 +55,8 @@
       "category": "mammal",
       "rarityTier": "scarce",
       "tags": [
-        "nocturnal"
+        "nocturnal",
+        "predator"
       ],
       "isSensitive": false,
       "description": "Blotched and heavy-set with a raised black crest along the spine. Marks territory with communal latrines called civetries.",
@@ -97,7 +99,9 @@
       "afrikaansName": "Wildehond",
       "category": "mammal",
       "rarityTier": "rare",
-      "tags": [],
+      "tags": [
+        "predator"
+      ],
       "isSensitive": false,
       "description": "Perhaps 300 in the whole park. Packs cover huge distances daily, so a sighting is genuine luck rather than knowledge.",
       "habitat": "Open woodland; ranges enormously",
@@ -118,7 +122,8 @@
       "category": "mammal",
       "rarityTier": "rare",
       "tags": [
-        "nocturnal"
+        "nocturnal",
+        "predator"
       ],
       "isSensitive": false,
       "description": "The ancestor of every domestic cat. Told apart by rich rufous behind the ears and much longer legs than a housecat.",
@@ -139,7 +144,9 @@
       "afrikaansName": "Gebande Muishond",
       "category": "mammal",
       "rarityTier": "frequent",
-      "tags": [],
+      "tags": [
+        "predator"
+      ],
       "isSensitive": false,
       "description": "Moves in noisy packs of twenty or more, constantly chattering to stay in contact while foraging through leaf litter.",
       "habitat": "Woodland, often near termite mounds",
@@ -159,7 +166,9 @@
       "afrikaansName": "Bakoorvos",
       "category": "mammal",
       "rarityTier": "veryRare",
-      "tags": [],
+      "tags": [
+        "predator"
+      ],
       "isSensitive": false,
       "description": "Enormous ears used to listen for termites underground. Common in the Kalahari but genuinely scarce in Kruger's open northern grassland.",
       "habitat": "Short open grassland",
@@ -199,7 +208,9 @@
       "afrikaansName": "Rooijakkals",
       "category": "mammal",
       "rarityTier": "frequent",
-      "tags": [],
+      "tags": [
+        "predator"
+      ],
       "isSensitive": false,
       "description": "Pairs bond for life and hold a territory together. The rising, wavering call at dusk is one of the definitive sounds of the bushveld.",
       "habitat": "Open grassland and woodland edges",
@@ -239,7 +250,8 @@
       "category": "mammal",
       "rarityTier": "legendary",
       "tags": [
-        "nocturnal"
+        "nocturnal",
+        "predator"
       ],
       "isSensitive": false,
       "description": "A handful of records in the entire park, all in the far north. Shaggy, long-haired and solitary, unlike the spotted hyena in every way.",
@@ -345,7 +357,8 @@
       "category": "mammal",
       "rarityTier": "rare",
       "tags": [
-        "nocturnal"
+        "nocturnal",
+        "predator"
       ],
       "isSensitive": false,
       "description": "Black-tufted ears and enough vertical leap to take birds out of the air. Secretive and very seldom seen in daylight.",
@@ -386,7 +399,9 @@
       "afrikaansName": "Jagluiperd",
       "category": "mammal",
       "rarityTier": "rare",
-      "tags": [],
+      "tags": [
+        "predator"
+      ],
       "isSensitive": false,
       "description": "Needs open ground to run and loses kills constantly to lion and hyena, which keeps numbers low. Favours the central grasslands.",
       "habitat": "Open plains and sparse savanna",
@@ -444,7 +459,9 @@
       "afrikaansName": "Dwergmuishond",
       "category": "mammal",
       "rarityTier": "frequent",
-      "tags": [],
+      "tags": [
+        "predator"
+      ],
       "isSensitive": false,
       "description": "Africa's smallest carnivore. Lives inside termite mounds and posts a sentry on top while the rest of the group feeds.",
       "habitat": "Termite mounds in open woodland",
@@ -546,7 +563,9 @@
       "afrikaansName": "Ratel",
       "category": "mammal",
       "rarityTier": "scarce",
-      "tags": [],
+      "tags": [
+        "predator"
+      ],
       "isSensitive": false,
       "description": "Loose, thick skin lets it twist round inside its own hide when grabbed. Will drive lions off a kill through sheer refusal to leave.",
       "habitat": "Widespread; mostly nocturnal but active at dusk",
@@ -606,7 +625,8 @@
       "category": "mammal",
       "rarityTier": "scarce",
       "tags": [
-        "nocturnal"
+        "nocturnal",
+        "predator"
       ],
       "isSensitive": false,
       "description": "Cat-like but not a cat. Habituated individuals patrol the rafters of several rest camps after dark.",
@@ -628,7 +648,8 @@
       "category": "mammal",
       "rarityTier": "scarce",
       "tags": [
-        "bigFive"
+        "bigFive",
+        "predator"
       ],
       "isSensitive": false,
       "description": "Solitary, largely nocturnal, and hauls kills into trees to keep them from hyena. The hardest of the Big Five to find on your own.",
@@ -672,7 +693,8 @@
       "category": "mammal",
       "rarityTier": "uncommon",
       "tags": [
-        "bigFive"
+        "bigFive",
+        "predator"
       ],
       "isSensitive": false,
       "description": "Sleeps up to twenty hours a day, which is why most sightings are of a flat cat under a bush. Prides are held by coalitions of related males.",
@@ -827,7 +849,9 @@
       "afrikaansName": "Tierboskat",
       "category": "mammal",
       "rarityTier": "rare",
-      "tags": [],
+      "tags": [
+        "predator"
+      ],
       "isSensitive": false,
       "description": "Long-legged and huge-eared, hunting rodents by sound alone in long grass and pouncing vertically. Tied to wetland margins.",
       "habitat": "Tall grass and reedbeds near water",
@@ -867,7 +891,9 @@
       "afrikaansName": "Swartkwasmuishond",
       "category": "mammal",
       "rarityTier": "frequent",
-      "tags": [],
+      "tags": [
+        "predator"
+      ],
       "isSensitive": false,
       "description": "Solitary and quick, identified by the black tail tip it flicks upward as it runs across a road.",
       "habitat": "Woodland and scrub",
@@ -906,7 +932,9 @@
       "afrikaansName": "Gevlekte Hiëna",
       "category": "mammal",
       "rarityTier": "frequent",
-      "tags": [],
+      "tags": [
+        "predator"
+      ],
       "isSensitive": false,
       "description": "A capable hunter, not merely a scavenger — clans kill more than they steal. Females are larger and outrank every male.",
       "habitat": "Widespread; dens in culverts and drainage lines",
@@ -1105,7 +1133,8 @@
       "category": "mammal",
       "rarityTier": "uncommon",
       "tags": [
-        "nocturnal"
+        "nocturnal",
+        "predator"
       ],
       "isSensitive": false,
       "description": "The largest mongoose in Africa, and strictly nocturnal. The bushy white tail catches a spotlight from a long way off.",
@@ -1126,7 +1155,9 @@
       "afrikaansName": "Visarend",
       "category": "bird",
       "rarityTier": "frequent",
-      "tags": [],
+      "tags": [
+        "predator"
+      ],
       "isSensitive": false,
       "description": "The ringing call thrown back over its shoulder is the sound most people associate with African water, whether or not they know the bird.",
       "habitat": "Rivers, dams and floodplains",
@@ -1146,7 +1177,9 @@
       "afrikaansName": "Berghaan",
       "category": "bird",
       "rarityTier": "frequent",
-      "tags": [],
+      "tags": [
+        "predator"
+      ],
       "isSensitive": false,
       "description": "Rocks side to side in flight like a tightrope walker, which is what the French name means. Almost no visible tail.",
       "habitat": "Open savanna, hunting on the wing",
@@ -1188,7 +1221,8 @@
       "category": "bird",
       "rarityTier": "scarce",
       "tags": [
-        "bigSixBirds"
+        "bigSixBirds",
+        "predator"
       ],
       "isSensitive": false,
       "description": "The largest vulture in Africa and dominant at a carcass — its bill opens hides the others cannot. Bare pink head and heavy folds of skin.",
@@ -1230,7 +1264,8 @@
       "category": "bird",
       "rarityTier": "scarce",
       "tags": [
-        "bigSixBirds"
+        "bigSixBirds",
+        "predator"
       ],
       "isSensitive": false,
       "description": "Africa's largest eagle, powerful enough to take a young impala. Territories are enormous, so sightings are widely spaced.",
@@ -1253,7 +1288,8 @@
       "rarityTier": "legendary",
       "tags": [
         "bigSixBirds",
-        "nocturnal"
+        "nocturnal",
+        "predator"
       ],
       "isSensitive": false,
       "description": "A huge ginger owl that hunts fish by touch from a low branch. In Kruger it is essentially a Luvuvhu River bird and the hardest of the Big Six.",
@@ -1295,7 +1331,8 @@
       "category": "bird",
       "rarityTier": "uncommon",
       "tags": [
-        "bigSixBirds"
+        "bigSixBirds",
+        "predator"
       ],
       "isSensitive": false,
       "description": "Turkey-sized, walks rather than flies, and booms at dawn like a distant lion. Groups raise one chick every nine years or so.",
@@ -1317,7 +1354,8 @@
       "category": "bird",
       "rarityTier": "uncommon",
       "tags": [
-        "nocturnal"
+        "nocturnal",
+        "predator"
       ],
       "isSensitive": false,
       "description": "Africa's largest owl, identified instantly by pink eyelids it shows when blinking. Roosts in big riverine trees by day.",
@@ -1338,7 +1376,9 @@
       "afrikaansName": "Witrugaasvoël",
       "category": "bird",
       "rarityTier": "frequent",
-      "tags": [],
+      "tags": [
+        "predator"
+      ],
       "isSensitive": false,
       "description": "The commonest vulture at a kill, and collapsing fast across its range through poisoning. Circling birds are the best kill-finder in the park.",
       "habitat": "Open woodland; nests in tall trees",
@@ -1358,7 +1398,9 @@
       "afrikaansName": "Swartmamba",
       "category": "reptile",
       "rarityTier": "rare",
-      "tags": [],
+      "tags": [
+        "predator"
+      ],
       "isSensitive": false,
       "description": "Named for the ink-black mouth, not the body, which is gunmetal grey. Fast, alert, and far more inclined to flee than to engage.",
       "habitat": "Woodland, termite mounds and rocky ground",
@@ -1398,7 +1440,9 @@
       "afrikaansName": "Nylkrokodil",
       "category": "reptile",
       "rarityTier": "frequent",
-      "tags": [],
+      "tags": [
+        "predator"
+      ],
       "isSensitive": false,
       "description": "Large individuals in the Olifants and Luvuvhu exceed four metres. Basks with its mouth open to shed heat, not as a threat.",
       "habitat": "Rivers, dams and pools",
@@ -1418,7 +1462,9 @@
       "afrikaansName": "Luislang",
       "category": "reptile",
       "rarityTier": "rare",
-      "tags": [],
+      "tags": [
+        "predator"
+      ],
       "isSensitive": false,
       "description": "Africa's largest snake, reaching five metres. Females coil around the eggs and stay with the hatchlings, unusual among snakes.",
       "habitat": "Riverine bush, rocky outcrops and dense cover",
@@ -1438,7 +1484,9 @@
       "afrikaansName": "Waterlikkewaan",
       "category": "reptile",
       "rarityTier": "frequent",
-      "tags": [],
+      "tags": [
+        "predator"
+      ],
       "isSensitive": false,
       "description": "Africa's largest lizard, up to two metres. Raids crocodile nests and swims with the tail alone, legs held flat against the body.",
       "habitat": "River banks and dams",

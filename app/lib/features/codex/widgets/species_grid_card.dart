@@ -240,14 +240,45 @@ class _Label extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text(
-            'No. ${species.dexLabel}',
-            style: AppText.caption.copyWith(
-              fontSize: 10,
-              height: 1,
-              letterSpacing: 0.5,
-              fontFeatures: AppText.tabular,
-            ),
+          // Dex number plus the tier name. The name is the sixth and most
+          // explicit rarity channel — colour, border, wash, glow and frame all
+          // require the player to have learned the system; a word does not.
+          Row(
+            children: <Widget>[
+              Text(
+                species.dexLabel,
+                style: AppText.caption.copyWith(
+                  fontSize: 10,
+                  height: 1,
+                  letterSpacing: 0.5,
+                  fontFeatures: AppText.tabular,
+                ),
+              ),
+              const SizedBox(width: Space.xs),
+              Container(
+                width: 2,
+                height: 2,
+                decoration: const BoxDecoration(
+                  color: AppColors.textMuted,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: Space.xs),
+              Flexible(
+                child: Text(
+                  species.rarityTier.label.toUpperCase(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppText.caption.copyWith(
+                    fontSize: 9,
+                    height: 1,
+                    letterSpacing: 0.7,
+                    color: style.accent,
+                    fontVariations: AppFonts.weight(800),
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: Space.xs),
           // Fraunces — the serif is what makes a species name read as a field
