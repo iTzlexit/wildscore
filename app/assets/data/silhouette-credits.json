@@ -1,0 +1,348 @@
+{
+  "note": "Silhouette credits (PhyloPic). CC0 requires no attribution; recorded regardless. Filtered to exclude NC and SA licences.",
+  "source": "PhyloPic (https://www.phylopic.org)",
+  "images": [
+    {
+      "id": "aardvark",
+      "author": "Kai Caspar",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Orycteropus afer"
+    },
+    {
+      "id": "african-elephant",
+      "author": "Margot Michaud",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Loxodonta africana"
+    },
+    {
+      "id": "african-wild-dog",
+      "author": "Holly English",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Lycaon pictus"
+    },
+    {
+      "id": "african-wildcat",
+      "author": "Margot Michaud",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Felis lybica"
+    },
+    {
+      "id": "banded-mongoose",
+      "author": "Margot Michaud",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Mungos mungo"
+    },
+    {
+      "id": "bat-eared-fox",
+      "author": "Margot Michaud",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Otocyon megalotis"
+    },
+    {
+      "id": "black-rhinoceros",
+      "author": "Christophe Mallet",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Diceros bicornis"
+    },
+    {
+      "id": "black-backed-jackal",
+      "author": "Steven Traver",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Lupulella mesomelas"
+    },
+    {
+      "id": "blue-wildebeest",
+      "author": "Graham Montgomery",
+      "license": "licenses/by/4.0/",
+      "matchedOn": "Connochaetes taurinus"
+    },
+    {
+      "id": "brown-hyena",
+      "author": "Margot Michaud",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Parahyaena brunnea"
+    },
+    {
+      "id": "bushbuck",
+      "author": "Amanda Kuhlman",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Tragelaphus sylvaticus"
+    },
+    {
+      "id": "cape-buffalo",
+      "author": "Jan A. Venter, Herbert H. T. Prins, David A. Balfour & Rob Slotow (vectorized by T. Michael Keesey)",
+      "license": "licenses/by/3.0/",
+      "matchedOn": "Syncerus caffer"
+    },
+    {
+      "id": "caracal",
+      "author": "Margot Michaud",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Caracal caracal"
+    },
+    {
+      "id": "cheetah",
+      "author": "An Ignorant Atheist",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Acinonyx jubatus"
+    },
+    {
+      "id": "common-duiker",
+      "author": null,
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Sylvicapra grimmia"
+    },
+    {
+      "id": "eland",
+      "author": "Robert Hering",
+      "license": "licenses/by/3.0/",
+      "matchedOn": "Taurotragus oryx"
+    },
+    {
+      "id": "dwarf-mongoose",
+      "author": "Margot Michaud",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Helogale parvula"
+    },
+    {
+      "id": "giraffe",
+      "author": "David M. Brown, Rick A. Brenneman, Klaus-Peter Koepfli, John P. Pollinger, Borja Milá, Nicholas J. Georgiadis, Edward E. Louis Jr., Gregory F. Grether, David K. Jacobs & Robert K. Wayne",
+      "license": "licenses/by/4.0/",
+      "matchedOn": "Giraffa camelopardalis"
+    },
+    {
+      "id": "greater-kudu",
+      "author": "Robert Hering",
+      "license": "licenses/by/3.0/",
+      "matchedOn": "Tragelaphus strepsiceros"
+    },
+    {
+      "id": "hippopotamus",
+      "author": "Evan Boucher",
+      "license": "publicdomain/mark/1.0/",
+      "matchedOn": "Hippopotamus amphibius"
+    },
+    {
+      "id": "honey-badger",
+      "author": "Steven Traver",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Mellivora capensis"
+    },
+    {
+      "id": "impala",
+      "author": "[unknown]",
+      "license": "publicdomain/mark/1.0/",
+      "matchedOn": "Aepyceros melampus"
+    },
+    {
+      "id": "large-spotted-genet",
+      "author": "Margot Michaud",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Genetta maculata"
+    },
+    {
+      "id": "leopard",
+      "author": "Margot Michaud",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Panthera pardus"
+    },
+    {
+      "id": "lion",
+      "author": "Margot Michaud",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Panthera leo"
+    },
+    {
+      "id": "mountain-reedbuck",
+      "author": "Jan A. Venter, Herbert H. T. Prins, David A. Balfour & Rob Slotow (vectorized by T. Michael Keesey)",
+      "license": "licenses/by/3.0/",
+      "matchedOn": "Redunca fulvorufula"
+    },
+    {
+      "id": "nyala",
+      "author": "Margot Michaud",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Tragelaphus angasii"
+    },
+    {
+      "id": "plains-zebra",
+      "author": "Andy Wilson",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Equus quagga"
+    },
+    {
+      "id": "roan-antelope",
+      "author": "Mathew Stewart",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Hippotragus equinus"
+    },
+    {
+      "id": "scrub-hare",
+      "author": "Margot Michaud",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Lepus saxatilis"
+    },
+    {
+      "id": "serval",
+      "author": "Margot Michaud",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Leptailurus serval"
+    },
+    {
+      "id": "slender-mongoose",
+      "author": "Margot Michaud",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Herpestes sanguineus"
+    },
+    {
+      "id": "spotted-hyena",
+      "author": "Caleb M. Gordon",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Crocuta crocuta"
+    },
+    {
+      "id": "warthog",
+      "author": "Steven Traver",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Phacochoerus africanus"
+    },
+    {
+      "id": "waterbuck",
+      "author": "Jan A. Venter, Herbert H. T. Prins, David A. Balfour & Rob Slotow (vectorized by T. Michael Keesey)",
+      "license": "licenses/by/3.0/",
+      "matchedOn": "Kobus ellipsiprymnus"
+    },
+    {
+      "id": "white-rhinoceros",
+      "author": "Christophe Mallet",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Ceratotherium simum"
+    },
+    {
+      "id": "white-tailed-mongoose",
+      "author": "Margot Michaud",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Ichneumia albicauda"
+    },
+    {
+      "id": "bateleur",
+      "author": "Andy Wilson",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Terathopius ecaudatus"
+    },
+    {
+      "id": "kori-bustard",
+      "author": "TeaandBiology",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Ardeotis kori"
+    },
+    {
+      "id": "lilac-breasted-roller",
+      "author": "Hugo Gruson",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Coracias caudatus"
+    },
+    {
+      "id": "southern-ground-hornbill",
+      "author": null,
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Bucorvus leadbeateri"
+    },
+    {
+      "id": "nile-crocodile",
+      "author": "Photograph by Caleb M. Gordon of YPM.HERR.008198, a fluid-preserved C. niloticus juvenile specimen at the Yale Peabody Museum.",
+      "license": "licenses/by/4.0/",
+      "matchedOn": "Crocodylus niloticus"
+    },
+    {
+      "id": "aardwolf",
+      "author": "Margot Michaud",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Proteles (genus)"
+    },
+    {
+      "id": "bushpig",
+      "author": null,
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Potamochoerus (genus)"
+    },
+    {
+      "id": "cape-porcupine",
+      "author": null,
+      "license": "publicdomain/mark/1.0/",
+      "matchedOn": "Hystrix (genus)"
+    },
+    {
+      "id": "chacma-baboon",
+      "author": "Margot Michaud",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Papio (genus)"
+    },
+    {
+      "id": "ground-pangolin",
+      "author": "T. Michael Keesey",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Smutsia (genus)"
+    },
+    {
+      "id": "lesser-bushbaby",
+      "author": "Joseph Wolf, 1863 (vectorization by Dinah Challen)",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Galago (genus)"
+    },
+    {
+      "id": "sable-antelope",
+      "author": "Mathew Stewart",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Hippotragus (genus)"
+    },
+    {
+      "id": "samango-monkey",
+      "author": "Kai R. Caspar",
+      "license": "licenses/by/3.0/",
+      "matchedOn": "Cercopithecus (genus)"
+    },
+    {
+      "id": "southern-reedbuck",
+      "author": "Jan A. Venter, Herbert H. T. Prins, David A. Balfour & Rob Slotow (vectorized by T. Michael Keesey)",
+      "license": "licenses/by/3.0/",
+      "matchedOn": "Redunca (genus)"
+    },
+    {
+      "id": "vervet-monkey",
+      "author": null,
+      "license": "publicdomain/mark/1.0/",
+      "matchedOn": "Chlorocebus (genus)"
+    },
+    {
+      "id": "african-fish-eagle",
+      "author": "Steve Hillebrand/U. S. Fish and Wildlife Service (source photo), T. Michael Keesey (vectorization)",
+      "license": "publicdomain/mark/1.0/",
+      "matchedOn": "Haliaeetus (genus)"
+    },
+    {
+      "id": "verreauxs-eagle-owl",
+      "author": "Margot Michaud",
+      "license": "publicdomain/zero/1.0/",
+      "matchedOn": "Bubo (genus)"
+    },
+    {
+      "id": "white-backed-vulture",
+      "author": "Kaija Gahm",
+      "license": "licenses/by/4.0/",
+      "matchedOn": "Gyps (genus)"
+    },
+    {
+      "id": "african-rock-python",
+      "author": "DS Biswas",
+      "license": "licenses/by/4.0/",
+      "matchedOn": "Python (genus)"
+    },
+    {
+      "id": "water-monitor",
+      "author": "Christina Zdenek",
+      "license": "licenses/by/4.0/",
+      "matchedOn": "Varanus (genus)"
+    }
+  ]
+}
