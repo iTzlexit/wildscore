@@ -1,30 +1,19 @@
 import 'package:flutter/material.dart';
 
 import '../../domain/species.dart';
+import '../../domain/species_category.dart';
 import '../../domain/tracker_profile.dart';
 import '../../shared/theme.dart';
-import '../../shared/widgets/species_image.dart';
 
-/// The player's own record: lifetime score, then the collection.
+/// The Spotter's own record: progress, then numbers, then recent catches.
 ///
-/// Opens on the score because that is what a player checks first — it is the
-/// summary of everything they have ever found.
+/// **The collection grid deliberately does not live here.** It belongs in the
+/// Animal Dex, filtered by Spotted / Not spotted — one grid, one place. A
+/// profile that repeats the whole Codex makes both screens feel like the same
+/// screen.
 ///
-/// The collection below is deliberately **not** an empty list. Every species in
-/// the park is shown, darkened, with a question mark. Seventy-one empty slots
-/// staring back is the entire motivation of a collection game; "You haven't
-/// caught anything yet" is a dead end.
-/// Which window the header is reporting on.
-enum ProfileScope {
-  today(label: 'Today', metricLabel: 'POINTS TODAY'),
-  lifetime(label: 'Lifetime', metricLabel: 'LIFETIME POINTS');
-
-  const ProfileScope({required this.label, required this.metricLabel});
-
-  final String label;
-  final String metricLabel;
-}
-
+/// Opens on Today, because during a trip that is the number the car is arguing
+/// about. Lifetime is the trophy shelf you visit afterwards.
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
     required this.profile,
@@ -36,65 +25,62 @@ class ProfileScreen extends StatefulWidget {
   final TrackerProfile profile;
   final List<Species> species;
 
-  /// Empty until Phase 2. The whole screen is already written to fill in.
+  /// Empty until Phase 2. Every number here already reads from it.
   final Set<String> caughtIds;
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
+enum ProfileScope {
+  today(label: 'Today'),
+  lifetime(label: 'Lifetime');
+
+  const ProfileScope({required this.label});
+
+  final String label;
+}
+
 class _ProfileScreenState extends State<ProfileScreen> {
-  // Opens on Today. During a trip that is the number you care about — it is
-  // what the family in the car is arguing over. Lifetime is the trophy shelf
-  // you visit afterwards.
   ProfileScope _scope = ProfileScope.today;
 
   int get _points => 0;
 
   @override
   Widget build(BuildContext context) {
-    final int found = widget.caughtIds.length;
+    final int total = widget.species.length;
+    final int spotted = widget.caughtIds.length;
 
     return Scaffold(
       body: SafeArea(
         bottom: false,
-        child: CustomScrollView(
-          slivers: <Widget>[
-            SliverToBoxAdapter(
-              child: _Header(
-                profile: widget.profile,
-                scope: _scope,
-                onScopeChanged: (ProfileScope s) => setState(() => _scope = s),
-                points: _points,
-                found: found,
-                total: widget.species.length,
-              ),
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(
+            Space.screen,
+            Space.screen,
+            Space.screen,
+            110,
+          ),
+          children: <Widget>[
+            _Identity(profile: widget.profile),
+            const SizedBox(height: Space.xl),
+            _ScopeToggle(
+              scope: _scope,
+              onChanged: (ProfileScope s) => setState(() => _scope = s),
             ),
-            SliverToBoxAdapter(
-              child: _CollectionHeader(
-                found: found,
-                total: widget.species.length,
-              ),
+            const SizedBox(height: Space.lg),
+            _ProgressCard(spotted: spotted, total: total, points: _points),
+            const SizedBox(height: Space.lg),
+            _Numbers(spotted: spotted, total: total),
+            const SizedBox(height: Space.section),
+            _CategoryBreakdown(
+              species: widget.species,
+              caughtIds: widget.caughtIds,
             ),
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 110),
-              sliver: SliverGrid.builder(
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 110,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  childAspectRatio: 0.86,
-                ),
-                itemCount: widget.species.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final Species s = widget.species[index];
-                  return _CollectionSlot(
-                    species: s,
-                    caught: widget.caughtIds.contains(s.id),
-                  );
-                },
-              ),
-            ),
+            const SizedBox(height: Space.section),
+            const _SectionLabel('RECENT SIGHTINGS'),
+            const SizedBox(height: Space.md),
+            const _RecentEmpty(),
           ],
         ),
       ),
@@ -102,136 +88,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-class _Header extends StatelessWidget {
-  const _Header({
-    required this.profile,
-    required this.scope,
-    required this.onScopeChanged,
-    required this.points,
-    required this.found,
-    required this.total,
-  });
+class _Identity extends StatelessWidget {
+  const _Identity({required this.profile});
 
   final TrackerProfile profile;
-  final ProfileScope scope;
-  final ValueChanged<ProfileScope> onScopeChanged;
-  final int points;
-  final int found;
-  final int total;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
+    return Row(
+      children: <Widget>[
+        Container(
+          width: 48,
+          height: 48,
+          alignment: Alignment.center,
+          decoration: const BoxDecoration(
+            color: Color(0x26DCA84A),
+            shape: BoxShape.circle,
+          ),
+          child: Text(
+            profile.initial,
+            style: AppText.title2.copyWith(color: AppColors.accent),
+          ),
+        ),
+        const SizedBox(width: Space.md),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Container(
-                width: 46,
-                height: 46,
-                alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                  color: Color(0x26D9A441),
-                  shape: BoxShape.circle,
-                ),
-                child: Text(
-                  profile.initial,
-                  style: const TextStyle(
-                    color: AppColors.accent,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
+              Text(
+                profile.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppText.title1.copyWith(fontSize: 24),
               ),
-              const SizedBox(width: 13),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      profile.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: AppColors.textPrimary,
-                        fontSize: 19,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: -0.3,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      'Tracker · Season ${profile.seasonYear}',
-                      style: const TextStyle(
-                        color: AppColors.textMuted,
-                        fontSize: 12.5,
-                      ),
-                    ),
-                  ],
-                ),
+              const SizedBox(height: 2),
+              Text(
+                // "Day Visitor" is rank one of six. Ranks arrive in Phase 9;
+                // everyone starts here.
+                'Day Visitor · Season ${profile.seasonYear}',
+                style: AppText.caption,
               ),
             ],
           ),
-          const SizedBox(height: 18),
-          _ScopeToggle(scope: scope, onChanged: onScopeChanged),
-          const SizedBox(height: 18),
-          // The number the whole screen exists for.
-          Center(
-            child: Column(
-              children: <Widget>[
-                Text(
-                  '$points',
-                  style: const TextStyle(
-                    color: AppColors.accent,
-                    fontSize: 62,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: -3,
-                    height: 1,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  scope.metricLabel,
-                  style: const TextStyle(
-                    color: AppColors.textMuted,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 2,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 22),
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: _Stat(value: '$found/$total', label: 'SPECIES'),
-              ),
-              const _StatDivider(),
-              const Expanded(
-                child: _Stat(value: '0', label: 'TRIPS'),
-              ),
-              const _StatDivider(),
-              const Expanded(
-                child: _Stat(value: '—', label: 'RAREST'),
-              ),
-            ],
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
 
-/// Today vs Lifetime.
-///
-/// Both matter and they matter at different moments: during a trip you want
-/// today's number, because that is what everyone in the car is arguing about.
-/// Afterwards you want the lifetime figure. Burying either behind a menu makes
-/// the app feel like admin.
 class _ScopeToggle extends StatelessWidget {
   const _ScopeToggle({required this.scope, required this.onChanged});
 
@@ -244,7 +148,7 @@ class _ScopeToggle extends StatelessWidget {
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(11),
+        borderRadius: BorderRadius.circular(Radii.chip + 3),
         border: Border.all(color: AppColors.outline),
       ),
       child: Row(
@@ -255,26 +159,25 @@ class _ScopeToggle extends StatelessWidget {
                 onTap: () => onChanged(value),
                 behavior: HitTestBehavior.opaque,
                 child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 180),
-                  curve: Curves.easeOut,
+                  duration: Motion.chip,
+                  curve: Motion.exit,
                   padding: const EdgeInsets.symmetric(vertical: 9),
                   decoration: BoxDecoration(
                     color: scope == value
                         ? AppColors.accent
                         : Colors.transparent,
-                    borderRadius: BorderRadius.circular(9),
+                    borderRadius: BorderRadius.circular(Radii.chip),
                   ),
                   child: Text(
                     value.label,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: AppText.label.copyWith(
                       color: scope == value
-                          ? const Color(0xFF14100A)
+                          ? AppColors.accentInk
                           : AppColors.textSecondary,
-                      fontSize: 13,
-                      fontWeight: scope == value
-                          ? FontWeight.w800
-                          : FontWeight.w600,
+                      fontVariations: AppFonts.weight(
+                        scope == value ? 700 : 500,
+                      ),
                     ),
                   ),
                 ),
@@ -286,36 +189,108 @@ class _ScopeToggle extends StatelessWidget {
   }
 }
 
-class _Stat extends StatelessWidget {
-  const _Stat({required this.value, required this.label});
+/// Score and completion in one card, because they answer the same question:
+/// how am I doing?
+class _ProgressCard extends StatelessWidget {
+  const _ProgressCard({
+    required this.spotted,
+    required this.total,
+    required this.points,
+  });
 
-  final String value;
-  final String label;
+  final int spotted;
+  final int total;
+  final int points;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    final double fraction = total == 0 ? 0 : spotted / total;
+    final int percent = (fraction * 100).round();
+
+    return Container(
+      padding: const EdgeInsets.all(Space.screen),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(Radii.card),
+        border: Border.all(color: AppColors.outline),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            '$points',
+            style: AppText.display.copyWith(
+              color: AppColors.accent,
+              fontFeatures: AppText.tabular,
+            ),
+          ),
+          const SizedBox(height: Space.xs),
+          const Text('POINTS', style: AppText.overline),
+          const SizedBox(height: Space.screen),
+          Row(
+            children: <Widget>[
+              Text('$spotted of $total spotted', style: AppText.label),
+              const Spacer(),
+              Text(
+                '$percent%',
+                style: AppText.label.copyWith(
+                  color: AppColors.accent,
+                  fontVariations: AppFonts.weight(800),
+                  fontFeatures: AppText.tabular,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: Space.sm),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(
+              value: fraction,
+              minHeight: 6,
+              backgroundColor: AppColors.surfaceRaised,
+              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.accent),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Numbers extends StatelessWidget {
+  const _Numbers({required this.spotted, required this.total});
+
+  final int spotted;
+  final int total;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
       children: <Widget>[
-        Text(
-          value,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 17,
-            fontWeight: FontWeight.w800,
-            height: 1,
+        Expanded(
+          child: _NumberTile(
+            icon: Icons.pets_rounded,
+            value: '$total',
+            label: 'IN THE PARK',
+            tint: AppColors.accent,
           ),
         ),
-        const SizedBox(height: 5),
-        Text(
-          label,
-          style: const TextStyle(
-            color: AppColors.textMuted,
-            fontSize: 9,
-            fontWeight: FontWeight.w800,
-            letterSpacing: 1.2,
-            height: 1,
+        const SizedBox(width: Space.md),
+        Expanded(
+          child: _NumberTile(
+            icon: Icons.check_circle_rounded,
+            value: '$spotted',
+            label: 'SPOTTED',
+            tint: AppColors.verified,
+          ),
+        ),
+        const SizedBox(width: Space.md),
+        Expanded(
+          child: _NumberTile(
+            icon: Icons.visibility_outlined,
+            value: '${total - spotted}',
+            label: 'TO FIND',
+            tint: AppColors.textSecondary,
           ),
         ),
       ],
@@ -323,124 +298,172 @@ class _Stat extends StatelessWidget {
   }
 }
 
-class _StatDivider extends StatelessWidget {
-  const _StatDivider();
+class _NumberTile extends StatelessWidget {
+  const _NumberTile({
+    required this.icon,
+    required this.value,
+    required this.label,
+    required this.tint,
+  });
+
+  final IconData icon;
+  final String value;
+  final String label;
+  final Color tint;
 
   @override
   Widget build(BuildContext context) {
-    return Container(width: 1, height: 26, color: AppColors.outline);
-  }
-}
-
-class _CollectionHeader extends StatelessWidget {
-  const _CollectionHeader({required this.found, required this.total});
-
-  final int found;
-  final int total;
-
-  @override
-  Widget build(BuildContext context) {
-    final double progress = total == 0 ? 0 : found / total;
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 22, 20, 14),
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: Space.lg),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(Radii.card),
+        border: Border.all(color: AppColors.outline),
+      ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              const Text(
-                'COLLECTION',
-                style: TextStyle(
-                  color: AppColors.textMuted,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 1.8,
-                ),
-              ),
-              const Spacer(),
-              Text(
-                '$found of $total found',
-                style: const TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
+          Icon(icon, size: 19, color: tint),
+          const SizedBox(height: Space.sm),
+          Text(
+            value,
+            style: AppText.title2.copyWith(fontFeatures: AppText.tabular),
           ),
-          const SizedBox(height: 10),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(3),
-            child: LinearProgressIndicator(
-              value: progress,
-              minHeight: 5,
-              backgroundColor: AppColors.surfaceRaised,
-              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.accent),
-            ),
+          const SizedBox(height: 3),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: AppText.overline.copyWith(fontSize: 8.5, letterSpacing: 1),
           ),
-          if (found == 0) ...<Widget>[
-            const SizedBox(height: 14),
-            const Text(
-              'Nothing here yet. Every animal you photograph in the park '
-              'fills one of these slots — for good.',
-              style: TextStyle(
-                color: AppColors.textMuted,
-                fontSize: 12.5,
-                height: 1.45,
-              ),
-            ),
-          ],
         ],
       ),
     );
   }
 }
 
-class _CollectionSlot extends StatelessWidget {
-  const _CollectionSlot({required this.species, required this.caught});
+/// Per-category completion. A mammal-focused Spotter should not stare at one
+/// number that only moves when they log birds.
+class _CategoryBreakdown extends StatelessWidget {
+  const _CategoryBreakdown({required this.species, required this.caughtIds});
 
-  final Species species;
-  final bool caught;
+  final List<Species> species;
+  final Set<String> caughtIds;
 
   @override
   Widget build(BuildContext context) {
-    final RarityStyle style = species.rarityTier.style;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        const _SectionLabel('BY CATEGORY'),
+        const SizedBox(height: Space.md),
+        for (final SpeciesCategory category in SpeciesCategory.values)
+          _CategoryBar(
+            category: category,
+            total: species.where((Species s) => s.category == category).length,
+            spotted: species
+                .where(
+                  (Species s) =>
+                      s.category == category && caughtIds.contains(s.id),
+                )
+                .length,
+          ),
+      ],
+    );
+  }
+}
 
-    return DecoratedBox(
+class _CategoryBar extends StatelessWidget {
+  const _CategoryBar({
+    required this.category,
+    required this.total,
+    required this.spotted,
+  });
+
+  final SpeciesCategory category;
+  final int total;
+  final int spotted;
+
+  @override
+  Widget build(BuildContext context) {
+    final double fraction = total == 0 ? 0 : spotted / total;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: Space.md),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Text(category.label, style: AppText.label),
+              const Spacer(),
+              Text(
+                '$spotted / $total',
+                style: AppText.caption.copyWith(fontFeatures: AppText.tabular),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(3),
+            child: LinearProgressIndicator(
+              value: fraction,
+              minHeight: 4,
+              backgroundColor: AppColors.surfaceRaised,
+              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.accent),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SectionLabel extends StatelessWidget {
+  const _SectionLabel(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(text, style: AppText.overline);
+  }
+}
+
+class _RecentEmpty extends StatelessWidget {
+  const _RecentEmpty();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(
+        horizontal: Space.screen,
+        vertical: Space.xl,
+      ),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(11),
-        border: Border.all(
-          color: caught ? style.border : AppColors.outline,
-          width: caught ? style.borderWidth : 1,
-        ),
+        borderRadius: BorderRadius.circular(Radii.card),
+        border: Border.all(color: AppColors.outline),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Expanded(
-              child: SpeciesImage(species: species, locked: !caught),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 5),
-              child: Text(
-                caught ? species.commonName : 'No. ${species.dexLabel}',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: caught ? AppColors.textPrimary : AppColors.textMuted,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
-                  height: 1.1,
-                ),
-              ),
-            ),
-          ],
-        ),
+      child: Column(
+        children: <Widget>[
+          const Icon(
+            Icons.photo_camera_outlined,
+            size: 26,
+            color: AppColors.textMuted,
+          ),
+          const SizedBox(height: Space.md),
+          Text(
+            'Nothing spotted yet',
+            style: AppText.bodyStrong.copyWith(fontSize: 14),
+          ),
+          const SizedBox(height: Space.xs),
+          Text(
+            'Every animal you photograph in the park lands here — '
+            'and stays, for good.',
+            textAlign: TextAlign.center,
+            style: AppText.caption.copyWith(height: 1.45),
+          ),
+        ],
       ),
     );
   }

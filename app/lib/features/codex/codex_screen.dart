@@ -22,12 +22,17 @@ class CodexScreen extends StatefulWidget {
   const CodexScreen({
     this.repository = const SpeciesRepository(),
     this.profile,
+    this.caughtIds = const <String>{},
     super.key,
   });
 
-  /// Null in tests that only exercise the list. When present, the tracker strip
-  /// sits above the title.
+  /// Null in tests that only exercise the list. When present, the strip sits
+  /// above the title.
   final TrackerProfile? profile;
+
+  /// Species already spotted. Empty until Phase 2; the Spotted / Not spotted
+  /// filter is wired to it now so the screen does not need restructuring later.
+  final Set<String> caughtIds;
 
   /// Injected so widget tests can supply an in-memory catalogue.
   ///
@@ -50,6 +55,7 @@ class _CodexScreenState extends State<CodexScreen> {
   RarityTier? _tier;
   ParkRegion? _region;
   SpeciesTag? _tag;
+  SpottedFilter _spotted = SpottedFilter.all;
   bool _filtersExpanded = false;
   Map<String, String> _credits = const <String, String>{};
 
@@ -99,7 +105,8 @@ class _CodexScreenState extends State<CodexScreen> {
             (_category == null || species.category == _category) &&
             (_tier == null || species.rarityTier == _tier) &&
             (_region == null || species.parkRegions.contains(_region)) &&
-            (_tag == null || species.tags.contains(_tag)))
+            (_tag == null || species.tags.contains(_tag)) &&
+            _spotted.matches(widget.caughtIds.contains(species.id)))
           species,
     ];
   }
@@ -161,6 +168,11 @@ class _CodexScreenState extends State<CodexScreen> {
                       selected: _tag,
                       onSelected: (SpeciesTag? value) =>
                           setState(() => _tag = value),
+                    ),
+                    _SpottedRow(
+                      selected: _spotted,
+                      onSelected: (SpottedFilter value) =>
+                          setState(() => _spotted = value),
                     ),
                     if (_filtersExpanded)
                       _AdvancedFilters(
@@ -537,6 +549,56 @@ class _CategoryRow extends StatelessWidget {
               label: category.label,
               selected: selected == category,
               onTap: () => onSelected(selected == category ? null : category),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Whether a species has been spotted.
+///
+/// This is why the collection grid does not also live on the Profile — one
+/// grid, one place, filtered. Two grids showing the same 71 animals makes both
+/// screens feel like the same screen.
+enum SpottedFilter {
+  all(label: 'All'),
+  spotted(label: 'Spotted'),
+  notSpotted(label: 'Not spotted');
+
+  const SpottedFilter({required this.label});
+
+  final String label;
+
+  bool matches(bool isSpotted) => switch (this) {
+    SpottedFilter.all => true,
+    SpottedFilter.spotted => isSpotted,
+    SpottedFilter.notSpotted => !isSpotted,
+  };
+}
+
+class _SpottedRow extends StatelessWidget {
+  const _SpottedRow({required this.selected, required this.onSelected});
+
+  final SpottedFilter selected;
+  final ValueChanged<SpottedFilter> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 38,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: Space.lg),
+        children: <Widget>[
+          for (final SpottedFilter value in SpottedFilter.values)
+            FilterPill(
+              label: value.label,
+              selected: selected == value,
+              accent: value == SpottedFilter.spotted
+                  ? AppColors.verified
+                  : null,
+              onTap: () => onSelected(value),
             ),
         ],
       ),

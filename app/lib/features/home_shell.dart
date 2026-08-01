@@ -78,10 +78,7 @@ class _HomeShellState extends State<HomeShell> {
             index: _tab,
             children: <Widget>[
               ProfileScreen(profile: widget.profile, species: species),
-              CodexScreen(
-                repository: widget.repository,
-                profile: widget.profile,
-              ),
+              CodexScreen(repository: widget.repository),
               LeaderboardScreen(seasonYear: widget.profile.seasonYear),
             ],
           ),
