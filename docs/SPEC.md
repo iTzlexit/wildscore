@@ -25,74 +25,94 @@ protect that feeling, not to replace it. Concretely, the app must nail:
 
 ## Scoring
 
-Seven rarity tiers, assigned by how hard the animal actually is to see in Kruger —
-not by how famous it is. Lions are easier to find than Sable.
+Seven rarity tiers, assigned by how hard the animal actually is to see in Kruger
+— not by how famous it is. Lions are easier to find than sable.
 
-| Tier | Points | Examples |
-|---|---|---|
-| Common | 5 | Impala, Zebra, Giraffe, Hippo |
-| Frequent | 10 | Elephant, Buffalo, Hyena, Nyala |
-| Uncommon | 25 | Lion, White Rhino, Klipspringer, Ground Hornbill |
-| Scarce | 50 | Leopard, Sable, Honey Badger, Porcupine |
-| Rare | 100 | Wild Dog, Cheetah, Roan, Serval, Python |
-| Very Rare | 250 | Black Rhino, Aardvark, Aardwolf, Suni |
-| Legendary | 500 | Pangolin, Brown Hyena, Pel's Fishing Owl |
+**The authoritative table, with its behaviour, is in
+[The daily scorecard](#the-daily-scorecard) below.** It is not repeated here,
+because a tier table separated from its cooldown gets misread.
 
-**Modifiers (Phase 3+):**
-- Big Five and Big Six Birds carry a badge and a completion bonus, not extra base points.
-- Night-drive sightings of nocturnal species: ×1.5.
-- First sighting of a species: full points. Repeats: 10%, so the collection still
-  rewards breadth without making repeats worthless.
+**Modifiers:**
+- **Quiet Sighting: ×1.5** on base points — photograph an animal with no other
+  vehicles present and prove it with a PanCapture. Available at every tier.
+- Big Five and Big Six Birds carry a badge and a completion bonus, not extra
+  base points.
 - **First Find bonus** — see below.
 
-## Repeat sightings of the same species
+There is no repeat penalty. Notable and above score in full, every encounter.
 
-You will see leopard more than once. Every one of those photographs belongs in
-your profile — the collection is a record of what you have seen, and deleting
-your second leopard because you already had one would be absurd.
+## The daily scorecard
 
-So the profile shows a species with **every encounter listed beneath it**:
+**Each day is a fresh scorecard.** This is how the paper version worked and it
+is the heart of the scoring system.
+
+| Tier | Points | Behaviour |
+|---|---|---|
+| Common | 5 | **Scratched off** — scores once that day |
+| Frequent | 15 | **Scratched off** — scores once that day |
+| Notable | 30 | **Stays live** — scores again per encounter |
+| Rare | 60 | Stays live |
+| Very rare | 100 | Stays live |
+| Exceptional | 200 | Stays live |
+| Legendary | 400 | Stays live |
+
+Your first impala of the day scores; the next forty are scenery. Same for
+elephant, giraffe, hippo. Every lion, leopard, wild dog and pangolin scores
+again, every time.
+
+This gives each day a natural arc: you clear the common list in the first hour,
+and after that the only thing moving your score is something worth stopping for.
+
+**Days sum into trips. Trips sum into the season.** A ten-day trip is not ten
+times as valuable as one brilliant morning.
+
+### The cooldown — and it must never be documented apart from the table above
+
+**"Stays live" means per encounter, never per shutter press.**
+
+> Same species, roughly the same location, within one hour counts once.
+> Enforced from the GPS trace.
+
+- A leopard at 07:00 near Skukuza and another at 15:00 near Satara: **two
+  sightings.**
+- Forty photos of one leopard over two hours: **one sighting.**
+
+Once GPS is in, the cooldown also releases on distance: **one hour, or ~2 km
+moved, whichever comes first.** Kruger's limit is 50 km/h and the roads are
+slow, so 2 km is several minutes of real driving — not something you can fake
+sitting at one sighting.
+
+Wherever the tier table appears without the cooldown beside it, someone reads
+"stays live" as unlimited. That has already happened once. Keep them together.
+
+### Photos inside the cooldown are never rejected
+
+A photo taken during a cooldown **attaches to the existing encounter** as
+another photo of it. You keep every picture; you are simply not paid twice for
+the same animal.
+
+Everybody takes eight photos of a leopard. Eight zero-point entries cluttering a
+profile would be worse than useless.
+
+### The Codex is lifetime; the scorecard is daily
+
+These are different things and both matter:
+
+- **Score** resets every day, sums into trips, sums into the season
+- **The Codex never resets.** It is a record of everything you have ever seen
+
+The profile shows a species with every encounter beneath it:
 
 ```
 Leopard  ·  3 encounters
-  ├─ 12 Jul 2027, 06:14   Sabie River      photo   50 pts   ✓ verified
-  ├─ 12 Jul 2027, 17:40   Nkuhlu           photo    5 pts   ✓ verified
-  └─ 14 Jul 2027, 05:52   Lower Sabie      photo    5 pts   ✓ verified
+  ├─ 12 Jul 2027, 06:14   Sabie River     60 pts   ✓ verified
+  ├─ 12 Jul 2027, 17:40   Nkuhlu          60 pts   ✓ verified
+  └─ 14 Jul 2027, 05:52   Lower Sabie     60 pts   ✓ verified
 ```
 
-### Scoring: first one counts, the rest are keepsakes
-
-- **First ever sighting of a species:** full points
-- **Every later sighting:** 10% (a repeat leopard is 5 points, not 50)
-
-That keeps breadth worth chasing without making a second leopard worthless.
-
-### The cooldown
-
-**A species scores at most once per hour, per player.**
-
-Without this, one leopard lying in a tree for twenty minutes is a hundred
-photographs and a wrecked leaderboard. The cooldown is the whole defence.
-
-**Crucially, a photo taken inside the cooldown is never rejected.** It attaches
-to the existing sighting as another photo of that encounter. You keep every
-picture; you simply do not get paid twice for the same animal.
-
-That is also the right model conceptually: **one sighting is one encounter**,
-not one shutter press. Everybody takes eight photos of a leopard. Eight
-zero-point entries cluttering a profile would be worse than useless.
-
-### Refinement worth adding later, not now
-
-An hour is crude. You could genuinely drive 40km and find a different leopard
-within it. Once GPS is in (Phase 3), the rule becomes:
-
-> The cooldown ends after **one hour, or once you have moved more than ~2 km**,
-> whichever comes first.
-
-Kruger's speed limit is 50 km/h and roads are slow, so 2 km is several minutes
-of real driving — not something you can fake sitting at one sighting. Ship the
-flat hour first; add the distance escape once there are coordinates to use.
+Note that repeats score in full — Notable and above stay live. There is no 10%
+repeat penalty; an earlier draft had one and it is gone. Breadth is rewarded by
+**Codex completion and crowns**, not by devaluing a second leopard.
 
 ## "Not sure what it was"
 

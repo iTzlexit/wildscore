@@ -1,5 +1,7 @@
 # Roadmap
 
+Phases follow [MASTER-VISION.md](MASTER-VISION.md), which is canonical.
+
 ## Resuming work — read this first
 
 **Where everything is**
@@ -8,11 +10,12 @@
 |---|---|
 | Repo | `C:\dev\wildscore` — **not** the KrugerPoke folder |
 | Remote | `github.com/iTzlexit/wildscore` (private), branch `main` |
-| Flutter 3.44.8 | `C:\src\flutter` — **not on PATH**, prefix commands or add it |
+| Flutter app | `app/` — Dart code in `app/lib/` |
+| Flutter 3.44.8 | `C:\src\flutter` — **not on PATH** |
 | JDK 21 | `C:\src\jdk-21.0.11+10` |
 | Android SDK 36 | `C:\src\android-sdk` — licences accepted, no Android Studio |
 
-**Commands** (from `C:\dev\wildscore\app`, with Flutter on PATH):
+**Commands** (from `C:\dev\wildscore\app`, Flutter on PATH):
 
 ```bash
 flutter run
@@ -22,213 +25,149 @@ flutter run
 pwsh scripts/check.ps1
 ```
 
-Web preview for quick visual checks — `flutter build web --release`, serve
-`build/web` on :8080, open in a browser. It is a **verification target only**;
-the product is Android and iOS.
-
-**Read before building anything:** [docs/VISION.md](docs/VISION.md) for the core
-loop and the non-negotiables, then [docs/SPEC.md](docs/SPEC.md) for the phase
-you are on.
-
-**Next task:** Phase 2. Start with the hardware interfaces and their fakes, then
-the scoring engine — see [docs/TESTING.md](docs/TESTING.md) for why that order.
-Camera last.
-
-**Open questions for Alex, not for code:**
-- Final name. `Krugermon` / `Krugerdex` were rejected on trademark grounds;
-  `Spoor` recommended. Nothing renamed yet — the package is still
-  `com.wildscore`
-- Nobody has run the app on a physical phone
-- Rarity tiers and regional ranges still need a Kruger guide's review
-- 12 Google Play closed testers not yet recruited
-
-## Do next — the actual list
-
-1. **Add `C:\src\flutter\bin` to your user PATH.** Flutter 3.44.8 is already
-   installed there; only the PATH entry is missing, so `flutter` won't resolve
-   in your own terminal yet. Start menu → "environment variables" → edit `Path`
-   → add it → reopen the terminal.
-2. **Enable the pre-commit hook** — once per clone:
-   `git config core.hooksPath .githooks`
-3. **Install Android Studio** — <https://developer.android.com/studio>. Needed
-   for the Android SDK and an emulator. Then add the command-line tools:
-   *Settings → Languages & Frameworks → Android SDK → SDK Tools → Android SDK
-   Command-line Tools (latest)*.
-4. **Create a Pixel emulator** — Device Manager → **+** → Pixel 8 → latest
-   system image with Google Play.
-5. **`flutter doctor --android-licenses`** — accept all of them.
-6. **`flutter run`** from `app/`, and report whatever breaks.
-7. Get the rarity tiers and regional ranges reviewed by someone who knows the
-   park. This is the data most likely to be quietly wrong, and it is the data
-   your best users will judge you on.
-8. Artwork for the 15 rarest species — see `app/assets/species/README.md`.
-
-In parallel, and independent of any code (see [docs/VISION.md](docs/VISION.md)):
-
-9. Post the concept in the Kruger Facebook groups. Target: 30 people saying
-   they'd pay R249.
-10. Start recruiting 12 Google Play closed testers. They must stay opted in for
-    14 consecutive days before you may publish publicly, and that clock cannot
-    be started retroactively.
-11. Check the name against CIPC and both app stores.
-
-## Current status
-
-**Phase 1 complete, plus onboarding and the navigation shell.**
-
-Built and working:
-
-- **Onboarding** — name yourself a Tracker, no account, persisted locally
-- **Three tabs** — Profile, Animal Dex, Leaderboard; camera is a gold FAB that
-  currently shows a "next update" snackbar
-- **Profile** — score with a Today/Lifetime toggle, and a collection grid of all
-  71 species darkened until caught
-- **Animal Dex** — Pokédex-style grid, permanent dex numbers, real photographs,
-  search across English/Afrikaans/scientific names, filters by category, region
-  and rarity
-- **Species detail** — hero photo, tier-styled points banner, field notes,
-  regional distribution, sensitive-species notice
-- **Photo viewer** — tap the hero, pinch to zoom, photographer credit
-- **71 CC0/CC-BY photographs** bundled (6.7 MB), attribution enforced by a test
-
-**Not built yet:** camera, sightings storage, scoring engine, GPS, backend,
-payments, nicknames, share cards.
-
-- `flutter analyze` — no issues
-- `flutter test` — **66 passing**
-- `flutter build web --release` — builds clean in ~40s
-- `flutter build apk --release` — **builds**, Android toolchain green
-- Verified at runtime in a browser: boots, fetches `species.json` (HTTP 200),
-  parses all 71 species, renders, no console errors
-
-The web build is a **verification and preview target only**; the product ships
-to Android and iOS.
-
-### Android build
-
-Toolchain installed without Android Studio: JDK 21 at `C:\src\jdk-21.0.11+10`,
-SDK 36 at `C:\src\android-sdk` (cmdline-tools, platform-tools, build-tools,
-NDK 28, CMake). All licences accepted. `flutter config` already points at both.
-
-| Artefact | Size | Use |
-|---|---|---|
-| `app-arm64-v8a-release.apk` | 15.8 MB | Any modern phone — sideload this one |
-| `app-armeabi-v7a-release.apk` | 13.3 MB | Older 32-bit devices |
-| `app-x86_64-release.apk` | 17.2 MB | Emulators |
-| `app-release.apk` | 45.5 MB | Universal, all ABIs. Avoid — three engines in one file |
-
-Built with `--split-per-abi`. For the Play Store you ship an **App Bundle**
-(`flutter build appbundle`) instead and Google does the splitting per device.
-
-**These are debug-signed.** Fine for sideloading, and they can never go to the
-Play Store. Release signing is a Phase 5 task: you generate a keystore and guard
-it, because losing it means you can never update your own app again.
-
-**Still unverified: nobody has run this on a physical phone.** No Android device
-is attached to this machine — `flutter devices` sees only Windows, Chrome and
-Edge. Installing the APK and using it is the outstanding test.
-
-### Defects found and fixed getting here
-
-| # | Found by | Defect |
-|---|---|---|
-| 1 | Static audit | `ThemeData.inputDecorationTheme` took `InputDecorationTheme`, deprecated during 2025. Moved to a plain `InputDecoration` on the widget, which works on every Flutter version. |
-| 2 | Static audit | Points banner set both `color` and `gradient` on one `BoxDecoration`. Flutter paints only the gradient, so the fade showed the scaffold background instead of the card surface. Split into two layers. |
-| 3 | Static audit | Dead parameter on the locked-species placeholder. |
-| 4 | `flutter test` | **Real layout bug**: the points banner Row used a fixed Column plus a `Spacer`, overflowing by 139px when text is wider than expected — which is exactly what happens at large accessibility font scales. Now `Expanded` with an ellipsis. |
-| 5 | `flutter test` | Widget tests did real file I/O inside Flutter's fake-async zone, so they passed individually and timed out as a suite. Fixed by injecting the repository into `CodexScreen` — better design regardless. |
-| 6 | `flutter test` | `flutter create` left a template `widget_test.dart` referencing a non-existent `MyApp`; its compile failure took down the shared test compiler and cascaded into 14 unrelated failures. Deleted. |
+**Read before building:** [MASTER-VISION.md](MASTER-VISION.md), then
+[docs/DIVERGENCES.md](docs/DIVERGENCES.md) for what the code does not yet match,
+then [docs/SPEC.md](docs/SPEC.md) for the phase you are on.
 
 ---
 
-## Phase 0 — Validation
+## Current status
 
-- [ ] Post the concept in Kruger Facebook groups and the Latest Sightings community
-- [ ] Get 30 people to say they would pay R249/season
-- [ ] Start recruiting 12 closed-test users for Google Play (14-day requirement)
-- [ ] Check the name against CIPC and both app stores
+**Phase 1 partially complete.** Built, tested, running on Android and web.
 
-## Phase 1 — Species Codex ← current
+Working: onboarding, three-tab navigation, profile with Today/Lifetime toggle
+and a 71-slot collection grid, Codex grid with permanent dex numbers and real
+photographs, search across English/Afrikaans/scientific names, filters, species
+detail, full-screen photo viewer, 71 CC0/CC-BY photos with enforced attribution.
 
-- [x] Domain model: species, rarity tiers, park regions, IUCN status, tags
-- [x] 71-species seed dataset as a JSON asset
-- [x] Repository loading the catalogue at startup
-- [x] Codex list: search across English, Afrikaans and scientific names
-- [x] Filters: category, park region, rarity tier
-- [x] Per-tier visual identity — rail, border, wash and glow escalate with rarity
-- [x] Species detail screen with field notes and a regional distribution strip
-- [x] Placeholder artwork that looks deliberate, so the app demos without photos
-- [x] Locked/silhouette rendering path wired up for Phase 2
-- [x] Compiles, analyzes clean, 39 tests passing
-- [x] Regression suite + `scripts/check.ps1` + pre-commit hook
-- [ ] Run it on Android — needs the Android SDK
-- [ ] Review rarity tiers and regional ranges with someone who knows the park
-- [ ] Artwork for the 15 rarest species
+`flutter analyze` clean · **66 tests passing** · APK builds at 23.1 MB (arm64).
 
-## Phase 2 — Capture & collection
+**Phase 1 is not finished.** Missing: the three-state Codex model, the reveal
+animation, and the design direction below.
 
-**This phase is the product.** Everything before it is setup and everything
-after it is amplification. See the core loop in [docs/VISION.md](docs/VISION.md).
+**Known to be wrong** — see [docs/DIVERGENCES.md](docs/DIVERGENCES.md):
+rarity tiers and values, the player noun ("Tracker" is a rank), the
+repeat-sighting model, `isSensitive` as a boolean.
 
-Build order matters here — see [docs/TESTING.md](docs/TESTING.md). Define the
-hardware interfaces and their fakes **first**, so the interesting parts stay
-testable from a desk. Camera last.
+---
 
-- [ ] `CaptureSource` and `LocationSource` interfaces + fakes + debug simulator
-- [ ] Scoring engine, exhaustively unit-tested before anything can score:
-      first-sighting full points, repeats at 10%, one-hour per-species cooldown,
-      photos inside the cooldown attaching to the existing encounter
-- [ ] Unidentified sightings — skip identification, name it later, score
-      against the original capture time
-- [ ] `sqflite` sightings table, photos on disk via `path_provider`
-- [ ] **Downscale photos on capture** and generate thumbnails — full-res camera
-      images are 3–12 MB each and will fill a phone in a weekend
-- [ ] Collection screen: silhouettes until caught, then **the player's own
-      photo** becomes the card art
-- [ ] `camera` package, in-app capture only — no gallery import, ever
-- [ ] Camera reachable in **one tap from anywhere** — it is the primary action
-- [ ] Shoot-first flow: photo saved with GPS and timestamp before identification
-- [ ] Fast species picker — large thumbnails, searchable, ordered by plausibility
-- [ ] **The reveal.** Card flip, sound, score counting up, scaled to rarity. This
-      is the product, not polish — a pangolin must feel different from an impala
-- [ ] Nothing between shutter and reveal — no spinner, no network call
-- [ ] Profile screen: total score, collection, personal bests
-- [ ] Collection view: found species in colour, unfound as silhouettes
-- [ ] One-tap share card, good enough to post without editing
-- [ ] Riverpod, once sightings are needed on more than one screen
-- [ ] `go_router` + bottom navigation
+## Phase 1 — Species Codex
 
-## Phase 3 — Map & verification
+- [x] Browse, search, filter
+- [x] Permanent dex numbers, real photographs, attribution
+- [x] Per-tier visual identity
+- [x] Species detail and photo viewer
+- [ ] **Correct rarity tiers** — 7 tiers, new names and values
+- [ ] **Three-state model** — undiscovered / logged / verified
+- [ ] **The reveal animation**, scaled by rarity
+- [ ] **Design direction applied** — see docs/DESIGN-DIRECTION.md
+- [ ] Per-category completion: Mammals / Birds / Reptiles
+- [ ] Rename Tracker → **Spotter**
 
-- [ ] Offline park map (`flutter_map` + bundled mbtiles)
-- [ ] GPS fix captured with every photo (`geolocator`)
-- [ ] Park-boundary check at capture time
-- [ ] **Sensitive species: location stored but never rendered.** Rhino, pangolin
-- [ ] Night-drive ×1.5 multiplier for nocturnal species
-- [ ] Repeat sightings at 10% value
+## Phase 2 — Trips, capture, scoring
 
-## Phase 4 — Accounts & sync
+The product. Everything before is setup; everything after is amplification.
 
-- [ ] **Schema carries a `reserve` table from day one**, with exactly one row
-      (Kruger). Rarity and dex numbers hang off species-in-reserve, not species.
-      A few hours now; a migration nobody wants later — see
-      [docs/SPEC.md](docs/SPEC.md#future-multiple-reserves)
+- [ ] `CaptureSource` / `LocationSource` interfaces + fakes + debug simulator
+      (build first — see [docs/TESTING.md](docs/TESTING.md))
+- [ ] Scoring engine, exhaustively tested: daily scorecard, scratch-off for
+      Common and Frequent, per-encounter cooldown for Notable and above
+- [ ] **Quick Log — under three seconds from app open.** One tap, no photo
+- [ ] Trip sessions: open on park entry, validity from a continuous GPS trace
+- [ ] Camera capture, up to four photos, review before save
+- [ ] `sqflite` sightings store, photos downscaled on capture
+- [ ] Provisional scoring — live during the drive
+- [ ] Unidentified sightings, named later
+- [ ] No points for off-road positions or speeding
+
+## Phase 3 — Backend, sync, the ritual
+
 - [ ] Supabase project, schema, row-level security
-- [ ] Auth, offline-first sync queue
-- [ ] Server-side score calculation — never trust a client total
+- [ ] **`reserve` table from day one**, one row. Rarity hangs off
+      species-in-reserve
+- [ ] **Versioned species catalogue** — syncs on connect, caches locally,
+      bundled JSON as fallback. Blocks nothing else, but retrofitting is a
+      migration
+- [ ] `sensitivityLevel` enforced server-side
+- [ ] Offline sync queue, idempotent upload
+- [ ] **The sync ritual** — cards flipping pending → verified, one at a time.
+      Never a spinner
+- [ ] Photos to Cloudflare R2, not Supabase Storage — R2 has no egress fees and
+      den/profile photos are viewed constantly
 
-## Phase 5 — Leaderboard & Season Pass
+## Phase 4 — Season Pass
 
-- [ ] Seasonal standings with an annual reset
-- [ ] RevenueCat, non-renewing annual pass
-- [ ] Store listings, screenshots, privacy policy
-- [ ] Google Play closed test (12 testers × 14 days)
+- [ ] RevenueCat, entitlements, restore
+- [ ] Season Pass R199 (R149 founding) / $14.99. Non-renewing
+- [ ] Vehicle Pass R399 / $29.99, five players
+- [ ] Paywall on promoting to the Six — never on submitting a score
 
-## Phase 6 — Social
+## Phase 5 — Collection of Six and share cards
 
-- [ ] Friends and family groups — the paper scoreboard, properly
-- [ ] Community flagging of implausible rare sightings
-- [ ] End-of-season summary worth sharing
+- [ ] Promote and swap, freely
+- [ ] Card rendering, tier frames, verified tick, Quiet mark
+- [ ] **One-tap share export.** This is the marketing channel, not a feature
+
+## Phase 6 — AI verification
+
+- [ ] Claude vision on sync, species vs claim
+- [ ] Multi-photo confidence
+- [ ] **Flag, never reject.** Provisional points, review queue, player appeal
+
+## Phase 7 — The Den
+
+The most expensive thing in the project and the most tempting to build early.
+**Resist.**
+
+- [ ] ~12 eligible species as animated sprites
+- [ ] Idle behaviour, time-of-day awareness, tap reaction
+- [ ] Tap opens the real photograph, with where and when
+- [ ] Never: hunger, decay, health, streaks
+
+## Phase 8 — Profiles and privacy
+
+- [ ] Visit other Spotters: rank, crowns, completion, their six, their den
+- [ ] Full private mode, per-sighting private flag, location granularity
+- [ ] Region-level location only, ever
+
+## Phase 9 — Crowns, ranks, seasons
+
+- [ ] Species Crowns — per-species seasonal holder
+- [ ] Hall of Fame for past holders
+- [ ] Ranks: Day Visitor → Tracker → Ranger → Field Guide → Head Ranger → Legend
+- [ ] Season reset. Codex never resets
+- [ ] Quick Logs never earn crowns
+
+## Phase 10 — Wild Card
+
+- [ ] Daily objective, generated locally at trip start
+- [ ] Always achievable with normal driving
+
+## Phase 11 — Anti-fraud hardening
+
+- [ ] **PanCapture** — ~360° sweep over 3–5s, gyro trace agreeing with visual
+      motion. Optional everywhere; earns Quiet Sighting ×1.5 at any tier;
+      effectively required for crown eligibility at Very rare and above
+- [ ] Play Integrity / App Attest, mock location detection
+- [ ] Sun position vs timestamp, duplicate image hashing
+
+## Phase 12 — Multi-park
+
+- [ ] Pilanesberg, Addo, Etosha
+- [ ] Rarity is per species-in-reserve — a cheetah is a prize in Kruger and
+      routine in the Mara
+
+---
+
+## Phase 0 — Validation, running in parallel
+
+- [ ] Post the concept in Kruger Facebook groups. Target 30 people saying they
+      would pay R199
+- [ ] Recruit 12 Google Play closed testers — 14 consecutive days, cannot be
+      backdated
+- [ ] Final name. `Krugermon` / `Krugerdex` rejected; `Spoor` recommended
+- [ ] Kruger guide reviews the whole rarity table
+- [ ] Run the APK on a physical phone
 
 ---
 
@@ -236,33 +175,28 @@ testable from a desk. Camera last.
 
 | Date | Decision | Why |
 |---|---|---|
-| 2026-07-26 | Flutter, not .NET MAUI | Mobile is new either way; the language is the small part. Flutter is far stronger at camera, offline maps, ML and animation — which is all this app is. |
-| 2026-07-26 | Project lives in `C:\dev\wildscore`, not OneDrive | Flutter build output churns thousands of files; OneDrive sync locks them mid-build. |
-| 2026-07-26 | Zero third-party packages in Phase 1 | Two screens over a read-only JSON asset need `Navigator` and `setState`. Riverpod, Drift and go_router arrive when there is state and persistence to justify them. |
-| 2026-07-26 | Supabase, not a hand-rolled ASP.NET Core backend | Postgres, auth, photo storage and RLS on day one. Backend skill goes into schema and policies instead of hosting and identity. It is still Postgres if it needs to be replaced. |
-| 2026-07-26 | RevenueCat for payments | Two store billing APIs and two receipt-validation flows is where homegrown IAP leaks money. Free below ~$2.5k/month. |
-| 2026-07-26 | Non-renewing season pass, not a subscription | People visit Kruger once a year. A subscription breeds cancellations; a season pass matches the annual leaderboard reset. |
-| 2026-07-26 | Rarity by difficulty of sighting, not by fame | Lions are easier to find than sable. Scoring only feels earned if it tracks reality. |
-| 2026-07-26 | Player is a "Tracker", not a "Trainer" | A tracker is the person who finds the animals in SA safari culture — authentic, descriptive, and not borrowed from Pokémon's own vocabulary. |
-| 2026-07-26 | Onboarding asks for a name and nothing else | A family at the gate must be playing in twenty seconds. A password field here loses half of them. Real accounts arrive in Phase 4 when sightings need to survive a lost phone. |
-| 2026-07-26 | `shared_preferences` added — first third-party package | A handful of bytes that must survive a restart is exactly what it is for. Sightings still go to sqflite in Phase 2; they grow without limit and need querying. |
-| 2026-07-26 | First Find bonus via spatio-temporal clustering; capture data now, ship feature later | Finding an animal yourself differs entirely from joining a traffic jam. Clusters can be recomputed retrospectively; ungathered GPS and timestamps are gone forever. Needs user density, so it cannot block launch. |
-| 2026-07-26 | Reward finding, never reward arriving | A first-to-arrive bonus is a bonus for speeding and crowding animals. No live sighting feed, no race UI; the bonus is computed quietly at sync. |
-| 2026-07-26 | Shoot first, identify second | Animals do not wait. Missing the photograph is far worse than a two-second delay before the reveal. The catch is at the shutter; the ceremony is at identification. |
-| 2026-07-26 | Tier-gated verification | Common sightings count instantly — nobody fakes an impala. Legendary ones enter the collection immediately but reach the public leaderboard only after review. Integrity where it matters, no friction where it does not. |
-| 2026-07-26 | ML routes to review, never rejects | Wrongly rejecting a real pangolin would be unforgivable. "This does not look like a pangolin" is an easy problem; "identify this animal" is a hard one. |
-| 2026-07-26 | Codex is a grid with permanent dex numbers | Reads as a guidebook rather than a database. Numbers assigned once (mammals, birds, reptiles; alphabetical within) and never reshuffled — a dex number is an identity, and collection screenshots would go stale. |
-| 2026-07-26 | Three tabs: Profile, Dex, Leaderboard | Your own achievement first, the goal second, other people third. Profile opens on lifetime score; tapping it lists catches newest-first. |
-| 2026-07-26 | Profile is lifetime; leaderboard is seasonal | Seasons reset so newcomers always have a reason to start. The collection never resets — permanence is one of the three feelings the product protects. |
-| 2026-07-26 | Nicknames on caught animals | Nearly free to build; a named animal is one you are attached to, and attachment is what makes a collection worth keeping. |
-| 2026-07-26 | Several leaderboards, not one | Ranking on season total alone is a wealth leaderboard — whoever affords ten trips beats whoever manages one. Best-single-trip and collection-percentage boards give a once-a-year family something they can actually win, and they are most of the market. |
-| 2026-07-26 | Trips derived from sightings, not check-ins | A new trip starts after a 48-hour gap. No geofence to maintain, no button to forget, works offline. |
-| 2026-07-26 | Photo quality never affects points | A blurry pangolin is 500; a perfect impala is 5. Rewarding photo quality builds a photography contest won by whoever owns a 600mm lens. This is a spotting game — the skill is finding the animal. |
-| 2026-07-26 | Distance never awards points | It only releases the per-species cooldown when a second sighting is genuinely a different animal. Paying for distance would reward driving fast through a 50 km/h park with animals on the road. |
-| 2026-07-26 | One sighting = one encounter, not one shutter press | Everyone takes eight photos of a leopard. Photos inside the cooldown attach to the existing sighting rather than creating eight zero-point entries. |
-| 2026-07-26 | A species scores once per hour, per player | One leopard in a tree for twenty minutes would otherwise be a hundred scoring photographs. Photos inside the cooldown are **never rejected** — you keep every picture, you are just not paid twice. |
-| 2026-07-26 | Identification is skippable | Not knowing is the normal condition of someone new to the bush. Photo saves as Unidentified with capture-time GPS and timestamp; scores nothing until named, then scores against the original capture time. |
-| 2026-07-26 | **Rarity belongs to species-in-reserve, not to species** | A cheetah is Rare in Kruger and near-guaranteed in the Masai Mara. A global rating would let one trip to Kenya top a Kruger leaderboard. Schema must carry a `reserve` table from Phase 4 with one row in it; the feature waits. |
-| 2026-07-26 | v1 verification is camera + GPS + timestamp, no ML | A trustworthy species classifier is its own project. This is already far stronger than paper. |
-| 2026-07-26 | Rhino and pangolin locations never rendered anywhere | Poaching risk. Not a setting, not a later feature request. |
-| 2026-07-26 | Rarity styling uses baked-in ARGB values | `withOpacity` / `withValues` churned across Flutter releases; literal colours compile everywhere and are inspectable. |
+| 2026-07-26 | Flutter, not .NET MAUI | Mobile is new either way; the language is the small part. MAUI is weakest at camera, offline maps and animation — this app's three hardest problems. |
+| 2026-07-26 | `C:\dev\wildscore`, not OneDrive | Build output churns thousands of files; OneDrive locks them mid-build. |
+| 2026-07-26 | Zero third-party packages in Phase 1 | Vindicated — Riverpod moved to 3.x with a changed API. Adding it early meant writing 2.x code against a 3.x library. |
+| 2026-07-26 | **Supabase**, not self-hosted ASP.NET Core | Postgres, auth, storage and RLS on day one with no server to operate. Reversible — it is Postgres. Supersedes MASTER-VISION.md's stack section. |
+| 2026-07-26 | Photos in **Cloudflare R2**, not Supabase Storage | R2 has no egress fees. Den and profile photos are viewed constantly; S3-style egress billing is the difference between a rounding error and a real bill. |
+| 2026-07-26 | RevenueCat for payments | Two store billing APIs and two receipt flows is where homegrown IAP leaks money. |
+| 2026-07-26 | Non-renewing season pass | People visit once a year. Subscriptions breed cancellations; a pass matches the rhythm and the crown reset. |
+| 2026-07-26 | **Paywall on the Six and the Den, not on submitting a score** | Charging to submit a score is charging for a leaderboard — the one thing the positioning says people resent. People pay to keep a photo album. |
+| 2026-07-26 | Rarity by difficulty of sighting, not fame | Lions are easier to find than sable. |
+| 2026-07-26 | Photo quality never affects points | A blurry pangolin is 400; a perfect impala is 5. Rewarding quality builds a photography contest won by the longest lens. |
+| 2026-07-26 | Distance never awards points | It only releases the cooldown. Paying for distance rewards driving fast in a 50 km/h park with animals on the road. |
+| 2026-07-26 | Reward finding, never reward arriving | No live sighting feed, no race UI. The First Find bonus is computed quietly at sync. |
+| 2026-07-26 | **Sensitive locations never rendered** | Master says "coarse grid or nothing" — this is the "or nothing" branch, and stricter. A coarsening bug leaks a location; a never-render rule has nothing to leak. |
+| 2026-07-26 | **`sensitivityLevel` as data, not a hardcoded list** | Poaching pressure shifts. Ground hornbill, vultures at nest sites, denning wild dog sites all warrant care. A boolean on three species is an if-statement waiting to be wrong. |
+| 2026-07-26 | **Versioned catalogue syncing on connect** | A sensitivity change must reach a player already in the park without a store review. Retrofitting means migrating a live user base off a compiled asset. |
+| 2026-07-26 | One sighting = one encounter, not one shutter press | Everyone takes eight photos of a leopard. Photos inside the cooldown attach to the existing encounter. |
+| 2026-07-26 | Identification is skippable | Not knowing is the normal condition of someone new to the bush. |
+| 2026-07-26 | Shoot-first vs pick-first resolved by **Quick Log** | Pick-species-then-shoot is fine for Capture precisely because Quick Log exists for everything else. |
+| 2026-07-26 | Dex numbers permanent | Mammals, birds, reptiles; alphabetical within. Never reshuffled — a dex number is an identity and collection screenshots would go stale. |
+| 2026-07-26 | **71 species, not 45** | Birders are the most obsessive list-keepers on earth and a large slice of self-drive visitors. |
+| 2026-07-26 | **Per-category completion** | Mammals / Birds / Reptiles with independent percentages, so a mammal-focused player is not stuck at 30% forever. |
+| 2026-07-26 | **Player noun is "Spotter"** | "Tracker" is rank two of six. Using it as the player noun promotes everyone on signup. |
+| 2026-07-26 | **Crowns, not more leaderboards** | Best-single-trip dropped — it is "most sightings today" with a different window, which rewards racing. 71 species is 71 chances to be best at something. |
+| 2026-07-26 | **Black rhino is Very rare (100)** | Fewer animals in thicker bush; genuinely harder than wild dog. The original Rare (60) was an artefact of illustrative examples. |
+| 2026-07-26 | PanCapture: gate by tier for fraud, universal for behaviour | Being alone with a herd of elephants deserves the same reward as with a leopard. Crowding matters at every tier. |
