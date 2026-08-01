@@ -19,6 +19,17 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  # Variable fonts — one file each covers every weight. Bundled rather than
+  # fetched: google_fonts downloads at runtime and this app has no network for
+  # days at a time. Weights come from FontVariation, not FontWeight.
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Variable.ttf
+    - family: Fraunces
+      fonts:
+        - asset: assets/fonts/Fraunces-Variable.ttf
   assets:
     - assets/data/
     - assets/species/

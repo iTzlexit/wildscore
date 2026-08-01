@@ -50,14 +50,26 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
     // A card that dips under the thumb feels like an object you picked up.
     // Cheap, and it does more for the "collectible" feeling than any amount
     // of decoration.
+    // Notched corners from Rare upward — one of the five redundant channels
+    // rarity escalates across, so the frame is distinguishable in greyscale
+    // and in direct sun where hue washes out.
+    final BorderRadius radius = style.notched
+        ? const BorderRadius.only(
+            topLeft: Radius.circular(Radii.card),
+            topRight: Radius.circular(Space.xs),
+            bottomLeft: Radius.circular(Space.xs),
+            bottomRight: Radius.circular(Radii.card),
+          )
+        : BorderRadius.circular(Radii.card);
+
     return AnimatedScale(
       scale: _pressed ? 0.96 : 1,
-      duration: const Duration(milliseconds: 110),
-      curve: Curves.easeOut,
+      duration: Motion.press,
+      curve: Motion.exit,
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: AppColors.surface,
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: radius,
           border: Border.all(color: style.border, width: style.borderWidth),
           boxShadow: style.glow == null
               ? null
@@ -71,7 +83,7 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
                 ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(13),
+          borderRadius: radius,
           child: Material(
             color: Colors.transparent,
             child: InkWell(
@@ -107,7 +119,7 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
                         // than a database row. Static, not animated — eighteen
                         // shimmering cards in a scrolling grid would be both
                         // distracting and expensive.
-                        if (style.isExalted)
+                        if (style.foil)
                           const IgnorePointer(
                             child: DecoratedBox(
                               decoration: BoxDecoration(
@@ -230,25 +242,21 @@ class _Label extends StatelessWidget {
         children: <Widget>[
           Text(
             'No. ${species.dexLabel}',
-            style: const TextStyle(
-              color: AppColors.textMuted,
-              fontSize: 9.5,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 0.6,
+            style: AppText.caption.copyWith(
+              fontSize: 10,
               height: 1,
+              letterSpacing: 0.5,
+              fontFeatures: AppText.tabular,
             ),
           ),
-          const SizedBox(height: 3),
+          const SizedBox(height: Space.xs),
+          // Fraunces — the serif is what makes a species name read as a field
+          // guide entry rather than a list row.
           Text(
             species.commonName,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              color: AppColors.textPrimary,
-              fontSize: 12.5,
-              fontWeight: FontWeight.w700,
-              height: 1.15,
-            ),
+            style: AppText.title2.copyWith(fontSize: 14, height: 1.12),
           ),
         ],
       ),
