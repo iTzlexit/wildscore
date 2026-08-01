@@ -74,9 +74,11 @@ void main() {
   ) async {
     await _pumpCodex(tester);
 
-    expect(find.text('Codex'), findsOneWidget);
-    expect(find.text('KRUGER NATIONAL PARK'), findsOneWidget);
+    // No screen title — the tab already says "Animal Dex".
+    expect(find.text('Codex'), findsNothing);
     expect(find.byType(SpeciesGridCard), findsWidgets);
+    // Rarity is a first-class filter row now, not buried in the panel.
+    expect(find.text('Any rarity'), findsOneWidget);
   });
 
   testWidgets('lists species in dex order, starting at No. 001', (
@@ -105,7 +107,7 @@ void main() {
   });
 
   testWidgets('filters by collection group', (WidgetTester tester) async {
-    await _pumpCodex(tester);
+    await _pumpCodex(tester, width: 1400);
 
     await tester.tap(find.text('Big Five'));
     await tester.pumpAndSettle();
@@ -117,7 +119,7 @@ void main() {
   testWidgets('predators filter excludes herbivores', (
     WidgetTester tester,
   ) async {
-    await _pumpCodex(tester);
+    await _pumpCodex(tester, width: 1400);
 
     // The group row scrolls horizontally and Predators sits past the right
     // edge on a 430pt screen, so it has to be scrolled to first.
@@ -154,7 +156,7 @@ void main() {
   });
 
   testWidgets('filters by category', (WidgetTester tester) async {
-    await _pumpCodex(tester, width: 1000);
+    await _pumpCodex(tester, width: 1400);
 
     await _tapQuickFilter(tester, 'Birds');
 
@@ -176,7 +178,7 @@ void main() {
   testWidgets('clear filters restores the full list', (
     WidgetTester tester,
   ) async {
-    await _pumpCodex(tester, width: 1000);
+    await _pumpCodex(tester, width: 1400);
 
     await _tapQuickFilter(tester, 'Birds');
     expect(find.text('Clear filters'), findsOneWidget);
@@ -199,7 +201,6 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('PARK REGION'), findsOneWidget);
-    expect(find.text('RARITY'), findsOneWidget);
     expect(find.text('Anywhere'), findsOneWidget);
   });
 

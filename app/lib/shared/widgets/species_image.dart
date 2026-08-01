@@ -30,7 +30,11 @@ class SpeciesImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (locked) {
+    // Only the rare tiers hide behind a silhouette. Hiding an impala teaches
+    // nobody anything and makes the free field guide useless; hiding a pangolin
+    // is the entire point of a collection game. `notched` is exactly the four
+    // tiers from Rare upward.
+    if (locked && species.rarityTier.style.notched) {
       return _LockedPlate(species: species);
     }
 
@@ -149,14 +153,6 @@ class _LockedPlate extends StatelessWidget {
                             ) => const SizedBox.shrink(),
                       ),
                     ),
-          ),
-        ),
-        const Align(
-          alignment: Alignment(0, 0.72),
-          child: Icon(
-            Icons.question_mark_rounded,
-            color: Color(0x73151A17),
-            size: 20,
           ),
         ),
       ],

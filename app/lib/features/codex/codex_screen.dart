@@ -144,12 +144,10 @@ class _CodexScreenState extends State<CodexScreen> {
 
                 return Column(
                   children: <Widget>[
-                    if (widget.profile != null)
-                      _TrackerStrip(
-                        profile: widget.profile!,
-                        totalSpecies: all.length,
-                      ),
-                    _Header(total: all.length),
+                    // No screen title. The tab is already labelled "Animal
+                    // Dex"; a "Codex" heading under it was a second name for
+                    // the same thing and cost a third of the screen.
+                    const SizedBox(height: Space.md),
                     _SearchBar(
                       controller: _searchController,
                       filtersExpanded: _filtersExpanded,
@@ -162,6 +160,7 @@ class _CodexScreenState extends State<CodexScreen> {
                     _QuickFilterRow(
                       category: _category,
                       tag: _tag,
+                      spotted: _spotted,
                       onCategory: (SpeciesCategory? value) => setState(() {
                         _category = value;
                         _tag = null;
@@ -170,24 +169,24 @@ class _CodexScreenState extends State<CodexScreen> {
                         _tag = value;
                         _category = null;
                       }),
+                      onSpotted: (SpottedFilter value) =>
+                          setState(() => _spotted = value),
                       onClear: () => setState(() {
                         _category = null;
                         _tag = null;
+                        _spotted = SpottedFilter.all;
                       }),
                     ),
-                    _SpottedRow(
-                      selected: _spotted,
-                      onSelected: (SpottedFilter value) =>
-                          setState(() => _spotted = value),
+                    _RarityRow(
+                      selected: _tier,
+                      onSelected: (RarityTier? value) =>
+                          setState(() => _tier = value),
                     ),
                     if (_filtersExpanded)
                       _AdvancedFilters(
                         region: _region,
-                        tier: _tier,
                         onRegion: (ParkRegion? value) =>
                             setState(() => _region = value),
-                        onTier: (RarityTier? value) =>
-                            setState(() => _tier = value),
                       ),
                     _ResultBar(
                       count: visible.length,
@@ -240,189 +239,6 @@ class _CodexScreenState extends State<CodexScreen> {
 
 /// Who you are, and how you are doing. Zeroes for now — Phase 2 fills these in
 /// from the local sightings table, and watching them climb is the point.
-class _TrackerStrip extends StatelessWidget {
-  const _TrackerStrip({required this.profile, required this.totalSpecies});
-
-  final TrackerProfile profile;
-  final int totalSpecies;
-
-  // Hard zeros until Phase 2 has a sightings table to count. Deliberately not
-  // constructor parameters yet — an unused parameter is a lie about what the
-  // widget can do.
-  static const int points = 0;
-  static const int speciesFound = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.outline),
-      ),
-      child: Row(
-        children: <Widget>[
-          Container(
-            width: 38,
-            height: 38,
-            alignment: Alignment.center,
-            decoration: const BoxDecoration(
-              color: Color(0x26D9A441),
-              shape: BoxShape.circle,
-            ),
-            child: Text(
-              profile.initial,
-              style: const TextStyle(
-                color: AppColors.accent,
-                fontSize: 17,
-                fontWeight: FontWeight.w900,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  profile.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  'Tracker · Season ${profile.seasonYear}',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: AppColors.textMuted,
-                    fontSize: 11.5,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 10),
-          const _StripStat(value: '$points', label: 'PTS'),
-          const SizedBox(width: 16),
-          _StripStat(value: '$speciesFound/$totalSpecies', label: 'FOUND'),
-        ],
-      ),
-    );
-  }
-}
-
-class _StripStat extends StatelessWidget {
-  const _StripStat({required this.value, required this.label});
-
-  final String value;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: <Widget>[
-        Text(
-          value,
-          style: const TextStyle(
-            color: AppColors.accent,
-            fontSize: 15,
-            fontWeight: FontWeight.w900,
-            height: 1,
-          ),
-        ),
-        const SizedBox(height: 3),
-        Text(
-          label,
-          style: const TextStyle(
-            color: AppColors.textMuted,
-            fontSize: 8.5,
-            fontWeight: FontWeight.w800,
-            letterSpacing: 1,
-            height: 1,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _Header extends StatelessWidget {
-  const _Header({required this.total});
-
-  final int total;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 18, 20, 14),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Container(
-                width: 5,
-                height: 5,
-                decoration: const BoxDecoration(
-                  color: AppColors.accent,
-                  shape: BoxShape.circle,
-                ),
-              ),
-              const SizedBox(width: 7),
-              const Text(
-                'KRUGER NATIONAL PARK',
-                style: TextStyle(
-                  color: AppColors.accent,
-                  fontSize: 10.5,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 1.6,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              const Text(
-                'Codex',
-                style: TextStyle(
-                  color: AppColors.textPrimary,
-                  fontSize: 32,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: -1,
-                  height: 1,
-                ),
-              ),
-              const SizedBox(width: 10),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 3),
-                child: Text(
-                  '$total species',
-                  style: const TextStyle(
-                    color: AppColors.textMuted,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class _SearchBar extends StatelessWidget {
   const _SearchBar({
     required this.controller,
@@ -552,15 +368,19 @@ class _QuickFilterRow extends StatelessWidget {
   const _QuickFilterRow({
     required this.category,
     required this.tag,
+    required this.spotted,
     required this.onCategory,
     required this.onTag,
+    required this.onSpotted,
     required this.onClear,
   });
 
   final SpeciesCategory? category;
   final SpeciesTag? tag;
+  final SpottedFilter spotted;
   final ValueChanged<SpeciesCategory?> onCategory;
   final ValueChanged<SpeciesTag?> onTag;
+  final ValueChanged<SpottedFilter> onSpotted;
   final VoidCallback onClear;
 
   @override
@@ -576,6 +396,17 @@ class _QuickFilterRow extends StatelessWidget {
             selected: category == null && tag == null,
             onTap: onClear,
           ),
+          for (final SpottedFilter value in SpottedFilter.values)
+            if (value != SpottedFilter.all)
+              FilterPill(
+                label: value.label,
+                selected: spotted == value,
+                accent: value == SpottedFilter.spotted
+                    ? AppColors.verified
+                    : null,
+                onTap: () =>
+                    onSpotted(spotted == value ? SpottedFilter.all : value),
+              ),
           // Groups first — "have you got the Big Five yet" is the question
           // every visitor is asked.
           for (final SpeciesTag value in SpeciesTag.values)
@@ -618,11 +449,16 @@ enum SpottedFilter {
   };
 }
 
-class _SpottedRow extends StatelessWidget {
-  const _SpottedRow({required this.selected, required this.onSelected});
+/// Rarity gets its own row, in tier colours.
+///
+/// It was buried in the advanced panel, which is wrong — rarity *is* the app's
+/// central concept, and a row of tier-coloured chips doubles as a legend for
+/// what the colours on the cards mean.
+class _RarityRow extends StatelessWidget {
+  const _RarityRow({required this.selected, required this.onSelected});
 
-  final SpottedFilter selected;
-  final ValueChanged<SpottedFilter> onSelected;
+  final RarityTier? selected;
+  final ValueChanged<RarityTier?> onSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -634,14 +470,19 @@ class _SpottedRow extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.symmetric(horizontal: Space.screen),
           children: <Widget>[
-            for (final SpottedFilter value in SpottedFilter.values)
+            FilterPill(
+              label: 'Any rarity',
+              selected: selected == null,
+              onTap: () => onSelected(null),
+            ),
+            // Rarest first — the interesting end of the scale should be the
+            // end you reach without scrolling.
+            for (final RarityTier value in RarityTier.values.reversed)
               FilterPill(
                 label: value.label,
                 selected: selected == value,
-                accent: value == SpottedFilter.spotted
-                    ? AppColors.verified
-                    : null,
-                onTap: () => onSelected(value),
+                accent: value.style.accent,
+                onTap: () => onSelected(selected == value ? null : value),
               ),
           ],
         ),
@@ -650,18 +491,12 @@ class _SpottedRow extends StatelessWidget {
   }
 }
 
+/// Region only. Rarity was promoted to its own always-visible row.
 class _AdvancedFilters extends StatelessWidget {
-  const _AdvancedFilters({
-    required this.region,
-    required this.tier,
-    required this.onRegion,
-    required this.onTier,
-  });
+  const _AdvancedFilters({required this.region, required this.onRegion});
 
   final ParkRegion? region;
-  final RarityTier? tier;
   final ValueChanged<ParkRegion?> onRegion;
-  final ValueChanged<RarityTier?> onTier;
 
   @override
   Widget build(BuildContext context) {
@@ -670,10 +505,10 @@ class _AdvancedFilters extends StatelessWidget {
       children: <Widget>[
         const _FilterGroupLabel('PARK REGION'),
         SizedBox(
-          height: 38,
+          height: 34,
           child: ListView(
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: Space.screen),
             children: <Widget>[
               FilterPill(
                 label: 'Anywhere',
@@ -689,29 +524,7 @@ class _AdvancedFilters extends StatelessWidget {
             ],
           ),
         ),
-        const _FilterGroupLabel('RARITY'),
-        SizedBox(
-          height: 38,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            children: <Widget>[
-              FilterPill(
-                label: 'Any',
-                selected: tier == null,
-                onTap: () => onTier(null),
-              ),
-              for (final RarityTier value in RarityTier.values.reversed)
-                FilterPill(
-                  label: value.label,
-                  selected: tier == value,
-                  accent: value.style.accent,
-                  onTap: () => onTier(tier == value ? null : value),
-                ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 4),
+        const SizedBox(height: Space.xs),
       ],
     );
   }
