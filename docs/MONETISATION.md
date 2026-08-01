@@ -101,55 +101,71 @@ have worked out how to fake a purchase.
 
 ## What you sell
 
-The split is **play free, pay to compete.**
+The split is **play free, pay to keep it beautifully.**
 
 | Tier | Price | Contains |
 |---|---|---|
-| **Free** | — | The Codex, the camera, and your own collection. Catch what you like, keep it forever, offline. |
-| **Season Pass** | ~R249/year, non-renewing | The leaderboard, share cards, full stats, and submitting your day |
-| **Later** | | Regional challenge packs, printed end-of-season cards, guided-operator tie-ins |
+| **Free forever** | — | Camera capture, Quick Log, live scoring, the daily scorecard, the trip summary, full Codex browsing |
+| **Season Pass** | **R199/year** (R149 founding season), $14.99 international. Non-renewing. | **The Collection of Six, the Den**, crown and leaderboard eligibility, share cards, Quiet Sighting mode, badges |
+| **Vehicle Pass** | **R399** / $29.99 | Up to five players on one trip. Safari is a group activity; the paper version was always played by a whole car. |
+| **Later** | | Park unlocks (Pilanesberg, Addo, Etosha), cosmetic den backdrops and card frames, end-of-season printed poster |
 
-### Why the free tier includes catching
+### Per-territory pricing matters
 
-It is tempting to paywall the camera. Do not.
+An international visitor already pays around **R602 per person per day** in
+conservation fees — $14.99 is invisible to them. A South African family feels
+every rand. Price them separately.
 
-A free player who has caught forty animals has **forty reasons to pay** — their
-collection is already real, and the pass is what lets them show it to anyone.
-A free player who has caught nothing has none, and will delete the app at the
-gate.
+### The paywall is on the Six and the Den — not on submitting a score
+
+An earlier draft put the paywall on **"Submit today's score"**, on the reasoning
+that it lands at the moment of peak motivation. That was wrong, and it is worth
+recording why.
+
+> People don't resent paying to keep a photo album. They resent paying for
+> leaderboards.
+
+Charging to submit a score **is** charging for a leaderboard. It is the one
+thing the positioning says not to sell. The error came from treating the app as
+a competitive game rather than a memory box — see [VISION.md](VISION.md).
+
+What people will pay for is **keeping their photographs, beautifully**: six
+cards they chose, and a den where those animals live. That is an album, and
+albums are what people renew.
+
+### Why the free tier is this generous
+
+It is tempting to paywall the camera. Do not. **The free tier must be genuinely
+good** — the whole model depends on someone finishing day one proud of their
+score before being asked for money.
+
+A free player who has captured forty animals has **forty reasons to pay**: their
+collection is already real, and the pass is what turns it into something they can
+keep and display. A free player who has captured nothing has none, and deletes
+the app at the gate.
 
 The collection is also the retention mechanism. Someone with three years of
 sightings does not switch to a competitor.
 
-### Where the paywall appears
+### When to ask
 
-**At "Submit today's score."**
+The natural moment is **the first time a player wants to promote a capture to
+their Six** — they have just taken a photograph they are proud of and want it
+kept. That is asking them to buy an album for a photo they already love, which
+is a completely different transaction from asking them to buy a ranking.
 
-This is the right moment and it is worth being deliberate about it. At the end
-of a day in the park, a player has just found something good and wants it to
-count. That is the point of maximum motivation — not a splash screen on first
-launch, when they have nothing invested and no reason to care.
-
-So: catch freely all day. When you tap *Submit today's score* and you have no
-pass, you get one screen that says what a pass costs and what it unlocks. Buy
-or dismiss; the sightings are saved either way and can be submitted later if
-you buy the pass before the season ends.
-
-**Never nag.** One paywall, at one moment, tied to one action the player chose
-to take. No interstitials, no countdowns, no "3 free submissions remaining"
-counters. The app is used in a place people go to get away from that.
+**Never nag.** One paywall, tied to one action the player chose to take. No
+interstitials, no countdowns, no "3 free promotions remaining" counters. The app
+is used in a place people go to get away from that.
 
 ### Per-submission payment: considered and rejected
 
-Charging per submitted day was considered. It is rejected because:
+Charging per submitted day was considered and rejected:
 
-- Consumable IAP means constant transaction friction at exactly the moment the
-  app should feel good
-- It makes the leaderboard a function of spending, not skill — which breaks
-  the no-pay-to-win rule
+- Consumable IAP means transaction friction at exactly the moment the app should
+  feel good
+- It makes standing a function of spending, which breaks the no-pay-to-win rule
 - It punishes the best days, which is precisely backwards
-
-The season pass gets the same "pay when you care" timing without any of that.
 
 **Never pay-to-win.** Money buys access and cosmetics. It never buys points,
 multipliers or leaderboard position. A leaderboard you can buy is not worth

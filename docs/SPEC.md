@@ -223,24 +223,50 @@ maintain, no button to forget to press, and it works entirely offline.
 Someone who spends a day in the park and logs nothing records no trip. That is
 correct — the game only knows about you when you play.
 
-#### One board is not enough
+#### Crowns, not more leaderboards
 
 Ranking on season score alone makes this a **wealth leaderboard**: whoever can
-afford ten trips a year beats whoever manages one, regardless of skill. Rewarding
-visits is deliberate — it is the whole incentive — but if a family who comes once
-a year can never place anywhere, they stop playing, and they are most of the
-market.
+afford ten trips a year beats whoever manages one. A family who comes once a
+year could never place anywhere, and they are most of the market.
 
-So there are several boards, and a casual visitor can win the ones that matter to
-them:
+An earlier draft answered that with four boards, including a **best single
+trip**. That was wrong — [MASTER-VISION.md](../MASTER-VISION.md) forbids it
+explicitly:
 
-- **Season score** — the main board. Rewards frequency and skill together
-- **Best single trip** — one visit, one score. A once-a-year visitor can top this
-- **Collection** — species held as a percentage. Rewards years, not money
-- **Rarest find of the season** — one lucky pangolin beats a hundred impala
+> Never build a "most sightings today" leaderboard. It rewards racing between
+> sightings, which is exactly what the Quiet Sighting bonus exists to discourage.
 
-Friends-and-family groups (Phase 6) matter more than the global board for most
-people. The paper scorecard was always five people in one car.
+Best-single-trip is that mechanic with a different window. Dropped.
+
+**The answer is Species Crowns.** Every species has a seasonal holder — the
+player with the most verified sightings of it. Seventy-one species means
+seventy-one separate competitions and seventy-one chances to be best at
+something. A first-timer who gets lucky with a pangolin holds that crown
+immediately, which is a far better story than being ranked 4,318th.
+
+Alongside crowns:
+
+- **Ranks** — Day Visitor → Tracker → Ranger → Field Guide → Head Ranger →
+  Legend. Earned by breadth across every trip ever taken. Crowns reward one
+  brilliant sighting; ranks reward persistence.
+- **Codex completion** — per category, see below. Rewards years, not money.
+
+Quick Logs never earn crowns. No photo means no proof.
+
+Friends-and-family groups matter more than any global board for most people. The
+paper scorecard was always five people in one car.
+
+#### Completion is per category
+
+The Codex splits into **Mammals / Birds / Reptiles with independent completion
+percentages.**
+
+Birders are the most obsessive list-keepers on earth and a large slice of
+self-drive visitors, so birds and reptiles stay in — but a mammal-focused player
+staring at 30% forever is demoralised by a number that is not measuring what they
+are actually doing. Three bars, three achievements.
+
+Crowns work per species regardless of category.
 
 ## Nicknames
 
@@ -357,15 +383,64 @@ Beyond that, three defences, cheapest first:
    sighting outright. A model that wrongly rejects a real pangolin would be
    unforgivable; one that quietly asks a human is fine.
 
+## The species catalogue must be updatable without an app release
+
+Tiers, sensitivity flags, descriptions and new species all change. Today the
+catalogue is a JSON asset compiled into the binary, so changing a single rarity
+tier means a store submission and a review queue.
+
+That is unacceptable for one field in particular. **If a sensitivity flag needs
+changing urgently — a new poaching hotspot, a wild dog den discovered — waiting
+three days for app review is not an option.**
+
+### What is needed
+
+A **versioned catalogue** that syncs on connect and caches locally:
+
+- The catalogue carries a monotonic `version`
+- On any connection, the app asks the server for the current version and pulls a
+  delta if it is behind
+- The bundled JSON remains the **fallback**, so a fresh install works offline at
+  the gate with no signal, which is exactly where installs happen
+- The cached copy is what the app reads. Never block startup on the network.
+
+### Why this cannot wait
+
+Retrofitting it means migrating a live user base off a compiled asset while
+their local sightings reference species ids. Building it before there are users
+costs a day; building it after costs a migration.
+
+Do it in the backend phase, alongside the first schema.
+
+### The safety rule it enables
+
+A sensitivity change must be able to reach a player **already in the park**, on
+their next moment of signal, without an update. That is the point of the whole
+mechanism.
+
 ## Sensitive species
 
-**White Rhino, Black Rhino and Pangolin sightings never expose location.** Not to
-friends, not on the leaderboard, not in the share card, not in exported data. The
-sighting counts for points; the coordinates are stored encrypted and are never
-rendered. This is a poaching-risk decision and it is not negotiable for a feature
-request later.
+**Sensitivity is a per-species data field, not a hardcoded list.**
 
-The same rule applies to any species flagged `isSensitive` in the dataset.
+The current model — a boolean `isSensitive` set on three species — is an
+if-statement waiting to be wrong. Poaching pressure moves. The real list is
+longer than rhino and pangolin and it changes over time: **ground hornbill,
+vultures at nest sites, and any denning wild dog site** all warrant care.
+
+Replace it with `sensitivityLevel`, updatable via the catalogue sync above
+without an app release:
+
+| Level | Behaviour |
+|---|---|
+| `none` | Location stored and shown normally |
+| `coarse` | Stored and displayed only at a coarse grid — region-level, never a pin |
+| `never` | Coordinates never rendered anywhere: not on a profile, a leaderboard, a share card, an export, or to friends. Stored encrypted; the sighting still scores. |
+
+Rhino and pangolin are `never`. Others will be added, and some will move
+between levels as circumstances change — that is the point of it being data.
+
+**Enforce on both client and server.** This is a correctness invariant, not a
+feature. If it fails, an animal dies.
 
 ## Monetisation
 

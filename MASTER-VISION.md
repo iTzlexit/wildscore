@@ -77,13 +77,18 @@ as valuable as one brilliant morning.
 | Common | 5 | Scratched off for the day | Impala, zebra, wildebeest, kudu, warthog, baboon, vervet |
 | Frequent | 15 | Scratched off for the day | Elephant, buffalo, giraffe, hippo, waterbuck, nyala, crocodile |
 | Notable | 30 | Stays live | White rhino, spotted hyena, lion |
-| Rare | 60 | Stays live | Leopard, cheetah, black rhino |
-| Very rare | 100 | Stays live | African wild dog, sable, roan, honey badger |
+| Rare | 60 | Stays live | Leopard, cheetah |
+| Very rare | 100 | Stays live | **Black rhino**, African wild dog, sable, roan, honey badger |
 | Exceptional | 200 | Stays live | Serval, caracal, aardwolf, aardvark |
 | Legendary | 400 | Stays live | Pangolin |
 
 A single pangolin outweighs six leopards. That is true to how Kruger regulars
 actually feel, and the scoring should reflect it.
+
+> **Corrected 2026-07-26.** Black rhino was originally listed as Rare (60),
+> below wild dog. That was an artefact of writing illustrative examples rather
+> than thinking it through — black rhino are far fewer animals in much thicker
+> bush and are genuinely harder to find. Moved to Very rare (100).
 
 **Cooldown:** the same species at roughly the same location within an hour
 counts once. Two hours parked at a leopard is one sighting, not forty. Enforce
@@ -289,7 +294,8 @@ players.
 | Constraint | Why |
 |---|---|
 | Camera capture only — no gallery path exists | The entire trust model depends on controlling the capture moment |
-| Rhino and pangolin locations never stored precisely | Geotagged sightings of high-value species are a poaching risk. Coarse grid or nothing. Enforce client and server side. This is a correctness invariant, not a feature — if it fails, an animal dies. |
+| Sensitive species locations never stored precisely | Geotagged sightings of high-value species are a poaching risk. Coarse grid or nothing. Enforce client and server side. This is a correctness invariant, not a feature — if it fails, an animal dies. **Amended 2026-07-26: this is a per-species `sensitivityLevel` field (`none` / `coarse` / `never`), updatable without an app release — not a hardcoded rhino-and-pangolin list. Poaching pressure shifts; ground hornbill, vultures at nest sites and denning wild dog sites all warrant care.** |
+| The species catalogue must be updatable without an app release | Tiers, sensitivity flags and new species all change. A versioned catalogue that syncs on connect and caches locally. **Added 2026-07-26** — painful to retrofit. |
 | No live public sightings map | Real-time "where is the leopard" creates crowding and poaching risk. Deliberate omission. |
 | No points for off-road positions or speeding | Never incentivise breaking park rules. Detectable from the trace. |
 | Nothing decays | No feeding, no guilt, no streak punishment |
@@ -346,9 +352,15 @@ part, so the temptation to build it early will be strong. **Resist.**
 geolocator, flutter_map with offline MBTiles, sensors_plus for the pan gyro
 trace, RevenueCat for IAP.
 
-**Backend:** ASP.NET Core 9 + PostgreSQL + EF Core. Cloudflare R2 for photo
-storage. Claude vision via Anthropic.SDK for species verification. Hosted on
-Render.
+**Backend:** ~~ASP.NET Core 9 + PostgreSQL + EF Core, Cloudflare R2, Render.~~
+
+> **Superseded 2026-07-26 — Supabase.** Postgres, auth, object storage and
+> row-level security on day one, with no server to operate. The original stack
+> is five separate things to build and run before a single user sees anything.
+> Backend skill goes into schema design and RLS policies, which is real backend
+> work. Reversible: Supabase *is* Postgres, so ASP.NET Core can go in front of
+> the same database later. Claude vision for species verification is unchanged.
+> See [docs/TECH-STACK.md](docs/TECH-STACK.md).
 
 **Why Flutter over MAUI:** the developer has never built mobile, so the C#
 advantage is smaller than it looks — mobile concepts are the real learning

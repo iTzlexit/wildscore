@@ -217,15 +217,52 @@ reveal animation.**
 
 ---
 
-## What still needs a decision from Alex
+## Decisions — all resolved 2026-07-26
 
-1. **Rewrite `docs/VISION.md` around the master's framing?** (§1) — my
-   recommendation is yes, and first.
-2. **Re-tier the ~40 species** the examples do not cover, and confirm the black
-   rhino / wild dog ordering. Best done in the same pass as the guide's review.
-3. **45 species or 71?** (§8)
-4. **Rename the player noun** — "Tracker" is taken by the rank system (§4).
-5. **Drop the best-single-trip board** in favour of crowns? (§6)
-6. **Confirm the Supabase call still stands** now that the master specifies
-   ASP.NET Core + R2 + Render. Alex has already said yes; noting it because the
-   canonical document disagrees.
+| # | Question | Decision |
+|---|---|---|
+| 1 | Rewrite VISION.md around the master's framing? | **Yes, and first.** Done. Paywall moved to the Six and the Den. |
+| 2 | Re-tier the ~40 uncovered species | **In the same pass as the Kruger guide's review — do not do it alone.** That is the one chance to have the whole table sanity-checked by someone who knows the park. |
+| 3 | 45 species or 71? | **71.** Birders are the most obsessive list-keepers on earth and a large slice of self-drive visitors. But **split Codex completion into Mammals / Birds / Reptiles with independent percentages**, so a mammal-focused player is not staring at 30% forever. Crowns work per species regardless. |
+| 4 | Player noun | **Spotter.** Neutral, matches the game's language, no rank collision, reads correctly in English and Afrikaans. |
+| 5 | Drop best-single-trip? | **Yes.** Crowns are the better answer to "how does a casual player win something". |
+| 6 | Supabase vs the master's ASP.NET Core stack | **Supabase stands.** MASTER-VISION.md updated — the document was stale, not the decision. |
+| — | Black rhino tier | **Very rare (100)**, not Rare (60). Far fewer animals in much thicker bush; genuinely harder than wild dog. The original was an artefact of writing illustrative examples. MASTER-VISION.md corrected. |
+
+## Added to the design 2026-07-26
+
+Two gaps neither document had.
+
+### A. Species sensitivity is a data field, not a hardcoded list
+
+`isSensitive` as a boolean on three species is an if-statement waiting to be
+wrong. Poaching pressure shifts, and the real list is longer — **ground hornbill,
+vultures at nest sites, any denning wild dog site.**
+
+Replaced by a per-species `sensitivityLevel` enum — `none` / `coarse` / `never`
+— changeable **without an app release**. Specced in [SPEC.md](SPEC.md).
+
+### B. The species catalogue needs an offline update path
+
+**The gap:** the catalogue is a JSON asset compiled into the binary. Changing one
+rarity tier means a store submission and a review queue. When the guide re-tiers
+something, or a species is added, or **a sensitivity flag needs changing
+urgently**, there is no way to reach a player already in the park.
+
+**The fix:** a versioned catalogue that syncs on connect and caches locally, with
+the bundled JSON as the offline fallback so a fresh install works at the gate.
+
+**Why it cannot wait:** retrofitting means migrating a live user base off a
+compiled asset while their local sightings reference species ids. A day now; a
+migration later. Build it with the first backend schema.
+
+This also makes §A actually work — a sensitivity change is worthless if it cannot
+reach anyone.
+
+## Still outstanding
+
+- **Re-tier ~40 species** with the guide (decision 2)
+- **Rename "Tracker" → "Spotter"** in onboarding, the profile strip and all copy
+- **Restructure ROADMAP.md** to the master's twelve phases
+- **Rewrite the repeat-sighting section of SPEC.md** for the daily scorecard —
+  it still describes a lifetime model with 10% repeats
