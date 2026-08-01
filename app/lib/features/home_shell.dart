@@ -104,15 +104,22 @@ class _CameraButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Standard size, not .large. The large FAB is 96pt and was covering the
+    // category counts on the profile — a floating button that hides data is
+    // worse than a smaller one. Gold on near-black is prominent enough.
     return Padding(
-      padding: const EdgeInsets.only(bottom: 62),
-      child: FloatingActionButton.large(
-        onPressed: onPressed,
-        backgroundColor: AppColors.accent,
-        foregroundColor: const Color(0xFF14100A),
-        elevation: 6,
-        shape: const CircleBorder(),
-        child: const Icon(Icons.photo_camera_rounded, size: 30),
+      padding: const EdgeInsets.only(bottom: 58),
+      child: SizedBox(
+        width: 62,
+        height: 62,
+        child: FloatingActionButton(
+          onPressed: onPressed,
+          backgroundColor: AppColors.accent,
+          foregroundColor: AppColors.accentInk,
+          elevation: 6,
+          shape: const CircleBorder(),
+          child: const Icon(Icons.photo_camera_rounded, size: 26),
+        ),
       ),
     );
   }
