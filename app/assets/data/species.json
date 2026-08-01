@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "note": "First-pass dataset. Rarity tiers and regional ranges need review by a Kruger guide before launch — see docs/SPEC.md.",
   "species": [
     {
@@ -802,26 +802,8 @@
       "conservationStatus": "leastConcern"
     },
     {
-      "id": "samango-monkey",
-      "dexNumber": 39,
-      "commonName": "Samango Monkey",
-      "scientificName": "Cercopithecus albogularis",
-      "afrikaansName": "Samango-aap",
-      "category": "mammal",
-      "rarityTier": "rare",
-      "tags": [],
-      "isSensitive": false,
-      "description": "Darker, shyer and far more arboreal than a vervet. In Kruger it occurs only in the northern riverine forests around Pafuri and Punda Maria.",
-      "habitat": "Tall riverine and montane forest",
-      "bestTimeToSpot": "Early morning in northern forest",
-      "parkRegions": [
-        "northern"
-      ],
-      "conservationStatus": "leastConcern"
-    },
-    {
       "id": "scrub-hare",
-      "dexNumber": 40,
+      "dexNumber": 39,
       "commonName": "Scrub Hare",
       "scientificName": "Lepus saxatilis",
       "afrikaansName": "Kolhaas",
@@ -843,7 +825,7 @@
     },
     {
       "id": "serval",
-      "dexNumber": 41,
+      "dexNumber": 40,
       "commonName": "Serval",
       "scientificName": "Leptailurus serval",
       "afrikaansName": "Tierboskat",
@@ -864,7 +846,7 @@
     },
     {
       "id": "sharpes-grysbok",
-      "dexNumber": 42,
+      "dexNumber": 41,
       "commonName": "Sharpe's Grysbok",
       "scientificName": "Raphicerus sharpei",
       "afrikaansName": "Sharpe se Grysbok",
@@ -885,7 +867,7 @@
     },
     {
       "id": "slender-mongoose",
-      "dexNumber": 43,
+      "dexNumber": 42,
       "commonName": "Slender Mongoose",
       "scientificName": "Herpestes sanguineus",
       "afrikaansName": "Swartkwasmuishond",
@@ -907,7 +889,7 @@
     },
     {
       "id": "southern-reedbuck",
-      "dexNumber": 44,
+      "dexNumber": 43,
       "commonName": "Southern Reedbuck",
       "scientificName": "Redunca arundinum",
       "afrikaansName": "Rietbok",
@@ -926,7 +908,7 @@
     },
     {
       "id": "spotted-hyena",
-      "dexNumber": 45,
+      "dexNumber": 44,
       "commonName": "Spotted Hyena",
       "scientificName": "Crocuta crocuta",
       "afrikaansName": "Gevlekte Hiëna",
@@ -948,7 +930,7 @@
     },
     {
       "id": "steenbok",
-      "dexNumber": 46,
+      "dexNumber": 45,
       "commonName": "Steenbok",
       "scientificName": "Raphicerus campestris",
       "afrikaansName": "Steenbok",
@@ -968,7 +950,7 @@
     },
     {
       "id": "suni",
-      "dexNumber": 47,
+      "dexNumber": 46,
       "commonName": "Suni",
       "scientificName": "Neotragus moschatus",
       "afrikaansName": "Soenie",
@@ -986,7 +968,7 @@
     },
     {
       "id": "thick-tailed-bushbaby",
-      "dexNumber": 48,
+      "dexNumber": 47,
       "commonName": "Thick-tailed Bushbaby",
       "scientificName": "Otolemur crassicaudatus",
       "afrikaansName": "Bosnagaap",
@@ -1007,7 +989,7 @@
     },
     {
       "id": "tree-squirrel",
-      "dexNumber": 49,
+      "dexNumber": 48,
       "commonName": "Tree Squirrel",
       "scientificName": "Paraxerus cepapi",
       "afrikaansName": "Boomeekhoring",
@@ -1027,7 +1009,7 @@
     },
     {
       "id": "tsessebe",
-      "dexNumber": 50,
+      "dexNumber": 49,
       "commonName": "Tsessebe",
       "scientificName": "Damaliscus lunatus",
       "afrikaansName": "Tsessebe",
@@ -1045,7 +1027,7 @@
     },
     {
       "id": "vervet-monkey",
-      "dexNumber": 51,
+      "dexNumber": 50,
       "commonName": "Vervet Monkey",
       "scientificName": "Chlorocebus pygerythrus",
       "afrikaansName": "Blouaap",
@@ -1065,7 +1047,7 @@
     },
     {
       "id": "warthog",
-      "dexNumber": 52,
+      "dexNumber": 51,
       "commonName": "Warthog",
       "scientificName": "Phacochoerus africanus",
       "afrikaansName": "Vlakvark",
@@ -1085,7 +1067,7 @@
     },
     {
       "id": "waterbuck",
-      "dexNumber": 53,
+      "dexNumber": 52,
       "commonName": "Waterbuck",
       "scientificName": "Kobus ellipsiprymnus",
       "afrikaansName": "Waterbok",
@@ -1105,7 +1087,7 @@
     },
     {
       "id": "white-rhinoceros",
-      "dexNumber": 54,
+      "dexNumber": 53,
       "commonName": "White Rhinoceros",
       "scientificName": "Ceratotherium simum",
       "afrikaansName": "Witrenoster",
@@ -1126,7 +1108,7 @@
     },
     {
       "id": "white-tailed-mongoose",
-      "dexNumber": 55,
+      "dexNumber": 54,
       "commonName": "White-tailed Mongoose",
       "scientificName": "Ichneumia albicauda",
       "afrikaansName": "Witstertmuishond",
@@ -1149,7 +1131,7 @@
     },
     {
       "id": "african-fish-eagle",
-      "dexNumber": 56,
+      "dexNumber": 55,
       "commonName": "African Fish Eagle",
       "scientificName": "Haliaeetus vocifer",
       "afrikaansName": "Visarend",
@@ -1171,7 +1153,7 @@
     },
     {
       "id": "bateleur",
-      "dexNumber": 57,
+      "dexNumber": 56,
       "commonName": "Bateleur",
       "scientificName": "Terathopius ecaudatus",
       "afrikaansName": "Berghaan",
@@ -1193,7 +1175,7 @@
     },
     {
       "id": "kori-bustard",
-      "dexNumber": 58,
+      "dexNumber": 57,
       "commonName": "Kori Bustard",
       "scientificName": "Ardeotis kori",
       "afrikaansName": "Gompou",
@@ -1214,7 +1196,7 @@
     },
     {
       "id": "lappet-faced-vulture",
-      "dexNumber": 59,
+      "dexNumber": 58,
       "commonName": "Lappet-faced Vulture",
       "scientificName": "Torgos tracheliotos",
       "afrikaansName": "Swartaasvoël",
@@ -1237,7 +1219,7 @@
     },
     {
       "id": "lilac-breasted-roller",
-      "dexNumber": 60,
+      "dexNumber": 59,
       "commonName": "Lilac-breasted Roller",
       "scientificName": "Coracias caudatus",
       "afrikaansName": "Gewone Troupant",
@@ -1257,7 +1239,7 @@
     },
     {
       "id": "martial-eagle",
-      "dexNumber": 61,
+      "dexNumber": 60,
       "commonName": "Martial Eagle",
       "scientificName": "Polemaetus bellicosus",
       "afrikaansName": "Breëkoparend",
@@ -1280,7 +1262,7 @@
     },
     {
       "id": "pels-fishing-owl",
-      "dexNumber": 62,
+      "dexNumber": 61,
       "commonName": "Pel's Fishing Owl",
       "scientificName": "Scotopelia peli",
       "afrikaansName": "Visuil",
@@ -1302,7 +1284,7 @@
     },
     {
       "id": "saddle-billed-stork",
-      "dexNumber": 63,
+      "dexNumber": 62,
       "commonName": "Saddle-billed Stork",
       "scientificName": "Ephippiorhynchus senegalensis",
       "afrikaansName": "Saalbekooievaar",
@@ -1324,7 +1306,7 @@
     },
     {
       "id": "southern-ground-hornbill",
-      "dexNumber": 64,
+      "dexNumber": 63,
       "commonName": "Southern Ground Hornbill",
       "scientificName": "Bucorvus leadbeateri",
       "afrikaansName": "Bromvoël",
@@ -1347,7 +1329,7 @@
     },
     {
       "id": "verreauxs-eagle-owl",
-      "dexNumber": 65,
+      "dexNumber": 64,
       "commonName": "Verreaux's Eagle-Owl",
       "scientificName": "Bubo lacteus",
       "afrikaansName": "Reuse-ooruil",
@@ -1370,7 +1352,7 @@
     },
     {
       "id": "white-backed-vulture",
-      "dexNumber": 66,
+      "dexNumber": 65,
       "commonName": "White-backed Vulture",
       "scientificName": "Gyps africanus",
       "afrikaansName": "Witrugaasvoël",
@@ -1392,7 +1374,7 @@
     },
     {
       "id": "black-mamba",
-      "dexNumber": 67,
+      "dexNumber": 66,
       "commonName": "Black Mamba",
       "scientificName": "Dendroaspis polylepis",
       "afrikaansName": "Swartmamba",
@@ -1414,7 +1396,7 @@
     },
     {
       "id": "leopard-tortoise",
-      "dexNumber": 68,
+      "dexNumber": 67,
       "commonName": "Leopard Tortoise",
       "scientificName": "Stigmochelys pardalis",
       "afrikaansName": "Bergskilpad",
@@ -1434,7 +1416,7 @@
     },
     {
       "id": "nile-crocodile",
-      "dexNumber": 69,
+      "dexNumber": 68,
       "commonName": "Nile Crocodile",
       "scientificName": "Crocodylus niloticus",
       "afrikaansName": "Nylkrokodil",
@@ -1456,7 +1438,7 @@
     },
     {
       "id": "african-rock-python",
-      "dexNumber": 70,
+      "dexNumber": 69,
       "commonName": "Southern African Rock Python",
       "scientificName": "Python natalensis",
       "afrikaansName": "Luislang",
@@ -1478,7 +1460,7 @@
     },
     {
       "id": "water-monitor",
-      "dexNumber": 71,
+      "dexNumber": 70,
       "commonName": "Water Monitor",
       "scientificName": "Varanus niloticus",
       "afrikaansName": "Waterlikkewaan",

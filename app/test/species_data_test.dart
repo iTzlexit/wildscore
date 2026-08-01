@@ -26,7 +26,7 @@ void main() {
     // If an enum string in the JSON is wrong, loadAll throws and the app shows
     // an error screen instead of the Codex. This is the single most valuable
     // assertion in the file.
-    expect(species.length, greaterThanOrEqualTo(71));
+    expect(species.length, greaterThanOrEqualTo(70));
   });
 
   test('ids are unique', () {
@@ -174,9 +174,6 @@ void main() {
       ParkRegion.northern,
     ]);
     expect(byId('suni').parkRegions, <ParkRegion>[ParkRegion.northern]);
-    expect(byId('samango-monkey').parkRegions, <ParkRegion>[
-      ParkRegion.northern,
-    ]);
     expect(
       byId('white-rhinoceros').parkRegions,
       isNot(contains(ParkRegion.northern)),
