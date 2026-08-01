@@ -1,318 +1,231 @@
-# Divergences from the original plan
+# Divergences from MASTER-VISION.md
 
-The original [00-START-HERE](archive/00-START-HERE-original.md) was written
-before any code existed and was never saved to disk — the first two days of
-building happened without it. This records where the live docs disagree with it,
-so nothing was changed silently.
+[MASTER-VISION.md](../MASTER-VISION.md) is canonical and arrived after Phase 1
+was already built. This records every place the code and the working docs
+disagree with it.
 
-**Everything not listed here still holds**, including Flutter over MAUI,
-RevenueCat, the non-renewing R249 season pass, the iOS/Codemagic plan, the store
-account requirements, and the four Pokémon feelings.
+**No code has been changed yet.** This is the audit, not the migration.
 
 ---
 
-## Settled — not open questions
+## 1. The positioning is inverted — fix this first
 
-Confirmed by Alex 2026-07-26. Do not reopen without a new reason.
+**MASTER-VISION.md opens with:**
 
-- **Supabase**, not self-hosted ASP.NET Core
-- **Sensitive locations never rendered**, not coarsened to a grid — an
-  invariant rather than a defence
-- **The reveal lands in Phase 2**, with the camera
-- **Do not adopt packages before there is a problem they solve**
+> Wild Score is where your Kruger sightings live, so you can visit them when you
+> miss the park.
+>
+> This is also the business model. People don't resent paying to keep a photo
+> album. They resent paying for leaderboards.
+
+**Our `docs/VISION.md` opens with:** *Catch → Score → Profile → Rank*, framed as
+"the reason a player drives one more loop road at last light."
+
+Both describe the same app. They point the product in different directions.
+
+The master's frame is **memory first, game second** — the competition exists to
+make the collection worth building, not the reverse. Ours reads as a competitive
+game that happens to keep photos. That difference decides:
+
+- Whether the app feels good in October, when the next trip is in July
+- **What people are willing to pay for.** The master's monetisation follows
+  directly from its framing, and ours does not: we put the paywall on
+  *submitting your score*, which is paying for a leaderboard — the exact thing
+  the master says people resent.
+
+**This is the single most important correction in this document.** Everything
+else is mechanics.
+
+`docs/VISION.md` needs rewriting around the master's sentence.
 
 ---
 
-## CONFIRMED — the scoring model, and the migration it requires
+## 2. Settled — confirmed, keep as built
 
-Confirmed by Alex 2026-07-26. Not yet implemented — no code has been changed.
-
-### The model
-
-**Each day is a fresh scorecard.**
-
-| Tier (enum name) | Points | Behaviour |
-|---|---|---|
-| `common` | 5 | **Scratched off** — scores once that day |
-| `frequent` | 15 | **Scratched off** — scores once that day |
-| `notable` | 30 | Stays live, 1h cooldown |
-| `rare` | 60 | Stays live, 1h cooldown |
-| `veryRare` | 100 | Stays live, 1h cooldown |
-| `exceptional` | 200 | Stays live, 1h cooldown |
-| `legendary` | 400 | Stays live, 1h cooldown |
-
-Enum names are the display names, so the two can never drift apart.
-
-### "Stays live" means per encounter, never per shutter press
-
-**The rule:** same species, roughly the same location, within one hour counts
-once. Enforced from the GPS trace.
-
-- A leopard at 07:00 near Skukuza and another at 15:00 near Satara: **two
-  sightings.**
-- Forty photos of one leopard over two hours: **one sighting.**
-
-**The tier table and the cooldown must always appear together.** Wherever they
-are separated, someone reads "stays live" as unlimited — which is exactly what
-happened here. Never document one without the other.
-
-### Migration — every touchpoint
-
-Two tiers disappear (`uncommon`, `scarce`) and two change meaning
-(`rare` 100→60, `veryRare` 250→100). **Every species currently in a deleted or
-revalued tier must be re-assigned by hand, not mapped mechanically** — the point
-of the change is that the curve is different, not just renamed.
-
-Current distribution, all 71 species need review:
-
-| Current tier | Count | Likely new tier |
-|---|---|---|
-| `frequent` | 17 | `frequent` (10→15 pts) |
-| `scarce` | 16 | **deleted** — split between `rare` and `notable` |
-| `common` | 13 | `common` ✓ |
-| `rare` | 10 | **revalued** 100→60, or promote to `veryRare` |
-| `uncommon` | 7 | **deleted** — likely `notable` |
-| `veryRare` | 5 | **revalued** 250→100, or promote to `exceptional` |
-| `legendary` | 3 | `legendary` (500→400) |
-
-Files that must change together:
-
-- `app/lib/domain/rarity_tier.dart` — the enum and its point values
-- `app/lib/shared/theme.dart` — seven `RarityStyle` cases in a switch that will
-  fail to compile until all seven names match. That is a feature: the compiler
-  finds them.
-- `app/assets/data/species.json` — 71 `rarityTier` values
-- `app/test/species_model_test.dart` — asserts all seven point values, plus a
-  fixture using `legendary` and asserting 500
-- `app/test/species_data_test.dart` — asserts every tier is populated
-- `docs/SPEC.md` — the tier table, and the repeat-sighting section, which
-  currently describes a lifetime model rather than a daily scorecard
-
-Do the enum first and let the analyzer enumerate the rest.
-
-### What we built instead — to be replaced
-
-| Ours | Points | Maps to | Their points |
-|---|---|---|---|
-| common | 5 | Common | 5 ✓ |
-| frequent | 10 | Frequent | **15** |
-| uncommon | 25 | Notable | **30** |
-| scarce | 50 | Rare | **60** |
-| rare | 100 | Very rare | 100 |
-| veryRare | 250 | Exceptional | **200** |
-| legendary | 500 | Legendary | **400** |
-
-**The dangerous part is the naming, not the numbers.** Our `rare` is 100; their
-*Rare* is 60. Our `veryRare` is 250; their *Very rare* is 100. Any conversation
-using tier names without numbers will produce a wrong answer until this is
-fixed. Rename before anyone reviews the species data.
-
-### The structural change is bigger than the numbers
-
-The daily-scorecard model **replaces** what is currently specced:
-
-| Currently in SPEC.md | Current model |
+| Decision | Note |
 |---|---|
-| First sighting full points, repeats at 10% | Common/Frequent score once per day; Notable+ score every time |
-| Lifetime scoring | Fresh scorecard every day |
-| One-hour per-species cooldown | *Unresolved — see below* |
-
-The daily scorecard is closer to the paper game and I think it is right. The
-lifetime **collection** still stands alongside it: score is per-day, collection
-is forever.
-
-**It also makes the leaderboard simpler** — "best single day" stops being a
-special board and becomes the natural unit.
-
-### Resolved: the farming hole
-
-Raised as an open question, now closed. "Stays live" never meant per shutter
-press — see the cooldown rule above. The ambiguity was in the document's
-phrasing, not in the intent.
+| **Supabase**, not self-hosted ASP.NET Core + R2 + Render | Confirmed by Alex. Master's stack section is superseded here. |
+| **Sensitive locations never rendered** | Master says "coarse grid **or nothing**" — never-render is the "or nothing" branch, and stricter. Compliant. |
+| **The reveal lands with the camera**, not before it | Master puts the reveal in Phase 1 as part of the Codex; there is nothing to reveal until capture exists. |
+| **No packages before there is a problem** | Riverpod and Drift deferred. Master names both; timing is ours. |
 
 ---
 
-## Resolved differences
+## 3. Mechanics we do not have at all
 
-### Backend: Supabase, not ASP.NET Core + your own hosting
+### Quick Log — the biggest functional gap
 
-**Original:** ASP.NET Core 9, EF Core, ASP.NET Identity + JWT, Cloudflare R2,
-Render or Azure.
+**One tap, no photo, under three seconds from app open.** Builds the Codex,
+scores points, feeds Wild Card objectives. It is how you record the forty
+impala, in a moving car.
 
-**Now:** Supabase — see [TECH-STACK.md](TECH-STACK.md).
+We specced camera capture as the *only* way to record a sighting. That is wrong,
+and it makes the app unusable at the speed it actually needs to work.
 
-**Why:** that stack is five separate things to build and operate (API, identity,
-blob storage, hosting, deployment) before a single user can see anything.
-Supabase gives Postgres, auth, photo storage and row-level security on day one.
-Alex's backend experience still applies — it goes into schema design and RLS
-policies, which *is* backend work.
+It also resolves the argument we had about capture ordering: **Quick Log is the
+fast path.** Pick-species-then-shoot is fine for Capture precisely because Quick
+Log exists for everything else.
 
-**Reversible:** Supabase is plain Postgres. If it is outgrown, put ASP.NET Core
-in front of the same database. Nothing here is one-way.
+### Trip sessions — a different trust model
 
-### No packages in Phase 1; Riverpod and Drift deferred
+> Verify the session, not each individual image.
 
-**Original:** Riverpod, Drift, dio from the first commit.
+A session opens when the device enters the park boundary and stays valid while
+the GPS trace is continuous, on known roads, at plausible speeds, within gate
+hours. **Everything captured inside a valid session inherits that trust.**
 
-**Now:** Phase 1 shipped with **zero** third-party packages.
-`shared_preferences` was added only when the tracker profile needed to survive a
-restart.
+We specced per-photo GPS + timestamp. The session model is stronger and cheaper:
+forging eight hours of coherent trace on real park roads is harder than driving
+there.
 
-**Why:** two screens over a read-only JSON asset need `Navigator` and
-`setState`. Every package added before it is needed is a version-resolution
-problem standing between you and your first successful build.
+### The Codex middle state
 
-**This was vindicated:** Riverpod is now on **3.x** with a substantially
-changed API — `StateNotifier` gave way to `Notifier`, and most tutorials are
-still written for 2.x. Adding it on day one would have meant writing 2.x-shaped
-code against a 3.x library.
+Three states: undiscovered silhouette → **logged (stock image)** → verified
+(your photo replaces the stock image permanently, plus a tick).
 
-### sqflite before Drift
+We built two. The *logged* state is missing, and it is the state Quick Log
+produces — so the two gaps are the same gap.
 
-**Original:** Drift for local persistence.
+**Confirmed by Alex:** logged → verified is automatic on sync. No separate
+action.
 
-**Now:** `sqflite` in Phase 2, with Drift only if the queries get complex.
+### Also entirely absent
 
-**Why:** Drift needs build_runner code generation, which is another workflow to
-learn while also learning Flutter. Plain SQL is already familiar.
-
-### Sensitive species: never rendered, not coarsened
-
-**Original:** coarsen sensitive locations to a ~25 km grid.
-
-**Now:** rhino and pangolin locations are **stored encrypted and never rendered
-anywhere** — not on a profile, a leaderboard, a share card or an export.
-
-**Why:** stricter, and simpler to guarantee. A coarsening bug leaks a location;
-a never-render rule has nothing to leak. There is a test enforcing the flag.
-
-### The reveal and share card moved to Phase 2
-
-**Original:** build both in Phase 1.
-
-**Now:** Phase 1 was the Codex only; the reveal lands with the camera in Phase 2.
-
-**Why:** there is nothing to reveal before capture exists. The onboarding
-tracker-card animation was built as a deliberate cheap rehearsal of it.
-
-**Still agreed:** these are product, not polish, and must not be deferred again.
+- **Collection of Six** — six promoted captures, freely swappable, the only ones
+  stored at full resolution
+- **The Den** — the six as animated sprites; tap opens your real photo. ~12
+  eligible species. Never build hunger, decay or streaks.
+- **Species Crowns** — per-species seasonal holder, Hall of Fame for past
+  holders. Quick Logs never earn crowns.
+- **Ranks** — Day Visitor → Tracker → Ranger → Field Guide → Head Ranger →
+  Legend
+- **Wild Card** — daily objective, generated locally at trip start
+- **The sync ritual** — cards flipping pending → verified one at a time. "Don't
+  hide it behind a spinner."
+- **Provisional scoring** — live score during the drive, points confirm later
+- **No points for off-road positions or speeding** — detectable from the trace
+- **Four photos per capture**
 
 ---
 
-## Ideas from the original plan that are *not* yet in the live spec
+## 4. Naming collision: "Tracker" is a rank
 
-These are good and were lost when the file was not saved. Reconsider each before
-Phase 3.
+We call every player a **Tracker** — it is on the onboarding card, the profile
+strip, and throughout the copy.
 
-### PanCapture — the 360° gyroscope pan — CONFIRMED, returning
+In the master, **Tracker is the second of six ranks**: Day Visitor → *Tracker* →
+Ranger → Field Guide → Head Ranger → Legend.
 
-A gyroscope trace proving the phone physically swept the scene. **The only
-preventive control in the whole design** — everything else (tier-gated review,
-community flagging, ML checks) is reactive. It defeats the one attack
-camera-only capture cannot: photographing a screen or a printed picture.
+So the app currently promotes every new user to rank two on signup and calls it
+their identity. This must be renamed before ranks ship, and it is user-visible
+copy in several places.
 
-**It does double duty**, which is why it earns its complexity: anti-fraud *and*
-anti-crowding.
+---
 
-**Rules, as amended by Alex** — my original proposal was to gate it to the top
-tiers entirely, and that was wrong:
+## 5. Rarity tiers — mapping from the master's examples
 
-- **Optional at every tier.** Never required to log a sighting.
-- **Earns the Quiet Sighting bonus at any tier.** Its primary job is
-  behavioural. Rewarding someone for being alone with a herd of elephants is
-  exactly as valuable as rewarding it for a leopard, and it is the mechanic that
-  keeps people off the crowded roads.
-- **Effectively required for crown eligibility at Very rare and above**, where
-  leaderboard integrity actually matters.
+Two tiers are deleted (`uncommon`, `scarce`) and the curve changes shape. The
+master's examples settle roughly 30 of our 71.
 
-Gate by tier for *fraud*; keep the bonus universal for *behaviour*. Those are
-two different jobs and only one of them scales with rarity.
+| Species | Ours now | Master says | Move |
+|---|---|---|---|
+| Impala, zebra, wildebeest, kudu, warthog, baboon, vervet | common 5 | Common 5 | — |
+| **Giraffe, hippo, waterbuck** | common 5 | **Frequent 15** | up |
+| Elephant, buffalo, nyala, crocodile | frequent 10 | Frequent 15 | revalue |
+| **Spotted hyena** | frequent 10 | **Notable 30** | up two |
+| White rhino, lion | uncommon 25 | Notable 30 | revalue |
+| Leopard | scarce 50 | Rare 60 | revalue |
+| **Cheetah** | rare 100 | **Rare 60** | down |
+| **Black rhino** | veryRare 250 | **Rare 60** | down two |
+| African wild dog, roan | rare 100 | Very rare 100 | rename only |
+| **Sable, honey badger** | scarce 50 | **Very rare 100** | up |
+| **Serval, caracal** | rare 100 | **Exceptional 200** | up |
+| Aardwolf, aardvark | veryRare 250 | Exceptional 200 | revalue |
+| Pangolin | legendary 500 | Legendary 400 | revalue |
 
-### Quiet Sighting bonus — CONFIRMED
+**Worth querying with the Kruger guide:** black rhino at Rare 60 sits below wild
+dog at Very rare 100. In Kruger, black rhino sightings are meaningfully rarer
+than wild dog — they are far fewer animals in far thicker bush. This may be
+deliberate; it may be an artefact of the examples being illustrative rather than
+exhaustive.
 
-Not a separate mechanic: it is what PanCapture earns. See above.
+The remaining ~40 species have no example to map from and need judgement.
 
-### Species Crowns
+---
 
-Being the top holder of a given species. A per-species leaderboard, which gives
-far more people something to win than a single global table — the same reasoning
-behind the four boards in [SPEC.md](SPEC.md).
+## 6. Leaderboards — we built one the master forbids
 
-Crown eligibility at Very rare and above requires PanCapture.
+> **Never build a "most sightings today" leaderboard.** It rewards racing
+> between sightings, which is exactly what the Quiet Sighting bonus exists to
+> discourage.
 
-### Vehicle Pass — R499 for five players on one trip
+`docs/SPEC.md` currently specs four boards, including **"Best single trip — one
+visit, one score."** That is the banned mechanic with a different window.
 
-Directly serves the actual use case: a family in one car. The paper scorecard was
-always five people in a vehicle. Likely a better seller than the individual pass.
+The master's answer to "how does a casual player win something" is **Species
+Crowns** — 45 separate competitions — not more leaderboards. That is a better
+answer than mine and it replaces the four-board scheme.
 
-### The three-state Codex — needs confirming against our build
+Keep: the Collection board (breadth over years) is compatible with crowns and
+ranks. Drop: best-single-trip.
 
-Alex describes three states per species:
+---
 
-1. **Undiscovered** — silhouette
-2. **Logged** — stock image
-3. **Verified** — the player's own photo **replaces the stock image
-   permanently**, plus a verification tick
+## 7. Monetisation — prices and the paywall are both wrong
 
-**What we built has only two states**: locked (photo desaturated to near-black
-with a question mark) and unlocked (stock photo). There is no logged-vs-verified
-distinction and no photo replacement.
+| | Ours | Master |
+|---|---|---|
+| Season Pass | R249 | **R199** (R149 founding season), $14.99 international |
+| Vehicle Pass | R499 | **R399** / $29.99 |
+| Free tier | Codex, camera, collection | Camera capture, Quick Log, live scoring, daily scorecard, trip summary, **full Codex browsing** |
+| Pass unlocks | Leaderboard, share cards, stats, submitting your day | **Collection of Six, the Den**, crown/leaderboard eligibility, share cards, Quiet Sighting mode, badges |
 
-The player-photo-replaces-stock idea was independently reached during Phase 1
-and written into `assets/species/README.md` — good, it is the same conclusion.
-But **the middle state is missing**, and it implies a verification pipeline
-(logged → verified) that the live spec does not yet describe. What makes a
-sighting move from logged to verified?
+**The paywall placement is the real error.** We put it on *submitting your day's
+score* — which is charging for a leaderboard, the thing the master explicitly
+says people resent.
 
-### Ranks, the Collection of Six, the Den, the Wild Card
+The master sells **the Six and the Den**: keeping your photos, beautifully. That
+follows from the positioning in §1, and it is why §1 matters more than any
+mechanic in this file.
 
-**Named but not described anywhere I can see.** These are in
-`MASTER-VISION.md` and `COLLECTION-AND-DEN.md`, which are not in the repo.
-Cannot place them in the roadmap without reading them.
+Per-territory pricing is also missing from our doc: an international visitor
+already pays R602/person/day in conservation fees, so $14.99 is invisible to
+them while a South African family feels every rand.
 
-"Collection of Six" is presumably the Big Six Birds, which the dataset already
-tags — but I am guessing, and guessing at product definitions is how features
-get built wrong.
+---
+
+## 8. Scope: 45 species or 71?
+
+The master says 45 throughout — "all 45 species", "forty-five separate
+competitions". We shipped **71**, including 11 birds and 5 reptiles.
+
+Not necessarily wrong, but it is a decision, and it changes crowns (71
+competitions, not 45) and the Codex completion percentage.
+
+---
+
+## 9. Build order — 12 phases, not 7
+
+Our roadmap's seven phases predate the master. Its twelve are authoritative and
+`ROADMAP.md` should be restructured to match.
+
+Note **the Den is Phase 7** — the most expensive thing in the project, and the
+most tempting to build early. The master says: resist.
+
+Where we actually are: **Phase 1 complete except the three-state model and the
+reveal animation.**
 
 ---
 
 ## What still needs a decision from Alex
 
-Blocked on `MASTER-VISION.md`, which is still not in the repo:
-
-1. **The logged → verified pipeline.** Three Codex states are confirmed, but not
-   what moves a sighting from *logged* (stock image) to *verified* (player's
-   photo replaces it permanently). Is verification automatic on capture, or does
-   something have to happen first? This determines whether the middle state
-   lasts seconds or days.
-2. **Ranks, Collection of Six, the Den, the Wild Card.** Named, never described.
-   Cannot be placed in the roadmap.
-3. **The offline sync ritual** — referenced as being in MASTER-VISION.md.
-
-Answerable now, without the document:
-
-4. **Re-tiering all 71 species.** Two tiers are deleted and two revalued, so
-   every species needs a human decision. This wants the Kruger guide's review
-   doing at the same time — one pass, not two.
-5. **Whether the daily scorecard replaces the lifetime score on the profile**,
-   or sits alongside it. The Today/Lifetime toggle already built assumes
-   alongside, which seems right: score is per-day, collection is forever.
-
-## Missing source documents — still missing
-
-Four documents are referenced as canonical and **none is in the repo or anywhere
-on this machine** (searched the repo, `KrugerPoke`, Downloads, Desktop,
-Documents):
-
-- **`MASTER-VISION.md`** — stated to be canonical, written last, supersedes the
-  others
-- `SPEC.md` (the original, not ours)
-- `VERIFICATION-AND-PROGRESSION.md`
-- `COLLECTION-AND-DEN.md`
-
-Everything in this file about the rarity table, the three-state Codex and
-PanCapture comes from **Alex describing them in chat**, not from reading the
-documents. That is enough to correct the scoring model; it is not enough to
-place Ranks, the Collection of Six, the Den or the Wild Card.
-
-Pasting the contents into chat works as well as attaching the files.
+1. **Rewrite `docs/VISION.md` around the master's framing?** (§1) — my
+   recommendation is yes, and first.
+2. **Re-tier the ~40 species** the examples do not cover, and confirm the black
+   rhino / wild dog ordering. Best done in the same pass as the guide's review.
+3. **45 species or 71?** (§8)
+4. **Rename the player noun** — "Tracker" is taken by the rank system (§4).
+5. **Drop the best-single-trip board** in favour of crowns? (§6)
+6. **Confirm the Supabase call still stands** now that the master specifies
+   ASP.NET Core + R2 + Render. Alex has already said yes; noting it because the
+   canonical document disagrees.
