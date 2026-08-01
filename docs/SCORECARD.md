@@ -38,16 +38,61 @@ them:
 
 ---
 
-## Scratch-off: the rule that makes it work
+## Chances: the rule that makes it work
 
-**Common and Frequent species can be claimed once per day, per vehicle.** After
-that the tile visibly locks — greyed, marked *claimed by ___*, not tappable.
+Every species has a number of **chances per day** — how many times it can be
+claimed before the tile locks for the rest of the day.
+
+| Tier | Default chances |
+|---|---|
+| Common | 1 |
+| Frequent | 1 |
+| Notable | 3 |
+| Rare and above | unlimited |
 
 Without this, forty impala means forty shouts and the game is unplayable inside
 an hour. It is also exactly how the paper version worked.
 
-**Notable and above stay open all day**, every time. Every lion is worth
-calling.
+A locked tile shows **who claimed it** and stays visible — the record of who got
+the impala at the gate is part of the fun, so it must not simply disappear.
+
+**"Chances" rather than a boolean scratch-off** because it generalises. One is
+the common case; three suits a species you see a few times a day but not
+constantly; unlimited is every leopard. And it gives house rules something
+meaningful to adjust.
+
+## House rules
+
+Set up before the day starts, per vehicle:
+
+- **Exclude species.** Anything nobody wants to count.
+- **Chances per species**, overriding the tier default.
+- **Points per species**, overriding the tier default.
+
+This is genuinely wanted — every family plays slightly differently, and a car
+game that cannot be house-ruled is a worse car game.
+
+### But it breaks the leaderboard, so there are two modes
+
+**A score is only comparable to another score if both were earned under the
+same rules.** If one vehicle excludes impala, another triples cheetah and a
+third gives everything ten chances, a shared ranking is meaningless — and worse,
+it is trivially gamed by whoever sets the most generous rules.
+
+So:
+
+| Mode | Customisable | Public leaderboard |
+|---|---|---|
+| **Park rules** | No | **Yes** |
+| **House rules** | Everything | No — ranked within the vehicle only |
+
+This is the casual/ranked split every game with custom rules ends up building,
+and it is worth building deliberately now rather than discovering later when
+there are scores to invalidate.
+
+**Store the ruleset with the scorecard**, not just a mode flag. A day scored six
+months ago must still be explicable, and "why did I get 60 for that leopard"
+needs an answer that does not depend on current settings.
 
 ---
 
@@ -120,15 +165,50 @@ is *your record*. A claim can optionally be upgraded by photographing the animal
 
 ---
 
+## Bonuses
+
+- **Big Five in one day** — first player to claim all five: **+400**
+- **Big Six Birds in one day** — **+400**, and much harder
+
+Both are already tagged in the catalogue, so this is a scoring rule rather than
+new data.
+
+## The leaderboard, and why it is the last piece
+
+Daily totals sync when signal returns and rank against other players.
+
+**This is the only part that needs a network, and Kruger mostly has none.** So
+the whole game must work offline and the submission is a separate, later act —
+back at camp, or on the drive home.
+
+That ordering matters: **the leaderboard is a consequence of the scorecard, not
+a prerequisite.** Build the car game first and it is useful with zero backend.
+Build the leaderboard first and you have infrastructure serving nothing.
+
+Three things to get right when it comes:
+
+1. **Only Park rules games submit.** House games are excluded at the source, not
+   filtered later.
+2. **The server recomputes the score** from the claim list. Never trust a total
+   the client calculated — the first person to notice is the first person to
+   edit it.
+3. **Submission is idempotent.** A day resubmitted after a flaky camp Wi-Fi must
+   not count twice.
+
 ## Build order
+
+Offline-only, no backend, in order:
 
 1. Players for a day — add, remove, persist locally
 2. Start / end a scorecard, one active at a time
 3. Claim a species → assign to a player
-4. Scratch-off locking for Common and Frequent
-5. Live standings, sorted, on the Profile tab
-6. Day log — every claim with a timestamp
-7. End-of-day summary worth screenshotting
+4. Chances, and tiles locking when spent
+5. Live standings on the Profile tab
+6. Day log — every claim, timestamped, reassignable for five minutes
+7. House rules setup screen
+8. Big Five / Big Six bonuses
+9. End-of-day summary worth screenshotting
+10. **Then** the leaderboard, once there is something to submit
 
-None of it needs a network. All of it works in aeroplane mode, which is the
-condition it will actually be used in.
+Steps 1–9 need no network at all, which is the condition this will actually be
+used in.

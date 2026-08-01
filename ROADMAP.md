@@ -71,6 +71,31 @@ repeat-sighting model, `isSensitive` as a boolean.
 - [ ] Re-run the photo pipeline at 1200px WebP — the detail hero is
       under-resolved at 800px, and WebP absorbs the size increase
 
+## Phase 1.5 — The day scorecard ← **next, and the current focus**
+
+Decided 2026-08-02: build the car game before the camera. It needs **no camera,
+no GPS and no backend**, so it is playable on the next trip rather than the one
+after — and it is the origin story of the whole product.
+
+Everything else is parked until this works. Full spec:
+[docs/SCORECARD.md](docs/SCORECARD.md), player-facing copy:
+[docs/HOW-TO-PLAY.md](docs/HOW-TO-PLAY.md).
+
+- [ ] Players for a day — add, remove, persist locally
+- [ ] Start / end a scorecard, one active at a time
+- [ ] Claim a species → assign to a player
+- [ ] **Chances per species**, tiles locking when spent, showing who claimed it
+- [ ] Live standings on the Profile tab
+- [ ] Day log — timestamped, reassignable for five minutes then locked
+- [ ] **House rules** — exclude species, override chances, override points
+- [ ] **Park rules vs House rules.** Only Park rules games can ever reach the
+      public leaderboard. Store the ruleset *with* the scorecard, so an old day
+      stays explicable
+- [ ] Big Five / Big Six in a day: +400 each
+- [ ] First call of the day worth double
+- [ ] End-of-day summary worth screenshotting
+- [ ] **How to play** screen, generated from HOW-TO-PLAY.md
+
 ## Phase 2 — Trips, capture, scoring
 
 The product. Everything before is setup; everything after is amplification.
@@ -210,4 +235,11 @@ The most expensive thing in the project and the most tempting to build early.
 | 2026-07-26 | **Player noun is "Spotter"** | "Tracker" is rank two of six. Using it as the player noun promotes everyone on signup. |
 | 2026-07-26 | **Crowns, not more leaderboards** | Best-single-trip dropped — it is "most sightings today" with a different window, which rewards racing. 71 species is 71 chances to be best at something. |
 | 2026-07-26 | **Black rhino is Very rare (100)** | Fewer animals in thicker bush; genuinely harder than wild dog. The original Rare (60) was an artefact of illustrative examples. |
+| 2026-08-02 | **Day scorecard before the camera** | No camera, GPS or backend needed, so it is playable on the next trip rather than the one after. It is also the paper game the product came from. |
+| 2026-08-02 | **Chances per species, not a boolean scratch-off** | Generalises: one for impala, three for something seen a few times a day, unlimited for leopard. Also gives house rules something meaningful to adjust. |
+| 2026-08-02 | **Park rules vs House rules** | House rules are genuinely wanted, but a score is only comparable if both were earned under the same rules — and a shared board is trivially gamed by whoever sets the most generous ones. Only Park rules submits. |
+| 2026-08-02 | Ruleset stored with the scorecard, not just a mode flag | A day scored six months ago must stay explicable; "why did I get 60 for that leopard" cannot depend on current settings. |
+| 2026-08-02 | First Call bonus rather than raising Common points | 13 Common + 17 Frequent means the whole day's common ceiling is 320 against a pangolin's 400 — it works, but only just. Tripling Common takes it to 705 and a good morning at the gate beats a once-in-a-lifetime find. |
+| 2026-08-02 | Samango monkey removed | Not a Kruger species. Sourced from marginal Pafuri records. Renumbered 1–70 while renumbering is still free. |
+| 2026-08-02 | Light theme supersedes dark | The dark build read as generic. Original reasoning survives as constraints — auto dark mode if dawn brightness hurts, and photographs still lead. |
 | 2026-07-26 | PanCapture: gate by tier for fraud, universal for behaviour | Being alone with a herd of elephants deserves the same reward as with a leopard. Crowding matters at every tier. |
