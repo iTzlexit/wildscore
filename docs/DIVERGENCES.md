@@ -23,26 +23,74 @@ Confirmed by Alex 2026-07-26. Do not reopen without a new reason.
 
 ---
 
-## OPEN — the rarity table is wrong and must be corrected
+## CONFIRMED — the scoring model, and the migration it requires
 
-The scoring model changed *after* the original `SPEC.md` was written, and the
-table rebuilt from scratch during Phase 1 does not match the current one.
+Confirmed by Alex 2026-07-26. Not yet implemented — no code has been changed.
 
-### Current model (authoritative)
+### The model
 
 **Each day is a fresh scorecard.**
 
-| Tier | Points | Behaviour |
+| Tier (enum name) | Points | Behaviour |
 |---|---|---|
-| Common | 5 | **Scratched off** — scores once that day |
-| Frequent | 15 | **Scratched off** — scores once that day |
-| Notable | 30 | Stays live — scores on every sighting |
-| Rare | 60 | Stays live |
-| Very rare | 100 | Stays live |
-| Exceptional | 200 | Stays live |
-| Legendary | 400 | Stays live |
+| `common` | 5 | **Scratched off** — scores once that day |
+| `frequent` | 15 | **Scratched off** — scores once that day |
+| `notable` | 30 | Stays live, 1h cooldown |
+| `rare` | 60 | Stays live, 1h cooldown |
+| `veryRare` | 100 | Stays live, 1h cooldown |
+| `exceptional` | 200 | Stays live, 1h cooldown |
+| `legendary` | 400 | Stays live, 1h cooldown |
 
-### What we built instead
+Enum names are the display names, so the two can never drift apart.
+
+### "Stays live" means per encounter, never per shutter press
+
+**The rule:** same species, roughly the same location, within one hour counts
+once. Enforced from the GPS trace.
+
+- A leopard at 07:00 near Skukuza and another at 15:00 near Satara: **two
+  sightings.**
+- Forty photos of one leopard over two hours: **one sighting.**
+
+**The tier table and the cooldown must always appear together.** Wherever they
+are separated, someone reads "stays live" as unlimited — which is exactly what
+happened here. Never document one without the other.
+
+### Migration — every touchpoint
+
+Two tiers disappear (`uncommon`, `scarce`) and two change meaning
+(`rare` 100→60, `veryRare` 250→100). **Every species currently in a deleted or
+revalued tier must be re-assigned by hand, not mapped mechanically** — the point
+of the change is that the curve is different, not just renamed.
+
+Current distribution, all 71 species need review:
+
+| Current tier | Count | Likely new tier |
+|---|---|---|
+| `frequent` | 17 | `frequent` (10→15 pts) |
+| `scarce` | 16 | **deleted** — split between `rare` and `notable` |
+| `common` | 13 | `common` ✓ |
+| `rare` | 10 | **revalued** 100→60, or promote to `veryRare` |
+| `uncommon` | 7 | **deleted** — likely `notable` |
+| `veryRare` | 5 | **revalued** 250→100, or promote to `exceptional` |
+| `legendary` | 3 | `legendary` (500→400) |
+
+Files that must change together:
+
+- `app/lib/domain/rarity_tier.dart` — the enum and its point values
+- `app/lib/shared/theme.dart` — seven `RarityStyle` cases in a switch that will
+  fail to compile until all seven names match. That is a feature: the compiler
+  finds them.
+- `app/assets/data/species.json` — 71 `rarityTier` values
+- `app/test/species_model_test.dart` — asserts all seven point values, plus a
+  fixture using `legendary` and asserting 500
+- `app/test/species_data_test.dart` — asserts every tier is populated
+- `docs/SPEC.md` — the tier table, and the repeat-sighting section, which
+  currently describes a lifetime model rather than a daily scorecard
+
+Do the enum first and let the analyzer enumerate the rest.
+
+### What we built instead — to be replaced
 
 | Ours | Points | Maps to | Their points |
 |---|---|---|---|
@@ -76,22 +124,11 @@ is forever.
 **It also makes the leaderboard simpler** — "best single day" stops being a
 special board and becomes the natural unit.
 
-### The one thing this breaks — needs your decision
+### Resolved: the farming hole
 
-If Notable-and-above "stay live and score on every sighting", **what stops
-someone photographing one leopard forty times at a single sighting?**
-
-That is 40 × 60 points from one animal that never moved. The one-hour cooldown
-was the entire defence against it, and "stays live" appears to remove it.
-
-Three possible readings, and I do not know which you intend:
-
-1. **"Stays live" means per encounter, not per shutter press.** The cooldown
-   survives; a leopard scores again only after an hour or 2 km. This is my
-   assumption unless told otherwise, and it preserves the anti-farming property.
-2. **"Stays live" means genuinely every photo**, with PanCapture and review
-   carrying the anti-fraud load instead.
-3. Something in `MASTER-VISION.md` already resolves this and I have not seen it.
+Raised as an open question, now closed. "Stays live" never meant per shutter
+press — see the cooldown rule above. The ambiguity was in the document's
+phrasing, not in the intent.
 
 ---
 
@@ -238,6 +275,28 @@ tags — but I am guessing, and guessing at product definitions is how features
 get built wrong.
 
 ---
+
+## What still needs a decision from Alex
+
+Blocked on `MASTER-VISION.md`, which is still not in the repo:
+
+1. **The logged → verified pipeline.** Three Codex states are confirmed, but not
+   what moves a sighting from *logged* (stock image) to *verified* (player's
+   photo replaces it permanently). Is verification automatic on capture, or does
+   something have to happen first? This determines whether the middle state
+   lasts seconds or days.
+2. **Ranks, Collection of Six, the Den, the Wild Card.** Named, never described.
+   Cannot be placed in the roadmap.
+3. **The offline sync ritual** — referenced as being in MASTER-VISION.md.
+
+Answerable now, without the document:
+
+4. **Re-tiering all 71 species.** Two tiers are deleted and two revalued, so
+   every species needs a human decision. This wants the Kruger guide's review
+   doing at the same time — one pass, not two.
+5. **Whether the daily scorecard replaces the lifetime score on the profile**,
+   or sits alongside it. The Today/Lifetime toggle already built assumes
+   alongside, which seems right: score is per-day, collection is forever.
 
 ## Missing source documents — still missing
 
