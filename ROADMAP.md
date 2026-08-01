@@ -63,6 +63,13 @@ repeat-sighting model, `isSensitive` as a boolean.
 - [ ] **Design direction applied** — see docs/DESIGN-DIRECTION.md
 - [ ] Per-category completion: Mammals / Birds / Reptiles
 - [ ] Rename Tracker → **Spotter**
+- [ ] **Licences screen** — photo credits are currently only an overlay on the
+      full-screen viewer. CC-BY needs a reachable credits list. Do not ship
+      without it
+- [ ] Silhouette assets via build-time ML background removal — see
+      [docs/IMAGE-ASSETS.md](docs/IMAGE-ASSETS.md)
+- [ ] Re-run the photo pipeline at 1200px WebP — the detail hero is
+      under-resolved at 800px, and WebP absorbs the size increase
 
 ## Phase 2 — Trips, capture, scoring
 
@@ -94,6 +101,10 @@ The product. Everything before is setup; everything after is amplification.
       Never a spinner
 - [ ] Photos to Cloudflare R2, not Supabase Storage — R2 has no egress fees and
       den/profile photos are viewed constantly
+- [ ] **Enforce six full-resolution photos per player in the schema.** Everything
+      else is a thumbnail. This is the reason the Collection is capped at six —
+      it must be a constraint, not a convention, or the storage bill discovers it
+      for us
 
 ## Phase 4 — Season Pass
 

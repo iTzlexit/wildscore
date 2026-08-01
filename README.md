@@ -23,6 +23,8 @@ with the scoring made honest and the bragging made shareable.
 | [docs/MONETISATION.md](docs/MONETISATION.md) | How users pay and how the money reaches your bank account |
 | [docs/TESTING.md](docs/TESTING.md) | How to test camera, GPS and a park you cannot visit |
 | [docs/DIVERGENCES.md](docs/DIVERGENCES.md) | Where the live docs disagree with the original plan, and why |
+| [docs/DESIGN-DIRECTION.md](docs/DESIGN-DIRECTION.md) | Palette, type scale, rarity treatments, card anatomy, motion |
+| [docs/IMAGE-ASSETS.md](docs/IMAGE-ASSETS.md) | Photo sourcing, licensing, silhouettes, community donations, cost |
 | [ROADMAP.md](ROADMAP.md) | Seven phases, current status, decisions log |
 
 ## Status
