@@ -46,6 +46,10 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
     final Species species = widget.species;
     final bool locked = widget.locked;
     final RarityStyle style = species.rarityTier.style;
+    // A gold frame on an animal you have never seen gives away the surprise,
+    // so the frame stays neutral until the species is caught.
+    final Color frame = locked ? AppColors.outline : style.border;
+    final double frameWidth = locked ? 1 : style.borderWidth;
 
     // A card that dips under the thumb feels like an object you picked up.
     // Cheap, and it does more for the "collectible" feeling than any amount
@@ -70,8 +74,8 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: radius,
-          border: Border.all(color: style.border, width: style.borderWidth),
-          boxShadow: style.glow == null
+          border: Border.all(color: frame, width: frameWidth),
+          boxShadow: (locked || style.glow == null)
               ? null
               : <BoxShadow>[
                   BoxShadow(
@@ -163,7 +167,7 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
                       ],
                     ),
                   ),
-                  _Label(species: species, style: style),
+                  _Label(species: species, style: style, locked: locked),
                 ],
               ),
             ),
@@ -219,10 +223,15 @@ class _CaughtTag extends StatelessWidget {
 }
 
 class _Label extends StatelessWidget {
-  const _Label({required this.species, required this.style});
+  const _Label({
+    required this.species,
+    required this.style,
+    required this.locked,
+  });
 
   final Species species;
   final RarityStyle style;
+  final bool locked;
 
   @override
   Widget build(BuildContext context) {
@@ -287,7 +296,14 @@ class _Label extends StatelessWidget {
             species.commonName,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: AppText.title2.copyWith(fontSize: 14, height: 1.12),
+            style: AppText.title2.copyWith(
+              fontSize: 14,
+              height: 1.12,
+              // Names stay legible when undiscovered — the shape is the tease,
+              // not the identity. Hiding the name too would make the Codex
+              // useless as the field guide the free tier promises.
+              color: locked ? AppColors.textSecondary : AppColors.textPrimary,
+            ),
           ),
         ],
       ),

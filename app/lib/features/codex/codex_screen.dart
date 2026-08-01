@@ -216,6 +216,14 @@ class _CodexScreenState extends State<CodexScreen> {
                                 final Species species = visible[index];
                                 return SpeciesGridCard(
                                   species: species,
+                                  // Three-state Codex, per MASTER-VISION.md:
+                                  // undiscovered species show as silhouettes.
+                                  // The tile is the tease; the detail screen
+                                  // still carries the full field-guide entry,
+                                  // so the free tier stays genuinely useful.
+                                  locked: !widget.caughtIds.contains(
+                                    species.id,
+                                  ),
                                   onTap: () => _openDetail(species),
                                 );
                               },
