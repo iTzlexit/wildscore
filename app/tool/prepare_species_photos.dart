@@ -56,7 +56,10 @@ Future<void> main(List<String> args) async {
   for (final File file in files) {
     final String name = file.uri.pathSegments.last;
     final Uint8List bytes = file.readAsBytesSync();
-    final img.Image? decoded = img.decodeJpg(bytes);
+    // Format-agnostic: iNaturalist serves PNG for some observations, and a
+    // `.jpg` filename says nothing about the actual encoding. decodeJpg throws
+    // on those; decodeImage sniffs the header.
+    final img.Image? decoded = img.decodeImage(bytes);
 
     if (decoded == null) {
       stdout.writeln('  SKIP (undecodable)  $name');

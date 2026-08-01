@@ -19,8 +19,12 @@ class SpeciesGridCard extends StatefulWidget {
     required this.onTap,
     this.locked = false,
     this.sightingCount = 0,
+    this.onToggleSpotted,
     super.key,
   });
+
+  /// Marks the species seen from the tile. Null hides the control.
+  final VoidCallback? onToggleSpotted;
 
   /// Tiles are sized by the grid delegate; this drives the image-to-label
   /// ratio within a tile.
@@ -158,11 +162,17 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
                             right: 6,
                             child: _CornerBadge(label: 'BIG 6'),
                           ),
-                        if (widget.sightingCount > 0)
+                        // Mark-as-spotted. A tap target on the tile itself,
+                        // because the alternative is opening a species just to
+                        // tick it — and in a moving car nobody does that.
+                        if (widget.onToggleSpotted != null)
                           Positioned(
                             bottom: 6,
                             right: 6,
-                            child: _CaughtTag(count: widget.sightingCount),
+                            child: _SpotToggle(
+                              spotted: !locked,
+                              onTap: widget.onToggleSpotted!,
+                            ),
                           ),
                       ],
                     ),
@@ -178,45 +188,35 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
   }
 }
 
-/// How many times this species has been caught, ever.
+/// Tap to mark a species seen, or unmark it.
 ///
-/// Only shown once the count is at least one — a grid of "×0" badges would
-/// read as failure, where an absent badge simply reads as "not yet". The
-/// number matters because a second leopard is still worth having even though
-/// it scores a tenth: this is the difference between a score and a collection.
-class _CaughtTag extends StatelessWidget {
-  const _CaughtTag({required this.count});
+/// Deliberately reads as a checkbox rather than a camera. This is the honest
+/// "I saw it" — a *verified* catch needs a photograph taken in the park, and
+/// conflating the two visually would undermine the whole trust model.
+class _SpotToggle extends StatelessWidget {
+  const _SpotToggle({required this.spotted, required this.onTap});
 
-  final int count;
+  final bool spotted;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-      decoration: BoxDecoration(
-        color: const Color(0xE60E1210),
-        borderRadius: BorderRadius.circular(7),
-        border: Border.all(color: const Color(0xFF5AA46F), width: 1.2),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          const Icon(
-            Icons.check_circle_rounded,
-            size: 10,
-            color: Color(0xFF5AA46F),
+    return Material(
+      color: spotted ? AppColors.verified : const Color(0xE6FFFFFF),
+      shape: const CircleBorder(),
+      elevation: 1,
+      child: InkWell(
+        onTap: onTap,
+        customBorder: const CircleBorder(),
+        child: SizedBox(
+          width: 30,
+          height: 30,
+          child: Icon(
+            spotted ? Icons.check_rounded : Icons.add_rounded,
+            size: 17,
+            color: spotted ? Colors.white : AppColors.textSecondary,
           ),
-          const SizedBox(width: 3),
-          Text(
-            '$count',
-            style: const TextStyle(
-              color: Color(0xFF5AA46F),
-              fontSize: 10.5,
-              fontWeight: FontWeight.w900,
-              height: 1,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -237,7 +237,7 @@ class _Label extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(9, 7, 9, 9),
+      padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
@@ -249,9 +249,6 @@ class _Label extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          // Dex number plus the tier name. The name is the sixth and most
-          // explicit rarity channel — colour, border, wash, glow and frame all
-          // require the player to have learned the system; a word does not.
           Row(
             children: <Widget>[
               Text(
@@ -259,7 +256,6 @@ class _Label extends StatelessWidget {
                 style: AppText.caption.copyWith(
                   fontSize: 10,
                   height: 1,
-                  letterSpacing: 0.5,
                   fontFeatures: AppText.tabular,
                 ),
               ),
@@ -290,18 +286,13 @@ class _Label extends StatelessWidget {
             ],
           ),
           const SizedBox(height: Space.xs),
-          // Fraunces — the serif is what makes a species name read as a field
-          // guide entry rather than a list row.
           Text(
             species.commonName,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: AppText.title2.copyWith(
+            style: AppText.title3.copyWith(
               fontSize: 14,
-              height: 1.12,
-              // Names stay legible when undiscovered — the shape is the tease,
-              // not the identity. Hiding the name too would make the Codex
-              // useless as the field guide the free tier promises.
+              height: 1.15,
               color: locked ? AppColors.textSecondary : AppColors.textPrimary,
             ),
           ),
@@ -321,19 +312,19 @@ class _PointsBadge extends StatelessWidget {
     final RarityStyle style = species.rarityTier.style;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: const Color(0xCC0E1210),
-        borderRadius: BorderRadius.circular(7),
-        border: Border.all(color: style.accent, width: 1.2),
+        color: style.accent,
+        borderRadius: BorderRadius.circular(Radii.chip),
       ),
       child: Text(
         '${species.points}',
-        style: TextStyle(
-          color: style.accent,
+        style: AppText.caption.copyWith(
+          color: Colors.white,
           fontSize: 11.5,
-          fontWeight: FontWeight.w900,
           height: 1,
+          fontVariations: AppFonts.weight(800),
+          fontFeatures: AppText.tabular,
         ),
       ),
     );
@@ -348,20 +339,19 @@ class _CornerBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
       decoration: BoxDecoration(
-        color: const Color(0xCC0E1210),
-        borderRadius: BorderRadius.circular(5),
-        border: Border.all(color: AppColors.accent, width: 1),
+        color: const Color(0xE6FFFFFF),
+        borderRadius: BorderRadius.circular(Radii.chip - 4),
       ),
       child: Text(
         label,
-        style: const TextStyle(
-          color: AppColors.accent,
-          fontSize: 8,
-          fontWeight: FontWeight.w900,
-          letterSpacing: 0.5,
+        style: AppText.caption.copyWith(
+          fontSize: 8.5,
           height: 1,
+          letterSpacing: 0.5,
+          color: AppColors.textPrimary,
+          fontVariations: AppFonts.weight(800),
         ),
       ),
     );

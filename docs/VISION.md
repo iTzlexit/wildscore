@@ -123,6 +123,21 @@ Settled. Not open to being traded away later under deadline pressure.
 **Camera capture only.** No gallery path exists, for Capture. Quick Log needs no
 photo at all — but a photo, once claimed, must have been taken in the app.
 
+**The app is light, not dark.** MASTER-VISION.md originally specified a dark
+theme on the reasoning that dark makes photographs glow and a white screen at
+5am in a game vehicle is antisocial. Overruled by Alex on 2026-08-02 after
+seeing both: the dark build read as generic, and the light one does not.
+
+The reasoning behind the original call was not wrong, so it survives as two
+constraints rather than a theme:
+
+- **Screen brightness at dawn and dusk matters.** If field testing shows the
+  light theme is painful before sunrise, the answer is an automatic dark mode
+  tied to time of day or system setting — not a return to dark-always.
+- **Photographs still lead.** The interface is a warm near-white ground with
+  colour reserved almost entirely for rarity, precisely so the animals remain
+  the only saturated thing on screen.
+
 **Species-level location privacy is data, not code.** Every species carries a
 `sensitivityLevel` — `none` / `coarse` / `never` — that can be changed **without
 an app release**. The obvious cases are rhino and pangolin, but the real list is

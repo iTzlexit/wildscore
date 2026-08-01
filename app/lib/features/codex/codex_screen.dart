@@ -23,8 +23,12 @@ class CodexScreen extends StatefulWidget {
     this.repository = const SpeciesRepository(),
     this.profile,
     this.caughtIds = const <String>{},
+    this.onToggleSpotted,
     super.key,
   });
+
+  /// Marks a species seen. Null in tests that only exercise filtering.
+  final ValueChanged<String>? onToggleSpotted;
 
   /// Null in tests that only exercise the list. When present, the strip sits
   /// above the title.
@@ -223,6 +227,11 @@ class _CodexScreenState extends State<CodexScreen> {
                                   locked: !widget.caughtIds.contains(
                                     species.id,
                                   ),
+                                  onToggleSpotted:
+                                      widget.onToggleSpotted == null
+                                      ? null
+                                      : () =>
+                                            widget.onToggleSpotted!(species.id),
                                   onTap: () => _openDetail(species),
                                 );
                               },

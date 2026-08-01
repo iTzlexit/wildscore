@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../data/species_repository.dart';
+import '../data/spotted_repository.dart';
 import '../domain/species.dart';
 import '../domain/tracker_profile.dart';
 import '../shared/theme.dart';
@@ -32,13 +33,31 @@ class HomeShell extends StatefulWidget {
 }
 
 class _HomeShellState extends State<HomeShell> {
+  static const SpottedRepository _spottedRepo = SpottedRepository();
+
   late final Future<List<Species>> _speciesFuture;
   int _tab = 0;
+
+  /// Held here rather than in either tab, because both read it — the Profile
+  /// counts it and the Dex colours by it.
+  Set<String> _spotted = <String>{};
 
   @override
   void initState() {
     super.initState();
     _speciesFuture = widget.repository.loadAll();
+    _spottedRepo.load().then((Set<String> ids) {
+      if (mounted) {
+        setState(() => _spotted = ids);
+      }
+    });
+  }
+
+  Future<void> _toggleSpotted(String id) async {
+    final Set<String> next = await _spottedRepo.toggle(_spotted, id);
+    if (mounted) {
+      setState(() => _spotted = next);
+    }
   }
 
   void _onCameraPressed() {
@@ -77,8 +96,16 @@ class _HomeShellState extends State<HomeShell> {
           body: IndexedStack(
             index: _tab,
             children: <Widget>[
-              ProfileScreen(profile: widget.profile, species: species),
-              CodexScreen(repository: widget.repository),
+              ProfileScreen(
+                profile: widget.profile,
+                species: species,
+                caughtIds: _spotted,
+              ),
+              CodexScreen(
+                repository: widget.repository,
+                caughtIds: _spotted,
+                onToggleSpotted: _toggleSpotted,
+              ),
               LeaderboardScreen(seasonYear: widget.profile.seasonYear),
             ],
           ),

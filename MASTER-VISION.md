@@ -299,6 +299,7 @@ players.
 | No live public sightings map | Real-time "where is the leopard" creates crowding and poaching risk. Deliberate omission. |
 | No points for off-road positions or speeding | Never incentivise breaking park rules. Detectable from the trace. |
 | Nothing decays | No feeding, no guilt, no streak punishment |
+| ~~Dark theme~~ | **Superseded 2026-08-02.** The app is light. The dark build read as generic; the light one does not. The underlying concerns survive as constraints — see [docs/VISION.md](docs/VISION.md) — but dark-always is no longer the rule. |
 | The free tier must be genuinely good | The whole model depends on someone finishing day one proud of their score before being asked for money |
 | POPIA compliance from day one | Continuous location logging is sensitive personal data |
 

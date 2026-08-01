@@ -28,23 +28,30 @@ class SpeciesImage extends StatelessWidget {
   /// where cropping the animal out of its own photograph would be absurd.
   final BoxFit fit;
 
+  /// Desaturated and slightly lifted. Not a silhouette — you can still see the
+  /// animal, which keeps the free field guide usable, but it is visibly *not
+  /// yours yet*. Colour returning on a catch is the reward.
+  static const ColorFilter _grey = ColorFilter.matrix(<double>[
+    0.28, 0.50, 0.10, 0, 26, //
+    0.24, 0.55, 0.10, 0, 26, //
+    0.24, 0.50, 0.15, 0, 26, //
+    0, 0, 0, 1, 0, //
+  ]);
+
   @override
   Widget build(BuildContext context) {
-    // Only the rare tiers hide behind a silhouette. Hiding an impala teaches
-    // nobody anything and makes the free field guide useless; hiding a pangolin
-    // is the entire point of a collection game. `notched` is exactly the four
-    // tiers from Rare upward.
-    if (locked && species.rarityTier.style.notched) {
-      return _LockedPlate(species: species);
-    }
-
-    return Image.asset(
+    final Widget photo = Image.asset(
       species.imageAsset,
       fit: fit,
       errorBuilder: (BuildContext context, Object error, StackTrace? stack) {
         return _MonogramPlate(species: species);
       },
     );
+
+    if (!locked) {
+      return photo;
+    }
+    return ColorFiltered(colorFilter: _grey, child: photo);
   }
 }
 
@@ -98,64 +105,5 @@ class _MonogramPlate extends StatelessWidget {
         .take(2)
         .map((String w) => w.substring(0, 1).toUpperCase())
         .join();
-  }
-}
-
-/// Uncaught species: a true silhouette, from PhyloPic.
-///
-/// Falls back to the reference photograph desaturated and crushed to near-black
-/// when no silhouette exists for that species. The fallback works, but it leaks
-/// the background and the animal's pose — a silhouette teases the *shape* and
-/// nothing else, which is the stronger hook.
-///
-/// The empty slot is what makes a collection worth filling.
-class _LockedPlate extends StatelessWidget {
-  const _LockedPlate({required this.species});
-
-  final Species species;
-
-  /// Greyscale, then lifted and flattened toward the plate colour, so a
-  /// fallback photograph reads as a ghost rather than a picture. Fallback only.
-  static const ColorFilter _crush = ColorFilter.matrix(<double>[
-    0.09, 0.30, 0.05, 0, 118, //
-    0.09, 0.30, 0.05, 0, 120, //
-    0.09, 0.30, 0.05, 0, 116, //
-    0, 0, 0, 1, 0, //
-  ]);
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: <Widget>[
-        const ColoredBox(color: AppColors.surfaceAlt),
-        Padding(
-          padding: const EdgeInsets.all(14),
-          child: Image.asset(
-            species.silhouetteAsset,
-            fit: BoxFit.contain,
-            // PhyloPic silhouettes are black on transparent; tint to a mid
-            // grey-green so the shape reads on a light plate without going
-            // heavy enough to look like a solid block.
-            color: const Color(0xFFA8B0A9),
-            errorBuilder:
-                (BuildContext context, Object error, StackTrace? stack) =>
-                    ColorFiltered(
-                      colorFilter: _crush,
-                      child: Image.asset(
-                        species.imageAsset,
-                        fit: BoxFit.cover,
-                        errorBuilder:
-                            (
-                              BuildContext context,
-                              Object error,
-                              StackTrace? stack,
-                            ) => const SizedBox.shrink(),
-                      ),
-                    ),
-          ),
-        ),
-      ],
-    );
   }
 }
