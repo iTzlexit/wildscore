@@ -9,10 +9,15 @@ import 'widgets/region_strip.dart';
 
 /// The species card, full screen.
 ///
-/// Structure: the rarity colour **owns the top of the screen**, with the
-/// photograph straddling the boundary into a rounded sheet below. That is the
-/// single change that stops a detail screen reading as a form — a timid
-/// coloured border says "database row"; a full-bleed colour field says "card".
+/// Structure: the rarity colour **owns the top of the screen**, with the animal
+/// centred in it as a ringed portrait and its name directly beneath. That is
+/// what stops a detail screen reading as a form — a timid coloured border says
+/// "database row"; a lit colour field with a specimen plate in the middle of it
+/// says "card".
+///
+/// The portrait used to sit in the bottom-right corner, straddling the seam
+/// into the sheet. It looked like an afterthought and, on a narrow screen, it
+/// was clipped by the edge. Centred is both prettier and correct.
 ///
 /// This layout is also the skeleton of the Phase 2 reveal. When you photograph
 /// a pangolin, this is the card that turns over, so the hierarchy is worth
@@ -58,38 +63,65 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final RarityStyle style = species.rarityTier.style;
+    final Size screen = MediaQuery.sizeOf(context);
+
+    // Sized from the screen rather than fixed. A 300pt header is most of a
+    // small phone and a third of a tablet; this keeps the proportion instead of
+    // the number, and clamps so the portrait never gets silly at either end.
+    final double height = (screen.height * 0.48).clamp(340.0, 460.0);
+    final double medallion = (height * 0.42).clamp(150.0, 210.0);
 
     return SizedBox(
-      height: 300,
+      height: height,
       child: Stack(
-        clipBehavior: Clip.none,
         children: <Widget>[
-          // The colour field. A vertical gradient rather than a flat fill so
-          // the photograph has somewhere darker to sit against.
           Positioned.fill(
             child: DecoratedBox(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: <Color>[style.headerTop, style.headerInk],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: <Color>[
+                    Color.lerp(style.headerTop, Colors.white, 0.14)!,
+                    style.headerTop,
+                    style.headerInk,
+                  ],
+                  stops: const <double>[0, 0.45, 1],
+                ),
+              ),
+            ),
+          ),
+          // Light pooling behind the animal. This is what makes the portrait
+          // read as lit from behind rather than pasted onto a coloured
+          // rectangle, and it costs one gradient.
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  center: const Alignment(0, -0.15),
+                  radius: 0.75,
+                  colors: <Color>[
+                    Colors.white.withValues(alpha: 0.26),
+                    Colors.white.withValues(alpha: 0.05),
+                    Colors.transparent,
+                  ],
+                  stops: const <double>[0, 0.55, 1],
                 ),
               ),
             ),
           ),
           SafeArea(
             bottom: false,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(
-                Space.sm,
-                Space.sm,
-                Space.screen,
-                0,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    Space.sm,
+                    Space.xs,
+                    Space.screen,
+                    0,
+                  ),
+                  child: Row(
                     children: <Widget>[
                       IconButton(
                         onPressed: () => Navigator.of(context).pop(),
@@ -106,80 +138,183 @@ class _Header extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: Space.md),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          species.commonName,
-                          style: AppText.title1.copyWith(
-                            color: Colors.white,
-                            fontSize: 32,
-                          ),
+                ),
+                // The portrait yields space rather than the text, and scaleDown
+                // never enlarges it past its intended diameter. A long name
+                // with three tags on a short screen shrinks the animal a little
+                // instead of overflowing the header, which is the right thing
+                // to give up.
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: Space.sm),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: _Medallion(
+                        species: species,
+                        diameter: medallion,
+                        onTap: () => Navigator.of(context).push(
+                          PhotoViewerScreen.route(species, credit: credit),
                         ),
-                        const SizedBox(height: 2),
-                        Text(
-                          species.scientificName,
-                          style: AppText.caption.copyWith(
-                            color: const Color(0xB3FFFFFF),
-                            fontSize: 13,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                        const SizedBox(height: Space.md),
-                        Wrap(
-                          spacing: Space.sm,
-                          runSpacing: Space.sm,
-                          children: <Widget>[
-                            _HeaderPill(
-                              label: species.rarityTier.label,
-                              solid: true,
-                            ),
-                            for (final SpeciesTag tag in species.tags)
-                              _HeaderPill(label: tag.label, solid: false),
-                          ],
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
-          // The photograph straddles the header/sheet boundary. Overflowing the
-          // seam is what makes the card feel layered rather than stacked.
-          Positioned(
-            right: Space.screen,
-            bottom: -34,
-            child: GestureDetector(
-              onTap: () => Navigator.of(
-                context,
-              ).push(PhotoViewerScreen.route(species, credit: credit)),
-              child: Container(
-                width: 156,
-                height: 156,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: const Color(0x40FFFFFF), width: 3),
-                  boxShadow: const <BoxShadow>[
-                    BoxShadow(
-                      color: Color(0x59000000),
-                      blurRadius: 24,
-                      offset: Offset(0, 8),
-                    ),
-                  ],
                 ),
-                child: ClipOval(
-                  child: Hero(
-                    tag: 'species-photo-${species.id}',
-                    child: SpeciesImage(species: species),
+                const SizedBox(height: Space.md),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: Space.screen),
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        species.commonName,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppText.title1.copyWith(
+                          color: Colors.white,
+                          fontSize: species.commonName.length > 20 ? 26 : 31,
+                          height: 1.1,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        species.scientificName,
+                        textAlign: TextAlign.center,
+                        style: AppText.caption.copyWith(
+                          color: const Color(0xB3FFFFFF),
+                          fontSize: 13,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                      const SizedBox(height: Space.md),
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: Space.sm,
+                        runSpacing: 6,
+                        children: <Widget>[
+                          _HeaderPill(
+                            label: species.rarityTier.label,
+                            solid: true,
+                          ),
+                          // Two at most. Every tag is also on the tile and in
+                          // the sheet, and a third row of pills pushes the
+                          // animal off a small screen to say something nobody
+                          // came here to read.
+                          for (final SpeciesTag tag in species.tags.take(2))
+                            _HeaderPill(label: tag.label, solid: false),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-              ),
+                const SizedBox(height: Space.lg),
+              ],
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// The portrait, centred and ringed.
+///
+/// Concentric rings rather than a single border: the halo is what turns a
+/// cropped photograph into a *specimen plate*, and it is the one piece of
+/// ceremony this screen gets. Rarity drives how bright the ring is, so a
+/// pangolin card is visibly more of an occasion than an impala one without
+/// needing a different layout.
+class _Medallion extends StatelessWidget {
+  const _Medallion({
+    required this.species,
+    required this.diameter,
+    required this.onTap,
+  });
+
+  final Species species;
+  final double diameter;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final RarityStyle style = species.rarityTier.style;
+    final bool exalted = style.isExalted;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: SizedBox(
+        width: diameter + 34,
+        height: diameter + 34,
+        child: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            // Outer halo. Wide and faint — it reads as glow, not as a second
+            // border.
+            Container(
+              width: diameter + 34,
+              height: diameter + 34,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withValues(alpha: exalted ? 0.16 : 0.09),
+              ),
+            ),
+            Container(
+              width: diameter + 16,
+              height: diameter + 16,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withValues(alpha: exalted ? 0.22 : 0.13),
+              ),
+            ),
+            Container(
+              width: diameter,
+              height: diameter,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: exalted ? 0.9 : 0.55),
+                  width: exalted ? 3.5 : 2.5,
+                ),
+                boxShadow: <BoxShadow>[
+                  const BoxShadow(
+                    color: Color(0x66000000),
+                    blurRadius: 28,
+                    offset: Offset(0, 10),
+                  ),
+                  if (exalted)
+                    BoxShadow(
+                      color: Colors.white.withValues(alpha: 0.35),
+                      blurRadius: 26,
+                      spreadRadius: -4,
+                    ),
+                ],
+              ),
+              child: ClipOval(
+                child: Hero(
+                  tag: 'species-photo-${species.id}',
+                  child: SpeciesImage(species: species),
+                ),
+              ),
+            ),
+            // A hint that the portrait opens. Small, low contrast — the tap
+            // target is the whole circle, this only says so.
+            Positioned(
+              right: 12,
+              bottom: 12,
+              child: Container(
+                padding: const EdgeInsets.all(6),
+                decoration: const BoxDecoration(
+                  color: Color(0xB3000000),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.zoom_out_map_rounded,
+                  size: 13,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -229,8 +364,7 @@ class _Sheet extends StatelessWidget {
       ),
       child: Column(
         children: <Widget>[
-          // Room for the photograph overhanging from the header.
-          const SizedBox(height: Space.section),
+          const SizedBox(height: Space.md),
           Align(
             alignment: Alignment.centerLeft,
             child: TabBar(
@@ -276,8 +410,6 @@ class _AboutTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final RarityStyle style = species.rarityTier.style;
-
     return ListView(
       padding: const EdgeInsets.fromLTRB(
         Space.screen,
@@ -301,8 +433,6 @@ class _AboutTab extends StatelessWidget {
           value: species.conservationStatus.label,
           valueColor: species.conservationStatus.color,
         ),
-        const SizedBox(height: Space.xl),
-        _LogSightingTeaser(accent: style.accent),
       ],
     );
   }
@@ -561,40 +691,6 @@ class _SensitiveNotice extends StatelessWidget {
               'not in a shared card.',
               style: AppText.caption.copyWith(height: 1.5),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _LogSightingTeaser extends StatelessWidget {
-  const _LogSightingTeaser({required this.accent});
-
-  final Color accent;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: Space.screen),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(Radii.card),
-        border: Border.all(color: AppColors.outline),
-      ),
-      child: Column(
-        children: <Widget>[
-          Icon(Icons.photo_camera_rounded, size: 22, color: accent),
-          const SizedBox(height: Space.sm),
-          Text(
-            'Log a sighting',
-            style: AppText.bodyStrong.copyWith(fontSize: 14),
-          ),
-          const SizedBox(height: 3),
-          Text(
-            'Camera capture arrives in the next update',
-            style: AppText.caption,
           ),
         ],
       ),
