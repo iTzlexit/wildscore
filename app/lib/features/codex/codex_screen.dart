@@ -4,7 +4,6 @@ import '../../data/attribution_repository.dart';
 import '../../data/species_repository.dart';
 import '../../domain/park_region.dart';
 import '../../domain/rarity_tier.dart';
-import '../../domain/scorecard.dart';
 import '../../domain/species.dart';
 import '../../domain/species_category.dart';
 import '../../domain/species_tag.dart';
@@ -26,24 +25,16 @@ class CodexScreen extends StatefulWidget {
     this.profile,
     this.caughtIds = const <String>{},
     this.onToggleSpotted,
-    this.onClaim,
-    this.card,
     super.key,
   });
 
-  /// Marks a species seen. Null in tests, and null while a game is running —
-  /// during a game a tap must ask *who* spotted it, not silently tick a box.
-  final ValueChanged<String>? onToggleSpotted;
-
-  /// Claims a species for a player. Non-null only while a game is running.
+  /// Marks a species seen — the life list, which costs nothing and scores
+  /// nothing. Null in tests.
   ///
-  /// Takes a callback that opens the field-guide entry, because the claim sheet
-  /// offers it as an escape hatch and this screen is what owns the photo
-  /// credits the detail screen needs.
-  final void Function(Species species, VoidCallback openDetail)? onClaim;
-
-  /// The running game, if any. Drives the chances-remaining badge.
-  final Scorecard? card;
+  /// The Dex no longer claims for a game. That happens on the Wild Score tab,
+  /// from the row of whoever shouted, which leaves this screen with exactly one
+  /// meaning: a tap opens the field-guide entry, always.
+  final ValueChanged<String>? onToggleSpotted;
 
   /// Null in tests that only exercise the list. When present, the strip sits
   /// above the title.
@@ -129,16 +120,6 @@ class _CodexScreenState extends State<CodexScreen> {
             _spotted.matches(widget.caughtIds.contains(species.id)))
           species,
     ]..sort(_sort.compare);
-  }
-
-  /// Chances remaining today, or null when unlimited or no game is running.
-  int? _chancesLeft(Species species) {
-    final Scorecard? card = widget.card;
-    final int? total = species.rarityTier.chancesPerDay;
-    if (card == null || total == null) {
-      return null;
-    }
-    return (total - card.timesClaimed(species.id)).clamp(0, total).toInt();
   }
 
   void _openDetail(Species species) {
@@ -274,24 +255,14 @@ class _CodexScreenState extends State<CodexScreen> {
         final Species species = visible[index];
         return SpeciesGridCard(
           species: species,
-          // Three-state Codex, per MASTER-VISION.md:
-          // undiscovered species show as silhouettes.
-          // The tile is the tease; the detail screen
-          // still carries the full field-guide entry,
-          // so the free tier stays genuinely useful.
+          // Greyed until spotted. The tile is the tease; the
+          // detail screen still carries the full field-guide
+          // entry, so the free tier stays genuinely useful.
           locked: !widget.caughtIds.contains(species.id),
           onToggleSpotted: widget.onToggleSpotted == null
               ? null
               : () => widget.onToggleSpotted!(species.id),
-          // During a game the whole tile is the claim
-          // target. Opening a field-guide entry is not
-          // what anyone wants while an animal is still
-          // in view.
-          onTap: widget.onClaim == null
-              ? () => _openDetail(species)
-              : () => widget.onClaim!(species, () => _openDetail(species)),
-          onLongPress: () => _openDetail(species),
-          chancesLeft: _chancesLeft(species),
+          onTap: () => _openDetail(species),
         );
       },
     );

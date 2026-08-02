@@ -85,10 +85,9 @@
 <div id="out">
   <p style="margin:0 0 8px"><b id="outTitle">Thank you.</b></p>
   <p style="margin:0 0 10px;color:#3d463f" id="outMsg"></p>
-  <textarea id="json" readonly></textarea>
+  <textarea id="json" readonly style="display:none"></textarea>
   <p style="margin:10px 0 0;display:flex;gap:8px;flex-wrap:wrap">
-    <button class="primary" onclick="cp()">Copy</button>
-    <button id="mailBtn" onclick="mailIt()">Email it</button>
+    <button class="primary" id="mailBtn" onclick="mailIt()" style="display:none">Send by email</button>
     <button onclick="document.getElementById('out').style.display='none'">Close</button></p>
 </div><script>
 // ---------------------------------------------------------------------------
@@ -194,19 +193,21 @@ async function exp(){
     document.getElementById('outMsg').textContent='Tap a different rating on any animal you think is ranked wrongly, then come back here.';
     return;
   }
+  // The payload is never shown. A stranger doing someone a two-minute favour
+  // should see "thank you", not a wall of JSON with an email address in it.
   if(ENDPOINT){
     try{
-      await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:text});
+      const res = await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:text});
+      if(!res.ok) throw new Error(res.status);
       document.getElementById('outTitle').textContent='Sent — thank you';
-      document.getElementById('outMsg').textContent=`${data.changed} rankings received. You can close this.`;
-      document.getElementById('mailBtn').style.display='none';
+      document.getElementById('outMsg').textContent=`${data.changed} rankings received. That is genuinely useful. You can close this.`;
       return;
-    }catch(e){ /* fall through to the manual path */ }
+    }catch(e){ /* the endpoint is down; fall through rather than lose the work */ }
   }
-  document.getElementById('outTitle').textContent='Almost there';
-  document.getElementById('outMsg').textContent='Tap Email it, or copy the text below and send it to '+EMAIL+'.';
+  document.getElementById('outTitle').textContent='One more tap';
+  document.getElementById('outMsg').textContent='Your mail app will open with the answers already filled in. Just send it.';
+  document.getElementById('mailBtn').style.display='';
 }
-function cp(){ const t=document.getElementById('json'); t.select(); document.execCommand('copy'); }
 function mailIt(){
   const body=encodeURIComponent(document.getElementById('json').value);
   location.href=`mailto:${EMAIL}?subject=Wild%20Score%20rankings&body=${body}`;

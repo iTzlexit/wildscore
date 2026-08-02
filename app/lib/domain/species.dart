@@ -25,6 +25,7 @@ class Species {
     required this.bestTimeToSpot,
     required this.parkRegions,
     required this.conservationStatus,
+    this.photoVerified = true,
     this.discovered = true,
   });
 
@@ -76,6 +77,9 @@ class Species {
         'conservationStatus',
         id,
       ),
+      // Absent means trusted. Only the handful we know to be wrong carry the
+      // flag, so a new species is not silently hidden by a forgotten field.
+      photoVerified: json['photoVerified'] as bool? ?? true,
     );
   }
 
@@ -110,6 +114,15 @@ class Species {
   /// already renders locked species as silhouettes.
   final bool discovered;
 
+  /// Whether the photograph on file is confidently *this* species.
+  ///
+  /// False for the small cats, where the sourcing API cannot reliably tell a
+  /// caracal from a serval or an African wildcat from someone's tabby. A
+  /// misidentified photograph in a field guide is worse than no photograph:
+  /// somebody will learn the wrong animal from it and claim the wrong points.
+  /// Those fall back to a silhouette until a photograph is chosen by eye.
+  final bool photoVerified;
+
   int get points => rarityTier.points;
 
   /// Photographs live at `assets/species/<id>.jpg`. Missing files fall back to
@@ -138,6 +151,7 @@ class Species {
       rarityTier: rarityTier,
       tags: tags,
       isSensitive: isSensitive,
+      photoVerified: photoVerified,
       description: description,
       habitat: habitat,
       bestTimeToSpot: bestTimeToSpot,

@@ -327,9 +327,10 @@ class _Identity extends StatelessWidget {
               ),
               const SizedBox(height: 2),
               Text(
-                // "Day Visitor" is rank one of six. Ranks arrive in Phase 9;
-                // everyone starts here.
-                'Day Visitor · Season ${profile.seasonYear}',
+                // Ranks arrive in Phase 9. Until then a made-up title under
+                // someone's name is just noise — worse, "Day Visitor" reads as
+                // a demotion to anyone who has been coming for twenty years.
+                'Season ${profile.seasonYear}',
                 style: AppText.caption,
               ),
             ],

@@ -125,6 +125,7 @@
         "nocturnal",
         "predator"
       ],
+      "photoVerified": false,
       "isSensitive": false,
       "description": "The ancestor of every domestic cat. Told apart by rich rufous behind the ears and much longer legs than a housecat.",
       "habitat": "Woodland and scrub",
@@ -364,6 +365,7 @@
         "nocturnal",
         "predator"
       ],
+      "photoVerified": false,
       "isSensitive": false,
       "description": "Black-tufted ears and enough vertical leap to take birds out of the air. Secretive and very seldom seen in daylight.",
       "habitat": "Scrub, koppies and open woodland",

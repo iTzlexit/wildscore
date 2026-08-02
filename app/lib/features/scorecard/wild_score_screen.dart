@@ -23,6 +23,7 @@ class WildScoreScreen extends StatelessWidget {
     this.onEnd,
     this.onRestart,
     this.onRemoveClaim,
+    this.onSpotFor,
     super.key,
   });
 
@@ -32,6 +33,7 @@ class WildScoreScreen extends StatelessWidget {
   final VoidCallback? onEnd;
   final VoidCallback? onRestart;
   final void Function(Player player, Species species)? onRemoveClaim;
+  final ValueChanged<Player>? onSpotFor;
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +61,7 @@ class WildScoreScreen extends StatelessWidget {
                       onEnd: onEnd,
                       onRestart: onRestart,
                       onRemoveClaim: onRemoveClaim,
+                      onSpotFor: onSpotFor,
                     ),
             ),
           ],
@@ -116,6 +119,49 @@ class _Invitation extends StatelessWidget {
           child: Text(
             'You are always in the drive. Add others if there are any.',
             style: AppText.caption,
+          ),
+        ),
+        const SizedBox(height: Space.xl),
+        // The honest alternative, said out loud. Somebody who only wants a life
+        // list should not have to start and end a game to get one, and burying
+        // that fact would make the app feel heavier than it is.
+        Container(
+          padding: const EdgeInsets.all(Space.lg),
+          decoration: BoxDecoration(
+            color: AppColors.surfaceAlt,
+            borderRadius: BorderRadius.circular(Radii.card),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const Icon(
+                Icons.menu_book_rounded,
+                size: 18,
+                color: AppColors.textMuted,
+              ),
+              const SizedBox(width: Space.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      'Just keeping a list?',
+                      style: AppText.label.copyWith(
+                        color: AppColors.textPrimary,
+                        fontVariations: AppFonts.weight(700),
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Mark animals in the Animal Dex as you see them. No '
+                      'drive, no points, no scores to settle — they just join '
+                      'your collection.',
+                      style: AppText.caption.copyWith(height: 1.45),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
         const SizedBox(height: Space.section),
@@ -246,6 +292,7 @@ class _LiveGame extends StatelessWidget {
     this.onEnd,
     this.onRestart,
     this.onRemoveClaim,
+    this.onSpotFor,
   });
 
   final Scorecard card;
@@ -253,6 +300,7 @@ class _LiveGame extends StatelessWidget {
   final VoidCallback? onEnd;
   final VoidCallback? onRestart;
   final void Function(Player player, Species species)? onRemoveClaim;
+  final ValueChanged<Player>? onSpotFor;
 
   @override
   Widget build(BuildContext context) {
@@ -273,6 +321,7 @@ class _LiveGame extends StatelessWidget {
           species: species,
           expanded: true,
           onRemoveClaim: onRemoveClaim,
+          onSpotFor: onSpotFor,
         ),
         if (card.claims.isNotEmpty) ...<Widget>[
           const SizedBox(height: Space.xs),
@@ -286,7 +335,7 @@ class _LiveGame extends StatelessWidget {
               const SizedBox(width: 6),
               Expanded(
                 child: Text(
-                  'Tap an animal to take it back off someone.',
+                  'Tap + to add a sighting. Tap an animal to take it back.',
                   style: AppText.caption.copyWith(fontSize: 11.5),
                 ),
               ),
@@ -311,8 +360,8 @@ class _LiveGame extends StatelessWidget {
                 const SizedBox(width: Space.md),
                 Expanded(
                   child: Text(
-                    'Nothing claimed yet. Open the Animal Dex and tap whatever '
-                    'you see.',
+                    'Nothing claimed yet. Tap the + next to whoever shouted '
+                    'first.',
                     style: AppText.caption.copyWith(height: 1.45),
                   ),
                 ),

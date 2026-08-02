@@ -12,8 +12,8 @@ import '../shared/theme.dart';
 import 'codex/codex_screen.dart';
 import 'leaderboard/leaderboard_screen.dart';
 import 'profile/profile_screen.dart';
+import 'scorecard/spot_picker_screen.dart';
 import 'scorecard/start_scorecard_sheet.dart';
-import 'scorecard/who_spotted_sheet.dart';
 import 'scorecard/wild_score_screen.dart';
 
 /// The four tabs, plus the camera.
@@ -238,42 +238,33 @@ class _HomeShellState extends State<HomeShell> {
     }
   }
 
-  /// A species tapped from the Dex while a game is running.
+  /// "Sam spotted something" — the picker, opened from Sam's row.
   ///
-  /// [openDetail] is supplied by the Codex, which owns the photo credits. It is
-  /// how the sheet can offer the field-guide entry: during a game a tap is a
-  /// claim, and without this there was no reachable way to simply look
-  /// something up.
-  Future<void> _claim(Species species, VoidCallback openDetail) async {
+  /// Claiming used to start in the Animal Dex and then ask *who*. That put the
+  /// Dex in two minds — a tap meant different things depending on state you
+  /// could not see — and it asked the question backwards. In a car the name
+  /// comes first, because somebody shouts it.
+  Future<void> _spotFor(Player player, List<Species> species) async {
     final Scorecard? card = _card;
     if (card == null) {
       return;
     }
-    final String? choice = await WhoSpottedSheet.show(
-      context: context,
+    final Species? chosen = await SpotPickerScreen.open(
+      context,
+      player: player,
       species: species,
       card: card,
     );
-    if (choice == null || !mounted) {
-      return;
-    }
-    if (choice == WhoSpottedSheet.detailSentinel) {
-      openDetail();
-      return;
-    }
-    if (choice == WhoSpottedSheet.unclaimSentinel) {
-      // Nothing to reverse anywhere else: a claim is only banked when the day
-      // is ended, so an undo is a single edit to a single object.
-      await _updateCard(card.withoutLastClaimOf(species.id));
+    if (chosen == null || !mounted) {
       return;
     }
     await _updateCard(
       card.withClaim(
         Claim(
-          speciesId: species.id,
-          playerId: choice,
+          speciesId: chosen.id,
+          playerId: player.id,
           at: DateTime.now(),
-          points: species.points,
+          points: chosen.points,
         ),
       ),
     );
@@ -331,16 +322,15 @@ class _HomeShellState extends State<HomeShell> {
                 onEnd: _endScorecard,
                 onRestart: _restartScorecard,
                 onRemoveClaim: _removeClaim,
+                onSpotFor: (Player p) => _spotFor(p, species),
               ),
+              // Always a field guide, never a claim surface. Marking something
+              // spotted here is the life list — no points, no drive — and it
+              // stays available whether or not a game is running.
               CodexScreen(
                 repository: widget.repository,
-                // While a game runs, the Dex colours by what has been claimed
-                // today rather than by the lifetime record — the screen you are
-                // staring at in the car should answer "have we got it yet".
-                caughtIds: _card?.claimedSpecies ?? _spotted,
-                onToggleSpotted: _card == null ? _toggleSpotted : null,
-                onClaim: _card == null ? null : _claim,
-                card: _card,
+                caughtIds: _spotted,
+                onToggleSpotted: _toggleSpotted,
               ),
               LeaderboardScreen(seasonYear: widget.profile.seasonYear),
             ],

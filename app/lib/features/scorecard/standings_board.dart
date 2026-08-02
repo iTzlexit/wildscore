@@ -16,6 +16,7 @@ class StandingsBoard extends StatefulWidget {
     required this.species,
     this.expanded = false,
     this.onRemoveClaim,
+    this.onSpotFor,
     super.key,
   });
 
@@ -36,6 +37,13 @@ class StandingsBoard extends StatefulWidget {
   /// sheet only reverses the *most recent* claim, which is no use an hour
   /// later.
   final void Function(Player player, Species species)? onRemoveClaim;
+
+  /// Opens the picker for this player. Live games only.
+  ///
+  /// Claiming starts from the person, not the animal, because that is the order
+  /// it happens in a car — somebody shouts a name before anyone knows what they
+  /// are looking at.
+  final ValueChanged<Player>? onSpotFor;
 
   @override
   State<StandingsBoard> createState() => _StandingsBoardState();
@@ -74,6 +82,9 @@ class _StandingsBoardState extends State<StandingsBoard> {
             onRemove: widget.onRemoveClaim == null
                 ? null
                 : (Species s) => widget.onRemoveClaim!(ranked[i], s),
+            onSpot: widget.onSpotFor == null
+                ? null
+                : () => widget.onSpotFor!(ranked[i]),
             onTap: () => setState(
               () => _open = _open == ranked[i].id ? null : ranked[i].id,
             ),
@@ -152,6 +163,7 @@ class _Row extends StatelessWidget {
     required this.haul,
     required this.onShowAll,
     required this.onRemove,
+    required this.onSpot,
     required this.onTap,
   });
 
@@ -166,6 +178,7 @@ class _Row extends StatelessWidget {
   final List<_Haul> haul;
   final VoidCallback onShowAll;
   final ValueChanged<Species>? onRemove;
+  final VoidCallback? onSpot;
   final VoidCallback onTap;
 
   /// Enough to show the day's best finds without becoming a wall. Rarest are
@@ -236,6 +249,10 @@ class _Row extends StatelessWidget {
                         fontFeatures: AppText.tabular,
                       ),
                     ),
+                    if (onSpot != null) ...<Widget>[
+                      const SizedBox(width: Space.sm),
+                      _SpotButton(onTap: onSpot!, name: player.name),
+                    ],
                   ],
                 ),
                 const SizedBox(height: 6),
@@ -286,6 +303,43 @@ class _Row extends StatelessWidget {
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+/// "They spotted something." The primary action of the whole game, sitting on
+/// the row of the person who shouted.
+///
+/// Deliberately a filled target rather than a text link: it is pressed by
+/// somebody in a moving vehicle who is still looking out of the window.
+class _SpotButton extends StatelessWidget {
+  const _SpotButton({required this.onTap, required this.name});
+
+  final VoidCallback onTap;
+  final String name;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      label: 'Add a sighting for $name',
+      child: Material(
+        color: AppColors.accent,
+        borderRadius: BorderRadius.circular(Radii.chip),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(Radii.chip),
+          child: const SizedBox(
+            width: 42,
+            height: 34,
+            child: Icon(
+              Icons.add_rounded,
+              size: 20,
+              color: AppColors.accentInk,
+            ),
+          ),
+        ),
       ),
     );
   }

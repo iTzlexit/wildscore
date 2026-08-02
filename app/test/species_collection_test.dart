@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wildscore/data/species_repository.dart';
 import 'package:wildscore/domain/conservation_status.dart';
@@ -99,6 +101,39 @@ void main() {
         members.map((Species s) => s.conservationStatus),
         isNot(contains(ConservationStatus.nearThreatened)),
       );
+    });
+  });
+
+  group('the photo guard', () {
+    test('flags the species whose photograph cannot be trusted', () {
+      // The sourcing API cannot tell a caracal from a serval, or an African
+      // wildcat from somebody's tabby. A misidentified photograph in a field
+      // guide teaches the wrong animal, which is worse than showing none.
+      final List<String> unverified = <String>[
+        for (final Species s in _all)
+          if (!s.photoVerified) s.id,
+      ]..sort();
+
+      expect(unverified, <String>['african-wildcat', 'caracal']);
+    });
+
+    test('everything else is trusted by default', () {
+      // Absence of the field means trusted, so a new species is never silently
+      // hidden by one somebody forgot to add.
+      expect(
+        _all.where((Species s) => s.photoVerified).length,
+        _all.length - 2,
+      );
+    });
+
+    test('the flagged ones have a silhouette to fall back to', () async {
+      for (final Species s in _all.where((Species s) => !s.photoVerified)) {
+        expect(
+          File(s.silhouetteAsset).existsSync(),
+          isTrue,
+          reason: '${s.id} has no silhouette, so it would show a monogram',
+        );
+      }
     });
   });
 

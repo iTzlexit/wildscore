@@ -36,6 +36,22 @@ exactly the same.
 
 One drive runs at a time, and it belongs to the car, not to a person.
 
+### Or don't start one at all
+
+If you only want a life list, **mark animals in the Animal Dex** as you see
+them. No drive, no points, no scores to settle — they simply join your
+collection and your Collections fill up.
+
+The difference is what you get back:
+
+| | Points | Saved as a day | Joins your collection |
+|---|---|---|---|
+| **Mark it in the Dex** | no | no | **yes** |
+| **Claim it on a drive** | **yes** | **yes** | yes, when you end the day |
+
+Neither is the "real" way. Someone who never plays the game still gets the field
+guide and the collection, which is most of the app.
+
 ## The four rules that settle arguments
 
 These exist because a family already argued about them. The app cannot referee a
@@ -66,14 +82,15 @@ knowing it is there is not the same as finding it.
 
 Whoever calls it first gets it.
 
-Tap the animal, tap the name of whoever shouted. It is timestamped, so "I said
-it first" has an answer. You have five minutes to reassign a mis-tap, then the
-claim locks.
+**Tap the + next to whoever shouted**, then pick the animal. That order is
+deliberate: in a car the name comes first, because somebody shouts it before
+anyone knows what they are looking at.
 
-**To take one back later**, tap the animal's tag under that player's name on the
-Wild Score tab. It comes off their stack and the scores move. Useful an hour
-after the fact, when someone notices the kudu went to the wrong name — undoing
-"the last claim" would take it off whoever scored most recently instead.
+**To take one back**, tap the animal's tag under that player's name. It comes
+off their stack and the scores move.
+
+The Animal Dex is not part of this. It is a field guide and only a field guide —
+a tap there opens the entry, whether or not a drive is running.
 
 ## Not everything can be claimed forever
 
