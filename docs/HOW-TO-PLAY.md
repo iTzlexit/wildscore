@@ -82,7 +82,7 @@ knowing it is there is not the same as finding it.
 
 Whoever calls it first gets it.
 
-**Tap the + next to whoever shouted**, then pick the animal. That order is
+**Tap the eye next to whoever shouted**, then pick the animal. That order is
 deliberate: in a car the name comes first, because somebody shouts it before
 anyone knows what they are looking at.
 
@@ -140,6 +140,10 @@ join your lifetime total.
 Your points, not the car's. Everyone else's scores are kept with the day so you
 can look back and see who beat you, but they belong to that day rather than to
 your record.
+
+**Your collection is different.** Everything the car found joins it, not just
+what you called — you were there and you saw it. Points are for who spotted it
+first; your collection is for what you have seen.
 
 **Restart** wipes the day and keeps the car, for when the first hour was scored
 wrongly. Nothing has been banked at that point, so nothing is lost.

@@ -16,7 +16,7 @@ import 'scorecard/spot_picker_screen.dart';
 import 'scorecard/start_scorecard_sheet.dart';
 import 'scorecard/wild_score_screen.dart';
 
-/// The four tabs, plus the camera.
+/// The four tabs.
 ///
 /// Order is deliberate: your own record first, today's game second, the goal
 /// third, other people last. A player opens the app to see what they have, not
@@ -114,11 +114,19 @@ class _HomeShellState extends State<HomeShell> {
       return;
     }
     final int mine = card.owner == null ? 0 : card.pointsFor(card.owner!.id);
+    final Visit pending = Visit.from(card);
+    final int newToCollection = pending.collectedSpecies
+        .where((String id) => !_spotted.contains(id))
+        .length;
     final bool ok = await _confirm(
       title: 'End the day?',
       message:
           'The drive is saved to your history with everyone who played, and '
-          'your $mine points join your lifetime total. This cannot be undone.',
+          'your $mine points join your lifetime total.'
+          '${newToCollection == 0 ? '' : ' $newToCollection new '
+                    '${newToCollection == 1 ? 'species joins' : 'species join'} '
+                    'your collection.'}'
+          ' This cannot be undone.',
       action: 'End day',
       danger: false,
     );
@@ -126,15 +134,14 @@ class _HomeShellState extends State<HomeShell> {
       return;
     }
 
-    final Visit visit = Visit.from(card);
+    final Visit visit = pending;
     final List<Visit> visits = await _visitRepo.add(visit);
 
-    // Everything the owner called today enters their collection. Guests' claims
-    // are saved with the day but go no further — they are not accounts on this
-    // phone, and a collection that includes other people's finds is a
-    // collection nobody can trust.
+    // Everything *anyone* in the car called enters the owner's collection —
+    // they were there and they saw it. Points stay with whoever called it
+    // first, because that is a different question. See Visit.collectedSpecies.
     Set<String> spotted = _spotted;
-    for (final String id in visit.ownerSpecies) {
+    for (final String id in visit.collectedSpecies) {
       spotted = await _spottedRepo.add(spotted, id);
     }
 
@@ -270,22 +277,6 @@ class _HomeShellState extends State<HomeShell> {
     );
   }
 
-  void _onCameraPressed() {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        const SnackBar(
-          backgroundColor: AppColors.surfaceAlt,
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.fromLTRB(16, 0, 16, 96),
-          content: Text(
-            'Camera capture arrives in the next update.',
-            style: TextStyle(color: AppColors.textPrimary),
-          ),
-        ),
-      );
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Species>>(
@@ -335,7 +326,11 @@ class _HomeShellState extends State<HomeShell> {
               LeaderboardScreen(seasonYear: widget.profile.seasonYear),
             ],
           ),
-          floatingActionButton: _CameraButton(onPressed: _onCameraPressed),
+          // No camera button. It sat over the content on every tab and did
+          // nothing but apologise — a permanent advertisement for a feature
+          // that does not exist. Verified capture is Phase 2; see
+          // docs/SPEC.md, and it comes back with a purpose rather than as a
+          // placeholder.
           bottomNavigationBar: _BottomBar(
             index: _tab,
             onChanged: (int i) => setState(() => _tab = i),
@@ -343,38 +338,6 @@ class _HomeShellState extends State<HomeShell> {
           ),
         );
       },
-    );
-  }
-}
-
-/// The camera is the primary action of the whole product — one tap from
-/// anywhere, per docs/VISION.md. It gets the accent colour and it sits above
-/// the tab bar rather than inside it, so it never reads as "one of four things
-/// you might do".
-class _CameraButton extends StatelessWidget {
-  const _CameraButton({required this.onPressed});
-
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    // Standard size, not .large. The large FAB is 96pt and was covering the
-    // category counts on the profile — a floating button that hides data is
-    // worse than a smaller one. Gold on near-black is prominent enough.
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 58),
-      child: SizedBox(
-        width: 62,
-        height: 62,
-        child: FloatingActionButton(
-          onPressed: onPressed,
-          backgroundColor: AppColors.accent,
-          foregroundColor: AppColors.accentInk,
-          elevation: 6,
-          shape: const CircleBorder(),
-          child: const Icon(Icons.photo_camera_rounded, size: 26),
-        ),
-      ),
     );
   }
 }

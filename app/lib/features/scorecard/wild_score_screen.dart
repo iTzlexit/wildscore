@@ -335,7 +335,8 @@ class _LiveGame extends StatelessWidget {
               const SizedBox(width: 6),
               Expanded(
                 child: Text(
-                  'Tap + to add a sighting. Tap an animal to take it back.',
+                  'Tap the eye to add a sighting. Tap an animal to take it '
+                  'back.',
                   style: AppText.caption.copyWith(fontSize: 11.5),
                 ),
               ),
@@ -360,7 +361,7 @@ class _LiveGame extends StatelessWidget {
                 const SizedBox(width: Space.md),
                 Expanded(
                   child: Text(
-                    'Nothing claimed yet. Tap the + next to whoever shouted '
+                    'Nothing claimed yet. Tap the eye next to whoever shouted '
                     'first.',
                     style: AppText.caption.copyWith(height: 1.45),
                   ),

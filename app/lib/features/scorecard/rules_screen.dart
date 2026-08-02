@@ -152,6 +152,14 @@ class RulesScreen extends StatelessWidget {
                 'Wipes the day and keeps the car. Nothing is banked, so '
                 'nothing is lost from your record.',
           ),
+          const _Rule(
+            icon: Icons.visibility_rounded,
+            title: 'You saw it too',
+            body:
+                'Points go to whoever called it first — but everything the car '
+                'found joins your collection, because you were there and you '
+                'saw it. Scoring and your life list are different questions.',
+          ),
         ],
       ),
     );

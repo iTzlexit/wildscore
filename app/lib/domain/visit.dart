@@ -67,6 +67,8 @@ class Visit {
     return me == null ? 0 : pointsFor(me.id);
   }
 
+  /// What the account holder personally called. Not what enters their
+  /// collection — see [collectedSpecies].
   Set<String> get ownerSpecies {
     final Player? me = owner;
     if (me == null) {
@@ -77,6 +79,25 @@ class Visit {
         if (c.playerId == me.id) c.speciesId,
     };
   }
+
+  /// Everything the account holder *saw*, which is everything anyone in the car
+  /// called.
+  ///
+  /// Points and the collection answer different questions, and conflating them
+  /// was a mistake. **Points are for who called it first** — a competition, and
+  /// only the claimer scores. **The collection is for what you have seen**, and
+  /// if Sam shouts "pangolin" and you look up and see a pangolin, you have seen
+  /// a pangolin. Locking it out of your life list to protect a scoring rule
+  /// makes the life list the thing that is wrong.
+  ///
+  /// Empty when the owner was not playing. The phone can be handed to a friend
+  /// for the day, and a collection should not grow while its owner is at home.
+  Set<String> get collectedSpecies =>
+      owner == null ? const <String>{} : claimedSpecies;
+
+  Set<String> get claimedSpecies => <String>{
+    for (final Claim c in claims) c.speciesId,
+  };
 
   int get totalPoints => claims.fold(0, (int s, Claim c) => s + c.points);
 

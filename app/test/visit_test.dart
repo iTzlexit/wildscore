@@ -52,6 +52,39 @@ void main() {
       expect(visit.ownerSpecies, <String>{'leopard'});
     });
 
+    test('but the collection gets everything the car saw', () {
+      // If Sam shouts "pangolin" and you look up and see a pangolin, you have
+      // seen a pangolin. Points are for who called it first; the collection is
+      // for what you have seen. Different questions.
+      final Scorecard card = _card();
+      final Visit visit = Visit.from(
+        card
+            .withClaim(_claim('leopard', card.players[0].id, 100))
+            .withClaim(_claim('ground-pangolin', card.players[1].id, 2500)),
+      );
+
+      expect(visit.collectedSpecies, <String>{'leopard', 'ground-pangolin'});
+      expect(
+        visit.ownerPoints,
+        100,
+        reason: 'seeing it is not the same as calling it',
+      );
+    });
+
+    test('the collection stays empty when the owner was not in the car', () {
+      // The phone can be handed to a friend for the day. A collection should
+      // not grow while its owner is at home.
+      final Scorecard card = Scorecard.start(<String>[
+        'Sam',
+        'Jo',
+      ], now: DateTime(2026, 8, 2, 6));
+      final Visit visit = Visit.from(
+        card.withClaim(_claim('ground-pangolin', card.players[0].id, 2500)),
+      );
+
+      expect(visit.collectedSpecies, isEmpty);
+    });
+
     test('is nothing when they were not playing', () {
       // The phone can be handed to a friend for the day.
       final Scorecard card = Scorecard.start(<String>[

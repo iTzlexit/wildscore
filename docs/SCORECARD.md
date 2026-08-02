@@ -68,6 +68,28 @@ Guests' scores are saved **with the day**, not to anyone's record. That is what
 makes the history worth opening: "who was in the car at Satara in July, and did
 Sam really get the wild dog" is what people actually want back.
 
+### Points and the collection are different questions
+
+This was got wrong first time round, and the fix is worth stating plainly:
+
+| | Answers | Who gets it |
+|---|---|---|
+| **Points** | Who called it first? | Only the claimer |
+| **The collection** | What have you seen? | Everyone in the car |
+
+If Sam shouts "pangolin" and you look up and see a pangolin, **you have seen a
+pangolin.** Keeping it out of your life list to protect a scoring rule makes the
+life list the thing that is wrong — and the life list is the part of this app
+that is supposed to last for years.
+
+So at the end of a day, every species *anyone* claimed joins the owner's
+collection, while the points stay exactly where they were earned. The end-of-day
+confirmation says how many are new, so it is never a surprise.
+
+The one exception: if the owner was not a player — the phone was handed to a
+friend — nothing is collected. A collection should not grow while its owner is
+at home.
+
 ### Nothing is aged out of the history
 
 The question came up of whether to cap it — only keep the last forty drives, or

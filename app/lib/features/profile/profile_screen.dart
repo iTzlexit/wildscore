@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../domain/scorecard.dart';
 import '../../domain/species.dart';
-import '../../domain/species_category.dart';
 import '../../domain/species_collection.dart';
 import '../../domain/tracker_profile.dart';
 import '../../domain/visit.dart';
@@ -122,9 +121,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onToFind: () => _openCollection(CollectionMode.toFind),
                   ),
                   const SizedBox(height: Space.section),
-                  // Sets before categories. "Have I got the Big Five yet" is
-                  // the question people actually ask; nobody sets out to see
-                  // 54 mammals.
+                  // The per-category bars used to live below this. They are
+                  // gone: "13 of 54 mammals" is a statistic, and every set here
+                  // is a goal. Two progress systems on one screen made both
+                  // read as filler.
                   _Collections(
                     species: widget.species,
                     caughtIds: widget.caughtIds,
@@ -134,11 +134,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       caughtIds: widget.caughtIds,
                       group: group,
                     ),
-                  ),
-                  const SizedBox(height: Space.section),
-                  _CategoryBreakdown(
-                    species: widget.species,
-                    caughtIds: widget.caughtIds,
                   ),
                 ],
               ),
@@ -607,83 +602,6 @@ class _CollectionRow extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-/// Per-category completion. A mammal-focused Spotter should not stare at one
-/// number that only moves when they log birds.
-class _CategoryBreakdown extends StatelessWidget {
-  const _CategoryBreakdown({required this.species, required this.caughtIds});
-
-  final List<Species> species;
-  final Set<String> caughtIds;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        const _SectionLabel('BY CATEGORY'),
-        const SizedBox(height: Space.md),
-        for (final SpeciesCategory category in SpeciesCategory.values)
-          _CategoryBar(
-            category: category,
-            total: species.where((Species s) => s.category == category).length,
-            spotted: species
-                .where(
-                  (Species s) =>
-                      s.category == category && caughtIds.contains(s.id),
-                )
-                .length,
-          ),
-      ],
-    );
-  }
-}
-
-class _CategoryBar extends StatelessWidget {
-  const _CategoryBar({
-    required this.category,
-    required this.total,
-    required this.spotted,
-  });
-
-  final SpeciesCategory category;
-  final int total;
-  final int spotted;
-
-  @override
-  Widget build(BuildContext context) {
-    final double fraction = total == 0 ? 0 : spotted / total;
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: Space.md),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Text(category.label, style: AppText.label),
-              const Spacer(),
-              Text(
-                '$spotted / $total',
-                style: AppText.caption.copyWith(fontFeatures: AppText.tabular),
-              ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(3),
-            child: LinearProgressIndicator(
-              value: fraction,
-              minHeight: 4,
-              backgroundColor: AppColors.surfaceAlt,
-              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.accent),
-            ),
-          ),
-        ],
       ),
     );
   }

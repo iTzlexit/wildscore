@@ -308,11 +308,16 @@ class _Row extends StatelessWidget {
   }
 }
 
-/// "They spotted something." The primary action of the whole game, sitting on
-/// the row of the person who shouted.
+/// "They spotted something." The primary action of the game, on the row of the
+/// person who shouted.
 ///
-/// Deliberately a filled target rather than a text link: it is pressed by
-/// somebody in a moving vehicle who is still looking out of the window.
+/// An eye rather than a plus, because the verb is *spotted* and a plus reads as
+/// "add a row". Binoculars would be better still and are not in the Material
+/// icon font; drawing them by hand is not worth it at 17pt, where two small
+/// circles read as two small circles.
+///
+/// Outlined rather than filled. A filled accent block on every row competed
+/// with the score for attention, and the score is what people are reading.
 class _SpotButton extends StatelessWidget {
   const _SpotButton({required this.onTap, required this.name});
 
@@ -325,18 +330,25 @@ class _SpotButton extends StatelessWidget {
       button: true,
       label: 'Add a sighting for $name',
       child: Material(
-        color: AppColors.accent,
-        borderRadius: BorderRadius.circular(Radii.chip),
+        color: AppColors.accentWash,
+        borderRadius: BorderRadius.circular(9),
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(Radii.chip),
-          child: const SizedBox(
-            width: 42,
-            height: 34,
-            child: Icon(
-              Icons.add_rounded,
-              size: 20,
-              color: AppColors.accentInk,
+          borderRadius: BorderRadius.circular(9),
+          child: Container(
+            width: 32,
+            height: 28,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(9),
+              border: Border.all(
+                color: AppColors.accent.withValues(alpha: 0.35),
+              ),
+            ),
+            child: const Icon(
+              Icons.visibility_rounded,
+              size: 17,
+              color: AppColors.accent,
             ),
           ),
         ),
