@@ -8,8 +8,29 @@
 
 ## The short version
 
-Everyone in the car plays. You spot animals, you claim them, the rarest finds
-win. At the end of the day the scores are added up and the argument is over.
+Everyone in the car spots animals. The rarest finds win. At the end of the day
+the scores are added up and the argument is over.
+
+## Getting going
+
+**Five steps, and the app screen shows them in this order** — because the reason
+anyone opens it is that a car full of people is waiting for them to work out how
+to start.
+
+1. **Start a drive.** Wild Score tab, big green button. Do it at the gate.
+2. **Add whoever is playing.** Just first names — no accounts, no sign-ups. You
+   are added already. On your own is fine too; a solo drive scores exactly the
+   same.
+3. **Someone shouts.** Tap the eye next to their name, then tap the animal. That
+   is the whole game.
+4. **Watch the bars move.** The rarer the animal, the more it pays. An impala is
+   5. A pangolin is 2,500.
+5. **End the day.** Back at camp. The drive is saved with everyone who played,
+   and your points join your lifetime total.
+
+Step 3 is the one worth stating carefully: **the name comes before the animal.**
+That is the order it happens in a car, because somebody shouts before anyone
+knows what they are looking at.
 
 ## It is a game, and only a game
 
@@ -26,17 +47,7 @@ rather than leaving the app to imply something nobody involved believes.
 
 ---
 
-## Starting a drive
-
-**Start a drive** on the Wild Score tab. You are in it automatically; add
-everyone else in the vehicle by name. No accounts, no sign-ups — just names.
-
-Playing on your own is a normal way to play, not a fallback. A solo drive scores
-exactly the same.
-
-One drive runs at a time, and it belongs to the car, not to a person.
-
-### Or don't start one at all
+## Or don't start one at all
 
 If you only want a life list, **mark animals in the Animal Dex** as you see
 them. No drive, no points, no scores to settle — they simply join your
