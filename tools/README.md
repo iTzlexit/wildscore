@@ -69,6 +69,26 @@ type themselves — and the name is optional. Keep it that way; there is no reas
 this needs anything more, and anything more turns a two-minute favour into a
 privacy question.
 
+## photo-picker.html
+
+**Choose the tile photo for the four Small Five species.**
+
+They are the only four in the catalogue whose photo was picked by a machine
+rather than by eye, and it shows: the auto-pick for Ant Lion is the adult
+insect, which almost nobody recognises. The pit in the sand is what people
+actually see.
+
+Candidates are pulled from iNaturalist and filtered to **CC0 and CC-BY only** —
+the default licence on open image platforms is usually non-commercial, which is
+illegal in a paid app. See `docs/IMAGE-ASSETS.md`.
+
+```bash
+start tools/photo-picker.html
+```
+
+Click one per species, **Export**, paste the JSON back into the chat. The
+download, downscale and attribution update all run from there.
+
 ## prepare_species_photos.dart
 
 See `app/tool/`. Downscales sourced photographs into `assets/species/`.
