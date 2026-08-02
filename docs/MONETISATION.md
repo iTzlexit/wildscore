@@ -3,17 +3,50 @@
 > Phase 5 work. Written now because it shapes decisions earlier, and because
 > getting it wrong gets an app removed rather than merely criticised.
 
-## Do not charge for version one
+## Where the data is today
 
-There is no server yet, so there is nothing to sell. Every paid feature on this
-page is something Phase 4 has not built.
+**All of it is on the phone. There is no server, and the app makes no network
+calls at all.** One runtime dependency, `shared_preferences`, holding four keys:
 
-Ship free. Get the twelve Google Play testers through their fourteen consecutive
-days. Get reviews from people who used it on a real trip. Build the backend.
-*Then* put a price on the thing the backend does.
+| Key | What |
+|---|---|
+| `tracker_profile_v1` | Name, avatar, season |
+| `spotted_species_v1` | The collection — species ids only |
+| `active_scorecard_v1` | The drive in play |
+| `visit_history_v1` | Every finished drive |
 
-Charging before there is a server to pay for is charging for nothing, and the
-first hundred users are worth far more as advocates than as R199 each.
+The species catalogue and photographs are bundled read-only assets.
+
+**Which means: lose the phone, lose everything.** Android's auto-backup may
+quietly save these to a Google account, but it is off for some users, silent
+when it fails, and not something to promise anyone. Until Phase 4 there is no
+recovery, and the app should not pretend otherwise.
+
+`shared_preferences` also rewrites the whole visit list on every append. Fine
+for the tens of records a season produces; it moves to sqflite when photographs
+arrive.
+
+## When a server actually becomes necessary
+
+Not for anything currently built. It is needed for exactly six things, and every
+one of them is on the paid side of the line:
+
+1. **Backup and restore** — the lost phone
+2. **Sync** — a second device
+3. **The leaderboard** — comparing against strangers
+4. **The sightings feed** — sharing with them
+5. **Photo storage** — Phase 2, and the only genuinely expensive one
+6. Anything social that follows
+
+**Build backup first, not the leaderboard.** Backup is what people pay for;
+leaderboards are what developers assume people pay for. The trigger to start is
+the first email from someone who lost their phone and their collection with it —
+that email is the business case, and it will arrive.
+
+Rough running cost when it lands: Supabase Pro at $25/month, Cloudflare R2 at
+about $0.015 per GB with no egress charge. Call it $30–50/month for a few
+thousand users with photographs, which the Cloud Pass covers at around **forty
+subscribers**. Worth knowing that number before building anything.
 
 ## The rule that decides everything
 
@@ -118,29 +151,57 @@ have worked out how to fake a purchase.
 > to something simpler and easier to defend, and the old split is kept at the
 > bottom of this file for the reasoning, which still holds.
 
-### The line: free is everything that works offline
+### Two products, priced by what each costs to run
 
-**You pay for what costs me money.**
+> **Revised 2 August 2026.** An earlier draft here put everything behind one
+> annual pass. That was wrong in one specific way: it treated the game as free
+> and the server as the product, when **the game is the only thing here nobody
+> else has.** A species checklist exists a hundred times over. A scorecard your
+> family argues over does not.
 
-That is the whole rule, it fits in one sentence on the paywall screen, and it is
-true — which matters, because a paywall a user thinks is arbitrary is a paywall
-they resent.
+| | What it is | Price | Needs a server? |
+|---|---|---|---|
+| **The Wild Score game** | Drives, scoring, players, standings, history | **R99 once** | **No** |
+| **Cloud Pass** | Backup, sync, leaderboard, feed, photo storage | **R99/year** | Yes |
 
-| | Free forever | Wild Score Pass |
-|---|---|---|
-| Field guide, all 74 species | ✅ | ✅ |
-| Your collection, for life | ✅ | ✅ |
-| Drives, scoring, standings | ✅ | ✅ |
-| Full drive history | ✅ | ✅ |
-| Collections and progress | ✅ | ✅ |
-| **Backup and restore** | — | ✅ |
-| **Sync to a second device** | — | ✅ |
-| **The leaderboard** | — | ✅ |
-| **The sightings feed** | — | ✅ |
-| **Photo storage** (Phase 2) | — | ✅ |
+The pricing follows the cost. The game costs nothing to run once it is written,
+so it is bought once. The cloud costs money every month, so it recurs. That is
+easy to explain and impossible to resent.
 
-Everything in the top half runs on the phone and costs nothing to serve.
-Everything in the bottom half is Supabase, Cloudflare R2 and bandwidth.
+**The field guide and the collection are free forever, and always will be.**
+Browse all 74 species, mark what you find, fill the Collections, keep it for
+twenty years. That is the top of the funnel and the reason anyone still has the
+app in March.
+
+### Nobody pays before they have felt it
+
+> **Your first three drives are free.** All of them, complete, solo or with the
+> whole car. After that, R99 once and every drive after it is yours.
+
+Three drives is a full long weekend. It is enough to have had the moment where a
+child spots a kudu before anyone else and will not shut up about it, which is
+the moment that sells this — and it cannot be sold any other way, least of all
+by a screenshot on a store page.
+
+The ask then lands on day four of a trip, at a gate, with the family already in
+the car and the phone already in hand. There is no better-converting moment that
+will ever exist in this product, and it costs nothing to wait for it.
+
+Nothing earned in the free drives is ever taken away. They stay in the history,
+the points stay in the lifetime total, the species stay in the collection.
+
+### Why R99 once, and not R199 a year
+
+- **R99 is an impulse. R199/year is a decision.** Different parts of the brain,
+  and only one of them is available to an unknown app at a park gate.
+- A once-off has no "will I even go to Kruger this year" anxiety attached to it,
+  which is the objection that kills annual products aimed at holidays.
+- It can ship **with no backend at all** — which means revenue in month one with
+  zero running costs, instead of revenue in month nine after a server bill.
+
+The Cloud Pass arrives later, and by then it sells itself: someone with three
+seasons of sightings on one phone is *afraid*, and backup is the answer to a
+fear rather than a feature on a list.
 
 ### It never takes anything away
 
@@ -155,17 +216,18 @@ A lapsed player is exactly a free player who has been around longer. That is the
 difference between a subscription and a hostage situation, and it is the
 difference people write reviews about.
 
-### Price
+### Price sanity check
 
-**R199/year, non-renewing.** R99 for the founding season.
+A South African conservation fee is around R120 per person per day, and an
+international one is roughly five times that. A family trip runs to thousands
+before anyone has eaten.
 
-Sanity check: a South African conservation fee is around R120 per person per
-day, and an international one is roughly five times that. Nobody who has paid to
-get through the gate is deciding against R199 on price. They are deciding on
-whether they trust the app — which is an argument for a generous free tier and a
-long runway before asking, not for a lower number.
+Nobody who paid to get through that gate is deciding against R99 on price. They
+are deciding on **whether they trust the app** — which is an argument for a
+generous free tier and a long runway before asking, not for a lower number.
 
-$12.99 internationally. Price the territories separately; see below.
+$6.99 for the game internationally, $6.99/year for the pass. Price the
+territories separately; see below.
 
 ### Advertising: considered and rejected
 
