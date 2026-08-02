@@ -78,6 +78,19 @@ class _HomeShellState extends State<HomeShell> {
     });
   }
 
+  /// Re-reads everything from disk. Called after a restore, which rewrites the
+  /// stores underneath this widget without going through it.
+  Future<void> _reload() async {
+    final Set<String> spotted = await _spottedRepo.load();
+    final List<Visit> visits = await _visitRepo.load();
+    if (mounted) {
+      setState(() {
+        _spotted = spotted;
+        _visits = visits;
+      });
+    }
+  }
+
   Future<void> _toggleSpotted(String id) async {
     final Set<String> next = await _spottedRepo.toggle(_spotted, id);
     if (mounted) {
@@ -305,6 +318,7 @@ class _HomeShellState extends State<HomeShell> {
                 card: _card,
                 onOpenGame: () => setState(() => _tab = 1),
                 onDeleteVisit: _deleteVisit,
+                onRestored: _reload,
               ),
               WildScoreScreen(
                 species: species,

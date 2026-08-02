@@ -9,6 +9,7 @@ import '../../shared/theme.dart';
 import '../../shared/widgets/app_header.dart';
 import '../../shared/widgets/avatar_badge.dart';
 import '../codex/collection_screen.dart';
+import 'backup_screen.dart';
 import 'visit_history_screen.dart';
 
 /// One person's record. Not the day's game — that has its own tab.
@@ -31,6 +32,7 @@ class ProfileScreen extends StatefulWidget {
     this.card,
     this.onOpenGame,
     this.onDeleteVisit,
+    this.onRestored,
     super.key,
   });
 
@@ -50,6 +52,10 @@ class ProfileScreen extends StatefulWidget {
   final Scorecard? card;
   final VoidCallback? onOpenGame;
   final Future<void> Function(Visit visit)? onDeleteVisit;
+
+  /// Reloads the shell after a restore. Every screen reads from the stores this
+  /// writes to, so they all have to be told.
+  final VoidCallback? onRestored;
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -135,10 +141,75 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       group: group,
                     ),
                   ),
+                  const SizedBox(height: Space.section),
+                  _BackupRow(
+                    onTap: () => BackupScreen.open(
+                      context,
+                      onRestored: widget.onRestored ?? () {},
+                    ),
+                  ),
                 ],
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// The way out of "everything is on one phone".
+///
+/// Sits at the bottom because it is not what anyone opens the profile for — but
+/// it has to be *somewhere findable*, because the day it matters is the day
+/// after somebody wishes they had used it.
+class _BackupRow extends StatelessWidget {
+  const _BackupRow({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.surfaceAlt,
+      borderRadius: BorderRadius.circular(Radii.card),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(Radii.card),
+        child: Padding(
+          padding: const EdgeInsets.all(Space.lg),
+          child: Row(
+            children: <Widget>[
+              const Icon(
+                Icons.cloud_off_rounded,
+                size: 19,
+                color: AppColors.textSecondary,
+              ),
+              const SizedBox(width: Space.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      'Back up my collection',
+                      style: AppText.bodyStrong.copyWith(fontSize: 14.5),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'All of this lives on this phone only. Save a copy you '
+                      'can restore.',
+                      style: AppText.caption.copyWith(height: 1.45),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(
+                Icons.chevron_right_rounded,
+                size: 18,
+                color: AppColors.textMuted,
+              ),
+            ],
+          ),
         ),
       ),
     );

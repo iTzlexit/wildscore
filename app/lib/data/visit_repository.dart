@@ -76,6 +76,18 @@ class VisitRepository {
     return all;
   }
 
+  /// Overwrites the history wholesale. Used by a restore, which has already
+  /// merged; nothing else should call it.
+  Future<void> replaceAll(List<Visit> all) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+      _key,
+      json.encode(<Map<String, dynamic>>[
+        for (final Visit v in all) v.toJson(),
+      ]),
+    );
+  }
+
   Future<void> clear() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove(_key);

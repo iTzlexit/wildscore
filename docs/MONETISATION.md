@@ -151,7 +151,67 @@ have worked out how to fake a purchase.
 > to something simpler and easier to defend, and the old split is kept at the
 > bottom of this file for the reasoning, which still holds.
 
-### Two products, priced by what each costs to run
+### The offline constraint decides this, not preference
+
+**Revised again, 2 August 2026, and this is the version to build.**
+
+Two earlier drafts tried to charge for the game — first as an annual pass, then
+as a once-off after three free drives, then after one. Each ran into the same
+wall, and it is worth stating in one line because it settles the whole question:
+
+> **In-app purchase needs a network. The park does not have one. Therefore
+> anything sold must be something a person wants while they have signal.**
+
+Backup is exactly that. You think about backing up at camp, or at home, or after
+a trip — all places with connectivity. The game is the opposite: you want it at
+a gate at 05:30 with no bars, and a paywall there is unpayable by somebody
+actively trying to pay. That is worse than not asking, because the answer was
+yes and the app said no.
+
+Engineering around it — grace periods, deferred unlocks, offline entitlement
+tokens — is possible and all of it is fragile, unenforceable, and spends
+goodwill on the least generous part of the product.
+
+### So: version one is free, entirely
+
+No IAP, no paywall, no unlock, no counter. The game, the guide, the collection,
+the history, all of it.
+
+That is not generosity. It is the correct move for a product with zero users,
+zero reviews and an unknown developer:
+
+- **Adoption is the scarce resource, not revenue.** A paywall on an unknown app
+  converts badly and suppresses installs, which is the worst of both.
+- The **twelve testers for fourteen days** are dramatically easier to find for a
+  free app.
+- The collection compounds. Somebody with two seasons in the app is a customer
+  for life; somebody who bounced off a paywall on day two is nothing.
+- There is nothing to support, refund, or explain.
+
+### Then charge for the server, once it exists
+
+One tier, arriving with Phase 4:
+
+**Wild Score Cloud — R99/year.** Backup and restore, sync across devices, the
+leaderboard, the sightings feed, photo storage.
+
+Every item needs a server that costs money monthly, which is why it recurs, and
+every item is wanted at a moment when there is signal — which dissolves the
+problem entirely.
+
+### And if the game turns out to be the thing
+
+It might. If real trips show people raving about the scorecard and ignoring the
+collection, a **once-off game unlock is still available** — but sold at *first
+launch*, at home, before the trip, where there is Wi-Fi and a decision is being
+made anyway. Never mid-trip.
+
+Decide that with usage data from the first season, not now. It is a reversible
+decision made cheaply later, and an expensive one made blindly today.
+
+---
+
+## Two products, priced by what each costs to run
 
 > **Revised 2 August 2026.** An earlier draft here put everything behind one
 > annual pass. That was wrong in one specific way: it treated the game as free
