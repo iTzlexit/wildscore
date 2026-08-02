@@ -199,6 +199,37 @@ Every item needs a server that costs money monthly, which is why it recurs, and
 every item is wanted at a moment when there is signal — which dissolves the
 problem entirely.
 
+### Never sell "lifetime" for something that costs you monthly
+
+A once-off unlock is safe to promise forever **only because the current app
+costs nothing to run**. No server, no bandwidth, no storage. "Yours forever" is
+a promise that can actually be kept.
+
+The moment a purchase touches a server, forever becomes a liability: every
+lifetime buyer is a permanent cost with no matching income, and the only way out
+is to break the promise.
+
+So the split is not arbitrary — it is the only honest one available:
+
+| Bought once, forever | Recurring |
+|---|---|
+| Anything that runs on the phone | Anything that runs on a server |
+
+### If a once-off ever ships, protect those buyers
+
+If the game is ever sold once-off and the Cloud tier arrives afterwards, early
+buyers must not feel switched on. Two rules:
+
+1. **Say what it covers at the point of sale.** "The app and every future drive,
+   forever" — not "everything, forever". A promise nobody has to reinterpret
+   later.
+2. **Give them the first year of Cloud.** They paid before there was any
+   evidence the thing was good. That is worth more than the R99.
+
+The cost of getting this wrong is not the refunds. It is that the first hundred
+users are the ones who tell everyone else, and they are the exact people a
+bait-and-switch would turn.
+
 ### And if the game turns out to be the thing
 
 It might. If real trips show people raving about the scorecard and ignoring the
