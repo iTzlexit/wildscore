@@ -3,6 +3,18 @@
 > Phase 5 work. Written now because it shapes decisions earlier, and because
 > getting it wrong gets an app removed rather than merely criticised.
 
+## Do not charge for version one
+
+There is no server yet, so there is nothing to sell. Every paid feature on this
+page is something Phase 4 has not built.
+
+Ship free. Get the twelve Google Play testers through their fourteen consecutive
+days. Get reviews from people who used it on a real trip. Build the backend.
+*Then* put a price on the thing the backend does.
+
+Charging before there is a server to pay for is charging for nothing, and the
+first hundred users are worth far more as advocates than as R199 each.
+
 ## The rule that decides everything
 
 **Apple and Google require their own in-app purchase systems for digital
@@ -101,14 +113,76 @@ have worked out how to fake a purchase.
 
 ## What you sell
 
-The split is **play free, pay to keep it beautifully.**
+> **Amended 2 August 2026.** The tier table below was written against features
+> that do not exist yet — the Six, the Den, Quiet Sighting. The line has moved
+> to something simpler and easier to defend, and the old split is kept at the
+> bottom of this file for the reasoning, which still holds.
 
-| Tier | Price | Contains |
+### The line: free is everything that works offline
+
+**You pay for what costs me money.**
+
+That is the whole rule, it fits in one sentence on the paywall screen, and it is
+true — which matters, because a paywall a user thinks is arbitrary is a paywall
+they resent.
+
+| | Free forever | Wild Score Pass |
 |---|---|---|
-| **Free forever** | — | Camera capture, Quick Log, live scoring, the daily scorecard, the trip summary, full Codex browsing |
-| **Season Pass** | **R199/year** (R149 founding season), $14.99 international. Non-renewing. | **The Collection of Six, the Den**, crown and leaderboard eligibility, share cards, Quiet Sighting mode, badges |
-| **Vehicle Pass** | **R399** / $29.99 | Up to five players on one trip. Safari is a group activity; the paper version was always played by a whole car. |
-| **Later** | | Park unlocks (Pilanesberg, Addo, Etosha), cosmetic den backdrops and card frames, end-of-season printed poster |
+| Field guide, all 74 species | ✅ | ✅ |
+| Your collection, for life | ✅ | ✅ |
+| Drives, scoring, standings | ✅ | ✅ |
+| Full drive history | ✅ | ✅ |
+| Collections and progress | ✅ | ✅ |
+| **Backup and restore** | — | ✅ |
+| **Sync to a second device** | — | ✅ |
+| **The leaderboard** | — | ✅ |
+| **The sightings feed** | — | ✅ |
+| **Photo storage** (Phase 2) | — | ✅ |
+
+Everything in the top half runs on the phone and costs nothing to serve.
+Everything in the bottom half is Supabase, Cloudflare R2 and bandwidth.
+
+### It never takes anything away
+
+When a pass lapses:
+
+- **Nothing is deleted.** Not a sighting, not a drive, not a point.
+- **Nothing already earned is locked.** The collection, the history and the
+  scores stay open and fully usable, forever.
+- What stops is **new server work** — no further backup, no sync, no posting.
+
+A lapsed player is exactly a free player who has been around longer. That is the
+difference between a subscription and a hostage situation, and it is the
+difference people write reviews about.
+
+### Price
+
+**R199/year, non-renewing.** R99 for the founding season.
+
+Sanity check: a South African conservation fee is around R120 per person per
+day, and an international one is roughly five times that. Nobody who has paid to
+get through the gate is deciding against R199 on price. They are deciding on
+whether they trust the app — which is an argument for a generous free tier and a
+long runway before asking, not for a lower number.
+
+$12.99 internationally. Price the territories separately; see below.
+
+### Advertising: considered and rejected
+
+Not "later" — rejected, for a reason specific to this app.
+
+**Ads need a network, and Kruger has none.** The app's whole purpose is to be
+useful in a place with no signal, which means an ad-supported build shows
+adverts precisely when the app is *not* being used and none when it is. The
+inventory is worthless because it never loads at the moment of use.
+
+Beyond that: a few thousand South African users generating a handful of
+impressions each is worth a rounding error against a few hundred passes, and it
+would be paid for in exactly the currency this product is trading on — a
+calm screen, used in a place people drove six hours to get to.
+
+The only advertising-shaped thing worth revisiting is a **partner listing** for
+camps and operators, and that is a different business with a sales team in it.
 
 ### Per-territory pricing matters
 

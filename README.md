@@ -21,6 +21,7 @@ with the scoring made honest and the bragging made shareable.
 | [docs/TECH-STACK.md](docs/TECH-STACK.md) | Every technology choice and the reasoning behind it |
 | [docs/REVIEW-CHECKLIST.md](docs/REVIEW-CHECKLIST.md) | Run before merging anything. What the tests cover, and what only you can check |
 | [docs/MONETISATION.md](docs/MONETISATION.md) | How users pay and how the money reaches your bank account |
+| [docs/ACCOUNTS.md](docs/ACCOUNTS.md) | Sign-in, why there is no account at the gate, and the migration that must not eat anyone's collection |
 | [docs/TESTING.md](docs/TESTING.md) | How to test camera, GPS and a park you cannot visit |
 | [docs/DIVERGENCES.md](docs/DIVERGENCES.md) | Where the live docs disagree with the original plan, and why |
 | **[docs/SCORECARD.md](docs/SCORECARD.md)** | **The day scorecard — current focus.** Players, chances, house rules, leaderboard |
