@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../../domain/tracker_profile.dart';
 import '../../shared/theme.dart';
+import '../scorecard/rules_screen.dart';
 
 /// First run: name yourself, and you are a tracker.
 ///
@@ -107,6 +108,23 @@ class _WelcomeStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Scrolls, and only scrolls when it has to. A fixed Column with Spacers
+    // cannot shrink below its content, so it overflows on a short screen or at
+    // a large accessibility text scale — this keeps the Spacers doing their job
+    // when there is room and gives up gracefully when there is not.
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: IntrinsicHeight(child: _content(context)),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _content(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(28, 40, 28, 32),
       child: Column(
@@ -163,6 +181,11 @@ class _WelcomeStep extends StatelessWidget {
                 'Keep a collection that lasts for years, '
                 'not a scorecard you lose at the gate.',
           ),
+          const SizedBox(height: Space.sm),
+          // Said before anyone plays, not buried in a rules screen they may
+          // never open. A scoreboard that ranks living animals invites exactly
+          // one misreading, and it is worth heading off at the door.
+          const SpiritOfTheGame(),
           const Spacer(),
           _PrimaryButton(label: 'Begin', onPressed: onBegin),
           const SizedBox(height: 10),

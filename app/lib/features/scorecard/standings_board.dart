@@ -15,6 +15,7 @@ class StandingsBoard extends StatefulWidget {
     required this.card,
     required this.species,
     this.expanded = false,
+    this.onRemoveClaim,
     super.key,
   });
 
@@ -26,6 +27,15 @@ class StandingsBoard extends StatefulWidget {
   /// hiding the interesting part behind a tap is only worth doing when space is
   /// scarce.
   final bool expanded;
+
+  /// Takes one claim back off a player. Null for a finished day — history is
+  /// not editable, or it is not history.
+  ///
+  /// Reachable by tapping the animal's own tag, which is where a person looks
+  /// when they notice the kudu went to the wrong name. The undo in the claim
+  /// sheet only reverses the *most recent* claim, which is no use an hour
+  /// later.
+  final void Function(Player player, Species species)? onRemoveClaim;
 
   @override
   State<StandingsBoard> createState() => _StandingsBoardState();
@@ -61,6 +71,9 @@ class _StandingsBoardState extends State<StandingsBoard> {
             showAll: _showAll.contains(ranked[i].id),
             haul: _haulFor(ranked[i].id),
             onShowAll: () => setState(() => _showAll.add(ranked[i].id)),
+            onRemove: widget.onRemoveClaim == null
+                ? null
+                : (Species s) => widget.onRemoveClaim!(ranked[i], s),
             onTap: () => setState(
               () => _open = _open == ranked[i].id ? null : ranked[i].id,
             ),
@@ -69,19 +82,27 @@ class _StandingsBoardState extends State<StandingsBoard> {
     );
   }
 
-  /// What this player claimed today, with counts, rarest first.
+  /// What this player claimed today: counts and points banked, rarest first.
+  ///
+  /// Points come from the claims rather than from the species, because a claim
+  /// stores what it was worth on the day. A tier revalued next season must not
+  /// silently rewrite last winter's card.
   List<_Haul> _haulFor(String playerId) {
     final Map<String, int> counts = <String, int>{};
+    final Map<String, int> points = <String, int>{};
     for (final Claim c in widget.card.claims) {
       if (c.playerId == playerId) {
         counts[c.speciesId] = (counts[c.speciesId] ?? 0) + 1;
+        points[c.speciesId] = (points[c.speciesId] ?? 0) + c.points;
       }
     }
     final List<_Haul> haul = <_Haul>[
       for (final MapEntry<String, int> e in counts.entries)
         if (_lookup(e.key) case final Species s)
-          _Haul(species: s, count: e.value),
+          _Haul(species: s, count: e.value, points: points[e.key] ?? 0),
     ];
+    // By what the animal is worth, not by what the stack totals — two impala
+    // must not outrank a leopard.
     haul.sort((_Haul a, _Haul b) {
       final int byTier = b.species.points.compareTo(a.species.points);
       return byTier != 0
@@ -102,10 +123,20 @@ class _StandingsBoardState extends State<StandingsBoard> {
 }
 
 class _Haul {
-  const _Haul({required this.species, required this.count});
+  const _Haul({
+    required this.species,
+    required this.count,
+    required this.points,
+  });
 
   final Species species;
+
+  /// Separate sightings, in different places. Two hyena at the same kill is one
+  /// claim — see the rules screen.
   final int count;
+
+  /// What the stack is worth in total, summed from the claims.
+  final int points;
 }
 
 class _Row extends StatelessWidget {
@@ -120,6 +151,7 @@ class _Row extends StatelessWidget {
     required this.showAll,
     required this.haul,
     required this.onShowAll,
+    required this.onRemove,
     required this.onTap,
   });
 
@@ -133,6 +165,7 @@ class _Row extends StatelessWidget {
   final bool showAll;
   final List<_Haul> haul;
   final VoidCallback onShowAll;
+  final ValueChanged<Species>? onRemove;
   final VoidCallback onTap;
 
   /// Enough to show the day's best finds without becoming a wall. Rarest are
@@ -240,13 +273,96 @@ class _Row extends StatelessWidget {
                 spacing: 6,
                 runSpacing: 6,
                 children: <Widget>[
-                  for (final _Haul h in shown) _HaulTag(haul: h),
+                  for (final _Haul h in shown)
+                    _HaulTag(
+                      haul: h,
+                      onRemove: onRemove == null
+                          ? null
+                          : () => onRemove!(h.species),
+                    ),
                   if (trimmed)
                     _MoreTag(count: haul.length - cap, onTap: onShowAll),
                 ],
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+/// One species in a player's stack: what it is, how many, what it paid.
+///
+/// The count and the total both earn their space. Two of something is a
+/// different day from one of it, and "African Wildcat ×2 · 1500" answers both
+/// "what did they get" and "why are they winning" without any arithmetic.
+class _HaulTag extends StatelessWidget {
+  const _HaulTag({required this.haul, this.onRemove});
+
+  final _Haul haul;
+
+  /// Live games only. Tapping the tag is how a wrongly assigned animal gets
+  /// taken back off someone an hour after the fact.
+  final VoidCallback? onRemove;
+
+  @override
+  Widget build(BuildContext context) {
+    final RarityStyle style = haul.species.rarityTier.style;
+
+    return Material(
+      color: style.fill,
+      borderRadius: BorderRadius.circular(Radii.chip - 2),
+      child: InkWell(
+        onTap: onRemove,
+        borderRadius: BorderRadius.circular(Radii.chip - 2),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(Radii.chip - 2),
+            border: Border.all(color: style.accent, width: 1.2),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(
+                haul.species.commonName,
+                style: AppText.caption.copyWith(
+                  fontSize: 11.5,
+                  color: style.accent,
+                  fontVariations: AppFonts.weight(700),
+                ),
+              ),
+              if (haul.count > 1) ...<Widget>[
+                const SizedBox(width: 5),
+                Text(
+                  '×${haul.count}',
+                  style: AppText.caption.copyWith(
+                    fontSize: 11,
+                    color: style.accent,
+                    fontVariations: AppFonts.weight(800),
+                    fontFeatures: AppText.tabular,
+                  ),
+                ),
+              ],
+              const SizedBox(width: 6),
+              Container(
+                width: 1,
+                height: 10,
+                color: style.accent.withValues(alpha: 0.35),
+              ),
+              const SizedBox(width: 6),
+              Text(
+                '${haul.points}',
+                style: AppText.caption.copyWith(
+                  fontSize: 11,
+                  color: style.accent,
+                  fontVariations: AppFonts.weight(600),
+                  fontFeatures: AppText.tabular,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -283,51 +399,6 @@ class _MoreTag extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _HaulTag extends StatelessWidget {
-  const _HaulTag({required this.haul});
-
-  final _Haul haul;
-
-  @override
-  Widget build(BuildContext context) {
-    final RarityStyle style = haul.species.rarityTier.style;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
-      decoration: BoxDecoration(
-        color: style.fill,
-        borderRadius: BorderRadius.circular(Radii.chip - 2),
-        border: Border.all(color: style.accent, width: 1.2),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Text(
-            haul.species.commonName,
-            style: AppText.caption.copyWith(
-              fontSize: 11.5,
-              color: style.accent,
-              fontVariations: AppFonts.weight(700),
-            ),
-          ),
-          if (haul.count > 1) ...<Widget>[
-            const SizedBox(width: 5),
-            Text(
-              '×${haul.count}',
-              style: AppText.caption.copyWith(
-                fontSize: 11,
-                color: style.accent,
-                fontVariations: AppFonts.weight(800),
-                fontFeatures: AppText.tabular,
-              ),
-            ),
-          ],
-        ],
       ),
     );
   }

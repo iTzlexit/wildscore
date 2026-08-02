@@ -68,6 +68,30 @@ Guests' scores are saved **with the day**, not to anyone's record. That is what
 makes the history worth opening: "who was in the car at Satara in July, and did
 Sam really get the wild dog" is what people actually want back.
 
+### Nothing is aged out of the history
+
+The question came up of whether to cap it — only keep the last forty drives, or
+only this season. **No.** A two-year-old drive is worth *more* than last week's,
+not less; it is the thing someone opens when they miss the park, and it is a
+large part of what a season pass is being renewed for. Capping it would delete
+the product's own retention.
+
+Long histories are handled three ways instead:
+
+- **Filter by year and month.** Only periods that contain a drive are offered.
+- **Twelve at a time**, with a "show older" button. These cards are tall and a
+  season of them built at once is a visibly slow screen.
+- **Delete is the player's call**, per drive, never the app's.
+
+Because the lifetime total is derived, deleting a drive removes its points too.
+The confirmation says so — a total that outlived the deletion of its own
+evidence would be worse than losing the points. Species already spotted stay in
+the collection, since they may well predate that day.
+
+Storage moves to sqflite in Phase 2. `shared_preferences` rewrites the whole
+list on every append, which is fine for the tens of records a trip produces and
+is not fine for a few hundred.
+
 ## Restart vs End day
 
 Two different intentions, so two different controls, both confirmed:

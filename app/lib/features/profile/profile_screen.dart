@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../domain/scorecard.dart';
 import '../../domain/species.dart';
 import '../../domain/species_category.dart';
 import '../../domain/tracker_profile.dart';
@@ -27,8 +28,9 @@ class ProfileScreen extends StatefulWidget {
     required this.species,
     this.caughtIds = const <String>{},
     this.visits = const <Visit>[],
-    this.driveInPlay = false,
+    this.card,
     this.onOpenGame,
+    this.onDeleteVisit,
     super.key,
   });
 
@@ -42,10 +44,12 @@ class ProfileScreen extends StatefulWidget {
   /// derived from it rather than stored — see data/visit_repository.dart.
   final List<Visit> visits;
 
-  /// A drive is running on the Wild Score tab. Worth a pointer, since this
-  /// screen deliberately does not show it.
-  final bool driveInPlay;
+  /// A drive running on the Wild Score tab. Worth a pointer, since this screen
+  /// deliberately does not show it — and it appears, unbanked, at the top of
+  /// the drive history.
+  final Scorecard? card;
   final VoidCallback? onOpenGame;
+  final Future<void> Function(Visit visit)? onDeleteVisit;
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -101,9 +105,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       context,
                       visits: widget.visits,
                       species: widget.species,
+                      live: widget.card,
+                      onDelete: widget.onDeleteVisit,
                     ),
                   ),
-                  if (widget.driveInPlay) ...<Widget>[
+                  if (widget.card != null) ...<Widget>[
                     const SizedBox(height: Space.md),
                     _DriveInPlayLink(onTap: widget.onOpenGame),
                   ],

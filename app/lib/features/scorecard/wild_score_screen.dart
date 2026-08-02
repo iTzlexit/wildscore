@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../domain/scorecard.dart';
 import '../../domain/species.dart';
+import '../../shared/date_format.dart';
 import '../../shared/theme.dart';
 import '../../shared/widgets/app_header.dart';
 import 'rules_screen.dart';
@@ -21,6 +22,7 @@ class WildScoreScreen extends StatelessWidget {
     this.onStart,
     this.onEnd,
     this.onRestart,
+    this.onRemoveClaim,
     super.key,
   });
 
@@ -29,6 +31,7 @@ class WildScoreScreen extends StatelessWidget {
   final VoidCallback? onStart;
   final VoidCallback? onEnd;
   final VoidCallback? onRestart;
+  final void Function(Player player, Species species)? onRemoveClaim;
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +58,7 @@ class WildScoreScreen extends StatelessWidget {
                       species: species,
                       onEnd: onEnd,
                       onRestart: onRestart,
+                      onRemoveClaim: onRemoveClaim,
                     ),
             ),
           ],
@@ -241,12 +245,14 @@ class _LiveGame extends StatelessWidget {
     required this.species,
     this.onEnd,
     this.onRestart,
+    this.onRemoveClaim,
   });
 
   final Scorecard card;
   final List<Species> species;
   final VoidCallback? onEnd;
   final VoidCallback? onRestart;
+  final void Function(Player player, Species species)? onRemoveClaim;
 
   @override
   Widget build(BuildContext context) {
@@ -262,7 +268,31 @@ class _LiveGame extends StatelessWidget {
       children: <Widget>[
         _LiveHeader(card: card, solo: solo),
         const SizedBox(height: Space.lg),
-        StandingsBoard(card: card, species: species, expanded: true),
+        StandingsBoard(
+          card: card,
+          species: species,
+          expanded: true,
+          onRemoveClaim: onRemoveClaim,
+        ),
+        if (card.claims.isNotEmpty) ...<Widget>[
+          const SizedBox(height: Space.xs),
+          Row(
+            children: <Widget>[
+              const Icon(
+                Icons.touch_app_outlined,
+                size: 14,
+                color: AppColors.textMuted,
+              ),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  'Tap an animal to take it back off someone.',
+                  style: AppText.caption.copyWith(fontSize: 11.5),
+                ),
+              ),
+            ],
+          ),
+        ],
         const SizedBox(height: Space.sm),
         if (card.claims.isEmpty)
           Container(
@@ -382,12 +412,23 @@ class _LiveHeader extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: Space.sm),
-              Text(
-                solo ? 'DRIVE IN PLAY · SOLO' : 'DRIVE IN PLAY',
-                style: AppText.overline.copyWith(color: AppColors.accent),
+              Expanded(
+                child: Text(
+                  solo ? 'DRIVE IN PLAY · SOLO' : 'DRIVE IN PLAY',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppText.overline.copyWith(color: AppColors.accent),
+                ),
               ),
-              const Spacer(),
-              Text('${card.claims.length} claimed', style: AppText.caption),
+              // The date, because a drive can outlive the day it started on —
+              // someone opens the app the next morning with yesterday still
+              // running, and the card should say so rather than imply today.
+              Text(
+                formatLongDate(card.startedAt),
+                style: AppText.caption.copyWith(
+                  fontVariations: AppFonts.weight(600),
+                ),
+              ),
             ],
           ),
           const SizedBox(height: Space.md),
@@ -403,11 +444,20 @@ class _LiveHeader extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: Space.sm),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 7),
+                  child: Text(
+                    solo ? 'POINTS TODAY' : 'POINTS IN THE CAR',
+                    style: AppText.overline,
+                  ),
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 7),
                 child: Text(
-                  solo ? 'POINTS TODAY' : 'POINTS IN THE CAR',
-                  style: AppText.overline,
+                  '${card.claims.length} claimed',
+                  style: AppText.caption,
                 ),
               ),
             ],

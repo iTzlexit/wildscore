@@ -11,6 +11,19 @@
 Everyone in the car plays. You spot animals, you claim them, the rarest finds
 win. At the end of the day the scores are added up and the argument is over.
 
+## It is a game, and only a game
+
+> **Every animal out there is worth the same.** The points only measure how hard
+> something is to find — a pangolin scores more than an elephant because the
+> elephant is standing in the road, not because it matters less.
+>
+> The ranking exists so a long drive has something to argue about. Watch the
+> animal first. The phone can wait.
+
+Shown on this screen and again on first launch. A scoreboard that ranks living
+animals invites exactly one misreading, and it is worth heading off at the door
+rather than leaving the app to imply something nobody involved believes.
+
 ---
 
 ## Starting a drive
@@ -56,6 +69,11 @@ Whoever calls it first gets it.
 Tap the animal, tap the name of whoever shouted. It is timestamped, so "I said
 it first" has an answer. You have five minutes to reassign a mis-tap, then the
 claim locks.
+
+**To take one back later**, tap the animal's tag under that player's name on the
+Wild Score tab. It comes off their stack and the scores move. Useful an hour
+after the fact, when someone notices the kudu went to the wrong name — undoing
+"the last claim" would take it off whoever scored most recently instead.
 
 ## Not everything can be claimed forever
 

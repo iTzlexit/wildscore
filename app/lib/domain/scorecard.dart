@@ -204,6 +204,29 @@ class Scorecard {
     );
   }
 
+  /// Takes one claim of a species back off a specific player.
+  ///
+  /// [withoutLastClaimOf] undoes whatever happened most recently, which is the
+  /// right tool immediately after a mis-tap. This is the other case: an hour
+  /// later, someone notices the kudu went to the wrong name. Removing the most
+  /// recent claim would then take it off the wrong person twice over.
+  ///
+  /// Removes the player's *latest* claim of that species, so a duplicate count
+  /// comes down by one rather than vanishing.
+  Scorecard withoutClaimBy(String playerId, String speciesId) {
+    final int index = claims.lastIndexWhere(
+      (Claim c) => c.playerId == playerId && c.speciesId == speciesId,
+    );
+    if (index < 0) {
+      return this;
+    }
+    return Scorecard(
+      startedAt: startedAt,
+      players: players,
+      claims: <Claim>[...claims]..removeAt(index),
+    );
+  }
+
   /// Same car, clean slate.
   ///
   /// Separate from ending the day because they are different intentions. A

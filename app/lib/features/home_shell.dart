@@ -148,6 +148,36 @@ class _HomeShellState extends State<HomeShell> {
     }
   }
 
+  /// Takes one animal back off a player, from the standings.
+  ///
+  /// Confirmed, and the dialog names the person and the points — this is the
+  /// one destructive action in the game that someone else is watching over your
+  /// shoulder while you do it.
+  Future<void> _removeClaim(Player player, Species species) async {
+    final Scorecard? card = _card;
+    if (card == null) {
+      return;
+    }
+    final bool ok = await _confirm(
+      title: 'Take it back?',
+      message:
+          'Removes one ${species.commonName} from ${player.name} '
+          '— ${species.points} points.',
+      action: 'Remove',
+    );
+    if (!ok) {
+      return;
+    }
+    await _updateCard(card.withoutClaimBy(player.id, species.id));
+  }
+
+  Future<void> _deleteVisit(Visit visit) async {
+    final List<Visit> visits = await _visitRepo.remove(visit);
+    if (mounted) {
+      setState(() => _visits = visits);
+    }
+  }
+
   /// Same players, no claims. The common case is "we scored the first hour
   /// wrong", and that must not cost anyone four names retyped at a gate.
   Future<void> _restartScorecard() async {
@@ -290,8 +320,9 @@ class _HomeShellState extends State<HomeShell> {
                 species: species,
                 caughtIds: _spotted,
                 visits: _visits,
-                driveInPlay: _card != null,
+                card: _card,
                 onOpenGame: () => setState(() => _tab = 1),
+                onDeleteVisit: _deleteVisit,
               ),
               WildScoreScreen(
                 species: species,
@@ -299,6 +330,7 @@ class _HomeShellState extends State<HomeShell> {
                 onStart: _startScorecard,
                 onEnd: _endScorecard,
                 onRestart: _restartScorecard,
+                onRemoveClaim: _removeClaim,
               ),
               CodexScreen(
                 repository: widget.repository,

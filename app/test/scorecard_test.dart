@@ -240,6 +240,57 @@ void main() {
     });
   });
 
+  group('taking one back off a player', () {
+    test('removes their claim, not the most recent one', () {
+      // The case this exists for: an hour after the fact, someone notices the
+      // kudu went to the wrong name. Undoing "the last claim" would take it off
+      // whoever happened to score most recently.
+      final Scorecard card = _card();
+      final String alex = card.players[0].id;
+      final String sam = card.players[1].id;
+
+      final Scorecard after = card
+          .withClaim(_claim('kudu', alex, 5, minute: 1))
+          .withClaim(_claim('leopard', sam, 100, minute: 2))
+          .withoutClaimBy(alex, 'kudu');
+
+      expect(after.pointsFor(alex), 0);
+      expect(after.pointsFor(sam), 100, reason: 'the leopard is untouched');
+    });
+
+    test('takes one off a stack rather than all of them', () {
+      final Scorecard card = _card();
+      final String alex = card.players[0].id;
+
+      final Scorecard after = card
+          .withClaim(_claim('spotted-hyena', alex, 15, minute: 1))
+          .withClaim(_claim('spotted-hyena', alex, 15, minute: 2))
+          .withoutClaimBy(alex, 'spotted-hyena');
+
+      expect(after.timesClaimed('spotted-hyena'), 1);
+      expect(after.pointsFor(alex), 15);
+    });
+
+    test('leaves the same species claimed by someone else alone', () {
+      final Scorecard card = _card();
+      final String alex = card.players[0].id;
+      final String sam = card.players[1].id;
+
+      final Scorecard after = card
+          .withClaim(_claim('lion', alex, 40, minute: 1))
+          .withClaim(_claim('lion', sam, 40, minute: 2))
+          .withoutClaimBy(alex, 'lion');
+
+      expect(after.pointsFor(alex), 0);
+      expect(after.pointsFor(sam), 40);
+    });
+
+    test('a claim that was never made is a no-op', () {
+      final Scorecard card = _card();
+      expect(card.withoutClaimBy('nobody', 'lion').claims, isEmpty);
+    });
+  });
+
   group('restarting', () {
     test('keeps the car and drops the claims', () {
       final Scorecard card = _card()

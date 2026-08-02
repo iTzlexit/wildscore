@@ -55,6 +55,27 @@ class VisitRepository {
     return all;
   }
 
+  /// Drops one drive, matched on when it ended.
+  ///
+  /// Because the lifetime total is derived, deleting a drive also removes its
+  /// points. That is the honest behaviour — a total that survived the deletion
+  /// of the day that produced it would be a number with no evidence behind it —
+  /// but it does mean the confirmation has to say so out loud.
+  Future<List<Visit>> remove(Visit visit) async {
+    final List<Visit> all = <Visit>[
+      for (final Visit v in await load())
+        if (v.endedAt != visit.endedAt) v,
+    ];
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+      _key,
+      json.encode(<Map<String, dynamic>>[
+        for (final Visit v in all) v.toJson(),
+      ]),
+    );
+    return all;
+  }
+
   Future<void> clear() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove(_key);

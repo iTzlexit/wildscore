@@ -42,6 +42,8 @@ class RulesScreen extends StatelessWidget {
             'and the argument is over.',
             style: AppText.body.copyWith(height: 1.55),
           ),
+          const SizedBox(height: Space.lg),
+          const SpiritOfTheGame(),
           const SizedBox(height: Space.xl),
 
           const _Section('THE FOUR THAT SETTLE ARGUMENTS'),
@@ -149,6 +151,63 @@ class RulesScreen extends StatelessWidget {
             body:
                 'Wipes the day and keeps the car. Nothing is banked, so '
                 'nothing is lost from your record.',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// What the points are, and what they are not.
+///
+/// Shown on the rules screen and again during onboarding. It matters that this
+/// is said plainly and early: a scoreboard that ranks living animals invites
+/// exactly one misreading, and leaving it unaddressed would let the app imply
+/// something nobody involved believes.
+///
+/// It is also a better explanation of the scoring than any table. Rarity is a
+/// measure of *difficulty*, which is why a pangolin beats an elephant — the
+/// elephant is not worth less, it is standing in the road.
+class SpiritOfTheGame extends StatelessWidget {
+  const SpiritOfTheGame({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(Space.lg),
+      decoration: BoxDecoration(
+        color: AppColors.accentWash,
+        borderRadius: BorderRadius.circular(Radii.card),
+        border: Border.all(color: AppColors.accent.withValues(alpha: 0.25)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          const Icon(Icons.favorite_rounded, size: 18, color: AppColors.accent),
+          const SizedBox(width: Space.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'It is a game, and only a game',
+                  style: AppText.label.copyWith(
+                    color: AppColors.accent,
+                    fontVariations: AppFonts.weight(800),
+                  ),
+                ),
+                const SizedBox(height: Space.xs),
+                Text(
+                  'Every animal out there is worth the same. The points only '
+                  'measure how hard something is to find — a pangolin scores '
+                  'more than an elephant because the elephant is standing in '
+                  'the road, not because it matters less.\n\n'
+                  'The ranking exists so a long drive has something to argue '
+                  'about. Watch the animal first. The phone can wait.',
+                  style: AppText.caption.copyWith(height: 1.55),
+                ),
+              ],
+            ),
           ),
         ],
       ),
