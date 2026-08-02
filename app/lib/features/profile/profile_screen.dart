@@ -5,6 +5,7 @@ import '../../domain/species.dart';
 import '../../domain/species_category.dart';
 import '../../domain/tracker_profile.dart';
 import '../../shared/theme.dart';
+import '../../shared/widgets/app_header.dart';
 import '../scorecard/standings_board.dart';
 
 /// The Spotter's own record: progress, then numbers, then recent catches.
@@ -64,42 +65,57 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       body: SafeArea(
         bottom: false,
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(
-            Space.screen,
-            Space.screen,
-            Space.screen,
-            110,
-          ),
+        child: Column(
           children: <Widget>[
-            _Identity(profile: widget.profile),
-            const SizedBox(height: Space.xl),
-            // The day's game sits above the lifetime record, because during a
-            // trip it is the only thing anyone looks at.
-            if (widget.card != null) ...<Widget>[
-              _ScorecardPanel(card: widget.card!, onEnd: widget.onEndScorecard),
-              const SizedBox(height: Space.xl),
-            ] else if (widget.onStartScorecard != null) ...<Widget>[
-              _StartScorecardCard(onStart: widget.onStartScorecard!),
-              const SizedBox(height: Space.xl),
-            ],
-            _ScopeToggle(
-              scope: _scope,
-              onChanged: (ProfileScope s) => setState(() => _scope = s),
+            const AppHeader(),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(
+                  Space.screen,
+                  Space.sm,
+                  Space.screen,
+                  110,
+                ),
+                children: <Widget>[
+                  // Order is by what someone actually opens this screen to see.
+                  // During a trip that is today's score, then the standings, then
+                  // everything else. The lifetime record is a trophy shelf, and a
+                  // trophy shelf does not go by the front door.
+                  _Identity(profile: widget.profile),
+                  const SizedBox(height: Space.xl),
+                  _ScopeToggle(
+                    scope: _scope,
+                    onChanged: (ProfileScope s) => setState(() => _scope = s),
+                  ),
+                  const SizedBox(height: Space.lg),
+                  _ProgressCard(
+                    spotted: spotted,
+                    total: total,
+                    points: widget.card?.totalPoints ?? _points,
+                    scope: _scope,
+                    playerCount: widget.card?.players.length ?? 0,
+                  ),
+                  const SizedBox(height: Space.lg),
+                  if (widget.card != null) ...<Widget>[
+                    _ScorecardPanel(
+                      card: widget.card!,
+                      species: widget.species,
+                      onEnd: widget.onEndScorecard,
+                    ),
+                    const SizedBox(height: Space.lg),
+                  ] else if (widget.onStartScorecard != null) ...<Widget>[
+                    _StartScorecardCard(onStart: widget.onStartScorecard!),
+                    const SizedBox(height: Space.lg),
+                  ],
+                  _Numbers(spotted: spotted, total: total),
+                  const SizedBox(height: Space.section),
+                  _CategoryBreakdown(
+                    species: widget.species,
+                    caughtIds: widget.caughtIds,
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: Space.lg),
-            _ProgressCard(spotted: spotted, total: total, points: _points),
-            const SizedBox(height: Space.lg),
-            _Numbers(spotted: spotted, total: total),
-            const SizedBox(height: Space.section),
-            _CategoryBreakdown(
-              species: widget.species,
-              caughtIds: widget.caughtIds,
-            ),
-            const SizedBox(height: Space.section),
-            const _SectionLabel('RECENT SIGHTINGS'),
-            const SizedBox(height: Space.md),
-            const _RecentEmpty(),
           ],
         ),
       ),
@@ -162,9 +178,14 @@ class _StartScorecardCard extends StatelessWidget {
 
 /// Game running: live standings.
 class _ScorecardPanel extends StatelessWidget {
-  const _ScorecardPanel({required this.card, this.onEnd});
+  const _ScorecardPanel({
+    required this.card,
+    required this.species,
+    this.onEnd,
+  });
 
   final Scorecard card;
+  final List<Species> species;
   final VoidCallback? onEnd;
 
   @override
@@ -201,7 +222,7 @@ class _ScorecardPanel extends StatelessWidget {
             ],
           ),
           const SizedBox(height: Space.lg),
-          StandingsBoard(card: card),
+          StandingsBoard(card: card, species: species),
           const SizedBox(height: Space.sm),
           Row(
             children: <Widget>[
@@ -341,11 +362,18 @@ class _ProgressCard extends StatelessWidget {
     required this.spotted,
     required this.total,
     required this.points,
+    required this.scope,
+    required this.playerCount,
   });
 
   final int spotted;
   final int total;
   final int points;
+  final ProfileScope scope;
+
+  /// Non-zero while a game is running, so the label can say whose points these
+  /// are — "everyone's" is a different number from "mine".
+  final int playerCount;
 
   @override
   Widget build(BuildContext context) {
@@ -370,7 +398,14 @@ class _ProgressCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: Space.xs),
-          Text('POINTS', style: AppText.overline),
+          Text(
+            playerCount > 0
+                ? 'POINTS TODAY · $playerCount PLAYING'
+                : scope == ProfileScope.today
+                ? 'POINTS TODAY'
+                : 'LIFETIME POINTS',
+            style: AppText.overline,
+          ),
           const SizedBox(height: Space.screen),
           Row(
             children: <Widget>[
@@ -570,46 +605,5 @@ class _SectionLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(text, style: AppText.overline);
-  }
-}
-
-class _RecentEmpty extends StatelessWidget {
-  const _RecentEmpty();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(
-        horizontal: Space.screen,
-        vertical: Space.xl,
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(Radii.card),
-        border: Border.all(color: AppColors.outline),
-      ),
-      child: Column(
-        children: <Widget>[
-          const Icon(
-            Icons.photo_camera_outlined,
-            size: 26,
-            color: AppColors.textMuted,
-          ),
-          const SizedBox(height: Space.md),
-          Text(
-            'Nothing spotted yet',
-            style: AppText.bodyStrong.copyWith(fontSize: 14),
-          ),
-          const SizedBox(height: Space.xs),
-          Text(
-            'Every animal you photograph in the park lands here — '
-            'and stays, for good.',
-            textAlign: TextAlign.center,
-            style: AppText.caption.copyWith(height: 1.45),
-          ),
-        ],
-      ),
-    );
   }
 }

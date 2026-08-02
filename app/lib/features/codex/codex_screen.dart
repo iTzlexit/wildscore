@@ -10,6 +10,7 @@ import '../../domain/species_category.dart';
 import '../../domain/species_tag.dart';
 import '../../domain/tracker_profile.dart';
 import '../../shared/theme.dart';
+import '../../shared/widgets/app_header.dart';
 import 'species_detail_screen.dart';
 import 'widgets/species_grid_card.dart';
 
@@ -168,10 +169,7 @@ class _CodexScreenState extends State<CodexScreen> {
 
                 return Column(
                   children: <Widget>[
-                    // No screen title. The tab is already labelled "Animal
-                    // Dex"; a "Codex" heading under it was a second name for
-                    // the same thing and cost a third of the screen.
-                    const SizedBox(height: Space.md),
+                    const AppHeader(),
                     _SearchBar(
                       controller: _searchController,
                       filtersExpanded: _filtersExpanded,

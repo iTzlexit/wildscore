@@ -172,6 +172,16 @@ class RarityStyle {
 
   Color get border => accent;
 
+  /// Tint of the foil sweep. Legendary gets a real gold shimmer rather than a
+  /// neutral white gloss — a holographic card is the one thing a collector
+  /// recognises instantly, and it should be unmistakable across a room.
+  Color get foilTint => Color.fromARGB(
+    0x38,
+    accent.r.toInt(),
+    accent.g.toInt(),
+    accent.b.toInt(),
+  );
+
   /// Detail-screen colour field. Light enough to read dark text on for the
   /// muted tiers, so the header adapts rather than forcing white everywhere.
   Color get headerTop => accent;

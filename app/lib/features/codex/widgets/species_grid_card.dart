@@ -141,20 +141,27 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
                         // than a database row. Static, not animated — eighteen
                         // shimmering cards in a scrolling grid would be both
                         // distracting and expensive.
-                        if (style.foil)
-                          const IgnorePointer(
+                        if (style.foil && !locked)
+                          IgnorePointer(
                             child: DecoratedBox(
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: <Color>[
-                                    Color(0x00FFFFFF),
-                                    Color(0x1AFFFFFF),
-                                    Color(0x00FFFFFF),
-                                    Color(0x00FFFFFF),
+                                    const Color(0x00FFFFFF),
+                                    style.foilTint,
+                                    const Color(0x40FFFFFF),
+                                    style.foilTint,
+                                    const Color(0x00FFFFFF),
                                   ],
-                                  stops: <double>[0.18, 0.34, 0.52, 1],
+                                  stops: const <double>[
+                                    0.1,
+                                    0.3,
+                                    0.42,
+                                    0.54,
+                                    0.8,
+                                  ],
                                 ),
                               ),
                             ),
