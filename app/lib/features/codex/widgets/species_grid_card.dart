@@ -20,11 +20,21 @@ class SpeciesGridCard extends StatefulWidget {
     this.locked = false,
     this.sightingCount = 0,
     this.onToggleSpotted,
+    this.onLongPress,
+    this.chancesLeft,
     super.key,
   });
 
   /// Marks the species seen from the tile. Null hides the control.
   final VoidCallback? onToggleSpotted;
+
+  /// Opens the field-guide entry while a game is running, since a plain tap is
+  /// then a claim.
+  final VoidCallback? onLongPress;
+
+  /// Claims remaining today. Null when unlimited or no game is running; 0 means
+  /// the tile is spent and locked.
+  final int? chancesLeft;
 
   /// Tiles are sized by the grid delegate; this drives the image-to-label
   /// ratio within a tile.
@@ -54,6 +64,9 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
     // so the frame stays neutral until the species is caught.
     final Color frame = locked ? AppColors.outline : style.border;
     final double frameWidth = locked ? 1 : style.borderWidth;
+
+    /// Chances used up — claimed as many times as it can be today.
+    final bool spent = widget.chancesLeft == 0;
 
     // A card that dips under the thumb feels like an object you picked up.
     // Cheap, and it does more for the "collectible" feeling than any amount
@@ -95,7 +108,8 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              onTap: widget.onTap,
+              onTap: spent ? null : widget.onTap,
+              onLongPress: widget.onLongPress,
               onTapDown: (_) => setState(() => _pressed = true),
               onTapUp: (_) => setState(() => _pressed = false),
               onTapCancel: () => setState(() => _pressed = false),
@@ -174,6 +188,43 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
                               onTap: widget.onToggleSpotted!,
                             ),
                           ),
+                        // Spent tiles stay visible and greyed rather than
+                        // disappearing — who got the impala at the gate is part
+                        // of the fun and must not vanish from the board.
+                        if (spent)
+                          Positioned.fill(
+                            child: IgnorePointer(
+                              child: ColoredBox(
+                                color: const Color(0xB3FFFFFF),
+                                child: Center(
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 5,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.textPrimary,
+                                      borderRadius: BorderRadius.circular(
+                                        Radii.chip,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'CLAIMED',
+                                      style: AppText.overline.copyWith(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        else if (widget.chancesLeft != null)
+                          Positioned(
+                            bottom: 6,
+                            left: 6,
+                            child: _ChancesBadge(left: widget.chancesLeft!),
+                          ),
                       ],
                     ),
                   ),
@@ -182,6 +233,32 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// How many claims this species has left today.
+class _ChancesBadge extends StatelessWidget {
+  const _ChancesBadge({required this.left});
+
+  final int left;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
+      decoration: BoxDecoration(
+        color: const Color(0xE6FFFFFF),
+        borderRadius: BorderRadius.circular(Radii.chip - 4),
+      ),
+      child: Text(
+        left == 1 ? 'LAST ONE' : '$left LEFT',
+        style: AppText.overline.copyWith(
+          fontSize: 8.5,
+          letterSpacing: 0.6,
+          color: left == 1 ? AppColors.danger : AppColors.textSecondary,
         ),
       ),
     );

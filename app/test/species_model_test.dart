@@ -38,7 +38,7 @@ void main() {
       expect(s.conservationStatus, ConservationStatus.leastConcern);
       expect(s.isNocturnal, isTrue);
       expect(s.isBigFive, isFalse);
-      expect(s.points, 500);
+      expect(s.points, 2500);
       expect(s.dexNumber, 999);
       expect(s.dexLabel, '999');
       expect(s.imageAsset, 'assets/species/test-beast.jpg');
@@ -95,13 +95,15 @@ void main() {
 
   group('rarity tiers', () {
     test('point values are the ones the spec promises', () {
+      // Geometric, each tier ~2.5–3x the one below. Sighting probability in
+      // Kruger spans roughly 1:1000, so a flat spread under-rewards the top.
       expect(RarityTier.common.points, 5);
-      expect(RarityTier.frequent.points, 10);
-      expect(RarityTier.uncommon.points, 25);
-      expect(RarityTier.scarce.points, 50);
-      expect(RarityTier.rare.points, 100);
-      expect(RarityTier.veryRare.points, 250);
-      expect(RarityTier.legendary.points, 500);
+      expect(RarityTier.frequent.points, 15);
+      expect(RarityTier.uncommon.points, 40);
+      expect(RarityTier.scarce.points, 100);
+      expect(RarityTier.rare.points, 250);
+      expect(RarityTier.veryRare.points, 750);
+      expect(RarityTier.legendary.points, 2500);
     });
 
     test('are strictly ascending — scarcity has to mean something', () {

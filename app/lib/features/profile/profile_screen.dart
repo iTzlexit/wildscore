@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../../domain/scorecard.dart';
 import '../../domain/species.dart';
 import '../../domain/species_category.dart';
 import '../../domain/tracker_profile.dart';
 import '../../shared/theme.dart';
+import '../scorecard/standings_board.dart';
 
 /// The Spotter's own record: progress, then numbers, then recent catches.
 ///
@@ -19,8 +21,16 @@ class ProfileScreen extends StatefulWidget {
     required this.profile,
     required this.species,
     this.caughtIds = const <String>{},
+    this.card,
+    this.onStartScorecard,
+    this.onEndScorecard,
     super.key,
   });
+
+  /// The day's game, if one is running.
+  final Scorecard? card;
+  final VoidCallback? onStartScorecard;
+  final VoidCallback? onEndScorecard;
 
   final TrackerProfile profile;
   final List<Species> species;
@@ -64,6 +74,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: <Widget>[
             _Identity(profile: widget.profile),
             const SizedBox(height: Space.xl),
+            // The day's game sits above the lifetime record, because during a
+            // trip it is the only thing anyone looks at.
+            if (widget.card != null) ...<Widget>[
+              _ScorecardPanel(card: widget.card!, onEnd: widget.onEndScorecard),
+              const SizedBox(height: Space.xl),
+            ] else if (widget.onStartScorecard != null) ...<Widget>[
+              _StartScorecardCard(onStart: widget.onStartScorecard!),
+              const SizedBox(height: Space.xl),
+            ],
             _ScopeToggle(
               scope: _scope,
               onChanged: (ProfileScope s) => setState(() => _scope = s),
@@ -83,6 +102,132 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const _RecentEmpty(),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// No game running: the invitation to start one.
+class _StartScorecardCard extends StatelessWidget {
+  const _StartScorecardCard({required this.onStart});
+
+  final VoidCallback onStart;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(Space.screen),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(Radii.card),
+        border: Border.all(color: AppColors.outline),
+        boxShadow: AppColors.shadowSm,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text("Today's scorecard", style: AppText.title3),
+          const SizedBox(height: Space.xs),
+          Text(
+            'Everyone in the car plays. Whoever calls it first gets the '
+            'points.',
+            style: AppText.caption.copyWith(height: 1.45),
+          ),
+          const SizedBox(height: Space.lg),
+          SizedBox(
+            width: double.infinity,
+            height: 48,
+            child: FilledButton.icon(
+              onPressed: onStart,
+              icon: const Icon(Icons.play_arrow_rounded, size: 20),
+              label: Text(
+                'Start a game',
+                style: AppText.bodyStrong.copyWith(color: AppColors.accentInk),
+              ),
+              style: FilledButton.styleFrom(
+                backgroundColor: AppColors.accent,
+                foregroundColor: AppColors.accentInk,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(Radii.chip),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Game running: live standings.
+class _ScorecardPanel extends StatelessWidget {
+  const _ScorecardPanel({required this.card, this.onEnd});
+
+  final Scorecard card;
+  final VoidCallback? onEnd;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(Space.screen),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(Radii.card),
+        border: Border.all(color: AppColors.accent, width: 1.5),
+        boxShadow: AppColors.shadowSm,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Container(
+                width: 8,
+                height: 8,
+                decoration: const BoxDecoration(
+                  color: AppColors.accent,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: Space.sm),
+              Text(
+                'GAME IN PLAY',
+                style: AppText.overline.copyWith(color: AppColors.accent),
+              ),
+              const Spacer(),
+              Text('${card.claims.length} spotted', style: AppText.caption),
+            ],
+          ),
+          const SizedBox(height: Space.lg),
+          StandingsBoard(card: card),
+          const SizedBox(height: Space.sm),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Text(
+                  'Tap any animal in the Animal Dex to claim it.',
+                  style: AppText.caption,
+                ),
+              ),
+              if (onEnd != null)
+                TextButton(
+                  onPressed: onEnd,
+                  style: TextButton.styleFrom(
+                    foregroundColor: AppColors.danger,
+                    padding: const EdgeInsets.symmetric(horizontal: Space.sm),
+                    minimumSize: Size.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: Text(
+                    'End day',
+                    style: AppText.label.copyWith(color: AppColors.danger),
+                  ),
+                ),
+            ],
+          ),
+        ],
       ),
     );
   }

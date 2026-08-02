@@ -96,7 +96,62 @@ needs an answer that does not depend on current settings.
 
 ---
 
-## The points problem, and why Common should rise
+## The points scale
+
+Points are **fixed**. House rules may not change them — see below — so the scale
+has to be one most players would agree with on sight.
+
+### The principle
+
+**Points should track how unlikely a sighting actually is**, and sighting
+probability in Kruger is wildly non-linear. Rough odds for a self-drive visitor
+on a four-day trip:
+
+| Animal | Odds of seeing one |
+|---|---|
+| Impala | Certain |
+| Elephant, giraffe | ~90% |
+| Lion | ~60% |
+| Leopard | ~25% |
+| Cheetah, wild dog | ~10% |
+| Serval, honey badger | ~2% |
+| Caracal, aardvark | under 1% |
+| Pangolin | a handful of sightings a year, park-wide |
+
+That is a range of roughly **1 : 1000**, not 1 : 80. The old scale
+(5 → 400) badly under-rewarded the top end: a pangolin was worth 80 impala,
+when in truth thousands of people see impala for every one who sees a pangolin.
+
+### The scale
+
+A clean geometric progression, each tier ~2.5–3× the one below:
+
+| Tier | Points | Step |
+|---|---|---|
+| Common | 5 | — |
+| Frequent | 15 | 3× |
+| Notable | 40 | 2.7× |
+| Rare | 100 | 2.5× |
+| Very rare | 250 | 2.5× |
+| Exceptional | 750 | 3× |
+| **Legendary** | **2,500** | 3.3× |
+
+**Sense check:** claiming every Common and Frequent species in the park in a
+single day is worth **320**. One pangolin is **2,500** — nearly eight times a
+perfect morning.
+
+That is the right shape. A pangolin *should* end the competition, because in
+real life it does. A caracal at 750 is worth more than an entire good day of
+ordinary game viewing, which is exactly how it feels at the time.
+
+### What this depends on
+
+**The numbers only work if the tier assignments are right.** Getting caracal
+into Exceptional matters more than whether Exceptional is 700 or 800 — and the
+tier review with a Kruger guide is still outstanding. Do that before treating
+these as settled.
+
+## The old points problem, kept for the record
 
 > "First one to spot an impala at the gate is always an excitement."
 

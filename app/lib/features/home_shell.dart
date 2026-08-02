@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 
+import '../data/scorecard_repository.dart';
 import '../data/species_repository.dart';
 import '../data/spotted_repository.dart';
+import '../domain/scorecard.dart';
 import '../domain/species.dart';
 import '../domain/tracker_profile.dart';
 import '../shared/theme.dart';
 import 'codex/codex_screen.dart';
 import 'leaderboard/leaderboard_screen.dart';
 import 'profile/profile_screen.dart';
+import 'scorecard/start_scorecard_sheet.dart';
+import 'scorecard/who_spotted_sheet.dart';
 
 /// The three tabs, plus the camera.
 ///
@@ -34,6 +38,7 @@ class HomeShell extends StatefulWidget {
 
 class _HomeShellState extends State<HomeShell> {
   static const SpottedRepository _spottedRepo = SpottedRepository();
+  static const ScorecardRepository _cardRepo = ScorecardRepository();
 
   late final Future<List<Species>> _speciesFuture;
   int _tab = 0;
@@ -41,6 +46,9 @@ class _HomeShellState extends State<HomeShell> {
   /// Held here rather than in either tab, because both read it — the Profile
   /// counts it and the Dex colours by it.
   Set<String> _spotted = <String>{};
+
+  /// The day's game, or null when none is running.
+  Scorecard? _card;
 
   @override
   void initState() {
@@ -51,6 +59,11 @@ class _HomeShellState extends State<HomeShell> {
         setState(() => _spotted = ids);
       }
     });
+    _cardRepo.load().then((Scorecard? card) {
+      if (mounted) {
+        setState(() => _card = card);
+      }
+    });
   }
 
   Future<void> _toggleSpotted(String id) async {
@@ -58,6 +71,62 @@ class _HomeShellState extends State<HomeShell> {
     if (mounted) {
       setState(() => _spotted = next);
     }
+  }
+
+  Future<void> _startScorecard() async {
+    final List<String>? names = await StartScorecardSheet.show(context);
+    if (names == null || names.isEmpty || !mounted) {
+      return;
+    }
+    final Scorecard card = Scorecard.start(names);
+    await _cardRepo.save(card);
+    if (mounted) {
+      setState(() => _card = card);
+    }
+  }
+
+  Future<void> _endScorecard() async {
+    await _cardRepo.clear();
+    if (mounted) {
+      setState(() => _card = null);
+    }
+  }
+
+  Future<void> _updateCard(Scorecard next) async {
+    await _cardRepo.save(next);
+    if (mounted) {
+      setState(() => _card = next);
+    }
+  }
+
+  /// A species tapped from the Dex while a game is running.
+  Future<void> _claim(Species species) async {
+    final Scorecard? card = _card;
+    if (card == null) {
+      return;
+    }
+    final String? choice = await WhoSpottedSheet.show(
+      context: context,
+      species: species,
+      card: card,
+    );
+    if (choice == null || !mounted) {
+      return;
+    }
+    if (choice == WhoSpottedSheet.unclaimSentinel) {
+      await _updateCard(card.withoutLastClaimOf(species.id));
+      return;
+    }
+    await _updateCard(
+      card.withClaim(
+        Claim(
+          speciesId: species.id,
+          playerId: choice,
+          at: DateTime.now(),
+          points: species.points,
+        ),
+      ),
+    );
   }
 
   void _onCameraPressed() {
@@ -100,11 +169,19 @@ class _HomeShellState extends State<HomeShell> {
                 profile: widget.profile,
                 species: species,
                 caughtIds: _spotted,
+                card: _card,
+                onStartScorecard: _startScorecard,
+                onEndScorecard: _endScorecard,
               ),
               CodexScreen(
                 repository: widget.repository,
-                caughtIds: _spotted,
-                onToggleSpotted: _toggleSpotted,
+                // While a game runs, the Dex colours by what has been claimed
+                // today rather than by the lifetime record — the screen you are
+                // staring at in the car should answer "have we got it yet".
+                caughtIds: _card?.claimedSpecies ?? _spotted,
+                onToggleSpotted: _card == null ? _toggleSpotted : null,
+                onClaim: _card == null ? null : _claim,
+                card: _card,
               ),
               LeaderboardScreen(seasonYear: widget.profile.seasonYear),
             ],
