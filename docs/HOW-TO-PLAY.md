@@ -8,25 +8,32 @@
 
 ## The short version
 
-Everyone in the car spots animals. The rarest finds win. At the end of the day
-the scores are added up and the argument is over.
+Someone shouts. Everyone looks. Whoever spotted it first takes the points, and
+the harder it was to find, the more it pays.
 
-## Getting going
+That's the whole game, and it turns a quiet stretch of road into the best hour
+of the trip.
 
-**Five steps, and the app screen shows them in this order** — because the reason
-anyone opens it is that a car full of people is waiting for them to work out how
-to start.
+> **On tone.** This screen is the one place in the app that has to sell the
+> thing. It is read by somebody deciding whether this is worth doing on their
+> holiday, so it is written warm and a little wry rather than as a
+> specification. Accurate, but nobody should feel they are reading terms.
 
-1. **Start a drive.** Wild Score tab, big green button. Do it at the gate.
-2. **Add whoever is playing.** Just first names — no accounts, no sign-ups. You
-   are added already. On your own is fine too; a solo drive scores exactly the
-   same.
-3. **Someone shouts.** Tap the eye next to their name, then tap the animal. That
-   is the whole game.
-4. **Watch the bars move.** The rarer the animal, the more it pays. An impala is
-   5. A pangolin is 2,500.
-5. **End the day.** Back at camp. The drive is saved with everyone who played,
-   and your points join your lifetime total.
+## Five steps and you are playing
+
+1. **Start a drive.** Wild Score tab, big green button. Do it in the queue at
+   the gate — it takes about five seconds.
+2. **Add the car.** First names, that is all. No accounts, no passwords, no
+   email. Gran counts. The kids definitely count. On your own counts too, and
+   scores exactly the same.
+3. **Someone shouts.** Tap the eye beside their name, then tap the animal. Done
+   in two taps, so you can get your eyes back on it.
+4. **Watch the bars move.** An impala is 5 points. A pangolin is 2,500.
+   Somewhere around the third sighting everyone in the car starts looking
+   properly, and that is rather the point.
+5. **End the day at camp.** Preferably with a drink in your hand. Scores lock
+   in, the day goes into your history with everyone who played, and tomorrow
+   you all start level again.
 
 Step 3 is the one worth stating carefully: **the name comes before the animal.**
 That is the order it happens in a car, because somebody shouts before anyone
@@ -63,31 +70,30 @@ The difference is what you get back:
 Neither is the "real" way. Someone who never plays the game still gets the field
 guide and the collection, which is most of the app.
 
-## The four rules that settle arguments
+## The four that keep it fair
 
 These exist because a family already argued about them. The app cannot referee a
 disagreement it has no opinion on.
 
 ### Inside the park only
 
-The gate is the boundary. An animal seen on the road in, on a private reserve,
-or from camp before the gates open does not count.
+The gate is the line. That kudu on the road in was lovely, and it does not
+count.
 
 ### One sighting, one claim
 
-Turn around and come back to the same leopard and it is still the same leopard.
-Driving back for a second look is worth doing — it is just not worth points.
+Reverse back for another look at the leopard by all means. It is still the same
+leopard.
 
 ### A pride is one lion
 
-You claim the sighting, not the animals in it. Twelve lions at a kill is one
-claim. So is a breeding herd of elephant and a tower of giraffe.
+Twelve lions at a kill is one claim, not twelve. Sorry. Same goes for a breeding
+herd of elephant.
 
 ### No asking at a jam
 
-A line of stopped cars means something good is ahead. **Nobody may ask a passing
-car what it is.** The point goes to whoever first sees the animal themselves —
-knowing it is there is not the same as finding it.
+Cars stopped up ahead means something good. **Nobody may wind down a window and
+ask what it is.** Find it yourself — that is the entire fun of it.
 
 ## Claiming a sighting
 

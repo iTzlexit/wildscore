@@ -39,47 +39,53 @@ class RulesScreen extends StatelessWidget {
         ),
         children: <Widget>[
           Text(
-            'Everyone in the car spots animals. The rarest finds win. At the '
-            'end of the day the scores are added up and the argument is over.',
+            'Someone shouts. Everyone looks. Whoever spotted it first takes '
+            'the points, and the harder it was to find, the more it pays.\n\n'
+            "That's the whole game, and it turns a quiet stretch of road into "
+            'the best hour of the trip.',
             style: AppText.body.copyWith(height: 1.55),
           ),
           const SizedBox(height: Space.xl),
 
-          const _Section('GETTING GOING'),
+          const _Section('FIVE STEPS AND YOU ARE PLAYING'),
           const _Step(
             number: 1,
             title: 'Start a drive',
-            body: 'Wild Score tab, big green button. Do it at the gate.',
+            body:
+                'Wild Score tab, big green button. Do it in the queue at the '
+                'gate — it takes about five seconds.',
           ),
           const _Step(
             number: 2,
-            title: 'Add whoever is playing',
+            title: 'Add the car',
             body:
-                'Just first names — no accounts, no sign-ups. You are added '
-                'already. On your own is fine too; a solo drive scores exactly '
-                'the same.',
+                'First names, that is all. No accounts, no passwords, no '
+                'email. Gran counts. The kids definitely count. On your own '
+                'counts too, and scores exactly the same.',
           ),
           const _Step(
             number: 3,
             title: 'Someone shouts',
             body:
-                'Tap the eye next to their name, then tap the animal. That is '
-                'the whole game.',
+                'Tap the eye beside their name, then tap the animal. Done in '
+                'two taps, so you can get your eyes back on it.',
             icon: Icons.visibility_rounded,
           ),
           const _Step(
             number: 4,
             title: 'Watch the bars move',
             body:
-                'The rarer the animal, the more it pays. An impala is 5. A '
-                'pangolin is 2,500.',
+                'An impala is 5 points. A pangolin is 2,500. Somewhere around '
+                'the third sighting everyone in the car starts looking '
+                'properly, and that is rather the point.',
           ),
           const _Step(
             number: 5,
-            title: 'End the day',
+            title: 'End the day at camp',
             body:
-                'Back at camp. The drive is saved with everyone who played, '
-                'and your points join your lifetime total.',
+                'Preferably with a drink in your hand. Scores lock in, the '
+                'day goes into your history with everyone who played, and '
+                'tomorrow you all start level again.',
             last: true,
           ),
 
@@ -87,97 +93,94 @@ class RulesScreen extends StatelessWidget {
           const SpiritOfTheGame(),
 
           const SizedBox(height: Space.xl),
-          const _Section('THE FOUR THAT SETTLE ARGUMENTS'),
+          const _Section('THE FOUR THAT KEEP IT FAIR'),
           const _Rule(
             icon: Icons.fence_rounded,
             title: 'Inside the park only',
             body:
-                'The gate is the boundary. Something seen on the road in, on a '
-                'private reserve, or from camp before the gates open does not '
-                'count.',
+                'The gate is the line. That kudu on the road in was lovely, '
+                'and it does not count.',
           ),
           const _Rule(
             icon: Icons.u_turn_left_rounded,
             title: 'One sighting, one claim',
             body:
-                'Turn around and come back to the same leopard and it is still '
-                'the same leopard. Worth doing. Not worth points.',
+                'Reverse back for another look at the leopard by all means. '
+                'It is still the same leopard.',
           ),
           const _Rule(
             icon: Icons.groups_rounded,
             title: 'A pride is one lion',
             body:
-                'You claim the sighting, not the animals in it. Twelve lions '
-                'at a kill is one claim. So is a herd of elephant.',
+                'Twelve lions at a kill is one claim, not twelve. Sorry. Same '
+                'goes for a breeding herd of elephant.',
           ),
           const _Rule(
             icon: Icons.no_transfer_rounded,
             title: 'No asking at a jam',
             body:
-                'A line of stopped cars means something good is ahead. Nobody '
-                'may ask a passing car what it is. The point goes to whoever '
-                'sees the animal themselves — knowing it is there is not the '
-                'same as finding it.',
+                'Cars stopped up ahead means something good. Nobody may wind '
+                'down a window and ask what it is. Find it yourself — that is '
+                'the entire fun of it.',
           ),
 
           const SizedBox(height: Space.lg),
-          const _Section('GOOD TO KNOW'),
+          const _Section('HANDY TO KNOW'),
           const _Rule(
             icon: Icons.campaign_rounded,
-            title: 'Whoever calls it first',
-            body:
-                'Every claim is timestamped, so "I said it first" has an '
-                'answer.',
+            title: 'Every claim is timestamped',
+            body: 'So "I said it first" finally has an answer.',
           ),
           const _Rule(
             icon: Icons.undo_rounded,
             title: 'Gave it to the wrong person?',
             body:
-                'Tap the animal under their name to take it back. The scores '
-                'move straight away.',
+                'Tap the animal under their name and it comes straight back '
+                'off. No hard feelings.',
           ),
           const _Rule(
             icon: Icons.lock_clock_rounded,
-            title: 'Common animals run out',
+            title: 'The common ones run out',
             body:
-                'If every impala counted the game would be over by the first '
-                'waterhole. Common and Frequent can be claimed once a day, '
-                'Notable three times. Rare and above never run out — every '
-                'leopard counts, every time.',
+                'If every impala counted you would be finished by the first '
+                'waterhole. So impala and friends can be claimed once a day, '
+                'the middling ones three times, and everything rare stays open '
+                'all day. Every leopard counts, every single time.',
           ),
           const _Rule(
             icon: Icons.visibility_rounded,
             title: 'You saw it too',
             body:
-                'Points go to whoever called it first, but everything the car '
-                'finds joins your collection — you were there and you saw it. '
-                'Scoring and your life list are different questions.',
+                'The points go to whoever called it, but everything the car '
+                'finds still joins your collection. You were there. You saw '
+                'the pangolin.',
           ),
           const _Rule(
             icon: Icons.restart_alt_rounded,
-            title: 'Restart if it went wrong',
+            title: 'First hour went sideways?',
             body:
-                'Wipes the day, keeps the car. Nothing has been saved yet, so '
-                'nothing is lost.',
+                'Restart wipes the day and keeps everyone in their seats. '
+                'Nothing was saved yet, so nothing is lost.',
           ),
           const _Rule(
             icon: Icons.menu_book_rounded,
-            title: 'Not playing? Still counts',
+            title: 'Not in the mood for a game?',
             body:
-                'Mark animals in the Animal Dex as you see them and they join '
-                'your collection. No drive, no points, no scores to settle.',
+                'Just tick animals off in the Animal Dex as you see them. No '
+                'drive, no scores, nobody keeping count. Your collection fills '
+                'up all the same.',
           ),
           const _Rule(
-            icon: Icons.verified_outlined,
-            title: 'It is an honour system',
+            icon: Icons.handshake_rounded,
+            title: 'It runs on trust',
             body:
-                'Exactly like the paper version. Nothing is photographed or '
-                'verified, and these scores do not go on the public '
-                'leaderboard — that is what the camera is for, later.',
+                'Same as the paper version your family has been arguing over '
+                'for years. Nothing is checked, nothing is verified, and these '
+                'scores stay in your car.',
           ),
 
           const SizedBox(height: Space.lg),
-          const _Section('WHAT THINGS ARE WORTH'),
+          const _Section('WHAT EVERYTHING IS WORTH'),
           Container(
             padding: const EdgeInsets.all(Space.lg),
             decoration: BoxDecoration(
@@ -194,10 +197,11 @@ class RulesScreen extends StatelessWidget {
           ),
           const SizedBox(height: Space.md),
           Text(
-            'Points track how hard an animal genuinely is to find in Kruger, '
-            'not how famous it is. Lions are easier to find than sable. '
-            'Claiming every common species in the park in one day is worth '
-            'less than a single pangolin, and that is on purpose.',
+            'None of this is about how impressive an animal is. It is about '
+            'how hard it is to find, which is why lions are worth less than '
+            'sable. Sweep up every common animal in the park in a single day '
+            'and one pangolin still beats the lot of you — exactly as it '
+            'should be.',
             style: AppText.caption.copyWith(height: 1.5),
           ),
         ],

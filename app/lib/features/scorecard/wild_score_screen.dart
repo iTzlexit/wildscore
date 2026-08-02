@@ -90,8 +90,9 @@ class _Invitation extends StatelessWidget {
         Text('Wild Score', style: AppText.title1),
         const SizedBox(height: Space.sm),
         Text(
-          'The scorecard game. Play it on your own, or hand the phone around '
-          'the car and settle who really found the leopard.',
+          'The old paper scorecard, minus the arguing. Play it on your own or '
+          'hand the phone around the car and find out who is actually any '
+          'good at spotting.',
           style: AppText.body.copyWith(height: 1.55),
         ),
         const SizedBox(height: Space.xl),
@@ -145,7 +146,7 @@ class _Invitation extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'Just keeping a list?',
+                      'Not in the mood for a game?',
                       style: AppText.label.copyWith(
                         color: AppColors.textPrimary,
                         fontVariations: AppFonts.weight(700),
@@ -153,9 +154,9 @@ class _Invitation extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Mark animals in the Animal Dex as you see them. No '
-                      'drive, no points, no scores to settle — they just join '
-                      'your collection.',
+                      'Just tick animals off in the Animal Dex as you see '
+                      'them. Nobody keeping count, nothing to settle — your '
+                      'collection fills up all the same.',
                       style: AppText.caption.copyWith(height: 1.45),
                     ),
                   ],
@@ -210,15 +211,15 @@ class _HowItWorks extends StatelessWidget {
             number: '2',
             title: 'Someone shouts',
             body:
-                'Tap the animal in the Animal Dex, tap who called it. The '
-                'rarer it is, the more it pays.',
+                'Tap the eye beside their name, then tap the animal. The '
+                'harder it was to find, the more it pays.',
           ),
           _Step(
             number: '3',
-            title: 'End the day',
+            title: 'End the day at camp',
             body:
-                'The drive is saved to your history, and your own points join '
-                'your lifetime total.',
+                'Scores lock in, the day is saved with everyone who played, '
+                'and tomorrow you start level again.',
             last: true,
           ),
         ],
@@ -361,8 +362,8 @@ class _LiveGame extends StatelessWidget {
                 const SizedBox(width: Space.md),
                 Expanded(
                   child: Text(
-                    'Nothing claimed yet. Tap the eye next to whoever shouted '
-                    'first.',
+                    'Nothing yet. First one to shout gets the first points — '
+                    'tap the eye beside their name.',
                     style: AppText.caption.copyWith(height: 1.45),
                   ),
                 ),
@@ -421,8 +422,8 @@ class _LiveGame extends StatelessWidget {
           // Says what the button does before it is pressed. Ending a day is the
           // only moment points become permanent, and nobody should discover
           // that afterwards.
-          'Ending saves the drive to your history and adds your own points to '
-          'your lifetime total.',
+          'Ending saves the day to your history and adds your points to your '
+          'lifetime total.',
           textAlign: TextAlign.center,
           style: AppText.caption.copyWith(height: 1.45),
         ),
