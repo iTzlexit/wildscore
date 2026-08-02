@@ -3,15 +3,18 @@ import 'package:flutter/material.dart';
 import '../../domain/rarity_tier.dart';
 import '../../shared/theme.dart';
 
-/// How to play, player-facing.
+/// What this is, and how to play it.
 ///
 /// Source of truth is docs/HOW-TO-PLAY.md — keep them in step.
 ///
-/// Ordered by what a person needs *now*. The walkthrough is first, in five
-/// numbered steps, because the reason anyone opens this screen is that a car
-/// full of people is waiting for them to work out how to start. The rules that
-/// settle arguments come second. The scoring table, which is the least urgent
-/// thing here, comes last.
+/// Four questions in the order a newcomer asks them: **what is this, which way
+/// do I want to use it, how do I play, what are the rules.** The points table
+/// is reference and sits last.
+///
+/// The previous version had a "handy to know" section, which was a junk drawer:
+/// a rule that changes how you play sat next to help for a button, in identical
+/// cards. Everything in it has been folded into the step or the rule it belongs
+/// to. **One card style means one kind of thing** — here, a rule.
 class RulesScreen extends StatelessWidget {
   const RulesScreen({super.key});
 
@@ -39,16 +42,39 @@ class RulesScreen extends StatelessWidget {
         ),
         children: <Widget>[
           Text(
-            'A game for people who love the Kruger.\n\n'
-            'Play it with the kids on the long stretch between camps and they '
-            'stop asking how far it is. Play it against whoever is driving. Or '
-            'skip the game entirely and just tick off what you find — the '
-            'collection is yours either way.',
+            'Wild Score is for people who love the Kruger.',
+            style: AppText.title2.copyWith(height: 1.3),
+          ),
+          const SizedBox(height: Space.md),
+          Text(
+            'It keeps a record of every animal you have ever found in the '
+            'park — a lifetime list that grows every trip.\n\n'
+            'The game is the twist on top. Score the sightings as you go, and '
+            'a long transfer between camps turns into the kids fighting over '
+            'who saw the giraffe first.',
             style: AppText.body.copyWith(height: 1.55),
           ),
           const SizedBox(height: Space.xl),
 
-          const _Section('FIVE STEPS AND YOU ARE PLAYING'),
+          const _Section('TWO WAYS TO USE IT'),
+          const _Way(
+            icon: Icons.menu_book_rounded,
+            title: 'Just keep a list',
+            body:
+                'Tick animals off in the Animal Dex as you find them. No game, '
+                'no scores, nobody keeping count.',
+          ),
+          const _Way(
+            icon: Icons.sports_score_rounded,
+            title: 'Play the game',
+            body:
+                'Start a drive and score every sighting. Best with other '
+                'people in the car, and it works on your own.',
+            last: true,
+          ),
+          const SizedBox(height: Space.xl),
+
+          const _Section('PLAYING, IN FIVE STEPS'),
           const _Step(
             number: 1,
             title: 'Start a drive',
@@ -64,7 +90,9 @@ class RulesScreen extends StatelessWidget {
           const _Step(
             number: 3,
             title: 'Someone shouts',
-            body: 'Tap the eye beside their name, then tap the animal.',
+            body:
+                'Tap the eye beside their name, then tap the animal. Tap the '
+                'animal again later to take it back off them.',
             icon: Icons.visibility_rounded,
           ),
           const _Step(
@@ -77,15 +105,14 @@ class RulesScreen extends StatelessWidget {
           const _Step(
             number: 5,
             title: 'End the day at camp',
-            body: 'Scores lock in. Tomorrow everyone starts level again.',
+            body:
+                'Scores lock in and tomorrow everyone starts level. Whatever '
+                'the car found joins your collection — you were there.',
             last: true,
           ),
-
           const SizedBox(height: Space.xl),
-          const SpiritOfTheGame(),
 
-          const SizedBox(height: Space.xl),
-          const _Section('THE FOUR THAT KEEP IT FAIR'),
+          const _Section('THE RULES'),
           const _Rule(
             icon: Icons.fence_rounded,
             title: 'Inside the park only',
@@ -112,9 +139,6 @@ class RulesScreen extends StatelessWidget {
                 'Cars stopped ahead means something good. No winding down a '
                 'window to ask what it is. Find it yourself — that is the fun.',
           ),
-
-          const SizedBox(height: Space.lg),
-          const _Section('HANDY TO KNOW'),
           const _Rule(
             icon: Icons.lock_clock_rounded,
             title: 'The common ones run out',
@@ -122,27 +146,11 @@ class RulesScreen extends StatelessWidget {
                 'Impala and friends: once a day. Middling ones: three times. '
                 'Anything rare stays open all day — every leopard counts.',
           ),
-          const _Rule(
-            icon: Icons.undo_rounded,
-            title: 'Gave it to the wrong person?',
-            body: 'Tap the animal under their name and it comes straight off.',
-          ),
-          const _Rule(
-            icon: Icons.visibility_rounded,
-            title: 'You saw it too',
-            body:
-                'Points go to whoever called it. Everything the car finds '
-                'still joins your collection — you were there.',
-          ),
-          const _Rule(
-            icon: Icons.handshake_rounded,
-            title: 'It runs on trust',
-            body:
-                'Nothing is checked or verified. Same as the paper version, '
-                'and these scores stay in your car.',
-          ),
-
           const SizedBox(height: Space.lg),
+
+          const SpiritOfTheGame(),
+          const SizedBox(height: Space.xl),
+
           const _Section('WHAT EVERYTHING IS WORTH'),
           Container(
             padding: const EdgeInsets.all(Space.lg),
@@ -166,6 +174,56 @@ class RulesScreen extends StatelessWidget {
             style: AppText.caption.copyWith(height: 1.5),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// One of the two ways in. Deliberately styled differently from a rule card:
+/// this is a choice, and a choice should not look like an instruction.
+class _Way extends StatelessWidget {
+  const _Way({
+    required this.icon,
+    required this.title,
+    required this.body,
+    this.last = false,
+  });
+
+  final IconData icon;
+  final String title;
+  final String body;
+  final bool last;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: last ? 0 : Space.sm),
+      child: Container(
+        padding: const EdgeInsets.all(Space.lg),
+        decoration: BoxDecoration(
+          color: AppColors.surfaceAlt,
+          borderRadius: BorderRadius.circular(Radii.card),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Icon(icon, size: 19, color: AppColors.accent),
+            const SizedBox(width: Space.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    title,
+                    style: AppText.bodyStrong.copyWith(fontSize: 14.5),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(body, style: AppText.caption.copyWith(height: 1.45)),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -316,7 +374,9 @@ class SpiritOfTheGame extends StatelessWidget {
                   'Every animal out there is worth the same. The points only '
                   'measure how hard something is to find — a pangolin beats an '
                   'elephant because the elephant is standing in the road.\n\n'
-                  'Watch the animal first. The phone can wait.',
+                  'Nothing is checked or verified. It runs on trust, same as '
+                  'the paper version. Watch the animal first; the phone can '
+                  'wait.',
                   style: AppText.caption.copyWith(height: 1.55),
                 ),
               ],

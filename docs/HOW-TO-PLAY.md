@@ -6,19 +6,38 @@
 
 ---
 
-## The short version
+## What this is
 
-A game for people who love the Kruger.
+**Wild Score is for people who love the Kruger.**
 
-Play it with the kids on the long stretch between camps and they stop asking how
-far it is. Play it against whoever is driving. Or skip the game entirely and
-just tick off what you find — the collection is yours either way.
+It keeps a record of every animal you have ever found in the park — a lifetime
+list that grows every trip.
 
-> **On tone and length.** This screen is the one place in the app that has to
-> sell the thing. It is opened by somebody deciding whether this is worth doing
-> on their holiday, so it is written warm rather than as a specification — and
-> **kept short**. A rules page nobody finishes has explained nothing. Every
-> addition has to earn its place by displacing something.
+The game is the twist on top. Score the sightings as you go, and a long transfer
+between camps turns into the kids fighting over who saw the giraffe first.
+
+## Two ways to use it
+
+| | |
+|---|---|
+| **Just keep a list** | Tick animals off in the Animal Dex as you find them. No game, no scores, nobody keeping count. |
+| **Play the game** | Start a drive and score every sighting. Best with other people in the car, and it works on your own. |
+
+Stated up front and given equal weight. Somebody who never wants to compete
+should not have to read past a wall of scoring rules to find out the app is
+still for them.
+
+> **On structure.** Four questions in the order a newcomer asks them: *what is
+> this, which way do I want to use it, how do I play, what are the rules.* The
+> points table is reference and goes last.
+>
+> **One card style means one kind of thing.** An earlier version had a "handy to
+> know" section that put a rule which changes how you play next to help for a
+> button, in identical cards. Everything in it was folded into the step or the
+> rule it belonged to.
+>
+> And keep it **short**. A rules page nobody finishes has explained nothing;
+> every addition has to earn its place by displacing something.
 
 ## Five steps and you are playing
 
@@ -26,11 +45,12 @@ just tick off what you find — the collection is yours either way.
    the gate.
 2. **Add the car.** First names only. Gran counts. The kids definitely count.
    On your own counts too.
-3. **Someone shouts.** Tap the eye beside their name, then tap the animal.
+3. **Someone shouts.** Tap the eye beside their name, then tap the animal. Tap
+   the animal again later to take it back off them.
 4. **Points land.** An impala is 5. A pangolin is 2,500. The harder it was to
    find, the more it pays.
-5. **End the day at camp.** Scores lock in. Tomorrow everyone starts level
-   again.
+5. **End the day at camp.** Scores lock in and tomorrow everyone starts level.
+   Whatever the car found joins your collection — you were there.
 
 Step 3 is the one worth stating carefully: **the name comes before the animal.**
 That is the order it happens in a car, because somebody shouts before anyone
