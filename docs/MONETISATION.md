@@ -173,22 +173,63 @@ Browse all 74 species, mark what you find, fill the Collections, keep it for
 twenty years. That is the top of the funnel and the reason anyone still has the
 app in March.
 
-### Nobody pays before they have felt it
+### One free drive, and the ask comes at camp that evening
 
-> **Your first three drives are free.** All of them, complete, solo or with the
-> whole car. After that, R99 once and every drive after it is yours.
+> **Your first day is free** — the whole day, solo or with the entire car. After
+> that, R99 once and every drive you ever take is yours.
 
-Three drives is a full long weekend. It is enough to have had the moment where a
-child spots a kudu before anyone else and will not shut up about it, which is
-the moment that sells this — and it cannot be sold any other way, least of all
-by a screenshot on a store page.
+An earlier draft said three drives. That was wrong, and the reason is the shape
+of a South African Kruger trip: **most of them are a long weekend.** Three free
+drives means the average family finishes the whole trip without ever being
+asked, drives home, and forgets the app exists by Wednesday. The free tier ate
+the entire customer.
 
-The ask then lands on day four of a trip, at a gate, with the family already in
-the car and the phone already in hand. There is no better-converting moment that
-will ever exist in this product, and it costs nothing to wait for it.
+One day is still plenty to feel it. A morning drive produces a dozen sightings
+and at least one argument, which is the product working.
 
-Nothing earned in the free drives is ever taken away. They stay in the history,
-the points stay in the lifetime total, the species stay in the collection.
+### The moment matters more than the price
+
+**Ask at the end of day one, back at camp. Not at the gate on day two.**
+
+Two reasons, and the second one is not obvious:
+
+1. They have just been shown their score. The day is fresh, somebody won, and
+   the app is the reason there is anything to argue about.
+2. **In-app purchase requires a network connection, and Kruger has none.**
+
+That second point is a hard constraint, not a preference. Google Play Billing
+and StoreKit both have to reach the store to complete a purchase. A paywall that
+appears at Satara gate at 05:30 cannot be paid even by someone reaching for
+their phone to do it — and that is a worse outcome than not asking, because the
+answer was yes and the app said no.
+
+Main camps have signal or Wi-Fi. The evening at camp is where the transaction
+can actually happen.
+
+Two rules that follow:
+
+- **Never block a drive already in progress.** Entitlement is checked when a
+  drive *starts*, never mid-day.
+- **Cache the entitlement locally.** RevenueCat does this by default. A paid
+  player must work for a week with no signal, which is the entire point of the
+  app.
+
+Nothing earned in the free day is ever taken away. It stays in the history, the
+points stay in the lifetime total, the species stay in the collection.
+
+### Once, not yearly
+
+Where the two could go either way, take once-off:
+
+- The decision is made **in a car, possibly at a gate, with a family waiting.**
+  "R99, yours forever" survives that. "R99 a year" invites a conversation.
+- An annual product aimed at holidays runs straight into *"am I even going next
+  year"*, which is unanswerable at the moment of asking.
+- No renewals to manage, no churn, no refunds of unused months, no support.
+
+The recurring revenue arrives later as the Cloud Pass, which recurs for a reason
+a user can see: it pays a server bill that exists every month whether they open
+the app or not.
 
 ### Why R99 once, and not R199 a year
 
