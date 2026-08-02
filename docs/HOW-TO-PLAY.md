@@ -8,32 +8,29 @@
 
 ## The short version
 
-Someone shouts. Everyone looks. Whoever spotted it first takes the points, and
-the harder it was to find, the more it pays.
+A game for people who love the Kruger.
 
-That's the whole game, and it turns a quiet stretch of road into the best hour
-of the trip.
+Play it with the kids on the long stretch between camps and they stop asking how
+far it is. Play it against whoever is driving. Or skip the game entirely and
+just tick off what you find — the collection is yours either way.
 
-> **On tone.** This screen is the one place in the app that has to sell the
-> thing. It is read by somebody deciding whether this is worth doing on their
-> holiday, so it is written warm and a little wry rather than as a
-> specification. Accurate, but nobody should feel they are reading terms.
+> **On tone and length.** This screen is the one place in the app that has to
+> sell the thing. It is opened by somebody deciding whether this is worth doing
+> on their holiday, so it is written warm rather than as a specification — and
+> **kept short**. A rules page nobody finishes has explained nothing. Every
+> addition has to earn its place by displacing something.
 
 ## Five steps and you are playing
 
-1. **Start a drive.** Wild Score tab, big green button. Do it in the queue at
-   the gate — it takes about five seconds.
-2. **Add the car.** First names, that is all. No accounts, no passwords, no
-   email. Gran counts. The kids definitely count. On your own counts too, and
-   scores exactly the same.
-3. **Someone shouts.** Tap the eye beside their name, then tap the animal. Done
-   in two taps, so you can get your eyes back on it.
-4. **Watch the bars move.** An impala is 5 points. A pangolin is 2,500.
-   Somewhere around the third sighting everyone in the car starts looking
-   properly, and that is rather the point.
-5. **End the day at camp.** Preferably with a drink in your hand. Scores lock
-   in, the day goes into your history with everyone who played, and tomorrow
-   you all start level again.
+1. **Start a drive.** Green button on the Wild Score tab. Do it in the queue at
+   the gate.
+2. **Add the car.** First names only. Gran counts. The kids definitely count.
+   On your own counts too.
+3. **Someone shouts.** Tap the eye beside their name, then tap the animal.
+4. **Points land.** An impala is 5. A pangolin is 2,500. The harder it was to
+   find, the more it pays.
+5. **End the day at camp.** Scores lock in. Tomorrow everyone starts level
+   again.
 
 Step 3 is the one worth stating carefully: **the name comes before the animal.**
 That is the order it happens in a car, because somebody shouts before anyone
