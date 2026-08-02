@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../domain/scorecard.dart';
 import '../../domain/species.dart';
 import '../../domain/species_category.dart';
+import '../../domain/species_collection.dart';
 import '../../domain/tracker_profile.dart';
 import '../../domain/visit.dart';
 import '../../shared/theme.dart';
@@ -119,6 +120,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     total: total,
                     onSpotted: () => _openCollection(CollectionMode.spotted),
                     onToFind: () => _openCollection(CollectionMode.toFind),
+                  ),
+                  const SizedBox(height: Space.section),
+                  // Sets before categories. "Have I got the Big Five yet" is
+                  // the question people actually ask; nobody sets out to see
+                  // 54 mammals.
+                  _Collections(
+                    species: widget.species,
+                    caughtIds: widget.caughtIds,
+                    onOpen: (SpeciesCollection group) => CollectionScreen.open(
+                      context,
+                      species: widget.species,
+                      caughtIds: widget.caughtIds,
+                      group: group,
+                    ),
                   ),
                   const SizedBox(height: Space.section),
                   _CategoryBreakdown(
@@ -440,6 +455,155 @@ class _NumberTile extends StatelessWidget {
                 ],
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The sets people try to complete, each one a way in to its own grid.
+///
+/// Completion here is far more motivating than the category bars below, because
+/// the denominator is small enough to hold in your head. "3 of 5" is a goal.
+/// "13 of 54" is a statistic.
+class _Collections extends StatelessWidget {
+  const _Collections({
+    required this.species,
+    required this.caughtIds,
+    required this.onOpen,
+  });
+
+  final List<Species> species;
+  final Set<String> caughtIds;
+  final ValueChanged<SpeciesCollection> onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        const _SectionLabel('COLLECTIONS'),
+        const SizedBox(height: Space.md),
+        for (final SpeciesCollection group in SpeciesCollection.values)
+          _CollectionRow(
+            group: group,
+            members: group.membersOf(species),
+            caughtIds: caughtIds,
+            onTap: () => onOpen(group),
+          ),
+      ],
+    );
+  }
+}
+
+class _CollectionRow extends StatelessWidget {
+  const _CollectionRow({
+    required this.group,
+    required this.members,
+    required this.caughtIds,
+    required this.onTap,
+  });
+
+  final SpeciesCollection group;
+  final List<Species> members;
+  final Set<String> caughtIds;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final int found = members
+        .where((Species s) => caughtIds.contains(s.id))
+        .length;
+    final bool complete = members.isNotEmpty && found == members.length;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: Space.sm),
+      child: Material(
+        color: complete ? AppColors.accentWash : AppColors.surface,
+        borderRadius: BorderRadius.circular(Radii.card),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(Radii.card),
+          child: Container(
+            padding: const EdgeInsets.all(Space.lg),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(Radii.card),
+              border: Border.all(
+                color: complete
+                    ? AppColors.accent.withValues(alpha: 0.4)
+                    : AppColors.outline,
+              ),
+            ),
+            child: Row(
+              children: <Widget>[
+                Container(
+                  width: 38,
+                  height: 38,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: complete ? AppColors.accent : AppColors.surfaceAlt,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    group.icon,
+                    size: 19,
+                    color: complete
+                        ? AppColors.accentInk
+                        : AppColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(width: Space.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Flexible(
+                            child: Text(
+                              group.label,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppText.bodyStrong,
+                            ),
+                          ),
+                          if (complete) ...<Widget>[
+                            const SizedBox(width: 6),
+                            const Icon(
+                              Icons.check_circle_rounded,
+                              size: 15,
+                              color: AppColors.accent,
+                            ),
+                          ],
+                        ],
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        group.blurb,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppText.caption.copyWith(fontSize: 11.5),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: Space.sm),
+                Text(
+                  '$found/${members.length}',
+                  style: AppText.label.copyWith(
+                    color: complete ? AppColors.accent : AppColors.textPrimary,
+                    fontVariations: AppFonts.weight(800),
+                    fontFeatures: AppText.tabular,
+                  ),
+                ),
+                const Icon(
+                  Icons.chevron_right_rounded,
+                  size: 18,
+                  color: AppColors.textMuted,
+                ),
+              ],
+            ),
           ),
         ),
       ),

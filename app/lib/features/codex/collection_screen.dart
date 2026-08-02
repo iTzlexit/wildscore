@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../domain/rarity_tier.dart';
 import '../../domain/species.dart';
+import '../../domain/species_collection.dart';
 import '../../shared/theme.dart';
 import 'species_detail_screen.dart';
 import 'widgets/species_grid_card.dart';
@@ -19,19 +20,31 @@ class CollectionScreen extends StatelessWidget {
   const CollectionScreen({
     required this.species,
     required this.caughtIds,
-    required this.mode,
+    this.mode,
+    this.group,
     super.key,
-  });
+  }) : assert(
+         mode != null || group != null,
+         'a collection screen shows either spotted/to-find or a named set',
+       );
 
   final List<Species> species;
   final Set<String> caughtIds;
-  final CollectionMode mode;
+
+  /// Spotted or still to find, across the whole catalogue.
+  final CollectionMode? mode;
+
+  /// A named set — Big Five, Antelope, and so on. Shows both spotted and
+  /// unspotted members, because the question is "how far off am I", and a list
+  /// with the missing ones removed cannot answer it.
+  final SpeciesCollection? group;
 
   static Future<void> open(
     BuildContext context, {
     required List<Species> species,
     required Set<String> caughtIds,
-    required CollectionMode mode,
+    CollectionMode? mode,
+    SpeciesCollection? group,
   }) {
     return Navigator.of(context).push<void>(
       MaterialPageRoute<void>(
@@ -39,6 +52,7 @@ class CollectionScreen extends StatelessWidget {
           species: species,
           caughtIds: caughtIds,
           mode: mode,
+          group: group,
         ),
       ),
     );
@@ -46,11 +60,16 @@ class CollectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final SpeciesCollection? group = this.group;
     final List<Species> visible =
         <Species>[
-            for (final Species s in species)
-              if (caughtIds.contains(s.id) == (mode == CollectionMode.spotted))
-                s,
+            if (group != null)
+              ...group.membersOf(species)
+            else
+              for (final Species s in species)
+                if (caughtIds.contains(s.id) ==
+                    (mode == CollectionMode.spotted))
+                  s,
           ]
           // Rarest first. On the spotted list that puts your best find at the
           // top, which is the reason anyone opens it. On the to-find list it
@@ -58,9 +77,13 @@ class CollectionScreen extends StatelessWidget {
           // to the park.
           ..sort(byRarityThenName);
 
+    final int found = visible
+        .where((Species s) => caughtIds.contains(s.id))
+        .length;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(mode.title, style: AppText.title2),
+        title: Text(group?.label ?? mode!.title, style: AppText.title2),
         backgroundColor: AppColors.background,
       ),
       body: SafeArea(
@@ -76,11 +99,17 @@ class CollectionScreen extends StatelessWidget {
               ),
               child: Row(
                 children: <Widget>[
-                  Icon(mode.icon, size: 17, color: mode.tint),
+                  Icon(
+                    group == null ? mode!.icon : group.icon,
+                    size: 17,
+                    color: group == null ? mode!.tint : AppColors.accent,
+                  ),
                   const SizedBox(width: Space.sm),
                   Expanded(
                     child: Text(
-                      '${visible.length} ${mode.subtitle}',
+                      group == null
+                          ? '${visible.length} ${mode!.subtitle}'
+                          : '$found of ${visible.length} · ${group.blurb}',
                       style: AppText.label,
                     ),
                   ),
@@ -89,7 +118,7 @@ class CollectionScreen extends StatelessWidget {
             ),
             Expanded(
               child: visible.isEmpty
-                  ? _Empty(mode: mode)
+                  ? _Empty(mode: mode ?? CollectionMode.spotted)
                   : GridView.builder(
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
                       gridDelegate:
@@ -104,7 +133,7 @@ class CollectionScreen extends StatelessWidget {
                         final Species s = visible[index];
                         return SpeciesGridCard(
                           species: s,
-                          locked: mode == CollectionMode.toFind,
+                          locked: !caughtIds.contains(s.id),
                           onTap: () => Navigator.of(context).push<void>(
                             MaterialPageRoute<void>(
                               builder: (BuildContext context) =>
@@ -120,6 +149,20 @@ class CollectionScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Icons live here rather than in the domain, which has no Flutter import.
+extension SpeciesCollectionIcon on SpeciesCollection {
+  IconData get icon => switch (this) {
+    SpeciesCollection.bigFive => Icons.workspace_premium_rounded,
+    SpeciesCollection.smallFive => Icons.zoom_in_rounded,
+    SpeciesCollection.bigSixBirds => Icons.flutter_dash_rounded,
+    SpeciesCollection.endangered => Icons.heart_broken_rounded,
+    SpeciesCollection.antelope => Icons.grass_rounded,
+    SpeciesCollection.predators => Icons.pets_rounded,
+    SpeciesCollection.snakes => Icons.gesture_rounded,
+    SpeciesCollection.nocturnal => Icons.nightlight_round,
+  };
 }
 
 enum CollectionMode {

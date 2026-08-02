@@ -4,6 +4,18 @@ enum SpeciesTag {
   bigFive(label: 'Big Five', shortLabel: 'BIG 5', isFilter: true),
   bigSixBirds(label: 'Big Six Birds', shortLabel: 'BIG 6', isFilter: true),
 
+  /// The joke played on every first-time visitor: elephant shrew, ant lion,
+  /// rhinoceros beetle, buffalo weaver, leopard tortoise. Four of the five are
+  /// in front of you at any picnic site and nobody ever looks.
+  smallFive(label: 'Small Five', shortLabel: 'SMALL 5', isFilter: true),
+
+  /// Not a scientific grouping — "antelope" excludes buffalo, which is a bovid
+  /// but is not what anyone means. It matches how people actually talk in a
+  /// car, which is the only test that matters here.
+  antelope(label: 'Antelope', shortLabel: 'ANTELOPE', isFilter: false),
+
+  snake(label: 'Snakes', shortLabel: 'SNAKE', isFilter: false),
+
   /// What a safari-goer means by "we saw a predator": things that hunt or
   /// scavenge other animals. Deliberately excludes the insectivores nobody
   /// calls a predator — pangolin, aardvark, bushbabies — even though they are

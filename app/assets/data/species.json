@@ -230,7 +230,9 @@
       "afrikaansName": "Blouwildebees",
       "category": "mammal",
       "rarityTier": "common",
-      "tags": [],
+      "tags": [
+        "antelope"
+      ],
       "isSensitive": false,
       "description": "Densest on the southern and central grasslands. Calving is tightly synchronised in the wet season, flooding predators with more prey than they can take.",
       "habitat": "Open grassland with nearby water",
@@ -270,7 +272,9 @@
       "afrikaansName": "Bosbok",
       "category": "mammal",
       "rarityTier": "frequent",
-      "tags": [],
+      "tags": [
+        "antelope"
+      ],
       "isSensitive": false,
       "description": "Solitary and shy, sticking tight to cover. A sharp barking alarm call is usually the only sign one is there.",
       "habitat": "Riverine thicket and dense undergrowth",
@@ -420,7 +424,9 @@
       "afrikaansName": "Gewone Duiker",
       "category": "mammal",
       "rarityTier": "frequent",
-      "tags": [],
+      "tags": [
+        "antelope"
+      ],
       "isSensitive": false,
       "description": "Named for its diving run into cover. The only small antelope in the park that regularly eats meat when it gets the chance.",
       "habitat": "Bush and woodland with good cover",
@@ -440,7 +446,9 @@
       "afrikaansName": "Eland",
       "category": "mammal",
       "rarityTier": "scarce",
-      "tags": [],
+      "tags": [
+        "antelope"
+      ],
       "isSensitive": false,
       "description": "The largest antelope on earth, and shy out of proportion to its size. Tendons in the legs click audibly as the herd walks.",
       "habitat": "Open woodland and grassland",
@@ -475,7 +483,7 @@
     },
     {
       "id": "giraffe",
-      "dexNumber": 23,
+      "dexNumber": 24,
       "commonName": "Giraffe",
       "scientificName": "Giraffa camelopardalis",
       "afrikaansName": "Kameelperd",
@@ -495,13 +503,15 @@
     },
     {
       "id": "greater-kudu",
-      "dexNumber": 24,
+      "dexNumber": 25,
       "commonName": "Greater Kudu",
       "scientificName": "Tragelaphus strepsiceros",
       "afrikaansName": "Koedoe",
       "category": "mammal",
       "rarityTier": "common",
-      "tags": [],
+      "tags": [
+        "antelope"
+      ],
       "isSensitive": false,
       "description": "Bulls carry spiralled horns over a metre long. Despite the size they vanish into thick bush the moment they stop moving.",
       "habitat": "Dense woodland and thicket",
@@ -515,7 +525,7 @@
     },
     {
       "id": "ground-pangolin",
-      "dexNumber": 25,
+      "dexNumber": 26,
       "commonName": "Ground Pangolin",
       "scientificName": "Smutsia temminckii",
       "afrikaansName": "Ietermagog",
@@ -537,7 +547,7 @@
     },
     {
       "id": "hippopotamus",
-      "dexNumber": 26,
+      "dexNumber": 27,
       "commonName": "Hippopotamus",
       "scientificName": "Hippopotamus amphibius",
       "afrikaansName": "Seekoei",
@@ -557,7 +567,7 @@
     },
     {
       "id": "honey-badger",
-      "dexNumber": 27,
+      "dexNumber": 28,
       "commonName": "Honey Badger",
       "scientificName": "Mellivora capensis",
       "afrikaansName": "Ratel",
@@ -579,13 +589,15 @@
     },
     {
       "id": "impala",
-      "dexNumber": 28,
+      "dexNumber": 29,
       "commonName": "Impala",
       "scientificName": "Aepyceros melampus",
       "afrikaansName": "Rooibok",
       "category": "mammal",
       "rarityTier": "common",
-      "tags": [],
+      "tags": [
+        "antelope"
+      ],
       "isSensitive": false,
       "description": "The most abundant antelope in the park and the staple prey of almost every predator in it. Herds scatter in explosive leaps when alarmed.",
       "habitat": "Open woodland and the edges of riverine bush",
@@ -599,13 +611,15 @@
     },
     {
       "id": "klipspringer",
-      "dexNumber": 29,
+      "dexNumber": 30,
       "commonName": "Klipspringer",
       "scientificName": "Oreotragus oreotragus",
       "afrikaansName": "Klipspringer",
       "category": "mammal",
       "rarityTier": "uncommon",
-      "tags": [],
+      "tags": [
+        "antelope"
+      ],
       "isSensitive": false,
       "description": "Stands on the very tips of cylindrical hooves and is found nowhere but rock. Pairs are near-inseparable, one always watching while the other feeds.",
       "habitat": "Koppies, gorges and rocky outcrops",
@@ -618,7 +632,7 @@
     },
     {
       "id": "large-spotted-genet",
-      "dexNumber": 30,
+      "dexNumber": 31,
       "commonName": "Large-spotted Genet",
       "scientificName": "Genetta maculata",
       "afrikaansName": "Rooikolmuskejaatkat",
@@ -641,7 +655,7 @@
     },
     {
       "id": "leopard",
-      "dexNumber": 31,
+      "dexNumber": 32,
       "commonName": "Leopard",
       "scientificName": "Panthera pardus",
       "afrikaansName": "Luiperd",
@@ -664,7 +678,7 @@
     },
     {
       "id": "lesser-bushbaby",
-      "dexNumber": 32,
+      "dexNumber": 33,
       "commonName": "Lesser Bushbaby",
       "scientificName": "Galago moholi",
       "afrikaansName": "Nagapie",
@@ -686,7 +700,7 @@
     },
     {
       "id": "lion",
-      "dexNumber": 33,
+      "dexNumber": 34,
       "commonName": "Lion",
       "scientificName": "Panthera leo",
       "afrikaansName": "Leeu",
@@ -709,13 +723,15 @@
     },
     {
       "id": "mountain-reedbuck",
-      "dexNumber": 34,
+      "dexNumber": 35,
       "commonName": "Mountain Reedbuck",
       "scientificName": "Redunca fulvorufula",
       "afrikaansName": "Rooiribbok",
       "category": "mammal",
       "rarityTier": "rare",
-      "tags": [],
+      "tags": [
+        "antelope"
+      ],
       "isSensitive": false,
       "description": "Confined to a handful of rocky hillsides in the north of the park. Small, grey and easily mistaken for a common reedbuck at distance.",
       "habitat": "Grassy slopes on rocky hills",
@@ -727,13 +743,15 @@
     },
     {
       "id": "nyala",
-      "dexNumber": 35,
+      "dexNumber": 36,
       "commonName": "Nyala",
       "scientificName": "Tragelaphus angasii",
       "afrikaansName": "Njala",
       "category": "mammal",
       "rarityTier": "frequent",
-      "tags": [],
+      "tags": [
+        "antelope"
+      ],
       "isSensitive": false,
       "description": "Males and females look like different species entirely — shaggy slate-grey bulls, bright chestnut ewes. Strongly tied to dense riverine bush.",
       "habitat": "Dense riverine thicket",
@@ -746,7 +764,7 @@
     },
     {
       "id": "plains-zebra",
-      "dexNumber": 36,
+      "dexNumber": 37,
       "commonName": "Plains Zebra",
       "scientificName": "Equus quagga",
       "afrikaansName": "Bontsebra",
@@ -766,13 +784,15 @@
     },
     {
       "id": "roan-antelope",
-      "dexNumber": 37,
+      "dexNumber": 38,
       "commonName": "Roan Antelope",
       "scientificName": "Hippotragus equinus",
       "afrikaansName": "Bastergemsbok",
       "category": "mammal",
       "rarityTier": "rare",
-      "tags": [],
+      "tags": [
+        "antelope"
+      ],
       "isSensitive": false,
       "description": "One of the rarest large antelope in Kruger, down to a few dozen animals in the far northern sandveld. A genuine trophy sighting.",
       "habitat": "Northern sandveld and open woodland",
@@ -784,13 +804,15 @@
     },
     {
       "id": "sable-antelope",
-      "dexNumber": 38,
+      "dexNumber": 39,
       "commonName": "Sable Antelope",
       "scientificName": "Hippotragus niger",
       "afrikaansName": "Swartwitpens",
       "category": "mammal",
       "rarityTier": "scarce",
-      "tags": [],
+      "tags": [
+        "antelope"
+      ],
       "isSensitive": false,
       "description": "Jet-black bulls with scimitar horns swept back over the shoulders. Kruger's population is small and concentrated in the north.",
       "habitat": "Open woodland on well-drained soils",
@@ -803,7 +825,7 @@
     },
     {
       "id": "scrub-hare",
-      "dexNumber": 39,
+      "dexNumber": 40,
       "commonName": "Scrub Hare",
       "scientificName": "Lepus saxatilis",
       "afrikaansName": "Kolhaas",
@@ -825,7 +847,7 @@
     },
     {
       "id": "serval",
-      "dexNumber": 40,
+      "dexNumber": 41,
       "commonName": "Serval",
       "scientificName": "Leptailurus serval",
       "afrikaansName": "Tierboskat",
@@ -846,14 +868,15 @@
     },
     {
       "id": "sharpes-grysbok",
-      "dexNumber": 41,
+      "dexNumber": 42,
       "commonName": "Sharpe's Grysbok",
       "scientificName": "Raphicerus sharpei",
       "afrikaansName": "Sharpe se Grysbok",
       "category": "mammal",
       "rarityTier": "scarce",
       "tags": [
-        "nocturnal"
+        "nocturnal",
+        "antelope"
       ],
       "isSensitive": false,
       "description": "Small, grizzled and almost entirely nocturnal, which is why it is so rarely recorded despite being reasonably common.",
@@ -867,7 +890,7 @@
     },
     {
       "id": "slender-mongoose",
-      "dexNumber": 42,
+      "dexNumber": 43,
       "commonName": "Slender Mongoose",
       "scientificName": "Herpestes sanguineus",
       "afrikaansName": "Swartkwasmuishond",
@@ -889,13 +912,15 @@
     },
     {
       "id": "southern-reedbuck",
-      "dexNumber": 43,
+      "dexNumber": 44,
       "commonName": "Southern Reedbuck",
       "scientificName": "Redunca arundinum",
       "afrikaansName": "Rietbok",
       "category": "mammal",
       "rarityTier": "scarce",
-      "tags": [],
+      "tags": [
+        "antelope"
+      ],
       "isSensitive": false,
       "description": "Bound away with a shrill whistle and a distinctive rocking-horse gait, flashing the white underside of the tail.",
       "habitat": "Tall grass and reedbeds near water",
@@ -908,7 +933,7 @@
     },
     {
       "id": "spotted-hyena",
-      "dexNumber": 44,
+      "dexNumber": 45,
       "commonName": "Spotted Hyena",
       "scientificName": "Crocuta crocuta",
       "afrikaansName": "Gevlekte Hiëna",
@@ -930,13 +955,15 @@
     },
     {
       "id": "steenbok",
-      "dexNumber": 45,
+      "dexNumber": 46,
       "commonName": "Steenbok",
       "scientificName": "Raphicerus campestris",
       "afrikaansName": "Steenbok",
       "category": "mammal",
       "rarityTier": "common",
-      "tags": [],
+      "tags": [
+        "antelope"
+      ],
       "isSensitive": false,
       "description": "A small, rufous antelope seen alone or in pairs. Freezes flat in the grass when threatened rather than running.",
       "habitat": "Open grassland and scrub",
@@ -950,13 +977,15 @@
     },
     {
       "id": "suni",
-      "dexNumber": 46,
+      "dexNumber": 47,
       "commonName": "Suni",
       "scientificName": "Neotragus moschatus",
       "afrikaansName": "Soenie",
       "category": "mammal",
       "rarityTier": "veryRare",
-      "tags": [],
+      "tags": [
+        "antelope"
+      ],
       "isSensitive": false,
       "description": "One of the smallest antelope in Africa, standing barely 35cm. In Kruger it is restricted to the sand forest of the Pafuri region.",
       "habitat": "Dense sand forest and thicket in the far north",
@@ -968,7 +997,7 @@
     },
     {
       "id": "thick-tailed-bushbaby",
-      "dexNumber": 47,
+      "dexNumber": 48,
       "commonName": "Thick-tailed Bushbaby",
       "scientificName": "Otolemur crassicaudatus",
       "afrikaansName": "Bosnagaap",
@@ -989,7 +1018,7 @@
     },
     {
       "id": "tree-squirrel",
-      "dexNumber": 48,
+      "dexNumber": 49,
       "commonName": "Tree Squirrel",
       "scientificName": "Paraxerus cepapi",
       "afrikaansName": "Boomeekhoring",
@@ -1009,13 +1038,15 @@
     },
     {
       "id": "tsessebe",
-      "dexNumber": 49,
+      "dexNumber": 50,
       "commonName": "Tsessebe",
       "scientificName": "Damaliscus lunatus",
       "afrikaansName": "Tsessebe",
       "category": "mammal",
       "rarityTier": "scarce",
-      "tags": [],
+      "tags": [
+        "antelope"
+      ],
       "isSensitive": false,
       "description": "The fastest antelope in southern Africa. Rare in Kruger and largely confined to the northern grasslands.",
       "habitat": "Open grassland and floodplain",
@@ -1027,7 +1058,7 @@
     },
     {
       "id": "vervet-monkey",
-      "dexNumber": 50,
+      "dexNumber": 51,
       "commonName": "Vervet Monkey",
       "scientificName": "Chlorocebus pygerythrus",
       "afrikaansName": "Blouaap",
@@ -1047,7 +1078,7 @@
     },
     {
       "id": "warthog",
-      "dexNumber": 51,
+      "dexNumber": 52,
       "commonName": "Warthog",
       "scientificName": "Phacochoerus africanus",
       "afrikaansName": "Vlakvark",
@@ -1067,13 +1098,15 @@
     },
     {
       "id": "waterbuck",
-      "dexNumber": 52,
+      "dexNumber": 53,
       "commonName": "Waterbuck",
       "scientificName": "Kobus ellipsiprymnus",
       "afrikaansName": "Waterbok",
       "category": "mammal",
       "rarityTier": "common",
-      "tags": [],
+      "tags": [
+        "antelope"
+      ],
       "isSensitive": false,
       "description": "Marked with a white ring on the rump that looks like it sat on a freshly painted toilet seat. Never strays far from permanent water.",
       "habitat": "Riverine grassland within a few kilometres of water",
@@ -1087,7 +1120,7 @@
     },
     {
       "id": "white-rhinoceros",
-      "dexNumber": 53,
+      "dexNumber": 54,
       "commonName": "White Rhinoceros",
       "scientificName": "Ceratotherium simum",
       "afrikaansName": "Witrenoster",
@@ -1108,7 +1141,7 @@
     },
     {
       "id": "white-tailed-mongoose",
-      "dexNumber": 54,
+      "dexNumber": 55,
       "commonName": "White-tailed Mongoose",
       "scientificName": "Ichneumia albicauda",
       "afrikaansName": "Witstertmuishond",
@@ -1131,7 +1164,7 @@
     },
     {
       "id": "african-fish-eagle",
-      "dexNumber": 55,
+      "dexNumber": 56,
       "commonName": "African Fish Eagle",
       "scientificName": "Haliaeetus vocifer",
       "afrikaansName": "Visarend",
@@ -1153,7 +1186,7 @@
     },
     {
       "id": "bateleur",
-      "dexNumber": 56,
+      "dexNumber": 57,
       "commonName": "Bateleur",
       "scientificName": "Terathopius ecaudatus",
       "afrikaansName": "Berghaan",
@@ -1175,7 +1208,7 @@
     },
     {
       "id": "kori-bustard",
-      "dexNumber": 57,
+      "dexNumber": 58,
       "commonName": "Kori Bustard",
       "scientificName": "Ardeotis kori",
       "afrikaansName": "Gompou",
@@ -1196,7 +1229,7 @@
     },
     {
       "id": "lappet-faced-vulture",
-      "dexNumber": 58,
+      "dexNumber": 59,
       "commonName": "Lappet-faced Vulture",
       "scientificName": "Torgos tracheliotos",
       "afrikaansName": "Swartaasvoël",
@@ -1219,7 +1252,7 @@
     },
     {
       "id": "lilac-breasted-roller",
-      "dexNumber": 59,
+      "dexNumber": 60,
       "commonName": "Lilac-breasted Roller",
       "scientificName": "Coracias caudatus",
       "afrikaansName": "Gewone Troupant",
@@ -1239,7 +1272,7 @@
     },
     {
       "id": "martial-eagle",
-      "dexNumber": 60,
+      "dexNumber": 61,
       "commonName": "Martial Eagle",
       "scientificName": "Polemaetus bellicosus",
       "afrikaansName": "Breëkoparend",
@@ -1262,7 +1295,7 @@
     },
     {
       "id": "pels-fishing-owl",
-      "dexNumber": 61,
+      "dexNumber": 62,
       "commonName": "Pel's Fishing Owl",
       "scientificName": "Scotopelia peli",
       "afrikaansName": "Visuil",
@@ -1284,7 +1317,7 @@
     },
     {
       "id": "saddle-billed-stork",
-      "dexNumber": 62,
+      "dexNumber": 64,
       "commonName": "Saddle-billed Stork",
       "scientificName": "Ephippiorhynchus senegalensis",
       "afrikaansName": "Saalbekooievaar",
@@ -1306,7 +1339,7 @@
     },
     {
       "id": "southern-ground-hornbill",
-      "dexNumber": 63,
+      "dexNumber": 65,
       "commonName": "Southern Ground Hornbill",
       "scientificName": "Bucorvus leadbeateri",
       "afrikaansName": "Bromvoël",
@@ -1329,7 +1362,7 @@
     },
     {
       "id": "verreauxs-eagle-owl",
-      "dexNumber": 64,
+      "dexNumber": 66,
       "commonName": "Verreaux's Eagle-Owl",
       "scientificName": "Bubo lacteus",
       "afrikaansName": "Reuse-ooruil",
@@ -1352,7 +1385,7 @@
     },
     {
       "id": "white-backed-vulture",
-      "dexNumber": 65,
+      "dexNumber": 67,
       "commonName": "White-backed Vulture",
       "scientificName": "Gyps africanus",
       "afrikaansName": "Witrugaasvoël",
@@ -1374,14 +1407,15 @@
     },
     {
       "id": "black-mamba",
-      "dexNumber": 66,
+      "dexNumber": 68,
       "commonName": "Black Mamba",
       "scientificName": "Dendroaspis polylepis",
       "afrikaansName": "Swartmamba",
       "category": "reptile",
       "rarityTier": "rare",
       "tags": [
-        "predator"
+        "predator",
+        "snake"
       ],
       "isSensitive": false,
       "description": "Named for the ink-black mouth, not the body, which is gunmetal grey. Fast, alert, and far more inclined to flee than to engage.",
@@ -1396,13 +1430,15 @@
     },
     {
       "id": "leopard-tortoise",
-      "dexNumber": 67,
+      "dexNumber": 69,
       "commonName": "Leopard Tortoise",
       "scientificName": "Stigmochelys pardalis",
       "afrikaansName": "Bergskilpad",
       "category": "reptile",
       "rarityTier": "frequent",
-      "tags": [],
+      "tags": [
+        "smallFive"
+      ],
       "isSensitive": false,
       "description": "The largest tortoise in the park and the only one that cannot pull its head straight back — it folds the neck sideways.",
       "habitat": "Grassland and open savanna",
@@ -1416,7 +1452,7 @@
     },
     {
       "id": "nile-crocodile",
-      "dexNumber": 68,
+      "dexNumber": 70,
       "commonName": "Nile Crocodile",
       "scientificName": "Crocodylus niloticus",
       "afrikaansName": "Nylkrokodil",
@@ -1438,14 +1474,15 @@
     },
     {
       "id": "african-rock-python",
-      "dexNumber": 69,
+      "dexNumber": 71,
       "commonName": "Southern African Rock Python",
       "scientificName": "Python natalensis",
       "afrikaansName": "Luislang",
       "category": "reptile",
       "rarityTier": "rare",
       "tags": [
-        "predator"
+        "predator",
+        "snake"
       ],
       "isSensitive": false,
       "description": "Africa's largest snake, reaching five metres. Females coil around the eggs and stay with the hatchlings, unusual among snakes.",
@@ -1460,7 +1497,7 @@
     },
     {
       "id": "water-monitor",
-      "dexNumber": 70,
+      "dexNumber": 72,
       "commonName": "Water Monitor",
       "scientificName": "Varanus niloticus",
       "afrikaansName": "Waterlikkewaan",
@@ -1473,6 +1510,94 @@
       "description": "Africa's largest lizard, up to two metres. Raids crocodile nests and swims with the tail alone, legs held flat against the body.",
       "habitat": "River banks and dams",
       "bestTimeToSpot": "Warm mornings near water",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern"
+    },
+    {
+      "id": "eastern-rock-elephant-shrew",
+      "dexNumber": 23,
+      "commonName": "Eastern Rock Elephant Shrew",
+      "scientificName": "Elephantulus myurus",
+      "afrikaansName": "Klipklaasneus",
+      "category": "mammal",
+      "rarityTier": "rare",
+      "tags": [
+        "smallFive"
+      ],
+      "isSensitive": false,
+      "description": "Not a shrew and not related to elephants — its closest living relatives are elephants, aardvarks and hyraxes. Bolts between rocks on fixed, swept trails it keeps clear of leaf litter.",
+      "habitat": "Rocky outcrops and boulder-strewn koppies",
+      "bestTimeToSpot": "Early morning on rocks, before the heat",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern"
+    },
+    {
+      "id": "red-billed-buffalo-weaver",
+      "dexNumber": 63,
+      "commonName": "Red-billed Buffalo Weaver",
+      "scientificName": "Bubalornis niger",
+      "afrikaansName": "Buffelwewer",
+      "category": "bird",
+      "rarityTier": "frequent",
+      "tags": [
+        "smallFive"
+      ],
+      "isSensitive": false,
+      "description": "Builds the untidy stick tenements that hang off the western side of tall trees and windmills. Easy to see and almost never looked at, which is the joke of the Small Five.",
+      "habitat": "Open woodland, usually near large trees and camps",
+      "bestTimeToSpot": "All day, around camps and picnic sites",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern"
+    },
+    {
+      "id": "ant-lion",
+      "dexNumber": 73,
+      "commonName": "Ant Lion",
+      "scientificName": "Myrmeleon obscurus",
+      "afrikaansName": "Mierleeu",
+      "category": "invertebrate",
+      "rarityTier": "uncommon",
+      "tags": [
+        "smallFive"
+      ],
+      "isSensitive": false,
+      "description": "The conical pits in soft sand at every picnic site are its traps. The larva waits buried at the bottom and flicks sand at anything that slides in. The adult looks like a clumsy dragonfly and flies at night.",
+      "habitat": "Fine dry sand under trees, out of the rain",
+      "bestTimeToSpot": "Any picnic site — look down before you look up",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern"
+    },
+    {
+      "id": "rhinoceros-beetle",
+      "dexNumber": 74,
+      "commonName": "Rhinoceros Beetle",
+      "scientificName": "Oryctes boas",
+      "afrikaansName": "Renosterkewer",
+      "category": "invertebrate",
+      "rarityTier": "scarce",
+      "tags": [
+        "smallFive"
+      ],
+      "isSensitive": false,
+      "description": "Can carry many times its own weight, and the males fight with the horn. Turns up at camp lights on humid summer nights, which is very nearly the only time anyone sees one.",
+      "habitat": "Woodland; larvae develop in rotting wood and dung",
+      "bestTimeToSpot": "Summer nights, at camp lights after rain",
       "parkRegions": [
         "southern",
         "central",

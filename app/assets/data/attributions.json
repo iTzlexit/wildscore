@@ -1,5 +1,5 @@
 {
-  "note": "Photo credits for Codex reference images. CC-BY requires attribution; do not remove. 68 of 71 hand-picked; the rest auto-selected.",
+  "note": "Photo credits for Codex reference images. CC-BY requires attribution; do not remove. 68 of 74 hand-picked; the rest auto-selected.",
   "source": "iNaturalist (https://www.inaturalist.org)",
   "photos": [
     {
@@ -49,6 +49,12 @@
       "author": "vijaybarve",
       "license": "cc0",
       "source": "https://www.inaturalist.org/observations/9267017"
+    },
+    {
+      "id": "ant-lion",
+      "author": "Konstantin Grebennikov",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/165892867"
     },
     {
       "id": "banded-mongoose",
@@ -151,6 +157,12 @@
       "author": "Tim",
       "license": "cc-by",
       "source": "https://www.inaturalist.org/observations/262808105"
+    },
+    {
+      "id": "eastern-rock-elephant-shrew",
+      "author": "Wynand Uys",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/8962217"
     },
     {
       "id": "eland",
@@ -283,6 +295,18 @@
       "author": "Tommy Andriollo",
       "license": "cc-by",
       "source": "https://www.inaturalist.org/observations/149899684"
+    },
+    {
+      "id": "red-billed-buffalo-weaver",
+      "author": "Public domain (CC0)",
+      "license": "cc0",
+      "source": "https://www.inaturalist.org/observations/383777898"
+    },
+    {
+      "id": "rhinoceros-beetle",
+      "author": "Ian Webb",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/78458614"
     },
     {
       "id": "roan-antelope",

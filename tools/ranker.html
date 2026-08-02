@@ -1,0 +1,215 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wild Score — how hard is it to spot?</title>
+<style>
+ :root{--bg:#f6f6f3;--card:#fff;--ink:#151a17;--mute:#8a938c;--line:#e2e4de;--accent:#1b7a54}
+ *{box-sizing:border-box}
+ body{margin:0;background:var(--bg);color:var(--ink);
+      font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+ header{position:sticky;top:0;z-index:20;background:#fffffff5;backdrop-filter:blur(8px);
+        border-bottom:1px solid var(--line);padding:12px 16px;
+        display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+ h1{font-size:16px;margin:0;font-weight:800;letter-spacing:-.2px}
+ .count{color:var(--mute);font-size:13px;margin-right:auto}
+ button{font:inherit;font-weight:700;border-radius:10px;padding:9px 14px;
+        border:1px solid var(--line);background:#fff;cursor:pointer;color:var(--ink)}
+ button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+ main{padding:16px;max-width:900px;margin:0 auto}
+ .intro{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;
+        margin-bottom:18px;line-height:1.6}
+ .intro h2{margin:0 0 8px;font-size:18px}
+ .intro p{margin:0 0 10px;color:#3d463f}
+ .intro p:last-child{margin:0}
+ .who{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+ .who input,.who select{font:inherit;padding:10px 12px;border:1px solid var(--line);
+        border-radius:10px;background:#fff;flex:1;min-width:150px;color:var(--ink)}
+ .sp{background:var(--card);border:1px solid var(--line);border-radius:14px;
+     padding:14px;margin-bottom:10px}
+ .nm{font-weight:800}
+ .sci{color:var(--mute);font-size:12px;font-style:italic;margin-bottom:10px}
+ .moved{color:var(--accent);font-size:11px;font-weight:800;margin-top:8px}
+ .tiers{display:flex;gap:6px;flex-wrap:wrap}
+ .t{padding:8px 10px;border-radius:9px;border:1.5px solid var(--line);
+    background:#fff;cursor:pointer;font-size:12px;font-weight:800;
+    white-space:nowrap;color:var(--mute);flex:1;min-width:88px;text-align:center}
+ .t.on{color:#fff}
+ .t0.on{background:#77817a;border-color:#77817a}
+ .t1.on{background:#2e8b57;border-color:#2e8b57}
+ .t2.on{background:#2372a8;border-color:#2372a8}
+ .t3.on{background:#6b47c0;border-color:#6b47c0}
+ .t4.on{background:#c26a15;border-color:#c26a15}
+ .t5.on{background:#c0392b;border-color:#c0392b}
+ .t6.on{background:#9c6b10;border-color:#9c6b10}
+ .grp{margin:26px 0 10px;font-size:12px;font-weight:800;letter-spacing:1.2px;
+      color:var(--mute)}
+ #out{position:fixed;inset:auto 12px 12px 12px;max-width:620px;margin:0 auto;background:#fff;
+      border:1px solid var(--line);border-radius:16px;padding:16px;display:none;
+      box-shadow:0 10px 40px #0003;z-index:30}
+ textarea{width:100%;height:140px;font:12px/1.4 ui-monospace,monospace;
+          border:1px solid var(--line);border-radius:10px;padding:10px}
+ .done{background:#e8f3ee;border-color:#bcdccd}
+</style><header>
+  <h1>How hard is it to spot?</h1>
+  <span class="count" id="count"></span>
+  <button onclick="only('moved')">Changed</button>
+  <button onclick="only('all')">All</button>
+  <button class="primary" onclick="exp()">Done — send</button>
+</header>
+<main>
+  <div class="intro">
+    <h2>Help us rank Kruger's animals</h2>
+    <p>Wild Score is a scorecard game for Kruger — you spot animals on a drive and
+       score points based on how hard each one is to find. We are trying to get
+       that ranking right, and the people who actually know are the people who
+       drive the park.</p>
+    <p><b>You do not have to do all of them.</b> Change only the ones you think
+       are wrong. Even five corrections help.</p>
+    <p>Rank by <b>how hard the animal is to find</b>, not how impressive it is. A
+       leopard is exciting; the question is how many days you would drive before
+       seeing one.</p>
+    <div class="who">
+      <input id="name" placeholder="Your name (optional)">
+      <select id="trips">
+        <option value="">How well do you know Kruger?</option>
+        <option>First visit coming up</option>
+        <option>A few trips</option>
+        <option>I go most years</option>
+        <option>Many trips over many years</option>
+        <option>I work / worked in the park</option>
+      </select>
+    </div>
+  </div>
+  <div id="list"></div>
+</main>
+<div id="out">
+  <p style="margin:0 0 8px"><b id="outTitle">Thank you.</b></p>
+  <p style="margin:0 0 10px;color:#3d463f" id="outMsg"></p>
+  <textarea id="json" readonly></textarea>
+  <p style="margin:10px 0 0;display:flex;gap:8px;flex-wrap:wrap">
+    <button class="primary" onclick="cp()">Copy</button>
+    <button id="mailBtn" onclick="mailIt()">Email it</button>
+    <button onclick="document.getElementById('out').style.display='none'">Close</button></p>
+</div><script>
+// ---------------------------------------------------------------------------
+// WHERE RESPONSES GO.
+//
+// Leave ENDPOINT empty and the page falls back to "copy" plus a mailto link,
+// which needs no hosting and no account but relies on the person having email
+// set up. Fill it in with a form endpoint (Formspree, Basin, Web3Forms, a
+// Google Apps Script) and submissions arrive in your inbox on their own.
+// ---------------------------------------------------------------------------
+const ENDPOINT = '';
+const EMAIL = 'lexit.tech@gmail.com';
+
+const SP = [{"id":"aardvark","name":"Aardvark","sci":"Orycteropus afer","cat":"mammal","tier":"veryRare","dex":1},{"id":"aardwolf","name":"Aardwolf","sci":"Proteles cristata","cat":"mammal","tier":"veryRare","dex":2},{"id":"african-civet","name":"African Civet","sci":"Civettictis civetta","cat":"mammal","tier":"scarce","dex":3},{"id":"african-elephant","name":"African Elephant","sci":"Loxodonta africana","cat":"mammal","tier":"frequent","dex":4},{"id":"african-wild-dog","name":"African Wild Dog","sci":"Lycaon pictus","cat":"mammal","tier":"rare","dex":5},{"id":"african-wildcat","name":"African Wildcat","sci":"Felis lybica","cat":"mammal","tier":"rare","dex":6},{"id":"banded-mongoose","name":"Banded Mongoose","sci":"Mungos mungo","cat":"mammal","tier":"frequent","dex":7},{"id":"bat-eared-fox","name":"Bat-eared Fox","sci":"Otocyon megalotis","cat":"mammal","tier":"veryRare","dex":8},{"id":"black-rhinoceros","name":"Black Rhinoceros","sci":"Diceros bicornis","cat":"mammal","tier":"veryRare","dex":9},{"id":"black-backed-jackal","name":"Black-backed Jackal","sci":"Lupulella mesomelas","cat":"mammal","tier":"frequent","dex":10},{"id":"blue-wildebeest","name":"Blue Wildebeest","sci":"Connochaetes taurinus","cat":"mammal","tier":"common","dex":11},{"id":"brown-hyena","name":"Brown Hyena","sci":"Parahyaena brunnea","cat":"mammal","tier":"legendary","dex":12},{"id":"bushbuck","name":"Bushbuck","sci":"Tragelaphus sylvaticus","cat":"mammal","tier":"frequent","dex":13},{"id":"bushpig","name":"Bushpig","sci":"Potamochoerus larvatus","cat":"mammal","tier":"scarce","dex":14},{"id":"cape-buffalo","name":"Cape Buffalo","sci":"Syncerus caffer","cat":"mammal","tier":"frequent","dex":15},{"id":"cape-porcupine","name":"Cape Porcupine","sci":"Hystrix africaeaustralis","cat":"mammal","tier":"scarce","dex":16},{"id":"caracal","name":"Caracal","sci":"Caracal caracal","cat":"mammal","tier":"legendary","dex":17},{"id":"chacma-baboon","name":"Chacma Baboon","sci":"Papio ursinus","cat":"mammal","tier":"common","dex":18},{"id":"cheetah","name":"Cheetah","sci":"Acinonyx jubatus","cat":"mammal","tier":"rare","dex":19},{"id":"common-duiker","name":"Common Duiker","sci":"Sylvicapra grimmia","cat":"mammal","tier":"frequent","dex":20},{"id":"eland","name":"Common Eland","sci":"Taurotragus oryx","cat":"mammal","tier":"scarce","dex":21},{"id":"dwarf-mongoose","name":"Dwarf Mongoose","sci":"Helogale parvula","cat":"mammal","tier":"frequent","dex":22},{"id":"eastern-rock-elephant-shrew","name":"Eastern Rock Elephant Shrew","sci":"Elephantulus myurus","cat":"mammal","tier":"rare","dex":23},{"id":"giraffe","name":"Giraffe","sci":"Giraffa camelopardalis","cat":"mammal","tier":"common","dex":24},{"id":"greater-kudu","name":"Greater Kudu","sci":"Tragelaphus strepsiceros","cat":"mammal","tier":"common","dex":25},{"id":"ground-pangolin","name":"Ground Pangolin","sci":"Smutsia temminckii","cat":"mammal","tier":"legendary","dex":26},{"id":"hippopotamus","name":"Hippopotamus","sci":"Hippopotamus amphibius","cat":"mammal","tier":"common","dex":27},{"id":"honey-badger","name":"Honey Badger","sci":"Mellivora capensis","cat":"mammal","tier":"scarce","dex":28},{"id":"impala","name":"Impala","sci":"Aepyceros melampus","cat":"mammal","tier":"common","dex":29},{"id":"klipspringer","name":"Klipspringer","sci":"Oreotragus oreotragus","cat":"mammal","tier":"uncommon","dex":30},{"id":"large-spotted-genet","name":"Large-spotted Genet","sci":"Genetta maculata","cat":"mammal","tier":"scarce","dex":31},{"id":"leopard","name":"Leopard","sci":"Panthera pardus","cat":"mammal","tier":"scarce","dex":32},{"id":"lesser-bushbaby","name":"Lesser Bushbaby","sci":"Galago moholi","cat":"mammal","tier":"scarce","dex":33},{"id":"lion","name":"Lion","sci":"Panthera leo","cat":"mammal","tier":"uncommon","dex":34},{"id":"mountain-reedbuck","name":"Mountain Reedbuck","sci":"Redunca fulvorufula","cat":"mammal","tier":"rare","dex":35},{"id":"nyala","name":"Nyala","sci":"Tragelaphus angasii","cat":"mammal","tier":"frequent","dex":36},{"id":"plains-zebra","name":"Plains Zebra","sci":"Equus quagga","cat":"mammal","tier":"common","dex":37},{"id":"roan-antelope","name":"Roan Antelope","sci":"Hippotragus equinus","cat":"mammal","tier":"rare","dex":38},{"id":"sable-antelope","name":"Sable Antelope","sci":"Hippotragus niger","cat":"mammal","tier":"scarce","dex":39},{"id":"scrub-hare","name":"Scrub Hare","sci":"Lepus saxatilis","cat":"mammal","tier":"frequent","dex":40},{"id":"serval","name":"Serval","sci":"Leptailurus serval","cat":"mammal","tier":"rare","dex":41},{"id":"sharpes-grysbok","name":"Sharpe's Grysbok","sci":"Raphicerus sharpei","cat":"mammal","tier":"scarce","dex":42},{"id":"slender-mongoose","name":"Slender Mongoose","sci":"Herpestes sanguineus","cat":"mammal","tier":"frequent","dex":43},{"id":"southern-reedbuck","name":"Southern Reedbuck","sci":"Redunca arundinum","cat":"mammal","tier":"scarce","dex":44},{"id":"spotted-hyena","name":"Spotted Hyena","sci":"Crocuta crocuta","cat":"mammal","tier":"frequent","dex":45},{"id":"steenbok","name":"Steenbok","sci":"Raphicerus campestris","cat":"mammal","tier":"common","dex":46},{"id":"suni","name":"Suni","sci":"Neotragus moschatus","cat":"mammal","tier":"veryRare","dex":47},{"id":"thick-tailed-bushbaby","name":"Thick-tailed Bushbaby","sci":"Otolemur crassicaudatus","cat":"mammal","tier":"scarce","dex":48},{"id":"tree-squirrel","name":"Tree Squirrel","sci":"Paraxerus cepapi","cat":"mammal","tier":"common","dex":49},{"id":"tsessebe","name":"Tsessebe","sci":"Damaliscus lunatus","cat":"mammal","tier":"scarce","dex":50},{"id":"vervet-monkey","name":"Vervet Monkey","sci":"Chlorocebus pygerythrus","cat":"mammal","tier":"common","dex":51},{"id":"warthog","name":"Warthog","sci":"Phacochoerus africanus","cat":"mammal","tier":"common","dex":52},{"id":"waterbuck","name":"Waterbuck","sci":"Kobus ellipsiprymnus","cat":"mammal","tier":"common","dex":53},{"id":"white-rhinoceros","name":"White Rhinoceros","sci":"Ceratotherium simum","cat":"mammal","tier":"uncommon","dex":54},{"id":"white-tailed-mongoose","name":"White-tailed Mongoose","sci":"Ichneumia albicauda","cat":"mammal","tier":"uncommon","dex":55},{"id":"african-fish-eagle","name":"African Fish Eagle","sci":"Haliaeetus vocifer","cat":"bird","tier":"frequent","dex":56},{"id":"bateleur","name":"Bateleur","sci":"Terathopius ecaudatus","cat":"bird","tier":"frequent","dex":57},{"id":"kori-bustard","name":"Kori Bustard","sci":"Ardeotis kori","cat":"bird","tier":"uncommon","dex":58},{"id":"lappet-faced-vulture","name":"Lappet-faced Vulture","sci":"Torgos tracheliotos","cat":"bird","tier":"scarce","dex":59},{"id":"lilac-breasted-roller","name":"Lilac-breasted Roller","sci":"Coracias caudatus","cat":"bird","tier":"common","dex":60},{"id":"martial-eagle","name":"Martial Eagle","sci":"Polemaetus bellicosus","cat":"bird","tier":"scarce","dex":61},{"id":"pels-fishing-owl","name":"Pel's Fishing Owl","sci":"Scotopelia peli","cat":"bird","tier":"legendary","dex":62},{"id":"red-billed-buffalo-weaver","name":"Red-billed Buffalo Weaver","sci":"Bubalornis niger","cat":"bird","tier":"frequent","dex":63},{"id":"saddle-billed-stork","name":"Saddle-billed Stork","sci":"Ephippiorhynchus senegalensis","cat":"bird","tier":"scarce","dex":64},{"id":"southern-ground-hornbill","name":"Southern Ground Hornbill","sci":"Bucorvus leadbeateri","cat":"bird","tier":"uncommon","dex":65},{"id":"verreauxs-eagle-owl","name":"Verreaux's Eagle-Owl","sci":"Bubo lacteus","cat":"bird","tier":"uncommon","dex":66},{"id":"white-backed-vulture","name":"White-backed Vulture","sci":"Gyps africanus","cat":"bird","tier":"frequent","dex":67},{"id":"black-mamba","name":"Black Mamba","sci":"Dendroaspis polylepis","cat":"reptile","tier":"rare","dex":68},{"id":"leopard-tortoise","name":"Leopard Tortoise","sci":"Stigmochelys pardalis","cat":"reptile","tier":"frequent","dex":69},{"id":"nile-crocodile","name":"Nile Crocodile","sci":"Crocodylus niloticus","cat":"reptile","tier":"frequent","dex":70},{"id":"african-rock-python","name":"Southern African Rock Python","sci":"Python natalensis","cat":"reptile","tier":"rare","dex":71},{"id":"water-monitor","name":"Water Monitor","sci":"Varanus niloticus","cat":"reptile","tier":"frequent","dex":72},{"id":"ant-lion","name":"Ant Lion","sci":"Myrmeleon obscurus","cat":"invertebrate","tier":"uncommon","dex":73},{"id":"rhinoceros-beetle","name":"Rhinoceros Beetle","sci":"Oryctes boas","cat":"invertebrate","tier":"scarce","dex":74}]
+;
+const TIERS = [
+ ['common','Common','seen every single drive'],
+ ['frequent','Frequent','most drives'],
+ ['uncommon','Notable','a few times a trip'],
+ ['scarce','Rare','maybe once a trip'],
+ ['rare','Very rare','once in several trips'],
+ ['veryRare','Exceptional','once in years of driving'],
+ ['legendary','Legendary','a lifetime sighting']];
+const KEY='wildscore-tiers';
+let picks=JSON.parse(localStorage.getItem(KEY)||'{}');
+const orig={}; SP.forEach(s=>orig[s.id]=s.tier);
+const tierOf=id=>picks[id] ?? orig[id];
+
+const list=document.getElementById('list');
+let lastGroup=null;
+// Grouped by current tier, rarest first — you rank by comparing neighbours, so
+// neighbours should be adjacent.
+[...SP].sort((a,b)=>{
+  const d=TIERS.findIndex(t=>t[0]===b.tier)-TIERS.findIndex(t=>t[0]===a.tier);
+  return d!==0?d:a.name.localeCompare(b.name);
+}).forEach(s=>{
+  if(s.tier!==lastGroup){
+    lastGroup=s.tier;
+    const h=document.createElement('div');
+    h.className='grp';
+    const t=TIERS.find(t=>t[0]===s.tier);
+    h.textContent='CURRENTLY '+t[1].toUpperCase()+' — '+t[2];
+    list.appendChild(h);
+  }
+  const el=document.createElement('div');
+  el.className='sp'; el.dataset.id=s.id;
+  el.innerHTML=`<div class="nm">${s.name}</div>
+    <div class="sci">${s.sci}</div>
+    <div class="tiers" id="t-${s.id}"></div>
+    <div class="moved" id="m-${s.id}"></div>`;
+  list.appendChild(el);
+  const box=el.querySelector('#t-'+CSS.escape(s.id));
+  TIERS.forEach((t,i)=>{
+    const b=document.createElement('button');
+    b.className='t t'+i; b.textContent=t[1]; b.title=t[2];
+    b.onclick=()=>{ picks[s.id]=t[0]; localStorage.setItem(KEY,JSON.stringify(picks)); paint(s.id); };
+    box.appendChild(b);
+  });
+  paint(s.id);
+});
+
+function paint(id){
+  const box=document.getElementById('t-'+id);
+  const cur=tierOf(id);
+  [...box.children].forEach((b,i)=>b.classList.toggle('on',TIERS[i][0]===cur));
+  const m=document.getElementById('m-'+id);
+  const el=document.querySelector('.sp[data-id="'+id+'"]');
+  if(cur!==orig[id]){
+    const from=TIERS.find(t=>t[0]===orig[id])[1], to=TIERS.find(t=>t[0]===cur)[1];
+    m.textContent=`changed: ${from} → ${to}`;
+    el.classList.add('done');
+  } else { m.textContent=''; el.classList.remove('done'); }
+  tally();
+}
+function tally(){
+  const n=SP.filter(s=>tierOf(s.id)!==orig[s.id]).length;
+  document.getElementById('count').textContent=n?`${n} changed`:'nothing changed yet';
+}
+function only(mode){
+  document.querySelectorAll('.sp').forEach(el=>{
+    const changed=tierOf(el.dataset.id)!==orig[el.dataset.id];
+    el.style.display=(mode==='all'||changed)?'':'none';
+  });
+  document.querySelectorAll('.grp').forEach(g=>g.style.display=mode==='all'?'':'none');
+}
+function payload(){
+  const changes={};
+  SP.forEach(s=>{ if(tierOf(s.id)!==orig[s.id]) changes[s.id]=tierOf(s.id); });
+  return {
+    name: document.getElementById('name').value.trim(),
+    experience: document.getElementById('trips').value,
+    changed: Object.keys(changes).length,
+    changes
+  };
+}
+async function exp(){
+  const data=payload();
+  const text=JSON.stringify(data);
+  document.getElementById('json').value=text;
+  document.getElementById('out').style.display='block';
+  if(!data.changed){
+    document.getElementById('outTitle').textContent='Nothing changed yet';
+    document.getElementById('outMsg').textContent='Tap a different rating on any animal you think is ranked wrongly, then come back here.';
+    return;
+  }
+  if(ENDPOINT){
+    try{
+      await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:text});
+      document.getElementById('outTitle').textContent='Sent — thank you';
+      document.getElementById('outMsg').textContent=`${data.changed} rankings received. You can close this.`;
+      document.getElementById('mailBtn').style.display='none';
+      return;
+    }catch(e){ /* fall through to the manual path */ }
+  }
+  document.getElementById('outTitle').textContent='Almost there';
+  document.getElementById('outMsg').textContent='Tap Email it, or copy the text below and send it to '+EMAIL+'.';
+}
+function cp(){ const t=document.getElementById('json'); t.select(); document.execCommand('copy'); }
+function mailIt(){
+  const body=encodeURIComponent(document.getElementById('json').value);
+  location.href=`mailto:${EMAIL}?subject=Wild%20Score%20rankings&body=${body}`;
+}
+tally();
+</script>
