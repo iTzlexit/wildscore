@@ -1,3 +1,5 @@
+import 'avatar_seed.dart';
+
 /// Who the player is.
 ///
 /// The first thing the app asks for, and deliberately the *only* thing —
@@ -12,23 +14,30 @@ class TrackerProfile {
     required this.name,
     required this.createdAt,
     required this.seasonYear,
+    required this.avatar,
   });
 
   factory TrackerProfile.fromJson(Map<String, dynamic> json) {
+    final String name = json['name'] as String;
     return TrackerProfile(
-      name: json['name'] as String,
+      name: name,
       createdAt: DateTime.parse(json['createdAt'] as String),
       seasonYear: json['seasonYear'] as int,
+      // Profiles saved before avatars existed derive theirs from the name,
+      // which is the same value they would have been given anyway.
+      avatar: json['avatar'] as int? ?? AvatarSeed.forName(name),
     );
   }
 
   /// Creates a profile for the current season.
   factory TrackerProfile.create(String name, {DateTime? now}) {
     final DateTime timestamp = now ?? DateTime.now();
+    final String clean = sanitiseName(name);
     return TrackerProfile(
-      name: sanitiseName(name),
+      name: clean,
       createdAt: timestamp,
       seasonYear: timestamp.year,
+      avatar: AvatarSeed.forName(clean),
     );
   }
 
@@ -42,6 +51,11 @@ class TrackerProfile {
   /// turns over with them; the collection never resets. See docs/VISION.md.
   final int seasonYear;
 
+  /// The account's face, assigned once and never reshuffled. Guests in a game
+  /// get a new avatar each day; the account holder does not, because this is
+  /// how other players will come to recognise them.
+  final int avatar;
+
   /// Single uppercase letter for the profile badge.
   String get initial => name.isEmpty ? '?' : name[0].toUpperCase();
 
@@ -50,6 +64,7 @@ class TrackerProfile {
       'name': name,
       'createdAt': createdAt.toIso8601String(),
       'seasonYear': seasonYear,
+      'avatar': avatar,
     };
   }
 

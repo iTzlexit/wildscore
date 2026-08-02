@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../data/lifetime_repository.dart';
 import '../data/scorecard_repository.dart';
 import '../data/species_repository.dart';
 import '../data/spotted_repository.dart';
@@ -39,6 +40,7 @@ class HomeShell extends StatefulWidget {
 class _HomeShellState extends State<HomeShell> {
   static const SpottedRepository _spottedRepo = SpottedRepository();
   static const ScorecardRepository _cardRepo = ScorecardRepository();
+  static const LifetimeRepository _lifetimeRepo = LifetimeRepository();
 
   late final Future<List<Species>> _speciesFuture;
   int _tab = 0;
@@ -46,6 +48,9 @@ class _HomeShellState extends State<HomeShell> {
   /// Held here rather than in either tab, because both read it — the Profile
   /// counts it and the Dex colours by it.
   Set<String> _spotted = <String>{};
+
+  /// Points earned across every day, by this account only.
+  int _lifetimePoints = 0;
 
   /// The day's game, or null when none is running.
   Scorecard? _card;
@@ -57,6 +62,11 @@ class _HomeShellState extends State<HomeShell> {
     _spottedRepo.load().then((Set<String> ids) {
       if (mounted) {
         setState(() => _spotted = ids);
+      }
+    });
+    _lifetimeRepo.loadPoints().then((int points) {
+      if (mounted) {
+        setState(() => _lifetimePoints = points);
       }
     });
     _cardRepo.load().then((Scorecard? card) {
@@ -74,11 +84,14 @@ class _HomeShellState extends State<HomeShell> {
   }
 
   Future<void> _startScorecard() async {
-    final List<String>? names = await StartScorecardSheet.show(context);
+    final List<String>? names = await StartScorecardSheet.show(
+      context,
+      owner: widget.profile.name,
+    );
     if (names == null || names.isEmpty || !mounted) {
       return;
     }
-    final Scorecard card = Scorecard.start(names);
+    final Scorecard card = Scorecard.start(names, owner: widget.profile.name);
     await _cardRepo.save(card);
     if (mounted) {
       setState(() => _card = card);
@@ -86,10 +99,90 @@ class _HomeShellState extends State<HomeShell> {
   }
 
   Future<void> _endScorecard() async {
+    // Confirmed, because the day's standings are gone afterwards. What the
+    // owner claimed is already in their lifetime record by this point — the
+    // credit happens per claim, not at the end, so a phone that dies at the
+    // gate still keeps the leopard.
+    final bool ok = await _confirm(
+      title: 'End the day?',
+      message:
+          "Today's standings are cleared. Everything you claimed yourself "
+          'stays in your collection.',
+      action: 'End day',
+    );
+    if (!ok) {
+      return;
+    }
     await _cardRepo.clear();
     if (mounted) {
       setState(() => _card = null);
     }
+  }
+
+  /// Same players, no claims. The common case is "we scored the first hour
+  /// wrong", and that must not cost anyone four names retyped at a gate.
+  Future<void> _restartScorecard() async {
+    final Scorecard? card = _card;
+    if (card == null) {
+      return;
+    }
+    final bool ok = await _confirm(
+      title: 'Restart the game?',
+      message:
+          'Everyone keeps their place in the car, but every claim today is '
+          'wiped — including the points that went to your own total.',
+      action: 'Restart',
+    );
+    if (!ok) {
+      return;
+    }
+    await _updateCard(card.restarted);
+
+    // Wiping the day must wipe what the day gave the owner, otherwise a
+    // restart is a way to farm points. The species stay marked as spotted, for
+    // the same reason undo leaves them: they may predate today.
+    final String? ownerId = card.owner?.id;
+    if (ownerId != null) {
+      final int refund = card.pointsFor(ownerId);
+      if (refund > 0) {
+        final int points = await _lifetimeRepo.addPoints(-refund);
+        if (mounted) {
+          setState(() => _lifetimePoints = points);
+        }
+      }
+    }
+  }
+
+  Future<bool> _confirm({
+    required String title,
+    required String message,
+    required String action,
+  }) async {
+    final bool? ok = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        title: Text(title, style: AppText.title3),
+        content: Text(message, style: AppText.body),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('Cancel', style: AppText.label),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(
+              action,
+              style: AppText.label.copyWith(
+                color: AppColors.danger,
+                fontVariations: AppFonts.weight(700),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    return ok ?? false;
   }
 
   Future<void> _updateCard(Scorecard next) async {
@@ -100,7 +193,12 @@ class _HomeShellState extends State<HomeShell> {
   }
 
   /// A species tapped from the Dex while a game is running.
-  Future<void> _claim(Species species) async {
+  ///
+  /// [openDetail] is supplied by the Codex, which owns the photo credits. It is
+  /// how the sheet can offer the field-guide entry: during a game a tap is a
+  /// claim, and without this there was no reachable way to simply look
+  /// something up.
+  Future<void> _claim(Species species, VoidCallback openDetail) async {
     final Scorecard? card = _card;
     if (card == null) {
       return;
@@ -113,8 +211,24 @@ class _HomeShellState extends State<HomeShell> {
     if (choice == null || !mounted) {
       return;
     }
+    if (choice == WhoSpottedSheet.detailSentinel) {
+      openDetail();
+      return;
+    }
     if (choice == WhoSpottedSheet.unclaimSentinel) {
-      await _updateCard(card.withoutLastClaimOf(species.id));
+      final Scorecard next = card.withoutLastClaimOf(species.id);
+      await _updateCard(next);
+      // An undo has to reach the lifetime total too, or the fix for a mis-tap
+      // silently inflates the permanent score. The species stays marked as
+      // spotted: it may well have been seen on an earlier trip, and un-spotting
+      // it would delete a real record to correct a fake one.
+      final Claim? undone = _lastOwnClaim(card, species.id);
+      if (undone != null) {
+        final int points = await _lifetimeRepo.addPoints(-undone.points);
+        if (mounted) {
+          setState(() => _lifetimePoints = points);
+        }
+      }
       return;
     }
     await _updateCard(
@@ -127,6 +241,43 @@ class _HomeShellState extends State<HomeShell> {
         ),
       ),
     );
+
+    // The account holder's claims are also theirs permanently. This is the
+    // whole reason the owner is flagged on the scorecard: a guest's leopard is
+    // a guest's, and writing it to this phone's lifetime record would make that
+    // record something nobody could trust.
+    if (card.owner?.id == choice) {
+      await _creditOwner(species);
+    }
+  }
+
+  /// The claim `withoutLastClaimOf` is about to drop, if the owner made it.
+  Claim? _lastOwnClaim(Scorecard card, String speciesId) {
+    final String? ownerId = card.owner?.id;
+    if (ownerId == null) {
+      return null;
+    }
+    final int index = card.claims.lastIndexWhere(
+      (Claim c) => c.speciesId == speciesId,
+    );
+    if (index < 0 || card.claims[index].playerId != ownerId) {
+      return null;
+    }
+    return card.claims[index];
+  }
+
+  Future<void> _creditOwner(Species species) async {
+    final Set<String> nextSpotted = await _spottedRepo.add(
+      _spotted,
+      species.id,
+    );
+    final int nextPoints = await _lifetimeRepo.addPoints(species.points);
+    if (mounted) {
+      setState(() {
+        _spotted = nextSpotted;
+        _lifetimePoints = nextPoints;
+      });
+    }
   }
 
   void _onCameraPressed() {
@@ -169,9 +320,11 @@ class _HomeShellState extends State<HomeShell> {
                 profile: widget.profile,
                 species: species,
                 caughtIds: _spotted,
+                lifetimePoints: _lifetimePoints,
                 card: _card,
                 onStartScorecard: _startScorecard,
                 onEndScorecard: _endScorecard,
+                onRestartScorecard: _restartScorecard,
               ),
               CodexScreen(
                 repository: widget.repository,

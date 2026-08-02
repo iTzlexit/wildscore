@@ -1,16 +1,44 @@
-/// One person in the car, for one day. Not an account — just a name.
-class Player {
-  const Player({required this.id, required this.name});
+import 'avatar_seed.dart';
 
-  factory Player.fromJson(Map<String, dynamic> json) =>
-      Player(id: json['id'] as String, name: json['name'] as String);
+/// One person in the car, for one day. Not an account — just a name.
+///
+/// Except for one of them. [isOwner] marks the player who is also the phone's
+/// account holder, and that flag is what lets a day's claims land in a
+/// permanent collection instead of evaporating when the game ends.
+class Player {
+  const Player({
+    required this.id,
+    required this.name,
+    this.avatar = 0,
+    this.isOwner = false,
+  });
+
+  factory Player.fromJson(Map<String, dynamic> json) => Player(
+    id: json['id'] as String,
+    name: json['name'] as String,
+    // Older saved games predate avatars. Fall back to the name-derived one so
+    // a scorecard in progress does not suddenly show everyone as a lion.
+    avatar: json['avatar'] as int? ?? 0,
+    isOwner: json['isOwner'] as bool? ?? false,
+  );
 
   final String id;
   final String name;
 
+  /// Index into the avatar set. See shared/widgets/avatar_badge.dart — the
+  /// domain stores a number so the artwork can change without a migration.
+  final int avatar;
+
+  final bool isOwner;
+
   String get initial => name.isEmpty ? '?' : name[0].toUpperCase();
 
-  Map<String, dynamic> toJson() => <String, dynamic>{'id': id, 'name': name};
+  Map<String, dynamic> toJson() => <String, dynamic>{
+    'id': id,
+    'name': name,
+    'avatar': avatar,
+    'isOwner': isOwner,
+  };
 }
 
 /// A single claimed sighting: who called it, what, and when.
@@ -72,13 +100,38 @@ class Scorecard {
     ],
   );
 
-  factory Scorecard.start(List<String> names, {DateTime? now}) {
+  /// Starts a day.
+  ///
+  /// [owner] is the account holder's name. Whichever entered name matches it
+  /// is flagged [Player.isOwner] and keeps their permanent avatar — everyone
+  /// else is dealt a fresh one for the day.
+  factory Scorecard.start(List<String> names, {DateTime? now, String? owner}) {
     final DateTime at = now ?? DateTime.now();
+    final String? ownerKey = owner?.trim().toLowerCase();
+    final int ownerAvatar = owner == null ? -1 : AvatarSeed.forName(owner);
+    final List<int> dealt = AvatarSeed.deal(
+      names.length,
+      at.millisecondsSinceEpoch,
+      taken: ownerAvatar < 0 ? const <int>{} : <int>{ownerAvatar},
+    );
+
     return Scorecard(
       startedAt: at,
       players: <Player>[
         for (int i = 0; i < names.length; i++)
-          Player(id: 'p$i-${at.millisecondsSinceEpoch}', name: names[i].trim()),
+          if (names[i].trim().toLowerCase() == ownerKey)
+            Player(
+              id: 'p$i-${at.millisecondsSinceEpoch}',
+              name: names[i].trim(),
+              avatar: ownerAvatar,
+              isOwner: true,
+            )
+          else
+            Player(
+              id: 'p$i-${at.millisecondsSinceEpoch}',
+              name: names[i].trim(),
+              avatar: dealt[i],
+            ),
       ],
       claims: const <Claim>[],
     );
@@ -100,6 +153,24 @@ class Scorecard {
   /// Every species anyone has claimed today. Drives the Codex colouring.
   Set<String> get claimedSpecies =>
       claims.map((Claim c) => c.speciesId).toSet();
+
+  /// The account holder, if they are playing. Their claims are the ones that
+  /// count towards a permanent collection — everyone else in the car is a guest
+  /// on this phone, and crediting a guest's leopard to the owner's lifetime
+  /// record would make that record a lie.
+  Player? get owner {
+    for (final Player p in players) {
+      if (p.isOwner) {
+        return p;
+      }
+    }
+    return null;
+  }
+
+  Set<String> speciesClaimedBy(String playerId) => <String>{
+    for (final Claim c in claims)
+      if (c.playerId == playerId) c.speciesId,
+  };
 
   /// Players ordered for the standings board. Ties keep entry order, so the
   /// list does not jitter as scores level.
@@ -132,6 +203,18 @@ class Scorecard {
       claims: <Claim>[...claims]..removeAt(index),
     );
   }
+
+  /// Same car, clean slate.
+  ///
+  /// Separate from ending the day because they are different intentions. A
+  /// restart is "we mis-scored the first hour"; ending the day is "we are done
+  /// and it counts". Making a player re-enter four names to fix a mistake is
+  /// how you lose them to paper.
+  Scorecard get restarted => Scorecard(
+    startedAt: startedAt,
+    players: players,
+    claims: const <Claim>[],
+  );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
     'startedAt': startedAt.toIso8601String(),

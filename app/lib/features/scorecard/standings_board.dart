@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../domain/scorecard.dart';
 import '../../domain/species.dart';
 import '../../shared/theme.dart';
+import '../../shared/widgets/avatar_badge.dart';
 
 /// Live standings — one row per player, bar proportional to the leader.
 ///
@@ -137,9 +138,15 @@ class _Row extends StatelessWidget {
                         ),
                       ),
                     ),
+                    AvatarBadge(
+                      avatar: player.avatar,
+                      size: 30,
+                      ring: player.isOwner,
+                    ),
+                    const SizedBox(width: Space.sm),
                     Expanded(
                       child: Text(
-                        player.name,
+                        player.isOwner ? '${player.name} (you)' : player.name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: AppText.bodyStrong.copyWith(
@@ -170,7 +177,9 @@ class _Row extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Padding(
-                  padding: const EdgeInsets.only(left: 20),
+                  // Rank column + avatar + gap, so the bar starts under the
+                  // name rather than under the face.
+                  padding: const EdgeInsets.only(left: 58),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(4),
                     child: TweenAnimationBuilder<double>(
@@ -196,7 +205,7 @@ class _Row extends StatelessWidget {
           // surface — "I got the leopard" is the whole point of the game.
           if (expanded && haul.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, Space.md, 0, Space.xs),
+              padding: const EdgeInsets.fromLTRB(58, Space.md, 0, Space.xs),
               child: Wrap(
                 spacing: 6,
                 runSpacing: 6,

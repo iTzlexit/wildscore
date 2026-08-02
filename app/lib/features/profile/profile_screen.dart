@@ -6,6 +6,8 @@ import '../../domain/species_category.dart';
 import '../../domain/tracker_profile.dart';
 import '../../shared/theme.dart';
 import '../../shared/widgets/app_header.dart';
+import '../../shared/widgets/avatar_badge.dart';
+import '../codex/collection_screen.dart';
 import '../scorecard/standings_board.dart';
 
 /// The Spotter's own record: progress, then numbers, then recent catches.
@@ -22,9 +24,11 @@ class ProfileScreen extends StatefulWidget {
     required this.profile,
     required this.species,
     this.caughtIds = const <String>{},
+    this.lifetimePoints = 0,
     this.card,
     this.onStartScorecard,
     this.onEndScorecard,
+    this.onRestartScorecard,
     super.key,
   });
 
@@ -32,12 +36,16 @@ class ProfileScreen extends StatefulWidget {
   final Scorecard? card;
   final VoidCallback? onStartScorecard;
   final VoidCallback? onEndScorecard;
+  final VoidCallback? onRestartScorecard;
 
   final TrackerProfile profile;
   final List<Species> species;
 
   /// Empty until Phase 2. Every number here already reads from it.
   final Set<String> caughtIds;
+
+  /// Points this account has earned across every day it has played.
+  final int lifetimePoints;
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -55,7 +63,22 @@ enum ProfileScope {
 class _ProfileScreenState extends State<ProfileScreen> {
   ProfileScope _scope = ProfileScope.today;
 
-  int get _points => 0;
+  /// Today shows the car's running total; Lifetime shows only what this
+  /// account has earned. Two different questions, and conflating them is how a
+  /// leaderboard ends up unusable.
+  int get _points => switch (_scope) {
+    ProfileScope.today => widget.card?.totalPoints ?? 0,
+    ProfileScope.lifetime => widget.lifetimePoints,
+  };
+
+  void _openCollection(CollectionMode mode) {
+    CollectionScreen.open(
+      context,
+      species: widget.species,
+      caughtIds: widget.caughtIds,
+      mode: mode,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,11 +112,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   const SizedBox(height: Space.lg),
                   _ProgressCard(
-                    spotted: spotted,
+                    // Today counts what the car has claimed since the gate;
+                    // Lifetime counts the collection. Showing a lifetime bar
+                    // under a "POINTS TODAY" heading was two answers to two
+                    // different questions stacked on top of each other.
+                    spotted: _scope == ProfileScope.today
+                        ? widget.card?.claimedSpecies.length ?? 0
+                        : spotted,
                     total: total,
-                    points: widget.card?.totalPoints ?? _points,
+                    points: _points,
                     scope: _scope,
-                    playerCount: widget.card?.players.length ?? 0,
+                    playerCount: _scope == ProfileScope.today
+                        ? widget.card?.players.length ?? 0
+                        : 0,
                   ),
                   const SizedBox(height: Space.lg),
                   if (widget.card != null) ...<Widget>[
@@ -101,13 +132,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       card: widget.card!,
                       species: widget.species,
                       onEnd: widget.onEndScorecard,
+                      onRestart: widget.onRestartScorecard,
                     ),
                     const SizedBox(height: Space.lg),
                   ] else if (widget.onStartScorecard != null) ...<Widget>[
                     _StartScorecardCard(onStart: widget.onStartScorecard!),
                     const SizedBox(height: Space.lg),
                   ],
-                  _Numbers(spotted: spotted, total: total),
+                  _Numbers(
+                    spotted: spotted,
+                    total: total,
+                    onSpotted: () => _openCollection(CollectionMode.spotted),
+                    onToFind: () => _openCollection(CollectionMode.toFind),
+                  ),
                   const SizedBox(height: Space.section),
                   _CategoryBreakdown(
                     species: widget.species,
@@ -182,11 +219,13 @@ class _ScorecardPanel extends StatelessWidget {
     required this.card,
     required this.species,
     this.onEnd,
+    this.onRestart,
   });
 
   final Scorecard card;
   final List<Species> species;
   final VoidCallback? onEnd;
+  final VoidCallback? onRestart;
 
   @override
   Widget build(BuildContext context) {
@@ -224,14 +263,36 @@ class _ScorecardPanel extends StatelessWidget {
           const SizedBox(height: Space.lg),
           StandingsBoard(card: card, species: species),
           const SizedBox(height: Space.sm),
+          Text(
+            'Tap any animal in the Animal Dex to claim it.',
+            style: AppText.caption,
+          ),
+          const SizedBox(height: Space.md),
+          const Divider(height: 1, color: AppColors.outline),
+          const SizedBox(height: Space.xs),
+          // Restart and End are deliberately different weights. Restarting is
+          // a correction and happens mid-morning; ending the day is final and
+          // happens once. Both confirm before they act.
           Row(
             children: <Widget>[
-              Expanded(
-                child: Text(
-                  'Tap any animal in the Animal Dex to claim it.',
-                  style: AppText.caption,
+              if (onRestart != null)
+                TextButton.icon(
+                  onPressed: onRestart,
+                  icon: const Icon(Icons.restart_alt_rounded, size: 17),
+                  label: Text(
+                    'Restart',
+                    style: AppText.label.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                  style: TextButton.styleFrom(
+                    foregroundColor: AppColors.textSecondary,
+                    padding: const EdgeInsets.symmetric(horizontal: Space.sm),
+                    minimumSize: Size.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
                 ),
-              ),
+              const Spacer(),
               if (onEnd != null)
                 TextButton(
                   onPressed: onEnd,
@@ -263,19 +324,7 @@ class _Identity extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
-        Container(
-          width: 48,
-          height: 48,
-          alignment: Alignment.center,
-          decoration: const BoxDecoration(
-            color: Color(0x26DCA84A),
-            shape: BoxShape.circle,
-          ),
-          child: Text(
-            profile.initial,
-            style: AppText.title2.copyWith(color: AppColors.accent),
-          ),
-        ),
+        AvatarBadge(avatar: profile.avatar, size: 52),
         const SizedBox(width: Space.md),
         Expanded(
           child: Column(
@@ -409,7 +458,12 @@ class _ProgressCard extends StatelessWidget {
           const SizedBox(height: Space.screen),
           Row(
             children: <Widget>[
-              Text('$spotted of $total spotted', style: AppText.label),
+              Text(
+                scope == ProfileScope.today
+                    ? '$spotted spotted today'
+                    : '$spotted of $total spotted',
+                style: AppText.label,
+              ),
               const Spacer(),
               Text(
                 '$percent%',
@@ -437,11 +491,23 @@ class _ProgressCard extends StatelessWidget {
   }
 }
 
+/// The three counts. Two of them open something.
+///
+/// SPOTTED and TO FIND were previously dead text, which is a small betrayal —
+/// a number on a dashboard reads as a link, and a player who taps it and gets
+/// nothing learns that this screen's numbers are decoration.
 class _Numbers extends StatelessWidget {
-  const _Numbers({required this.spotted, required this.total});
+  const _Numbers({
+    required this.spotted,
+    required this.total,
+    required this.onSpotted,
+    required this.onToFind,
+  });
 
   final int spotted;
   final int total;
+  final VoidCallback onSpotted;
+  final VoidCallback onToFind;
 
   @override
   Widget build(BuildContext context) {
@@ -462,6 +528,7 @@ class _Numbers extends StatelessWidget {
             value: '$spotted',
             label: 'SPOTTED',
             tint: AppColors.verified,
+            onTap: onSpotted,
           ),
         ),
         const SizedBox(width: Space.md),
@@ -471,6 +538,7 @@ class _Numbers extends StatelessWidget {
             value: '${total - spotted}',
             label: 'TO FIND',
             tint: AppColors.textSecondary,
+            onTap: onToFind,
           ),
         ),
       ],
@@ -484,37 +552,62 @@ class _NumberTile extends StatelessWidget {
     required this.value,
     required this.label,
     required this.tint,
+    this.onTap,
   });
 
   final IconData icon;
   final String value;
   final String label;
   final Color tint;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: Space.lg),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
+    return Material(
+      color: AppColors.surface,
+      borderRadius: BorderRadius.circular(Radii.card),
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(Radii.card),
-        border: Border.all(color: AppColors.outline),
-      ),
-      child: Column(
-        children: <Widget>[
-          Icon(icon, size: 19, color: tint),
-          const SizedBox(height: Space.sm),
-          Text(
-            value,
-            style: AppText.title2.copyWith(fontFeatures: AppText.tabular),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: Space.lg),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(Radii.card),
+            border: Border.all(color: AppColors.outline),
           ),
-          const SizedBox(height: 3),
-          Text(
-            label,
-            textAlign: TextAlign.center,
-            style: AppText.overline.copyWith(fontSize: 8.5, letterSpacing: 1),
+          child: Column(
+            children: <Widget>[
+              Icon(icon, size: 19, color: tint),
+              const SizedBox(height: Space.sm),
+              Text(
+                value,
+                style: AppText.title2.copyWith(fontFeatures: AppText.tabular),
+              ),
+              const SizedBox(height: 3),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Flexible(
+                    child: Text(
+                      label,
+                      textAlign: TextAlign.center,
+                      style: AppText.overline.copyWith(
+                        fontSize: 8.5,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                  ),
+                  if (onTap != null)
+                    const Icon(
+                      Icons.chevron_right_rounded,
+                      size: 13,
+                      color: AppColors.textMuted,
+                    ),
+                ],
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

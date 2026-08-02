@@ -17,9 +17,9 @@ import 'package:wildscore/shared/theme.dart';
 /// `testWidgets` does not work reliably — that code runs in a fake-async zone
 /// where real file I/O may never complete.
 ///
-/// Note on finding a specific species: the Codex is a grid in dex order, so
-/// only the first dozen or so tiles are built. Tests that need a particular
-/// animal search for it first rather than assuming it is on screen.
+/// Note on finding a specific species: the Codex is a grid, so only the first
+/// dozen or so tiles are built. Tests that need a particular animal search for
+/// it first rather than assuming it is on screen.
 class _InMemoryRepository implements SpeciesRepository {
   const _InMemoryRepository(this.species);
 
@@ -81,15 +81,45 @@ void main() {
     expect(find.text('Any rarity'), findsOneWidget);
   });
 
-  testWidgets('lists species in dex order, starting at No. 001', (
+  testWidgets('opens on the rarest species, not the first one', (
     WidgetTester tester,
   ) async {
     await _pumpCodex(tester);
 
+    // A catalogue that opens on impala says "here is a list of animals". One
+    // that opens on pangolin says "here is what you are hunting for".
+    expect(find.text('Rarest first'), findsOneWidget);
+    expect(find.text('Ground Pangolin'), findsOneWidget);
+    expect(
+      find.text('Impala'),
+      findsNothing,
+      reason: 'the common end is at the bottom, unbuilt',
+    );
+  });
+
+  testWidgets('sorting cycles back to dex order', (WidgetTester tester) async {
+    await _pumpCodex(tester);
+
+    await tester.tap(find.text('Rarest first'));
+    await tester.pumpAndSettle();
+
     // Dex numbers are permanent identities — mammals, then birds, then
     // reptiles, alphabetical within each. Aardvark is and stays 001.
+    expect(find.text('Dex order'), findsOneWidget);
     expect(find.text('001'), findsOneWidget);
     expect(find.text('Aardvark'), findsOneWidget);
+  });
+
+  testWidgets('the park boundary is stated at the foot of the dex', (
+    WidgetTester tester,
+  ) async {
+    await _pumpCodex(tester);
+    // Filtered to one tile so the footer is on screen without scrolling 70
+    // cards.
+    await _search(tester, 'Smutsia');
+
+    expect(find.text('Kruger only, for now'), findsOneWidget);
+    expect(find.textContaining('Okavango Delta'), findsOneWidget);
   });
 
   testWidgets('every tile shows a dex number, tier name and points', (

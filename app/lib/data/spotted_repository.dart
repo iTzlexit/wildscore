@@ -25,6 +25,17 @@ class SpottedRepository {
     await prefs.setStringList(_key, ids.toList()..sort());
   }
 
+  /// Adds without removing. Used when a game credits the account holder — a
+  /// second leopard must not un-spot the first one.
+  Future<Set<String>> add(Set<String> current, String id) async {
+    if (current.contains(id)) {
+      return current;
+    }
+    final Set<String> next = <String>{...current, id};
+    await save(next);
+    return next;
+  }
+
   /// Returns the new set, so callers can hold it in widget state without a
   /// second read.
   Future<Set<String>> toggle(Set<String> current, String id) async {

@@ -36,7 +36,11 @@ class CodexScreen extends StatefulWidget {
   final ValueChanged<String>? onToggleSpotted;
 
   /// Claims a species for a player. Non-null only while a game is running.
-  final ValueChanged<Species>? onClaim;
+  ///
+  /// Takes a callback that opens the field-guide entry, because the claim sheet
+  /// offers it as an escape hatch and this screen is what owns the photo
+  /// credits the detail screen needs.
+  final void Function(Species species, VoidCallback openDetail)? onClaim;
 
   /// The running game, if any. Drives the chances-remaining badge.
   final Scorecard? card;
@@ -71,6 +75,7 @@ class _CodexScreenState extends State<CodexScreen> {
   ParkRegion? _region;
   SpeciesTag? _tag;
   SpottedFilter _spotted = SpottedFilter.all;
+  SpeciesSort _sort = SpeciesSort.rarest;
   bool _filtersExpanded = false;
   Map<String, String> _credits = const <String, String>{};
 
@@ -123,7 +128,7 @@ class _CodexScreenState extends State<CodexScreen> {
             (_tag == null || species.tags.contains(_tag)) &&
             _spotted.matches(widget.caughtIds.contains(species.id)))
           species,
-    ];
+    ]..sort(_sort.compare);
   }
 
   /// Chances remaining today, or null when unlimited or no game is running.
@@ -214,53 +219,35 @@ class _CodexScreenState extends State<CodexScreen> {
                       count: visible.length,
                       total: all.length,
                       activeFilterCount: _activeFilterCount,
+                      sort: _sort,
+                      onSort: () => setState(() => _sort = _sort.next),
                       onClear: _clearFilters,
                     ),
                     Expanded(
                       child: visible.isEmpty
                           ? const _EmptyState()
-                          : GridView.builder(
-                              padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
-                              // maxCrossAxisExtent rather than a fixed column
-                              // count, so a small phone gets 2 columns and a
-                              // tablet gets 4 without any breakpoint logic.
-                              gridDelegate:
-                                  const SliverGridDelegateWithMaxCrossAxisExtent(
-                                    maxCrossAxisExtent: 190,
-                                    mainAxisSpacing: 12,
-                                    crossAxisSpacing: 12,
-                                    childAspectRatio:
-                                        SpeciesGridCard.aspectRatio,
+                          : CustomScrollView(
+                              slivers: <Widget>[
+                                SliverPadding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                    16,
+                                    4,
+                                    16,
+                                    Space.xl,
                                   ),
-                              itemCount: visible.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                final Species species = visible[index];
-                                return SpeciesGridCard(
-                                  species: species,
-                                  // Three-state Codex, per MASTER-VISION.md:
-                                  // undiscovered species show as silhouettes.
-                                  // The tile is the tease; the detail screen
-                                  // still carries the full field-guide entry,
-                                  // so the free tier stays genuinely useful.
-                                  locked: !widget.caughtIds.contains(
-                                    species.id,
-                                  ),
-                                  onToggleSpotted:
-                                      widget.onToggleSpotted == null
-                                      ? null
-                                      : () =>
-                                            widget.onToggleSpotted!(species.id),
-                                  // During a game the whole tile is the claim
-                                  // target. Opening a field-guide entry is not
-                                  // what anyone wants while an animal is still
-                                  // in view.
-                                  onTap: widget.onClaim == null
-                                      ? () => _openDetail(species)
-                                      : () => widget.onClaim!(species),
-                                  onLongPress: () => _openDetail(species),
-                                  chancesLeft: _chancesLeft(species),
-                                );
-                              },
+                                  sliver: _grid(visible),
+                                ),
+                                // The park boundary, stated once, at the point
+                                // where someone has just scrolled the whole
+                                // catalogue and might reasonably wonder where
+                                // the rest of Africa is.
+                                const SliverToBoxAdapter(
+                                  child: ComingSoonParks(),
+                                ),
+                                const SliverToBoxAdapter(
+                                  child: SizedBox(height: 110),
+                                ),
+                              ],
                             ),
                     ),
                   ],
@@ -268,6 +255,45 @@ class _CodexScreenState extends State<CodexScreen> {
               },
         ),
       ),
+    );
+  }
+
+  Widget _grid(List<Species> visible) {
+    return SliverGrid.builder(
+      // maxCrossAxisExtent rather than a fixed column
+      // count, so a small phone gets 2 columns and a
+      // tablet gets 4 without any breakpoint logic.
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 190,
+        mainAxisSpacing: 12,
+        crossAxisSpacing: 12,
+        childAspectRatio: SpeciesGridCard.aspectRatio,
+      ),
+      itemCount: visible.length,
+      itemBuilder: (BuildContext context, int index) {
+        final Species species = visible[index];
+        return SpeciesGridCard(
+          species: species,
+          // Three-state Codex, per MASTER-VISION.md:
+          // undiscovered species show as silhouettes.
+          // The tile is the tease; the detail screen
+          // still carries the full field-guide entry,
+          // so the free tier stays genuinely useful.
+          locked: !widget.caughtIds.contains(species.id),
+          onToggleSpotted: widget.onToggleSpotted == null
+              ? null
+              : () => widget.onToggleSpotted!(species.id),
+          // During a game the whole tile is the claim
+          // target. Opening a field-guide entry is not
+          // what anyone wants while an animal is still
+          // in view.
+          onTap: widget.onClaim == null
+              ? () => _openDetail(species)
+              : () => widget.onClaim!(species, () => _openDetail(species)),
+          onLongPress: () => _openDetail(species),
+          chancesLeft: _chancesLeft(species),
+        );
+      },
     );
   }
 }
@@ -463,6 +489,39 @@ class _QuickFilterRow extends StatelessWidget {
   }
 }
 
+/// How the grid is ordered.
+///
+/// Rarest first is the default, and it is a product decision rather than a
+/// neutral one. A catalogue that opens on impala says "here is a list of
+/// animals"; one that opens on pangolin says "here is what you are hunting
+/// for". The second is the app. Dex order remains available because a numbered
+/// catalogue is genuinely easier to hold in your head over a week.
+enum SpeciesSort {
+  rarest(label: 'Rarest first'),
+  dex(label: 'Dex order'),
+  alphabetical(label: 'A–Z');
+
+  const SpeciesSort({required this.label});
+
+  final String label;
+
+  int compare(Species a, Species b) => switch (this) {
+    SpeciesSort.rarest => _byTier(a, b),
+    SpeciesSort.dex => a.dexNumber.compareTo(b.dexNumber),
+    SpeciesSort.alphabetical => a.commonName.compareTo(b.commonName),
+  };
+
+  static int _byTier(Species a, Species b) {
+    final int tier = RarityTier.values
+        .indexOf(b.rarityTier)
+        .compareTo(RarityTier.values.indexOf(a.rarityTier));
+    return tier != 0 ? tier : a.commonName.compareTo(b.commonName);
+  }
+
+  SpeciesSort get next =>
+      SpeciesSort.values[(index + 1) % SpeciesSort.values.length];
+}
+
 /// Whether a species has been spotted.
 ///
 /// This is why the collection grid does not also live on the Profile — one
@@ -643,12 +702,16 @@ class _ResultBar extends StatelessWidget {
     required this.count,
     required this.total,
     required this.activeFilterCount,
+    required this.sort,
+    required this.onSort,
     required this.onClear,
   });
 
   final int count;
   final int total;
   final int activeFilterCount;
+  final SpeciesSort sort;
+  final VoidCallback onSort;
   final VoidCallback onClear;
 
   @override
@@ -657,16 +720,22 @@ class _ResultBar extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 12, 16, 8),
       child: Row(
         children: <Widget>[
-          Text(
-            count == total ? 'All $total species' : '$count of $total species',
-            style: const TextStyle(
-              color: AppColors.textMuted,
-              fontSize: 11.5,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 0.3,
+          // Flexible rather than followed by a Spacer: with a filter active
+          // there are now two buttons on this row, and at large accessibility
+          // text scales the fixed count was what pushed it over the edge.
+          Expanded(
+            child: Text(
+              count == total ? 'All $total species' : '$count of $total',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: AppColors.textMuted,
+                fontSize: 11.5,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.3,
+              ),
             ),
           ),
-          const Spacer(),
           if (activeFilterCount > 0)
             TextButton(
               onPressed: onClear,
@@ -681,6 +750,22 @@ class _ResultBar extends StatelessWidget {
                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
               ),
             ),
+          // Cycles rather than opening a menu. Three options is under the
+          // threshold where a menu earns its extra tap.
+          TextButton.icon(
+            onPressed: onSort,
+            icon: const Icon(Icons.swap_vert_rounded, size: 16),
+            label: Text(
+              sort.label,
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
+            ),
+            style: TextButton.styleFrom(
+              foregroundColor: AppColors.textSecondary,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              minimumSize: Size.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+          ),
         ],
       ),
     );

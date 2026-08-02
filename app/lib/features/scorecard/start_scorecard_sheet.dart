@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../domain/avatar_seed.dart';
 import '../../shared/theme.dart';
+import '../../shared/widgets/avatar_badge.dart';
 
 /// Add everyone in the car, then start.
 ///
@@ -8,15 +10,23 @@ import '../../shared/theme.dart';
 /// do any of that, and every field added here is a family that gives up and
 /// uses paper instead.
 class StartScorecardSheet extends StatefulWidget {
-  const StartScorecardSheet({super.key});
+  const StartScorecardSheet({this.owner, super.key});
+
+  /// The account holder's name, pre-added and not removable.
+  ///
+  /// You are in the car. Making the phone's owner type their own name every
+  /// morning is friction for nothing — and, more importantly, it is how a day's
+  /// claims fail to reach their permanent collection, because a guest called
+  /// "alex" is not the same person as the account.
+  final String? owner;
 
   /// Returns the player names, or null if dismissed.
-  static Future<List<String>?> show(BuildContext context) {
+  static Future<List<String>?> show(BuildContext context, {String? owner}) {
     return showModalBottomSheet<List<String>>(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (BuildContext context) => const StartScorecardSheet(),
+      builder: (BuildContext context) => StartScorecardSheet(owner: owner),
     );
   }
 
@@ -30,6 +40,17 @@ class _StartScorecardSheetState extends State<StartScorecardSheet> {
   final FocusNode _focus = FocusNode();
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.owner != null) {
+      _names.add(widget.owner!);
+    }
+  }
+
+  bool _isOwner(String name) =>
+      widget.owner != null && name.toLowerCase() == widget.owner!.toLowerCase();
+
+  @override
   void dispose() {
     _controller.dispose();
     _focus.dispose();
@@ -38,7 +59,8 @@ class _StartScorecardSheetState extends State<StartScorecardSheet> {
 
   void _add() {
     final String name = _controller.text.trim().replaceAll(RegExp(r'\s+'), ' ');
-    if (name.isEmpty || _names.contains(name)) {
+    if (name.isEmpty ||
+        _names.any((String n) => n.toLowerCase() == name.toLowerCase())) {
       return;
     }
     setState(() {
@@ -73,8 +95,11 @@ class _StartScorecardSheetState extends State<StartScorecardSheet> {
               Text("Who's in the car?", style: AppText.title2),
               const SizedBox(height: Space.xs),
               Text(
-                'Add everyone playing today. Names only.',
-                style: AppText.caption,
+                widget.owner == null
+                    ? 'Add everyone playing today. Names only.'
+                    : 'Add everyone playing today. Whatever you claim also '
+                          'goes to your own collection.',
+                style: AppText.caption.copyWith(height: 1.45),
               ),
               const SizedBox(height: Space.screen),
               Row(
@@ -117,10 +142,35 @@ class _StartScorecardSheetState extends State<StartScorecardSheet> {
                   children: <Widget>[
                     for (final String name in _names)
                       InputChip(
-                        label: Text(name, style: AppText.label),
-                        onDeleted: () => setState(() => _names.remove(name)),
-                        backgroundColor: AppColors.surfaceAlt,
-                        side: const BorderSide(color: AppColors.outline),
+                        avatar: _isOwner(name)
+                            ? AvatarBadge(
+                                avatar: AvatarSeed.forName(name),
+                                size: 26,
+                              )
+                            // Guests are dealt a face when the day starts, not
+                            // here — the reveal is part of kicking off.
+                            : const Icon(
+                                Icons.person_rounded,
+                                size: 17,
+                                color: AppColors.textMuted,
+                              ),
+                        label: Text(
+                          _isOwner(name) ? '$name · you' : name,
+                          style: AppText.label,
+                        ),
+                        // The account holder cannot be removed. Playing without
+                        // yourself in the car is not a thing anyone means to do.
+                        onDeleted: _isOwner(name)
+                            ? null
+                            : () => setState(() => _names.remove(name)),
+                        backgroundColor: _isOwner(name)
+                            ? AppColors.accentWash
+                            : AppColors.surfaceAlt,
+                        side: BorderSide(
+                          color: _isOwner(name)
+                              ? AppColors.accent.withValues(alpha: 0.4)
+                              : AppColors.outline,
+                        ),
                       ),
                   ],
                 ),

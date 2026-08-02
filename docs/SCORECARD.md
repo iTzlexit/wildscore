@@ -23,6 +23,61 @@ actually played and how the Vehicle Pass is priced.
 
 ---
 
+## You are in the car
+
+One player is the phone's account holder. They are added automatically, they
+cannot be removed, and they are flagged `isOwner` on the scorecard.
+
+That flag is load-bearing. **Whatever the owner claims is also written to their
+permanent record** — the species joins their collection, and the points join
+their lifetime total. Everyone else in the car is a guest on this phone: their
+claims count for the day and then they are gone.
+
+Crediting a guest's leopard to the owner's collection would make the collection
+untrustworthy, which is the one thing it cannot be — the whole product rests on
+"your sightings live here".
+
+Three consequences worth stating, because each one is a way the total could
+silently drift:
+
+- **Undo reverses the credit.** Fixing a mis-tap must not leave the points
+  behind.
+- **Restart reverses the whole day's credit.** Otherwise restarting is a way to
+  farm points.
+- **Neither un-spots the species.** It may well have been seen on an earlier
+  trip; deleting a real record to correct a fake one is the worse error.
+
+Ending the day does *not* reverse anything. That is the difference between
+restarting and ending.
+
+## Restart vs End day
+
+Two different intentions, so two different controls, both confirmed:
+
+| | Players | Today's claims | Owner's lifetime total |
+|---|---|---|---|
+| **Restart** | kept | wiped | refunded |
+| **End day** | cleared | cleared | kept |
+
+Restarting is "we mis-scored the first hour" and happens mid-morning. Ending is
+"we are done and it counts" and happens once. Making a family retype four names
+to fix a scoring mistake is how you lose them back to paper.
+
+## Avatars
+
+Every player gets an animal face, and the rule differs by who they are:
+
+- **The account holder's avatar is derived from their name** and never changes.
+  It survives a reinstall, and it is how other players will recognise them on
+  the leaderboard later.
+- **Guests are dealt a random face per game**, distinct within the car. A new
+  scorecard dealing new animals is part of the ritual of starting a day.
+
+Stored as an **index**, never as an image, so the artwork can be redrawn later
+without migrating a single saved profile.
+
+---
+
 ## Who called it
 
 Tapping a tile opens a short list of the day's players. One tap assigns it.
@@ -254,16 +309,17 @@ Three things to get right when it comes:
 
 Offline-only, no backend, in order:
 
-1. Players for a day — add, remove, persist locally
-2. Start / end a scorecard, one active at a time
-3. Claim a species → assign to a player
-4. Chances, and tiles locking when spent
-5. Live standings on the Profile tab
-6. Day log — every claim, timestamped, reassignable for five minutes
-7. House rules setup screen
-8. Big Five / Big Six bonuses
-9. End-of-day summary worth screenshotting
-10. **Then** the leaderboard, once there is something to submit
+1. ✅ Players for a day — add, remove, persist locally
+2. ✅ Start / restart / end a scorecard, one active at a time
+3. ✅ Claim a species → assign to a player
+4. ✅ Chances, and tiles locking when spent
+5. ✅ Live standings on the Profile tab, with per-player hauls
+6. ✅ The owner's claims reaching their permanent collection
+7. Day log — every claim, timestamped, reassignable for five minutes
+8. House rules setup screen
+9. Big Five / Big Six bonuses, First Call double
+10. End-of-day summary worth screenshotting
+11. **Then** the leaderboard, once there is something to submit
 
-Steps 1–9 need no network at all, which is the condition this will actually be
+Steps 1–10 need no network at all, which is the condition this will actually be
 used in.

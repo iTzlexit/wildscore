@@ -155,7 +155,7 @@ class _WelcomeStep extends StatelessWidget {
             icon: Icons.auto_awesome_rounded,
             text:
                 'Earn points for how hard it was to find. '
-                'An impala is 5. A pangolin is 500.',
+                'An impala is 5. A pangolin is 2500.',
           ),
           const _PitchLine(
             icon: Icons.inventory_2_rounded,

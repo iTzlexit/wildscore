@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:wildscore/domain/avatar_seed.dart';
 import 'package:wildscore/domain/rarity_tier.dart';
 import 'package:wildscore/domain/scorecard.dart';
 
@@ -38,6 +39,56 @@ void main() {
       for (final Player p in card.players) {
         expect(card.pointsFor(p.id), 0);
       }
+    });
+  });
+
+  group('the account holder in the car', () {
+    test('is flagged, so their claims can reach a permanent collection', () {
+      final Scorecard card = Scorecard.start(
+        <String>['Alex', 'Sam'],
+        owner: 'Alex',
+        now: DateTime(2026, 8, 2, 6),
+      );
+
+      expect(card.owner?.name, 'Alex');
+      expect(card.players[1].isOwner, isFalse);
+    });
+
+    test('is matched regardless of how the name was typed', () {
+      final Scorecard card = Scorecard.start(
+        <String>['  alex ', 'Sam'],
+        owner: 'Alex',
+        now: DateTime(2026, 8, 2, 6),
+      );
+
+      expect(card.owner?.name, 'alex');
+    });
+
+    test('keeps their permanent avatar', () {
+      final Scorecard card = Scorecard.start(
+        <String>['Alex', 'Sam'],
+        owner: 'Alex',
+        now: DateTime(2026, 8, 2, 6),
+      );
+
+      expect(card.owner?.avatar, AvatarSeed.forName('Alex'));
+    });
+
+    test('does not share a face with anyone else in the car', () {
+      final Scorecard card = Scorecard.start(
+        <String>['Alex', 'Sam', 'Jo', 'Thandi'],
+        owner: 'Alex',
+        now: DateTime(2026, 8, 2, 6),
+      );
+
+      expect(card.players.map((Player p) => p.avatar).toSet().length, 4);
+    });
+
+    test('is absent when nobody signed in — a guest-only game still works', () {
+      final Scorecard card = _card();
+
+      expect(card.owner, isNull);
+      expect(card.players.every((Player p) => !p.isOwner), isTrue);
     });
   });
 
@@ -189,10 +240,47 @@ void main() {
     });
   });
 
+  group('restarting', () {
+    test('keeps the car and drops the claims', () {
+      final Scorecard card = _card()
+          .withClaim(_claim('lion', 'p0', 40))
+          .withClaim(_claim('impala', 'p1', 5));
+
+      final Scorecard after = card.restarted;
+
+      expect(after.claims, isEmpty);
+      expect(after.players, card.players);
+      expect(after.startedAt, card.startedAt);
+    });
+
+    test('leaves the original alone', () {
+      final Scorecard card = _card().withClaim(_claim('lion', 'p0', 40));
+      card.restarted;
+
+      expect(card.claims.length, 1);
+    });
+  });
+
+  test('speciesClaimedBy is one player only', () {
+    final Scorecard card = _card();
+    final String alex = card.players[0].id;
+    final String sam = card.players[1].id;
+
+    final Scorecard after = card
+        .withClaim(_claim('lion', alex, 40))
+        .withClaim(_claim('lion', alex, 40))
+        .withClaim(_claim('impala', sam, 5));
+
+    expect(after.speciesClaimedBy(alex), <String>{'lion'});
+    expect(after.speciesClaimedBy(sam), <String>{'impala'});
+  });
+
   test('survives a JSON round trip', () {
-    final Scorecard card = _card().withClaim(
-      _claim('leopard', 'p0-x', 100, minute: 3),
-    );
+    final Scorecard card = Scorecard.start(
+      <String>['Alex', 'Sam'],
+      owner: 'Alex',
+      now: DateTime(2026, 8, 2, 6),
+    ).withClaim(_claim('leopard', 'p0-x', 100, minute: 3));
     final Scorecard restored = Scorecard.fromJson(card.toJson());
 
     expect(restored.players.length, card.players.length);
@@ -200,6 +288,23 @@ void main() {
     expect(restored.claims.single.points, 100);
     expect(restored.claims.single.speciesId, 'leopard');
     expect(restored.startedAt, card.startedAt);
+    expect(restored.owner?.name, 'Alex', reason: 'the owner flag persists');
+    expect(restored.players.first.avatar, card.players.first.avatar);
+  });
+
+  test('a game saved before avatars existed still loads', () {
+    // Shipped builds have scorecards in shared_preferences. A field added
+    // today must not wedge someone mid-trip.
+    final Scorecard restored = Scorecard.fromJson(<String, dynamic>{
+      'startedAt': '2026-08-02T06:00:00.000',
+      'players': <Map<String, dynamic>>[
+        <String, dynamic>{'id': 'p0', 'name': 'Alex'},
+      ],
+      'claims': <Map<String, dynamic>>[],
+    });
+
+    expect(restored.players.single.name, 'Alex');
+    expect(restored.players.single.isOwner, isFalse);
   });
 
   test('claimedSpecies is the set the Codex colours by', () {
