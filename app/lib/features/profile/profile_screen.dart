@@ -1,42 +1,36 @@
 import 'package:flutter/material.dart';
 
-import '../../domain/scorecard.dart';
 import '../../domain/species.dart';
 import '../../domain/species_category.dart';
 import '../../domain/tracker_profile.dart';
+import '../../domain/visit.dart';
 import '../../shared/theme.dart';
 import '../../shared/widgets/app_header.dart';
 import '../../shared/widgets/avatar_badge.dart';
 import '../codex/collection_screen.dart';
-import '../scorecard/standings_board.dart';
+import 'visit_history_screen.dart';
 
-/// The Spotter's own record: progress, then numbers, then recent catches.
+/// One person's record. Not the day's game — that has its own tab.
 ///
 /// **The collection grid deliberately does not live here.** It belongs in the
 /// Animal Dex, filtered by Spotted / Not spotted — one grid, one place. A
 /// profile that repeats the whole Codex makes both screens feel like the same
 /// screen.
 ///
-/// Opens on Today, because during a trip that is the number the car is arguing
-/// about. Lifetime is the trophy shelf you visit afterwards.
+/// There is no Today / Lifetime toggle any more. It asked people to choose
+/// which question they were asking before showing them anything, and only one
+/// of the two answers belonged here: a profile answers "how am I doing
+/// overall". The day's score lives where the day lives.
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
     required this.profile,
     required this.species,
     this.caughtIds = const <String>{},
-    this.lifetimePoints = 0,
-    this.card,
-    this.onStartScorecard,
-    this.onEndScorecard,
-    this.onRestartScorecard,
+    this.visits = const <Visit>[],
+    this.driveInPlay = false,
+    this.onOpenGame,
     super.key,
   });
-
-  /// The day's game, if one is running.
-  final Scorecard? card;
-  final VoidCallback? onStartScorecard;
-  final VoidCallback? onEndScorecard;
-  final VoidCallback? onRestartScorecard;
 
   final TrackerProfile profile;
   final List<Species> species;
@@ -44,32 +38,24 @@ class ProfileScreen extends StatefulWidget {
   /// Empty until Phase 2. Every number here already reads from it.
   final Set<String> caughtIds;
 
-  /// Points this account has earned across every day it has played.
-  final int lifetimePoints;
+  /// Every day this account has finished, newest first. The lifetime total is
+  /// derived from it rather than stored — see data/visit_repository.dart.
+  final List<Visit> visits;
+
+  /// A drive is running on the Wild Score tab. Worth a pointer, since this
+  /// screen deliberately does not show it.
+  final bool driveInPlay;
+  final VoidCallback? onOpenGame;
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-enum ProfileScope {
-  today(label: 'Today'),
-  lifetime(label: 'Lifetime');
-
-  const ProfileScope({required this.label});
-
-  final String label;
-}
-
 class _ProfileScreenState extends State<ProfileScreen> {
-  ProfileScope _scope = ProfileScope.today;
-
-  /// Today shows the car's running total; Lifetime shows only what this
-  /// account has earned. Two different questions, and conflating them is how a
-  /// leaderboard ends up unusable.
-  int get _points => switch (_scope) {
-    ProfileScope.today => widget.card?.totalPoints ?? 0,
-    ProfileScope.lifetime => widget.lifetimePoints,
-  };
+  /// Derived, never stored. A running total drifts — every undo and restart is
+  /// another chance for it to be wrong, with nothing to check it against.
+  int get _lifetimePoints =>
+      widget.visits.fold(0, (int sum, Visit v) => sum + v.ownerPoints);
 
   void _openCollection(CollectionMode mode) {
     CollectionScreen.open(
@@ -100,45 +86,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   110,
                 ),
                 children: <Widget>[
-                  // Order is by what someone actually opens this screen to see.
-                  // During a trip that is today's score, then the standings, then
-                  // everything else. The lifetime record is a trophy shelf, and a
-                  // trophy shelf does not go by the front door.
+                  // This screen is now one person's record and nothing else.
+                  // The day's game moved to its own tab: a drive belongs to the
+                  // vehicle and a profile belongs to a person, and having them
+                  // share a screen meant neither had room.
                   _Identity(profile: widget.profile),
                   const SizedBox(height: Space.xl),
-                  _ScopeToggle(
-                    scope: _scope,
-                    onChanged: (ProfileScope s) => setState(() => _scope = s),
-                  ),
-                  const SizedBox(height: Space.lg),
-                  _ProgressCard(
-                    // Today counts what the car has claimed since the gate;
-                    // Lifetime counts the collection. Showing a lifetime bar
-                    // under a "POINTS TODAY" heading was two answers to two
-                    // different questions stacked on top of each other.
-                    spotted: _scope == ProfileScope.today
-                        ? widget.card?.claimedSpecies.length ?? 0
-                        : spotted,
+                  _LifetimeCard(
+                    points: _lifetimePoints,
+                    drives: widget.visits.length,
+                    spotted: spotted,
                     total: total,
-                    points: _points,
-                    scope: _scope,
-                    playerCount: _scope == ProfileScope.today
-                        ? widget.card?.players.length ?? 0
-                        : 0,
-                  ),
-                  const SizedBox(height: Space.lg),
-                  if (widget.card != null) ...<Widget>[
-                    _ScorecardPanel(
-                      card: widget.card!,
+                    onTap: () => VisitHistoryScreen.open(
+                      context,
+                      visits: widget.visits,
                       species: widget.species,
-                      onEnd: widget.onEndScorecard,
-                      onRestart: widget.onRestartScorecard,
                     ),
-                    const SizedBox(height: Space.lg),
-                  ] else if (widget.onStartScorecard != null) ...<Widget>[
-                    _StartScorecardCard(onStart: widget.onStartScorecard!),
-                    const SizedBox(height: Space.lg),
+                  ),
+                  if (widget.driveInPlay) ...<Widget>[
+                    const SizedBox(height: Space.md),
+                    _DriveInPlayLink(onTap: widget.onOpenGame),
                   ],
+                  const SizedBox(height: Space.lg),
                   _Numbers(
                     spotted: spotted,
                     total: total,
@@ -160,88 +129,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-/// No game running: the invitation to start one.
-class _StartScorecardCard extends StatelessWidget {
-  const _StartScorecardCard({required this.onStart});
+/// A quiet pointer to the other tab. Not the game itself — just an
+/// acknowledgement that one is running, so the profile does not look like it
+/// has forgotten.
+class _DriveInPlayLink extends StatelessWidget {
+  const _DriveInPlayLink({this.onTap});
 
-  final VoidCallback onStart;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(Space.screen),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(Radii.card),
-        border: Border.all(color: AppColors.outline),
-        boxShadow: AppColors.shadowSm,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text("Today's scorecard", style: AppText.title3),
-          const SizedBox(height: Space.xs),
-          Text(
-            'Everyone in the car plays. Whoever calls it first gets the '
-            'points.',
-            style: AppText.caption.copyWith(height: 1.45),
-          ),
-          const SizedBox(height: Space.lg),
-          SizedBox(
-            width: double.infinity,
-            height: 48,
-            child: FilledButton.icon(
-              onPressed: onStart,
-              icon: const Icon(Icons.play_arrow_rounded, size: 20),
-              label: Text(
-                'Start a game',
-                style: AppText.bodyStrong.copyWith(color: AppColors.accentInk),
-              ),
-              style: FilledButton.styleFrom(
-                backgroundColor: AppColors.accent,
-                foregroundColor: AppColors.accentInk,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(Radii.chip),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Game running: live standings.
-class _ScorecardPanel extends StatelessWidget {
-  const _ScorecardPanel({
-    required this.card,
-    required this.species,
-    this.onEnd,
-    this.onRestart,
-  });
-
-  final Scorecard card;
-  final List<Species> species;
-  final VoidCallback? onEnd;
-  final VoidCallback? onRestart;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(Space.screen),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
+    return Material(
+      color: AppColors.accentWash,
+      borderRadius: BorderRadius.circular(Radii.card),
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(Radii.card),
-        border: Border.all(color: AppColors.accent, width: 1.5),
-        boxShadow: AppColors.shadowSm,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
+        child: Padding(
+          padding: const EdgeInsets.all(Space.lg),
+          child: Row(
             children: <Widget>[
               Container(
                 width: 8,
@@ -251,65 +157,127 @@ class _ScorecardPanel extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
               ),
-              const SizedBox(width: Space.sm),
-              Text(
-                'GAME IN PLAY',
-                style: AppText.overline.copyWith(color: AppColors.accent),
+              const SizedBox(width: Space.md),
+              Expanded(
+                child: Text(
+                  'A drive is in play',
+                  style: AppText.label.copyWith(
+                    color: AppColors.accent,
+                    fontVariations: AppFonts.weight(700),
+                  ),
+                ),
               ),
-              const Spacer(),
-              Text('${card.claims.length} spotted', style: AppText.caption),
+              const Icon(
+                Icons.chevron_right_rounded,
+                size: 18,
+                color: AppColors.accent,
+              ),
             ],
           ),
-          const SizedBox(height: Space.lg),
-          StandingsBoard(card: card, species: species),
-          const SizedBox(height: Space.sm),
-          Text(
-            'Tap any animal in the Animal Dex to claim it.',
-            style: AppText.caption,
+        ),
+      ),
+    );
+  }
+}
+
+/// The headline number, and the way into the days behind it.
+///
+/// One number rather than a Today/Lifetime toggle. The toggle asked people to
+/// choose which question they were asking before showing them anything, and
+/// "how am I doing overall" is the only question a profile should answer — the
+/// day's score lives on the Wild Score tab, where the day lives.
+class _LifetimeCard extends StatelessWidget {
+  const _LifetimeCard({
+    required this.points,
+    required this.drives,
+    required this.spotted,
+    required this.total,
+    required this.onTap,
+  });
+
+  final int points;
+  final int drives;
+  final int spotted;
+  final int total;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final double fraction = total == 0 ? 0 : spotted / total;
+    final int percent = (fraction * 100).round();
+
+    return Material(
+      color: AppColors.surface,
+      borderRadius: BorderRadius.circular(Radii.card),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(Radii.card),
+        child: Container(
+          padding: const EdgeInsets.all(Space.screen),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(Radii.card),
+            border: Border.all(color: AppColors.outline),
           ),
-          const SizedBox(height: Space.md),
-          const Divider(height: 1, color: AppColors.outline),
-          const SizedBox(height: Space.xs),
-          // Restart and End are deliberately different weights. Restarting is
-          // a correction and happens mid-morning; ending the day is final and
-          // happens once. Both confirm before they act.
-          Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              if (onRestart != null)
-                TextButton.icon(
-                  onPressed: onRestart,
-                  icon: const Icon(Icons.restart_alt_rounded, size: 17),
-                  label: Text(
-                    'Restart',
+              Text(
+                '$points',
+                style: AppText.display.copyWith(
+                  color: AppColors.accent,
+                  fontFeatures: AppText.tabular,
+                ),
+              ),
+              const SizedBox(height: Space.xs),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Text('LIFETIME POINTS', style: AppText.overline),
+                  ),
+                  Text(
+                    drives == 0
+                        ? 'No drives yet'
+                        : '$drives ${drives == 1 ? 'drive' : 'drives'}',
+                    style: AppText.caption,
+                  ),
+                  const SizedBox(width: 2),
+                  const Icon(
+                    Icons.chevron_right_rounded,
+                    size: 17,
+                    color: AppColors.textMuted,
+                  ),
+                ],
+              ),
+              const SizedBox(height: Space.screen),
+              Row(
+                children: <Widget>[
+                  Text('$spotted of $total spotted', style: AppText.label),
+                  const Spacer(),
+                  Text(
+                    '$percent%',
                     style: AppText.label.copyWith(
-                      color: AppColors.textSecondary,
+                      color: AppColors.accent,
+                      fontVariations: AppFonts.weight(800),
+                      fontFeatures: AppText.tabular,
                     ),
                   ),
-                  style: TextButton.styleFrom(
-                    foregroundColor: AppColors.textSecondary,
-                    padding: const EdgeInsets.symmetric(horizontal: Space.sm),
-                    minimumSize: Size.zero,
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ],
+              ),
+              const SizedBox(height: Space.sm),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: LinearProgressIndicator(
+                  value: fraction,
+                  minHeight: 6,
+                  backgroundColor: AppColors.surfaceAlt,
+                  valueColor: const AlwaysStoppedAnimation<Color>(
+                    AppColors.accent,
                   ),
                 ),
-              const Spacer(),
-              if (onEnd != null)
-                TextButton(
-                  onPressed: onEnd,
-                  style: TextButton.styleFrom(
-                    foregroundColor: AppColors.danger,
-                    padding: const EdgeInsets.symmetric(horizontal: Space.sm),
-                    minimumSize: Size.zero,
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                  child: Text(
-                    'End day',
-                    style: AppText.label.copyWith(color: AppColors.danger),
-                  ),
-                ),
+              ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -347,146 +315,6 @@ class _Identity extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _ScopeToggle extends StatelessWidget {
-  const _ScopeToggle({required this.scope, required this.onChanged});
-
-  final ProfileScope scope;
-  final ValueChanged<ProfileScope> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(3),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(Radii.chip + 3),
-        border: Border.all(color: AppColors.outline),
-      ),
-      child: Row(
-        children: <Widget>[
-          for (final ProfileScope value in ProfileScope.values)
-            Expanded(
-              child: GestureDetector(
-                onTap: () => onChanged(value),
-                behavior: HitTestBehavior.opaque,
-                child: AnimatedContainer(
-                  duration: Motion.chip,
-                  curve: Motion.exit,
-                  padding: const EdgeInsets.symmetric(vertical: 9),
-                  decoration: BoxDecoration(
-                    color: scope == value
-                        ? AppColors.accent
-                        : Colors.transparent,
-                    borderRadius: BorderRadius.circular(Radii.chip),
-                  ),
-                  child: Text(
-                    value.label,
-                    textAlign: TextAlign.center,
-                    style: AppText.label.copyWith(
-                      color: scope == value
-                          ? AppColors.accentInk
-                          : AppColors.textSecondary,
-                      fontVariations: AppFonts.weight(
-                        scope == value ? 700 : 500,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Score and completion in one card, because they answer the same question:
-/// how am I doing?
-class _ProgressCard extends StatelessWidget {
-  const _ProgressCard({
-    required this.spotted,
-    required this.total,
-    required this.points,
-    required this.scope,
-    required this.playerCount,
-  });
-
-  final int spotted;
-  final int total;
-  final int points;
-  final ProfileScope scope;
-
-  /// Non-zero while a game is running, so the label can say whose points these
-  /// are — "everyone's" is a different number from "mine".
-  final int playerCount;
-
-  @override
-  Widget build(BuildContext context) {
-    final double fraction = total == 0 ? 0 : spotted / total;
-    final int percent = (fraction * 100).round();
-
-    return Container(
-      padding: const EdgeInsets.all(Space.screen),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(Radii.card),
-        border: Border.all(color: AppColors.outline),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            '$points',
-            style: AppText.display.copyWith(
-              color: AppColors.accent,
-              fontFeatures: AppText.tabular,
-            ),
-          ),
-          const SizedBox(height: Space.xs),
-          Text(
-            playerCount > 0
-                ? 'POINTS TODAY · $playerCount PLAYING'
-                : scope == ProfileScope.today
-                ? 'POINTS TODAY'
-                : 'LIFETIME POINTS',
-            style: AppText.overline,
-          ),
-          const SizedBox(height: Space.screen),
-          Row(
-            children: <Widget>[
-              Text(
-                scope == ProfileScope.today
-                    ? '$spotted spotted today'
-                    : '$spotted of $total spotted',
-                style: AppText.label,
-              ),
-              const Spacer(),
-              Text(
-                '$percent%',
-                style: AppText.label.copyWith(
-                  color: AppColors.accent,
-                  fontVariations: AppFonts.weight(800),
-                  fontFeatures: AppText.tabular,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: Space.sm),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: LinearProgressIndicator(
-              value: fraction,
-              minHeight: 6,
-              backgroundColor: AppColors.surfaceAlt,
-              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.accent),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

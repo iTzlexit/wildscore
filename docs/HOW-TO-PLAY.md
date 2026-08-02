@@ -13,12 +13,41 @@ win. At the end of the day the scores are added up and the argument is over.
 
 ---
 
-## Starting a day
+## Starting a drive
 
-**Start a scorecard** and add everyone in the vehicle by name. No accounts, no
-sign-ups — just names.
+**Start a drive** on the Wild Score tab. You are in it automatically; add
+everyone else in the vehicle by name. No accounts, no sign-ups — just names.
 
-One scorecard runs at a time, and it belongs to the car, not to a person.
+Playing on your own is a normal way to play, not a fallback. A solo drive scores
+exactly the same.
+
+One drive runs at a time, and it belongs to the car, not to a person.
+
+## The four rules that settle arguments
+
+These exist because a family already argued about them. The app cannot referee a
+disagreement it has no opinion on.
+
+### Inside the park only
+
+The gate is the boundary. An animal seen on the road in, on a private reserve,
+or from camp before the gates open does not count.
+
+### One sighting, one claim
+
+Turn around and come back to the same leopard and it is still the same leopard.
+Driving back for a second look is worth doing — it is just not worth points.
+
+### A pride is one lion
+
+You claim the sighting, not the animals in it. Twelve lions at a kill is one
+claim. So is a breeding herd of elephant and a tower of giraffe.
+
+### No asking at a jam
+
+A line of stopped cars means something good is ahead. **Nobody may ask a passing
+car what it is.** The point goes to whoever first sees the animal themselves —
+knowing it is there is not the same as finding it.
 
 ## Claiming a sighting
 
@@ -45,15 +74,15 @@ something better.
 Each species is worth points based on how genuinely hard it is to find in
 Kruger — not how famous it is. Lions are easier to find than sable.
 
-| Tier | Points |
-|---|---|
-| Common | 5 |
-| Frequent | 15 |
-| Notable | 30 |
-| Rare | 60 |
-| Very rare | 100 |
-| Exceptional | 200 |
-| Legendary | 400 |
+| Tier | Points | Claims a day |
+|---|---|---|
+| Common | 5 | 1 |
+| Frequent | 15 | 1 |
+| Notable | 40 | 3 |
+| Rare | 100 | unlimited |
+| Very rare | 250 | unlimited |
+| Exceptional | 750 | unlimited |
+| Legendary | 2,500 | unlimited |
 
 **First call of the day is worth double.** Whoever gets the first animal of the
 morning, whatever it is, takes twice the points. Being awake at the gate should
@@ -66,6 +95,19 @@ count for something.
 - **Big Six Birds in one day** — martial eagle, lappet-faced vulture,
   saddle-billed stork, kori bustard, ground hornbill and Pel's fishing owl.
   **+400**, and considerably harder than the Big Five.
+
+## Ending the day
+
+**End the day to bank it.** The drive is saved to your history — the date, the
+claims, and everyone who was in the car with their scores — and your own points
+join your lifetime total.
+
+Your points, not the car's. Everyone else's scores are kept with the day so you
+can look back and see who beat you, but they belong to that day rather than to
+your record.
+
+**Restart** wipes the day and keeps the car, for when the first hour was scored
+wrongly. Nothing has been banked at that point, so nothing is lost.
 
 ## Winning
 

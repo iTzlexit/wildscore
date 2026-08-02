@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 
-import '../data/lifetime_repository.dart';
 import '../data/scorecard_repository.dart';
 import '../data/species_repository.dart';
 import '../data/spotted_repository.dart';
+import '../data/visit_repository.dart';
 import '../domain/scorecard.dart';
 import '../domain/species.dart';
 import '../domain/tracker_profile.dart';
+import '../domain/visit.dart';
 import '../shared/theme.dart';
 import 'codex/codex_screen.dart';
 import 'leaderboard/leaderboard_screen.dart';
 import 'profile/profile_screen.dart';
 import 'scorecard/start_scorecard_sheet.dart';
 import 'scorecard/who_spotted_sheet.dart';
+import 'scorecard/wild_score_screen.dart';
 
-/// The three tabs, plus the camera.
+/// The four tabs, plus the camera.
 ///
-/// Order is deliberate: your own record first, the goal second, other people
-/// third. A player opens the app to see what they have, not to see a list of
-/// animals they do not.
+/// Order is deliberate: your own record first, today's game second, the goal
+/// third, other people last. A player opens the app to see what they have, not
+/// to see a list of animals they do not.
 ///
 /// Uses an [IndexedStack] so each tab keeps its scroll position and its search
 /// text when you switch away and back. Rebuilding the Codex from scratch every
@@ -40,7 +42,7 @@ class HomeShell extends StatefulWidget {
 class _HomeShellState extends State<HomeShell> {
   static const SpottedRepository _spottedRepo = SpottedRepository();
   static const ScorecardRepository _cardRepo = ScorecardRepository();
-  static const LifetimeRepository _lifetimeRepo = LifetimeRepository();
+  static const VisitRepository _visitRepo = VisitRepository();
 
   late final Future<List<Species>> _speciesFuture;
   int _tab = 0;
@@ -49,8 +51,8 @@ class _HomeShellState extends State<HomeShell> {
   /// counts it and the Dex colours by it.
   Set<String> _spotted = <String>{};
 
-  /// Points earned across every day, by this account only.
-  int _lifetimePoints = 0;
+  /// Every finished day. The lifetime total is derived from this, never stored.
+  List<Visit> _visits = const <Visit>[];
 
   /// The day's game, or null when none is running.
   Scorecard? _card;
@@ -64,9 +66,9 @@ class _HomeShellState extends State<HomeShell> {
         setState(() => _spotted = ids);
       }
     });
-    _lifetimeRepo.loadPoints().then((int points) {
+    _visitRepo.load().then((List<Visit> visits) {
       if (mounted) {
-        setState(() => _lifetimePoints = points);
+        setState(() => _visits = visits);
       }
     });
     _cardRepo.load().then((Scorecard? card) {
@@ -98,24 +100,51 @@ class _HomeShellState extends State<HomeShell> {
     }
   }
 
+  /// Ends the day and banks it.
+  ///
+  /// This is the only moment points become permanent. Crediting per claim was
+  /// simpler to explain but meant undo and restart each had to reverse
+  /// themselves correctly, and every one of those paths was a way for a
+  /// lifetime total to drift with nothing to check it against. Banking once, at
+  /// a deliberate act, removes the whole class of bug — and the day is
+  /// persisted throughout, so nothing is at risk if the phone dies at the gate.
   Future<void> _endScorecard() async {
-    // Confirmed, because the day's standings are gone afterwards. What the
-    // owner claimed is already in their lifetime record by this point — the
-    // credit happens per claim, not at the end, so a phone that dies at the
-    // gate still keeps the leopard.
+    final Scorecard? card = _card;
+    if (card == null) {
+      return;
+    }
+    final int mine = card.owner == null ? 0 : card.pointsFor(card.owner!.id);
     final bool ok = await _confirm(
       title: 'End the day?',
       message:
-          "Today's standings are cleared. Everything you claimed yourself "
-          'stays in your collection.',
+          'The drive is saved to your history with everyone who played, and '
+          'your $mine points join your lifetime total. This cannot be undone.',
       action: 'End day',
+      danger: false,
     );
     if (!ok) {
       return;
     }
+
+    final Visit visit = Visit.from(card);
+    final List<Visit> visits = await _visitRepo.add(visit);
+
+    // Everything the owner called today enters their collection. Guests' claims
+    // are saved with the day but go no further — they are not accounts on this
+    // phone, and a collection that includes other people's finds is a
+    // collection nobody can trust.
+    Set<String> spotted = _spotted;
+    for (final String id in visit.ownerSpecies) {
+      spotted = await _spottedRepo.add(spotted, id);
+    }
+
     await _cardRepo.clear();
     if (mounted) {
-      setState(() => _card = null);
+      setState(() {
+        _card = null;
+        _visits = visits;
+        _spotted = spotted;
+      });
     }
   }
 
@@ -127,36 +156,23 @@ class _HomeShellState extends State<HomeShell> {
       return;
     }
     final bool ok = await _confirm(
-      title: 'Restart the game?',
+      title: 'Restart the drive?',
       message:
           'Everyone keeps their place in the car, but every claim today is '
-          'wiped — including the points that went to your own total.',
+          'wiped. Nothing has been banked yet, so your record is untouched.',
       action: 'Restart',
     );
     if (!ok) {
       return;
     }
     await _updateCard(card.restarted);
-
-    // Wiping the day must wipe what the day gave the owner, otherwise a
-    // restart is a way to farm points. The species stay marked as spotted, for
-    // the same reason undo leaves them: they may predate today.
-    final String? ownerId = card.owner?.id;
-    if (ownerId != null) {
-      final int refund = card.pointsFor(ownerId);
-      if (refund > 0) {
-        final int points = await _lifetimeRepo.addPoints(-refund);
-        if (mounted) {
-          setState(() => _lifetimePoints = points);
-        }
-      }
-    }
   }
 
   Future<bool> _confirm({
     required String title,
     required String message,
     required String action,
+    bool danger = true,
   }) async {
     final bool? ok = await showDialog<bool>(
       context: context,
@@ -174,7 +190,7 @@ class _HomeShellState extends State<HomeShell> {
             child: Text(
               action,
               style: AppText.label.copyWith(
-                color: AppColors.danger,
+                color: danger ? AppColors.danger : AppColors.accent,
                 fontVariations: AppFonts.weight(700),
               ),
             ),
@@ -216,19 +232,9 @@ class _HomeShellState extends State<HomeShell> {
       return;
     }
     if (choice == WhoSpottedSheet.unclaimSentinel) {
-      final Scorecard next = card.withoutLastClaimOf(species.id);
-      await _updateCard(next);
-      // An undo has to reach the lifetime total too, or the fix for a mis-tap
-      // silently inflates the permanent score. The species stays marked as
-      // spotted: it may well have been seen on an earlier trip, and un-spotting
-      // it would delete a real record to correct a fake one.
-      final Claim? undone = _lastOwnClaim(card, species.id);
-      if (undone != null) {
-        final int points = await _lifetimeRepo.addPoints(-undone.points);
-        if (mounted) {
-          setState(() => _lifetimePoints = points);
-        }
-      }
+      // Nothing to reverse anywhere else: a claim is only banked when the day
+      // is ended, so an undo is a single edit to a single object.
+      await _updateCard(card.withoutLastClaimOf(species.id));
       return;
     }
     await _updateCard(
@@ -241,43 +247,6 @@ class _HomeShellState extends State<HomeShell> {
         ),
       ),
     );
-
-    // The account holder's claims are also theirs permanently. This is the
-    // whole reason the owner is flagged on the scorecard: a guest's leopard is
-    // a guest's, and writing it to this phone's lifetime record would make that
-    // record something nobody could trust.
-    if (card.owner?.id == choice) {
-      await _creditOwner(species);
-    }
-  }
-
-  /// The claim `withoutLastClaimOf` is about to drop, if the owner made it.
-  Claim? _lastOwnClaim(Scorecard card, String speciesId) {
-    final String? ownerId = card.owner?.id;
-    if (ownerId == null) {
-      return null;
-    }
-    final int index = card.claims.lastIndexWhere(
-      (Claim c) => c.speciesId == speciesId,
-    );
-    if (index < 0 || card.claims[index].playerId != ownerId) {
-      return null;
-    }
-    return card.claims[index];
-  }
-
-  Future<void> _creditOwner(Species species) async {
-    final Set<String> nextSpotted = await _spottedRepo.add(
-      _spotted,
-      species.id,
-    );
-    final int nextPoints = await _lifetimeRepo.addPoints(species.points);
-    if (mounted) {
-      setState(() {
-        _spotted = nextSpotted;
-        _lifetimePoints = nextPoints;
-      });
-    }
   }
 
   void _onCameraPressed() {
@@ -320,11 +289,16 @@ class _HomeShellState extends State<HomeShell> {
                 profile: widget.profile,
                 species: species,
                 caughtIds: _spotted,
-                lifetimePoints: _lifetimePoints,
+                visits: _visits,
+                driveInPlay: _card != null,
+                onOpenGame: () => setState(() => _tab = 1),
+              ),
+              WildScoreScreen(
+                species: species,
                 card: _card,
-                onStartScorecard: _startScorecard,
-                onEndScorecard: _endScorecard,
-                onRestartScorecard: _restartScorecard,
+                onStart: _startScorecard,
+                onEnd: _endScorecard,
+                onRestart: _restartScorecard,
               ),
               CodexScreen(
                 repository: widget.repository,
@@ -343,6 +317,7 @@ class _HomeShellState extends State<HomeShell> {
           bottomNavigationBar: _BottomBar(
             index: _tab,
             onChanged: (int i) => setState(() => _tab = i),
+            driveInPlay: _card != null,
           ),
         );
       },
@@ -383,10 +358,19 @@ class _CameraButton extends StatelessWidget {
 }
 
 class _BottomBar extends StatelessWidget {
-  const _BottomBar({required this.index, required this.onChanged});
+  const _BottomBar({
+    required this.index,
+    required this.onChanged,
+    required this.driveInPlay,
+  });
 
   final int index;
   final ValueChanged<int> onChanged;
+
+  /// Puts a live dot on the Wild Score tab. A game running on a tab you are not
+  /// looking at should say so — otherwise the phone gets handed to the back
+  /// seat and the day quietly stops being scored.
+  final bool driveInPlay;
 
   @override
   Widget build(BuildContext context) {
@@ -408,16 +392,23 @@ class _BottomBar extends StatelessWidget {
                 onTap: () => onChanged(0),
               ),
               _Tab(
-                icon: Icons.menu_book_rounded,
-                label: 'Animal Dex',
+                icon: Icons.sports_score_rounded,
+                label: 'Wild Score',
                 selected: index == 1,
                 onTap: () => onChanged(1),
+                live: driveInPlay,
+              ),
+              _Tab(
+                icon: Icons.menu_book_rounded,
+                label: 'Animal Dex',
+                selected: index == 2,
+                onTap: () => onChanged(2),
               ),
               _Tab(
                 icon: Icons.emoji_events_rounded,
                 label: 'Leaderboard',
-                selected: index == 2,
-                onTap: () => onChanged(2),
+                selected: index == 3,
+                onTap: () => onChanged(3),
               ),
             ],
           ),
@@ -433,12 +424,14 @@ class _Tab extends StatelessWidget {
     required this.label,
     required this.selected,
     required this.onTap,
+    this.live = false,
   });
 
   final IconData icon;
   final String label;
   final bool selected;
   final VoidCallback onTap;
+  final bool live;
 
   @override
   Widget build(BuildContext context) {
@@ -450,13 +443,32 @@ class _Tab extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Icon(icon, size: 21, color: color),
+            Stack(
+              clipBehavior: Clip.none,
+              children: <Widget>[
+                Icon(icon, size: 21, color: color),
+                if (live)
+                  Positioned(
+                    right: -3,
+                    top: -1,
+                    child: Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        color: AppColors.accent,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 1.5),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
             const SizedBox(height: 4),
             Text(
               label,
               style: TextStyle(
                 color: color,
-                fontSize: 10.5,
+                fontSize: 10,
                 fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
               ),
             ),

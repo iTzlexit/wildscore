@@ -25,7 +25,7 @@ with the scoring made honest and the bragging made shareable.
 | [docs/DIVERGENCES.md](docs/DIVERGENCES.md) | Where the live docs disagree with the original plan, and why |
 | **[docs/SCORECARD.md](docs/SCORECARD.md)** | **The day scorecard — current focus.** Players, chances, house rules, leaderboard |
 | [docs/SIGHTINGS-FEED.md](docs/SIGHTINGS-FEED.md) | Two sightings a day, shared to the leaderboard. Safety rules for sensitive species |
-| [docs/HOW-TO-PLAY.md](docs/HOW-TO-PLAY.md) | Player-facing rules. Source for the in-app How to play screen |
+| **[docs/HOW-TO-PLAY.md](docs/HOW-TO-PLAY.md)** | **Player-facing rules.** Source for the in-app How to play screen |
 | [docs/DESIGN-DIRECTION.md](docs/DESIGN-DIRECTION.md) | Palette, type scale, rarity treatments, card anatomy, motion |
 | [docs/IMAGE-ASSETS.md](docs/IMAGE-ASSETS.md) | Photo sourcing, licensing, silhouettes, community donations, cost |
 | [ROADMAP.md](ROADMAP.md) | Seven phases, current status, decisions log |

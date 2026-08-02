@@ -12,11 +12,18 @@ on the next trip rather than the one after.
 
 ## The flow
 
-1. **Start scorecard.** One tap on the Profile tab.
-2. **Add players** — just names, everyone in the car. No accounts, no invites.
+1. **Start a drive.** One tap on the **Wild Score** tab. You are in it already.
+2. **Add players** — just names, everyone else in the car. Optional: solo is a
+   first-class way to play, not a fallback.
 3. **Drive.** Someone shouts. Tap the tile, pick who called it.
 4. **Common animals lock** once claimed. Rare ones stay open all day.
-5. **End of day** — final standings, and the argument settles itself.
+5. **End the day** — final standings, saved to history, and the argument settles
+   itself.
+
+The game has **its own tab**, separate from the Profile. A drive belongs to the
+vehicle; a profile belongs to one person. Sharing a screen meant a carful of
+five with a good morning between them had more standings than the card could
+hold, and the profile's own numbers were squeezed to make room.
 
 The scorecard is per **vehicle**, not per person. That matches how the game is
 actually played and how the Vehicle Pass is priced.
@@ -37,27 +44,38 @@ Crediting a guest's leopard to the owner's collection would make the collection
 untrustworthy, which is the one thing it cannot be — the whole product rests on
 "your sightings live here".
 
-Three consequences worth stating, because each one is a way the total could
-silently drift:
+### Banked once, when the day ends
 
-- **Undo reverses the credit.** Fixing a mis-tap must not leave the points
-  behind.
-- **Restart reverses the whole day's credit.** Otherwise restarting is a way to
-  farm points.
-- **Neither un-spots the species.** It may well have been seen on an earlier
-  trip; deleting a real record to correct a fake one is the worse error.
+Crediting per claim was the obvious design and it was wrong. It meant undo had
+to reverse itself, restart had to reverse a whole day, and every future edit
+would need its own reversal — each one a way for a lifetime total to drift with
+nothing to check it against.
 
-Ending the day does *not* reverse anything. That is the difference between
-restarting and ending.
+Instead:
+
+- A drive is **persisted continuously**, so nothing is at risk if the phone dies
+  at the gate
+- **Ending the day** writes it to the visit history, and the owner's species
+  enter their collection
+- **The lifetime total is derived** by summing `ownerPoints` across visits — it
+  is never stored, so it cannot be wrong
+- **Restart and undo reverse nothing**, because nothing was banked
+
+The one cost: a drive that is never ended is never counted. That is the right
+trade — ending is a deliberate act and the day sits there until you make it.
+
+Guests' scores are saved **with the day**, not to anyone's record. That is what
+makes the history worth opening: "who was in the car at Satara in July, and did
+Sam really get the wild dog" is what people actually want back.
 
 ## Restart vs End day
 
 Two different intentions, so two different controls, both confirmed:
 
-| | Players | Today's claims | Owner's lifetime total |
-|---|---|---|---|
-| **Restart** | kept | wiped | refunded |
-| **End day** | cleared | cleared | kept |
+| | Players | Today's claims | Saved to history | Lifetime total |
+|---|---|---|---|---|
+| **Restart** | kept | wiped | no | untouched |
+| **End day** | cleared | cleared | **yes** | **grows** |
 
 Restarting is "we mis-scored the first hour" and happens mid-morning. Ending is
 "we are done and it counts" and happens once. Making a family retype four names

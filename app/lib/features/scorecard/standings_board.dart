@@ -11,19 +11,33 @@ import '../../shared/widgets/avatar_badge.dart';
 /// is never "how many points do I have", it is "am I winning". A bar answers
 /// that at a glance from the passenger seat.
 class StandingsBoard extends StatefulWidget {
-  const StandingsBoard({required this.card, required this.species, super.key});
+  const StandingsBoard({
+    required this.card,
+    required this.species,
+    this.expanded = false,
+    super.key,
+  });
 
   final Scorecard card;
   final List<Species> species;
+
+  /// True when the board owns the screen rather than sitting in a card. Every
+  /// player's haul is then open by default, because there is room for it and
+  /// hiding the interesting part behind a tap is only worth doing when space is
+  /// scarce.
+  final bool expanded;
 
   @override
   State<StandingsBoard> createState() => _StandingsBoardState();
 }
 
 class _StandingsBoardState extends State<StandingsBoard> {
-  /// Which player's haul is expanded. Only one at a time — the panel is a
-  /// glance, not a report.
+  /// Which player's haul is open. In the cramped layout only one at a time.
   String? _open;
+
+  /// Players whose full haul has been asked for. A good day produces more tags
+  /// than anyone reads at a glance, so the list is capped until asked.
+  final Set<String> _showAll = <String>{};
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +56,11 @@ class _StandingsBoardState extends State<StandingsBoard> {
             // Everyone on zero gets an empty bar rather than a full one.
             fraction: leader == 0 ? 0 : card.pointsFor(ranked[i].id) / leader,
             leading: i == 0 && leader > 0,
-            expanded: _open == ranked[i].id,
+            expanded: widget.expanded || _open == ranked[i].id,
+            roomy: widget.expanded,
+            showAll: _showAll.contains(ranked[i].id),
             haul: _haulFor(ranked[i].id),
+            onShowAll: () => setState(() => _showAll.add(ranked[i].id)),
             onTap: () => setState(
               () => _open = _open == ranked[i].id ? null : ranked[i].id,
             ),
@@ -99,7 +116,10 @@ class _Row extends StatelessWidget {
     required this.fraction,
     required this.leading,
     required this.expanded,
+    required this.roomy,
+    required this.showAll,
     required this.haul,
+    required this.onShowAll,
     required this.onTap,
   });
 
@@ -109,12 +129,22 @@ class _Row extends StatelessWidget {
   final double fraction;
   final bool leading;
   final bool expanded;
+  final bool roomy;
+  final bool showAll;
   final List<_Haul> haul;
+  final VoidCallback onShowAll;
   final VoidCallback onTap;
+
+  /// Enough to show the day's best finds without becoming a wall. Rarest are
+  /// sorted first, so the cut always falls on the least interesting end.
+  static const int _cap = 6;
 
   @override
   Widget build(BuildContext context) {
     final Color bar = leading ? AppColors.accent : AppColors.outlineStrong;
+    final int cap = roomy ? _cap * 2 : _cap;
+    final bool trimmed = !showAll && haul.length > cap;
+    final List<_Haul> shown = trimmed ? haul.sublist(0, cap) : haul;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: Space.md),
@@ -122,7 +152,7 @@ class _Row extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           InkWell(
-            onTap: haul.isEmpty ? null : onTap,
+            onTap: haul.isEmpty || roomy ? null : onTap,
             borderRadius: BorderRadius.circular(Space.sm),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,7 +185,7 @@ class _Row extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if (haul.isNotEmpty)
+                    if (haul.isNotEmpty && !roomy)
                       Icon(
                         expanded
                             ? Icons.keyboard_arrow_up_rounded
@@ -210,11 +240,49 @@ class _Row extends StatelessWidget {
                 spacing: 6,
                 runSpacing: 6,
                 children: <Widget>[
-                  for (final _Haul h in haul) _HaulTag(haul: h),
+                  for (final _Haul h in shown) _HaulTag(haul: h),
+                  if (trimmed)
+                    _MoreTag(count: haul.length - cap, onTap: onShowAll),
                 ],
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+/// The rest of a long haul, one tap away. Rarest are shown first, so what is
+/// hidden behind this is always the ordinary end of someone's day.
+class _MoreTag extends StatelessWidget {
+  const _MoreTag({required this.count, required this.onTap});
+
+  final int count;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.surfaceAlt,
+      borderRadius: BorderRadius.circular(Radii.chip - 2),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(Radii.chip - 2),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(Radii.chip - 2),
+            border: Border.all(color: AppColors.outlineStrong, width: 1.2),
+          ),
+          child: Text(
+            '+$count more',
+            style: AppText.caption.copyWith(
+              fontSize: 11.5,
+              color: AppColors.textSecondary,
+              fontVariations: AppFonts.weight(700),
+            ),
+          ),
+        ),
       ),
     );
   }
