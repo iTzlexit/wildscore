@@ -14,6 +14,7 @@ with the scoring made honest and the bragging made shareable.
 
 | | |
 |---|---|
+| **[STATE.md](STATE.md)** | **Where the project is right now.** Read this first in a new conversation |
 | **[docs/VISION.md](docs/VISION.md)** | **The end goal.** What we are building and why. Read before any phase. |
 | **[docs/00-SETUP.md](docs/00-SETUP.md)** | Install Flutter and run the app. Start here to build. |
 | **[docs/DEV-WORKFLOW.md](docs/DEV-WORKFLOW.md)** | Day to day: connecting a phone, hot reload, what to run before committing |

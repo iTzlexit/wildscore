@@ -90,9 +90,8 @@ class _Invitation extends StatelessWidget {
         Text('Wild Score', style: AppText.title1),
         const SizedBox(height: Space.sm),
         Text(
-          'The old paper scorecard, minus the arguing. Play it on your own or '
-          'hand the phone around the car and find out who is actually any '
-          'good at spotting.',
+          'A game for long drives in the park. Hand the phone around the car '
+          'and find out who is actually any good at spotting.',
           style: AppText.body.copyWith(height: 1.55),
         ),
         const SizedBox(height: Space.xl),
@@ -113,56 +112,6 @@ class _Invitation extends StatelessWidget {
                 borderRadius: BorderRadius.circular(Radii.card),
               ),
             ),
-          ),
-        ),
-        const SizedBox(height: Space.md),
-        Center(
-          child: Text(
-            'You are always in the drive. Add others if there are any.',
-            style: AppText.caption,
-          ),
-        ),
-        const SizedBox(height: Space.xl),
-        // The honest alternative, said out loud. Somebody who only wants a life
-        // list should not have to start and end a game to get one, and burying
-        // that fact would make the app feel heavier than it is.
-        Container(
-          padding: const EdgeInsets.all(Space.lg),
-          decoration: BoxDecoration(
-            color: AppColors.surfaceAlt,
-            borderRadius: BorderRadius.circular(Radii.card),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const Icon(
-                Icons.menu_book_rounded,
-                size: 18,
-                color: AppColors.textMuted,
-              ),
-              const SizedBox(width: Space.md),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'Not in the mood for a game?',
-                      style: AppText.label.copyWith(
-                        color: AppColors.textPrimary,
-                        fontVariations: AppFonts.weight(700),
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      'Just tick animals off in the Animal Dex as you see '
-                      'them. Nobody keeping count, nothing to settle — your '
-                      'collection fills up all the same.',
-                      style: AppText.caption.copyWith(height: 1.45),
-                    ),
-                  ],
-                ),
-              ),
-            ],
           ),
         ),
         const SizedBox(height: Space.section),
@@ -204,22 +153,25 @@ class _HowItWorks extends StatelessWidget {
         children: <Widget>[
           _Step(
             number: '1',
-            title: 'Start a drive',
-            body: 'On your own, or add whoever else is in the car.',
+            title: 'Enter the players',
+            body: 'Everyone in the car who wants to play. First names only.',
           ),
           _Step(
             number: '2',
-            title: 'Someone shouts',
+            title: 'Spot something',
             body:
-                'Tap the eye beside their name, then tap the animal. The '
-                'harder it was to find, the more it pays.',
+                'Every animal has a scarcity level. The rarer it is, the more '
+                'it is worth.',
           ),
           _Step(
             number: '3',
-            title: 'End the day at camp',
-            body:
-                'Scores lock in, the day is saved with everyone who played, '
-                'and tomorrow you start level again.',
+            title: 'Points go to whoever saw it first',
+            body: 'Tap the eye beside their name, then tap the animal.',
+          ),
+          _Step(
+            number: '4',
+            title: 'Tally up at the end',
+            body: 'Highest score takes the bragging rights until tomorrow.',
             last: true,
           ),
         ],

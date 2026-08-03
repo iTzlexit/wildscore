@@ -42,54 +42,30 @@ class RulesScreen extends StatelessWidget {
         ),
         children: <Widget>[
           Text(
-            'Wild Score is for people who love the Kruger.',
-            style: AppText.title2.copyWith(height: 1.3),
-          ),
-          const SizedBox(height: Space.md),
-          Text(
-            'It keeps a record of every animal you have ever found in the '
-            'park — a lifetime list that grows every trip.\n\n'
-            'The game is the twist on top. Score the sightings as you go, and '
-            'a long transfer between camps turns into the kids fighting over '
-            'who saw the giraffe first.',
+            'A game for long drives in the park. Find out who is actually any '
+            'good at spotting.',
             style: AppText.body.copyWith(height: 1.55),
           ),
           const SizedBox(height: Space.xl),
 
-          const _Section('TWO WAYS TO USE IT'),
-          const _Way(
-            icon: Icons.menu_book_rounded,
-            title: 'Just keep a list',
-            body:
-                'Tick animals off in the Animal Dex as you find them. No game, '
-                'no scores, nobody keeping count.',
-          ),
-          const _Way(
-            icon: Icons.sports_score_rounded,
-            title: 'Play the game',
-            body:
-                'Start a drive and score every sighting. Best with other '
-                'people in the car, and it works on your own.',
-            last: true,
-          ),
-          const SizedBox(height: Space.xl),
-
-          const _Section('PLAYING, IN FIVE STEPS'),
+          const _Section('HOW IT IS PLAYED'),
           const _Step(
             number: 1,
-            title: 'Start a drive',
-            body: 'Green button on this tab. Do it in the queue at the gate.',
+            title: 'Enter the players',
+            body:
+                'Everyone in the car who wants to play. First names only — no '
+                'accounts, no sign-ups. On your own works too.',
           ),
           const _Step(
             number: 2,
-            title: 'Add the car',
+            title: 'Every animal has a scarcity level',
             body:
-                'First names only. Gran counts. The kids definitely count. '
-                'On your own counts too.',
+                'From Common up to Legendary, based on how hard it is to find '
+                'in Kruger. An impala is 5 points. A pangolin is 2,500.',
           ),
           const _Step(
             number: 3,
-            title: 'Someone shouts',
+            title: 'Points go to whoever spots it first',
             body:
                 'Tap the eye beside their name, then tap the animal. Tap the '
                 'animal again later to take it back off them.',
@@ -97,17 +73,22 @@ class RulesScreen extends StatelessWidget {
           ),
           const _Step(
             number: 4,
-            title: 'Points land',
+            title: 'Tally up at the end of the drive',
             body:
-                'An impala is 5. A pangolin is 2,500. The harder it was to '
-                'find, the more it pays.',
+                'Highest score takes the bragging rights. Tomorrow everyone '
+                'starts level again.',
+            last: true,
           ),
-          const _Step(
-            number: 5,
-            title: 'End the day at camp',
+          const SizedBox(height: Space.xl),
+
+          const _Section('OR DO NOT PLAY AT ALL'),
+          const _Way(
+            icon: Icons.menu_book_rounded,
+            title: 'Just keep a list',
             body:
-                'Scores lock in and tomorrow everyone starts level. Whatever '
-                'the car found joins your collection — you were there.',
+                'Tick animals off in the Animal Dex as you find them. No game, '
+                'no scores, nobody keeping count — your collection fills up '
+                'all the same.',
             last: true,
           ),
           const SizedBox(height: Space.xl),
