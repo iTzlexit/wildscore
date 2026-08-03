@@ -10,6 +10,7 @@ import '../../shared/widgets/app_header.dart';
 import '../../shared/widgets/avatar_badge.dart';
 import '../codex/collection_screen.dart';
 import 'backup_screen.dart';
+import 'licences_screen.dart';
 import 'visit_history_screen.dart';
 
 /// One person's record. Not the day's game — that has its own tab.
@@ -142,11 +143,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                   const SizedBox(height: Space.section),
-                  _BackupRow(
+                  _FooterRow(
+                    icon: Icons.cloud_off_rounded,
+                    title: 'Back up my collection',
+                    body:
+                        'All of this lives on this phone only. Save a copy you '
+                        'can restore.',
                     onTap: () => BackupScreen.open(
                       context,
                       onRestored: widget.onRestored ?? () {},
                     ),
+                  ),
+                  const SizedBox(height: Space.sm),
+                  _FooterRow(
+                    icon: Icons.workspace_premium_outlined,
+                    title: 'Credits and licences',
+                    body:
+                        'The photographers and illustrators whose work is in '
+                        'here.',
+                    onTap: () => LicencesScreen.open(context),
                   ),
                 ],
               ),
@@ -158,14 +173,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-/// The way out of "everything is on one phone".
+/// The rows at the foot of the profile: backup, and credits.
 ///
-/// Sits at the bottom because it is not what anyone opens the profile for — but
-/// it has to be *somewhere findable*, because the day it matters is the day
-/// after somebody wishes they had used it.
-class _BackupRow extends StatelessWidget {
-  const _BackupRow({required this.onTap});
+/// Down here because neither is what anyone opens this screen for — but both
+/// have to be *somewhere findable*. For backup, the day it matters is the day
+/// after somebody wishes they had used it. For credits, it is a condition of
+/// the CC-BY licence that they are reachable at all.
+class _FooterRow extends StatelessWidget {
+  const _FooterRow({
+    required this.icon,
+    required this.title,
+    required this.body,
+    required this.onTap,
+  });
 
+  final IconData icon;
+  final String title;
+  final String body;
   final VoidCallback onTap;
 
   @override
@@ -180,26 +204,18 @@ class _BackupRow extends StatelessWidget {
           padding: const EdgeInsets.all(Space.lg),
           child: Row(
             children: <Widget>[
-              const Icon(
-                Icons.cloud_off_rounded,
-                size: 19,
-                color: AppColors.textSecondary,
-              ),
+              Icon(icon, size: 19, color: AppColors.textSecondary),
               const SizedBox(width: Space.md),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'Back up my collection',
+                      title,
                       style: AppText.bodyStrong.copyWith(fontSize: 14.5),
                     ),
                     const SizedBox(height: 2),
-                    Text(
-                      'All of this lives on this phone only. Save a copy you '
-                      'can restore.',
-                      style: AppText.caption.copyWith(height: 1.45),
-                    ),
+                    Text(body, style: AppText.caption.copyWith(height: 1.45)),
                   ],
                 ),
               ),
