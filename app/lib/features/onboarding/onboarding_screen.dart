@@ -166,13 +166,15 @@ class _WelcomeStep extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           const _PitchLine(
-            icon: Icons.photo_camera_rounded,
-            text: 'Photograph what you find, in the park, with the camera.',
+            icon: Icons.menu_book_rounded,
+            text:
+                'A field guide to every animal in the park, '
+                'and a record of the ones you have found.',
           ),
           const _PitchLine(
             icon: Icons.auto_awesome_rounded,
             text:
-                'Earn points for how hard it was to find. '
+                'Score the car against each other as you drive. '
                 'An impala is 5. A pangolin is 2500.',
           ),
           const _PitchLine(

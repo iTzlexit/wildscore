@@ -10,7 +10,7 @@ import '../domain/tracker_profile.dart';
 import '../domain/visit.dart';
 import '../shared/theme.dart';
 import 'codex/codex_screen.dart';
-import 'leaderboard/leaderboard_screen.dart';
+import 'records/records_screen.dart';
 import 'profile/profile_screen.dart';
 import 'scorecard/spot_picker_screen.dart';
 import 'scorecard/start_scorecard_sheet.dart';
@@ -337,7 +337,7 @@ class _HomeShellState extends State<HomeShell> {
                 caughtIds: _spotted,
                 onToggleSpotted: _toggleSpotted,
               ),
-              LeaderboardScreen(seasonYear: widget.profile.seasonYear),
+              RecordsScreen(visits: _visits, species: species),
             ],
           ),
           // No camera button. It sat over the content on every tab and did
@@ -405,7 +405,7 @@ class _BottomBar extends StatelessWidget {
               ),
               _Tab(
                 icon: Icons.emoji_events_rounded,
-                label: 'Leaderboard',
+                label: 'Records',
                 selected: index == 3,
                 onTap: () => onChanged(3),
               ),
