@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:wildscore/domain/rarity_tier.dart';
 import 'package:wildscore/domain/tracker_profile.dart';
 import 'package:wildscore/features/onboarding/onboarding_screen.dart';
 import 'package:wildscore/shared/theme.dart';
@@ -23,19 +24,62 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('opens on the welcome step', (WidgetTester tester) async {
+  /// Straight past the tour to the part every other test is about.
+  Future<void> skipTour(WidgetTester tester) async {
+    await tester.tap(find.text('Skip'));
+    await tester.pumpAndSettle();
+  }
+
+  testWidgets('opens on the tour, not on a form', (WidgetTester tester) async {
     await pumpOnboarding(tester);
 
-    expect(find.text('Wild Score'), findsOneWidget);
-    expect(find.text('Begin'), findsOneWidget);
-    expect(find.text('No account. No email. Works offline.'), findsOneWidget);
+    expect(find.textContaining('back seat'), findsOneWidget);
+    expect(find.text('Skip'), findsOneWidget);
+    expect(find.text('Next'), findsOneWidget);
+    // Nobody is asked for anything before they know what this is.
+    expect(find.byType(TextField), findsNothing);
   });
 
-  testWidgets('Begin moves to the name step', (WidgetTester tester) async {
+  testWidgets('the tour walks all three slides to the name step', (
+    WidgetTester tester,
+  ) async {
     await pumpOnboarding(tester);
 
-    await tester.tap(find.text('Begin'));
+    await tester.tap(find.text('Next'));
     await tester.pumpAndSettle();
+    expect(find.textContaining('take the points'), findsOneWidget);
+
+    await tester.tap(find.text('Next'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Ultimate Spotter'), findsOneWidget);
+    // Last slide swaps Next for the way in, and drops Skip.
+    expect(find.text('Next'), findsNothing);
+    expect(find.text('Skip'), findsNothing);
+
+    await tester.tap(find.text('Let\'s go'));
+    await tester.pumpAndSettle();
+    expect(find.byType(TextField), findsOneWidget);
+  });
+
+  testWidgets('the rarity table is generated, not typed', (
+    WidgetTester tester,
+  ) async {
+    // Every tier and its real value, so a revalued tier cannot leave the sales
+    // pitch promising something the game no longer pays.
+    await pumpOnboarding(tester);
+    await tester.tap(find.text('Next'));
+    await tester.pumpAndSettle();
+
+    for (final RarityTier tier in RarityTier.values) {
+      expect(find.text(tier.label), findsOneWidget, reason: tier.name);
+      expect(find.text('${tier.points}'), findsWidgets, reason: tier.name);
+    }
+  });
+
+  testWidgets('Skip moves to the name step', (WidgetTester tester) async {
+    await pumpOnboarding(tester);
+
+    await skipTour(tester);
 
     expect(find.textContaining('call you'), findsOneWidget);
     expect(find.byType(TextField), findsOneWidget);
@@ -45,8 +89,7 @@ void main() {
     WidgetTester tester,
   ) async {
     await pumpOnboarding(tester);
-    await tester.tap(find.text('Begin'));
-    await tester.pumpAndSettle();
+    await skipTour(tester);
 
     await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();
@@ -58,8 +101,7 @@ void main() {
 
   testWidgets('a one-character name is rejected', (WidgetTester tester) async {
     await pumpOnboarding(tester);
-    await tester.tap(find.text('Begin'));
-    await tester.pumpAndSettle();
+    await skipTour(tester);
 
     await tester.enterText(find.byType(TextField), 'A');
     await tester.tap(find.text('Continue'));
@@ -73,8 +115,7 @@ void main() {
     WidgetTester tester,
   ) async {
     await pumpOnboarding(tester);
-    await tester.tap(find.text('Begin'));
-    await tester.pumpAndSettle();
+    await skipTour(tester);
 
     await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();
@@ -89,8 +130,7 @@ void main() {
     WidgetTester tester,
   ) async {
     await pumpOnboarding(tester);
-    await tester.tap(find.text('Begin'));
-    await tester.pumpAndSettle();
+    await skipTour(tester);
 
     await tester.enterText(find.byType(TextField), 'Alex');
     await tester.tap(find.text('Continue'));
@@ -106,8 +146,7 @@ void main() {
     WidgetTester tester,
   ) async {
     await pumpOnboarding(tester);
-    await tester.tap(find.text('Begin'));
-    await tester.pumpAndSettle();
+    await skipTour(tester);
     await tester.enterText(find.byType(TextField), '  Alex  ');
     await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();

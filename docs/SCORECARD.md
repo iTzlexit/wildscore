@@ -302,7 +302,7 @@ forget to end it, leaving a trip open for eight months. See
 `lib/domain/trip.dart`.
 
 **Sense check:** claiming every Common and Frequent species in the park in a
-single day is worth **320**. One pangolin is **2,500** — nearly eight times a
+single day is worth **320**. One pangolin is **2,000** — over six times a
 perfect morning.
 
 That is the right shape. A pangolin *should* end the competition, because in

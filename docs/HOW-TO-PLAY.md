@@ -47,7 +47,7 @@ still for them.
    On your own counts too.
 3. **Someone shouts.** Tap the eye beside their name, then tap the animal. Tap
    the animal again later to take it back off them.
-4. **Points land.** An impala is 5. A pangolin is 2,500. The harder it was to
+4. **Points land.** An impala is 5. A pangolin is 2,000. The harder it was to
    find, the more it pays.
 5. **End the day at camp.** Scores lock in and tomorrow everyone starts level.
    Whatever the car found joins your collection — you were there.
@@ -151,7 +151,7 @@ Kruger — not how famous it is. Lions are easier to find than sable.
 | Rare | 100 | unlimited |
 | Very rare | 250 | unlimited |
 | Exceptional | 750 | unlimited |
-| Legendary | 2,500 | unlimited |
+| Legendary | 2,000 | unlimited |
 
 **First call of the day is worth double.** Whoever gets the first animal of the
 morning, whatever it is, takes twice the points. Being awake at the gate should

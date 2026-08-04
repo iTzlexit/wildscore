@@ -4,12 +4,17 @@ import 'package:flutter/services.dart';
 import '../../domain/tracker_profile.dart';
 import '../../shared/theme.dart';
 import '../scorecard/rules_screen.dart';
+import 'intro_tour.dart';
 
-/// First run: name yourself, and you are a tracker.
+/// First run: see what the game is, name yourself, and you are a tracker.
 ///
 /// Three steps, no account, no email, no password. The whole point is that a
 /// family in a car at the gate can be playing within twenty seconds. Anything
 /// that asks for a password here loses half of them.
+///
+/// The opening used to be a page of prose making the case for the app. It was
+/// accurate and nobody read it. [IntroTour] says the same three things in three
+/// pictures, which is what survives a car with the engine running.
 ///
 /// The third step is deliberately a small ceremony rather than a confirmation
 /// dialog. It is the first rehearsal of the reveal moment that docs/VISION.md
@@ -74,7 +79,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           // opening of the app feel broken.
           physics: const NeverScrollableScrollPhysics(),
           children: <Widget>[
-            _WelcomeStep(onBegin: () => _goTo(1)),
+            IntroTour(onDone: () => _goTo(1)),
             _NameStep(
               controller: _nameController,
               focusNode: _nameFocus,
@@ -96,138 +101,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               const SizedBox.shrink(),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _WelcomeStep extends StatelessWidget {
-  const _WelcomeStep({required this.onBegin});
-
-  final VoidCallback onBegin;
-
-  @override
-  Widget build(BuildContext context) {
-    // Scrolls, and only scrolls when it has to. A fixed Column with Spacers
-    // cannot shrink below its content, so it overflows on a short screen or at
-    // a large accessibility text scale — this keeps the Spacers doing their job
-    // when there is room and gives up gracefully when there is not.
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        return SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: constraints.maxHeight),
-            child: IntrinsicHeight(child: _content(context)),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _content(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(28, 40, 28, 32),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const Spacer(),
-          Row(
-            children: <Widget>[
-              Container(
-                width: 6,
-                height: 6,
-                decoration: const BoxDecoration(
-                  color: AppColors.accent,
-                  shape: BoxShape.circle,
-                ),
-              ),
-              const SizedBox(width: 8),
-              const Text(
-                'KRUGER NATIONAL PARK',
-                style: TextStyle(
-                  color: AppColors.accent,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 1.8,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 14),
-          const Text(
-            'Wild Score',
-            style: TextStyle(
-              color: AppColors.textPrimary,
-              fontSize: 46,
-              fontWeight: FontWeight.w800,
-              letterSpacing: -1.8,
-              height: 1,
-            ),
-          ),
-          const SizedBox(height: 24),
-          const _PitchLine(
-            icon: Icons.menu_book_rounded,
-            text:
-                'A field guide to every animal in the park, '
-                'and a record of the ones you have found.',
-          ),
-          const _PitchLine(
-            icon: Icons.auto_awesome_rounded,
-            text:
-                'Score the car against each other as you drive. '
-                'An impala is 5. A pangolin is 2500.',
-          ),
-          const _PitchLine(
-            icon: Icons.inventory_2_rounded,
-            text:
-                'Keep a collection that lasts for years, '
-                'not a scorecard you lose at the gate.',
-          ),
-          const SizedBox(height: Space.sm),
-          // Said before anyone plays, not buried in a rules screen they may
-          // never open. A scoreboard that ranks living animals invites exactly
-          // one misreading, and it is worth heading off at the door.
-          const SpiritOfTheGame(),
-          const Spacer(),
-          _PrimaryButton(label: 'Begin', onPressed: onBegin),
-          const SizedBox(height: 10),
-          const Text(
-            'No account. No email. Works offline.',
-            textAlign: TextAlign.center,
-            style: TextStyle(color: AppColors.textMuted, fontSize: 12),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _PitchLine extends StatelessWidget {
-  const _PitchLine({required this.icon, required this.text});
-
-  final IconData icon;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Icon(icon, size: 18, color: AppColors.accent),
-          const SizedBox(width: 13),
-          Expanded(
-            child: Text(
-              text,
-              style: const TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 14.5,
-                height: 1.45,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -268,7 +141,8 @@ class _NameStep extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           const Text(
-            'This is the name other trackers will see on the leaderboard.',
+            'What the rest of the car will see on the scorecard. '
+            'Nothing leaves your phone.',
             style: TextStyle(
               color: AppColors.textSecondary,
               fontSize: 14,
@@ -296,6 +170,12 @@ class _NameStep extends StatelessWidget {
             decoration: nameFieldDecoration(errorText),
           ),
           const Spacer(),
+          // Said before anyone plays, not buried in a rules screen they may
+          // never open. A scoreboard that ranks living animals invites exactly
+          // one misreading, and it is worth heading off at the door. It moved
+          // here when the prose welcome step became the picture tour.
+          const SpiritOfTheGame(),
+          const SizedBox(height: Space.xl),
           _PrimaryButton(label: 'Continue', onPressed: onSubmit),
         ],
       ),

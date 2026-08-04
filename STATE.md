@@ -37,7 +37,9 @@ the app. One runtime dependency: `shared_preferences`.
 
 Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 
-- **Onboarding** — a name, an avatar, done. No account.
+- **Onboarding** — a three-slide picture tour of the game (car scene, scoring
+  with the live rarity table, the Ultimate Spotter), then a name. No account.
+  Replayable from How to play.
 - **Animal Dex** — 74 species, search, filters, rarity sort, detail cards.
   Photos are CC0/CC-BY from iNaturalist; caracal and African wildcat fall back
   to silhouettes because the photos could not be trusted.
@@ -54,7 +56,7 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 - **Backup** — a pasteable code. No server; see `docs/RISKS.md` for why it
   matters more than it looks.
 
-203 tests. `flutter analyze` is clean and must stay clean.
+211 tests. `flutter analyze` is clean and must stay clean.
 
 ## Decisions already made — do not relitigate
 

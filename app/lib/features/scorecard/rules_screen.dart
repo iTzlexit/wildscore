@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../domain/rarity_tier.dart';
 import '../../shared/theme.dart';
+import '../onboarding/intro_tour.dart';
 
 /// What this is, and how to play it.
 ///
@@ -46,6 +47,25 @@ class RulesScreen extends StatelessWidget {
             'good at spotting.',
             style: AppText.body.copyWith(height: 1.55),
           ),
+          const SizedBox(height: Space.lg),
+          // For everybody who skipped the tour at the gate, and for the person
+          // handing the phone to somebody who has never seen the app.
+          OutlinedButton.icon(
+            onPressed: () => IntroTour.open(context),
+            icon: const Icon(Icons.slideshow_rounded, size: 17),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: AppColors.accent,
+              side: const BorderSide(color: AppColors.outlineStrong),
+              padding: const EdgeInsets.symmetric(
+                horizontal: Space.lg,
+                vertical: Space.md,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(Radii.chip),
+              ),
+            ),
+            label: const Text('Show me the quick tour'),
+          ),
           const SizedBox(height: Space.xl),
 
           const _Section('HOW IT IS PLAYED'),
@@ -61,7 +81,7 @@ class RulesScreen extends StatelessWidget {
             title: 'Every animal has a scarcity level',
             body:
                 'From Common up to Legendary, based on how hard it is to find '
-                'in Kruger. An impala is 5 points. A pangolin is 2,500.',
+                'in Kruger. An impala is 5 points. A pangolin is 2,000.',
           ),
           const _Step(
             number: 3,
