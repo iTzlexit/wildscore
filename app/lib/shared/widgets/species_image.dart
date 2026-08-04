@@ -26,10 +26,19 @@ class SpeciesImage extends StatelessWidget {
     required this.species,
     this.locked = false,
     this.fit = BoxFit.cover,
+    this.onDark = false,
     super.key,
   });
 
   final Species species;
+
+  /// Sitting on a dark, coloured field rather than on the light surface.
+  ///
+  /// Only affects the fallbacks. A photograph looks the same anywhere, but the
+  /// silhouette plate is a pale gradient with charcoal artwork on it, which is
+  /// a light rectangle punched into a dark header. On dark it drops its own
+  /// background and goes light-on-nothing instead.
+  final bool onDark;
 
   /// Kept for call sites that still describe the collection state. It no longer
   /// changes the photograph.
@@ -48,14 +57,14 @@ class SpeciesImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!species.photoVerified) {
-      return _Silhouette(species: species);
+      return _Silhouette(species: species, onDark: onDark);
     }
 
     return Image.asset(
       species.imageAsset,
       fit: fit,
       errorBuilder: (BuildContext context, Object error, StackTrace? stack) =>
-          _Silhouette(species: species),
+          _Silhouette(species: species, onDark: onDark),
     );
   }
 }
@@ -65,9 +74,10 @@ class SpeciesImage extends StatelessWidget {
 /// rendering fault, and a soft charcoal on the tier's own wash reads as a
 /// deliberate illustration.
 class _Silhouette extends StatelessWidget {
-  const _Silhouette({required this.species});
+  const _Silhouette({required this.species, this.onDark = false});
 
   final Species species;
+  final bool onDark;
 
   @override
   Widget build(BuildContext context) {
@@ -75,21 +85,31 @@ class _Silhouette extends StatelessWidget {
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: <Color>[style.fill, AppColors.surfaceAlt],
-        ),
+        gradient: onDark
+            ? null
+            : LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: <Color>[style.fill, AppColors.surfaceAlt],
+              ),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(14),
+        // On dark this is the detail header, where the bottom third carries the
+        // animal's name. Weighting the padding downwards lifts the silhouette
+        // into the space that is actually visible rather than centring it
+        // behind the title.
+        padding: onDark
+            ? const EdgeInsets.fromLTRB(44, 24, 44, 92)
+            : const EdgeInsets.all(14),
         child: Image.asset(
           species.silhouetteAsset,
           fit: BoxFit.contain,
-          color: AppColors.textSecondary.withValues(alpha: 0.72),
+          color: onDark
+              ? Colors.white.withValues(alpha: 0.55)
+              : AppColors.textSecondary.withValues(alpha: 0.72),
           errorBuilder:
               (BuildContext context, Object error, StackTrace? stack) =>
-                  _MonogramPlate(species: species),
+                  _MonogramPlate(species: species, onDark: onDark),
         ),
       ),
     );
@@ -97,9 +117,10 @@ class _Silhouette extends StatelessWidget {
 }
 
 class _MonogramPlate extends StatelessWidget {
-  const _MonogramPlate({required this.species});
+  const _MonogramPlate({required this.species, this.onDark = false});
 
   final Species species;
+  final bool onDark;
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +134,9 @@ class _MonogramPlate extends StatelessWidget {
           child: Text(
             _monogram(species.commonName),
             style: TextStyle(
-              color: style.accent,
+              color: onDark
+                  ? Colors.white.withValues(alpha: 0.7)
+                  : style.accent,
               fontSize: 30,
               fontWeight: FontWeight.w900,
               letterSpacing: -1,

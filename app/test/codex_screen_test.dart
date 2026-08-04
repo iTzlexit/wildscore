@@ -283,7 +283,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // docs/VISION.md non-negotiable.
-    expect(find.textContaining('never show a location'), findsOneWidget);
+    expect(find.textContaining('never record a location'), findsOneWidget);
   });
 
   testWidgets('non-sensitive species show no protection notice', (
@@ -296,7 +296,7 @@ void main() {
     await tester.tap(find.text('Impala'));
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('never show a location'), findsNothing);
+    expect(find.textContaining('never record a location'), findsNothing);
     expect(find.text('Rooibok'), findsOneWidget);
   });
 }

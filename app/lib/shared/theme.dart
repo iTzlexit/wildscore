@@ -151,7 +151,6 @@ class RarityStyle {
     required this.borderWidth,
     required this.glow,
     required this.notched,
-    required this.foil,
   });
 
   /// Text, badges, the header field. Tuned for contrast on near-white.
@@ -166,21 +165,10 @@ class RarityStyle {
   final Color? glow;
 
   final bool notched;
-  final bool foil;
 
   bool get isExalted => glow != null;
 
   Color get border => accent;
-
-  /// Tint of the foil sweep. Legendary gets a real gold shimmer rather than a
-  /// neutral white gloss — a holographic card is the one thing a collector
-  /// recognises instantly, and it should be unmistakable across a room.
-  Color get foilTint => Color.fromARGB(
-    0x38,
-    accent.r.toInt(),
-    accent.g.toInt(),
-    accent.b.toInt(),
-  );
 
   /// Detail-screen colour field. Light enough to read dark text on for the
   /// muted tiers, so the header adapts rather than forcing white everywhere.
@@ -200,7 +188,6 @@ extension RarityTierStyling on RarityTier {
       borderWidth: 1,
       glow: null,
       notched: false,
-      foil: false,
     ),
     RarityTier.frequent => const RarityStyle(
       accent: Color(0xFF2E8B57),
@@ -208,7 +195,6 @@ extension RarityTierStyling on RarityTier {
       borderWidth: 1,
       glow: null,
       notched: false,
-      foil: false,
     ),
     // → Notable
     RarityTier.uncommon => const RarityStyle(
@@ -217,7 +203,6 @@ extension RarityTierStyling on RarityTier {
       borderWidth: 1.3,
       glow: null,
       notched: false,
-      foil: false,
     ),
     // → Rare
     RarityTier.scarce => const RarityStyle(
@@ -226,7 +211,6 @@ extension RarityTierStyling on RarityTier {
       borderWidth: 1.5,
       glow: null,
       notched: true,
-      foil: false,
     ),
     // → Very rare. Takes the old Exceptional crimson: with one fewer tier
     // above it, this is now the last step before the top and needs to look it.
@@ -236,7 +220,6 @@ extension RarityTierStyling on RarityTier {
       borderWidth: 2,
       glow: Color(0x38C0392B),
       notched: true,
-      foil: true,
     ),
     RarityTier.legendary => const RarityStyle(
       accent: Color(0xFF9C6B10),
@@ -244,7 +227,6 @@ extension RarityTierStyling on RarityTier {
       borderWidth: 2.4,
       glow: Color(0x479C6B10),
       notched: true,
-      foil: true,
     ),
   };
 }

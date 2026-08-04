@@ -147,37 +147,13 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
                             ),
                           ),
                         ),
-                        // Foil sheen on the exalted tiers only. A diagonal
-                        // gloss is the oldest trading-card trick there is, and
-                        // it makes a Legendary tile read as a *thing* rather
-                        // than a database row. Static, not animated — eighteen
-                        // shimmering cards in a scrolling grid would be both
-                        // distracting and expensive.
-                        if (style.foil)
-                          IgnorePointer(
-                            child: DecoratedBox(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: <Color>[
-                                    const Color(0x00FFFFFF),
-                                    style.foilTint,
-                                    const Color(0x40FFFFFF),
-                                    style.foilTint,
-                                    const Color(0x00FFFFFF),
-                                  ],
-                                  stops: const <double>[
-                                    0.1,
-                                    0.3,
-                                    0.42,
-                                    0.54,
-                                    0.8,
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
+                        // No foil sheen. There used to be a diagonal gloss over
+                        // the rare tiers — the oldest trading-card trick there
+                        // is, and wrong here. This is a field guide first: the
+                        // photograph gets matched against a real animal in the
+                        // road, and anything laid over it makes that harder.
+                        // Rarity is already said by the border, the badge and
+                        // the tier colour. It does not need a shine as well.
                         Positioned(
                           top: 6,
                           left: 6,

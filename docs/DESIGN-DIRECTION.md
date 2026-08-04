@@ -74,8 +74,16 @@ rarity escalates across **five redundant channels at once**:
 | Notable | `#4A93C7` blue | 1.4 | light | — | plain | — |
 | Rare | `#8B72D6` violet | 1.6 | medium | — | notched corners | — |
 | Very rare | `#E08238` amber | 2.0 | medium | soft | notched corners | — |
-| Exceptional | `#E0503A` crimson | 2.2 | strong | medium | notched + inner rule | static foil sheen |
-| Legendary | `#E8C15A` gold | 2.6 | strong | strong | double frame + corner ornament | animated foil sweep |
+| Legendary | `#E8C15A` gold | 2.6 | strong | strong | double frame + corner ornament | — |
+
+Seven tiers became six in August 2026 — Exceptional and Legendary merged, both
+at 2,000. The distinction was one nobody could hold in their head.
+
+**No foil sheen, on any tier.** The plan called for a diagonal gloss over the
+rare tiles, and it shipped. It was the oldest trading-card trick there is and it
+was wrong here: the photograph gets held up against a real animal standing in
+the road, and anything laid over it makes that job harder. Rarity is said by the
+border, the badge and the tier colour, which is plenty. Removed August 2026.
 
 **Common is deliberately hueless.** Stone grey says "this is not the interesting
 one" more clearly than any colour could, and it makes everything above it read as
