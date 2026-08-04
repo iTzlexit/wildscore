@@ -251,9 +251,34 @@ A clean geometric progression, each tier ~2.5–3× the one below:
 | Frequent | 15 | 3× |
 | Notable | 40 | 2.7× |
 | Rare | 100 | 2.5× |
-| Very rare | 250 | 2.5× |
-| Exceptional | 750 | 3× |
-| **Legendary** | **2,500** | 3.3× |
+| Very rare | 300 | 3× |
+| **Legendary** | **2,000** | 6.7× |
+
+**Six tiers, not seven.** Exceptional and Legendary were separate at 750 and
+2,500, and the distinction was one nobody could hold in their head — an aardvark
+and a pangolin are both "the sighting of the trip", and asking a car to rank
+them against each other produced an argument rather than a score.
+
+The final step is deliberately the steepest. Legendary should end the
+competition, because in real life it does.
+
+## The wild card
+
+> **The first impala of the trip is worth 50 points.** Once, to whoever calls
+> it, and then it is finished for the rest of the trip.
+
+First through the gate and first to shout *impala* is a real moment, and a
+5-point Common tile does nothing for it. Fifty is enough to matter on the first
+morning and nowhere near enough to decide a trip — half a Notable, a twentieth
+of a leopard.
+
+**Per trip, not per day.** Repeated every morning it would just be a points tax
+on whoever wakes up first.
+
+A trip is **derived, never declared** — consecutive drives with no more than a
+two-day gap. Making somebody press "Start trip" on top of "Start drive" doubles
+the ceremony at a gate and they would forget to end it, leaving a trip open for
+eight months. See `lib/domain/trip.dart`.
 
 **Sense check:** claiming every Common and Frequent species in the park in a
 single day is worth **320**. One pangolin is **2,500** — nearly eight times a

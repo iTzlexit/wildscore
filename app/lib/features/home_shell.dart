@@ -7,6 +7,7 @@ import '../data/visit_repository.dart';
 import '../domain/scorecard.dart';
 import '../domain/species.dart';
 import '../domain/tracker_profile.dart';
+import '../domain/trip.dart';
 import '../domain/visit.dart';
 import '../shared/theme.dart';
 import 'codex/codex_screen.dart';
@@ -275,6 +276,7 @@ class _HomeShellState extends State<HomeShell> {
       player: player,
       species: species,
       card: card,
+      wildCardsSpent: Trip.wildCardsSpent(_visits, live: card),
     );
     if (chosen == null || !mounted) {
       return;

@@ -9,7 +9,7 @@
       "scientificName": "Orycteropus afer",
       "afrikaansName": "Erdvark",
       "category": "mammal",
-      "rarityTier": "veryRare",
+      "rarityTier": "legendary",
       "tags": [
         "nocturnal"
       ],
@@ -31,7 +31,7 @@
       "scientificName": "Proteles cristata",
       "afrikaansName": "Aardwolf",
       "category": "mammal",
-      "rarityTier": "veryRare",
+      "rarityTier": "legendary",
       "tags": [
         "nocturnal",
         "predator"
@@ -166,7 +166,7 @@
       "scientificName": "Otocyon megalotis",
       "afrikaansName": "Bakoorvos",
       "category": "mammal",
-      "rarityTier": "veryRare",
+      "rarityTier": "legendary",
       "tags": [
         "predator"
       ],
@@ -187,7 +187,7 @@
       "scientificName": "Diceros bicornis",
       "afrikaansName": "Swartrenoster",
       "category": "mammal",
-      "rarityTier": "veryRare",
+      "rarityTier": "legendary",
       "tags": [
         "bigFive"
       ],
@@ -598,7 +598,8 @@
       "category": "mammal",
       "rarityTier": "common",
       "tags": [
-        "antelope"
+        "antelope",
+        "wildCard"
       ],
       "isSensitive": false,
       "description": "The most abundant antelope in the park and the staple prey of almost every predator in it. Herds scatter in explosive leaps when alarmed.",
@@ -984,7 +985,7 @@
       "scientificName": "Neotragus moschatus",
       "afrikaansName": "Soenie",
       "category": "mammal",
-      "rarityTier": "veryRare",
+      "rarityTier": "legendary",
       "tags": [
         "antelope"
       ],

@@ -1,27 +1,27 @@
 /// How hard a species actually is to find in Kruger — not how famous it is.
 ///
 /// Lions are easier to see than sable antelope, and the tiers reflect that.
-/// Points are the base value of a first verified sighting; modifiers (night
-/// drives, repeat sightings) arrive in Phase 3.
-/// Seven tiers, by how hard the animal actually is to find in Kruger — not by
-/// how famous it is. Lions are easier to find than sable.
 ///
-/// Points follow a geometric curve, each tier roughly 2.5–3× the one below,
+/// **Six tiers.** Exceptional and Legendary used to be separate at 750 and
+/// 2,500, and the distinction was one nobody could hold in their head — an
+/// aardvark and a pangolin are both "the sighting of the trip", and asking a
+/// car to rank them against each other produced an argument rather than a
+/// score. Merged into one Legendary at 2,000.
+///
+/// Points follow a geometric curve, each step roughly 2.5–3× the one below,
 /// because sighting probability is wildly non-linear: thousands of people see
-/// impala for every one who sees a pangolin. A flat 80× spread badly
-/// under-rewarded the top end. See docs/SCORECARD.md.
+/// impala for every one who sees a pangolin. The final step is deliberately
+/// steeper still — Legendary should end the competition, because in real life
+/// it does.
 ///
-/// **Names are still the old ones** pending the rename to Common / Frequent /
-/// Notable / Rare / Very rare / Exceptional / Legendary, which waits on the
-/// species re-tiering with a guide. Values are already correct.
+/// See docs/SCORECARD.md.
 enum RarityTier {
   common(label: 'Common', points: 5),
   frequent(label: 'Frequent', points: 15),
   uncommon(label: 'Notable', points: 40),
   scarce(label: 'Rare', points: 100),
-  rare(label: 'Very rare', points: 250),
-  veryRare(label: 'Exceptional', points: 750),
-  legendary(label: 'Legendary', points: 2500);
+  rare(label: 'Very rare', points: 300),
+  legendary(label: 'Legendary', points: 2000);
 
   const RarityTier({required this.label, required this.points});
 

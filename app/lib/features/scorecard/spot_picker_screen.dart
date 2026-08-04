@@ -24,6 +24,7 @@ class SpotPickerScreen extends StatefulWidget {
     required this.player,
     required this.species,
     required this.card,
+    this.wildCardsSpent = const <String>{},
     super.key,
   });
 
@@ -31,17 +32,26 @@ class SpotPickerScreen extends StatefulWidget {
   final List<Species> species;
   final Scorecard card;
 
+  /// Wild cards already taken earlier in this trip. The first impala is worth
+  /// 50 once per trip, so a drive on day three has to know about day one.
+  final Set<String> wildCardsSpent;
+
   /// Returns the chosen species, or null if dismissed.
   static Future<Species?> open(
     BuildContext context, {
     required Player player,
     required List<Species> species,
     required Scorecard card,
+    Set<String> wildCardsSpent = const <String>{},
   }) {
     return Navigator.of(context).push<Species>(
       MaterialPageRoute<Species>(
-        builder: (BuildContext context) =>
-            SpotPickerScreen(player: player, species: species, card: card),
+        builder: (BuildContext context) => SpotPickerScreen(
+          player: player,
+          species: species,
+          card: card,
+          wildCardsSpent: wildCardsSpent,
+        ),
       ),
     );
   }
@@ -63,6 +73,14 @@ class _SpotPickerScreenState extends State<SpotPickerScreen> {
 
   /// Chances remaining today, or null when the tier is unlimited.
   int? _chancesLeft(Species species) {
+    // A wild card is one per trip, not one per day, so a drive on day three
+    // has to see what day one already took.
+    if (species.isWildCard) {
+      return widget.wildCardsSpent.contains(species.id) ||
+              widget.card.timesClaimed(species.id) > 0
+          ? 0
+          : 1;
+    }
     final int? total = species.rarityTier.chancesPerDay;
     if (total == null) {
       return null;

@@ -184,7 +184,6 @@ void main() {
     test('rare and above are unlimited — every leopard counts', () {
       expect(RarityTier.scarce.chancesPerDay, isNull);
       expect(RarityTier.rare.chancesPerDay, isNull);
-      expect(RarityTier.veryRare.chancesPerDay, isNull);
       expect(RarityTier.legendary.chancesPerDay, isNull);
     });
 

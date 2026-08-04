@@ -119,7 +119,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(picked?.id, 'ground-pangolin');
-    expect(picked?.points, 2500);
+    expect(picked?.points, 2000);
   });
 
   testWidgets('a spent species cannot be claimed again', (

@@ -123,7 +123,18 @@ class Species {
   /// Those fall back to a silhouette until a photograph is chosen by eye.
   final bool photoVerified;
 
-  int get points => rarityTier.points;
+  /// What a claim is worth.
+  ///
+  /// Normally the tier value. The wild card overrides it: the first impala of a
+  /// trip is a real moment that a 5-point Common tile does nothing for, so it
+  /// pays 50 — once, to one person, and then it is gone.
+  int get points => isWildCard ? wildCardPoints : rarityTier.points;
+
+  /// Enough to matter on the first morning and nowhere near enough to decide a
+  /// trip. Half a Notable, and a twentieth of a leopard.
+  static const int wildCardPoints = 50;
+
+  bool get isWildCard => tags.contains(SpeciesTag.wildCard);
 
   /// Photographs live at `assets/species/<id>.jpg`. Missing files fall back to
   /// a generated placeholder, so the app runs before any art exists.

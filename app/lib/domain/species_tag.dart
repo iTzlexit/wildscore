@@ -26,7 +26,18 @@ enum SpeciesTag {
   /// technically carnivorous.
   predator(label: 'Predators', shortLabel: 'PREDATOR', isFilter: true),
 
-  nocturnal(label: 'Nocturnal', shortLabel: 'NIGHT', isFilter: true);
+  nocturnal(label: 'Nocturnal', shortLabel: 'NIGHT', isFilter: true),
+
+  /// The first impala of the trip.
+  ///
+  /// Being first through the gate and calling the first impala is a real moment
+  /// that a 5-point Common tile does nothing for. This makes it worth 50 — once
+  /// per trip, to one person, and then it is gone for good.
+  ///
+  /// Per *trip*, not per day, on purpose: repeated every morning it would just
+  /// be a points tax on whoever wakes up first. Not a filter — it is a scoring
+  /// rule attached to one species, not a group anybody browses.
+  wildCard(label: 'Wild card', shortLabel: 'WILD CARD', isFilter: false);
 
   const SpeciesTag({
     required this.label,

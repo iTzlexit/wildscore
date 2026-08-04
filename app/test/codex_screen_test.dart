@@ -130,7 +130,7 @@ void main() {
 
     expect(find.text('Ground Pangolin'), findsOneWidget);
     expect(find.textContaining('0'), findsWidgets);
-    expect(find.text('2500'), findsOneWidget);
+    expect(find.text('2000'), findsOneWidget);
     // The tier name is the most explicit rarity channel — the other five
     // require the player to have learned the system first.
     expect(find.text('LEGENDARY'), findsOneWidget);

@@ -38,7 +38,7 @@ void main() {
       expect(s.conservationStatus, ConservationStatus.leastConcern);
       expect(s.isNocturnal, isTrue);
       expect(s.isBigFive, isFalse);
-      expect(s.points, 2500);
+      expect(s.points, 2000);
       expect(s.dexNumber, 999);
       expect(s.dexLabel, '999');
       expect(s.imageAsset, 'assets/species/test-beast.jpg');
@@ -101,9 +101,8 @@ void main() {
       expect(RarityTier.frequent.points, 15);
       expect(RarityTier.uncommon.points, 40);
       expect(RarityTier.scarce.points, 100);
-      expect(RarityTier.rare.points, 250);
-      expect(RarityTier.veryRare.points, 750);
-      expect(RarityTier.legendary.points, 2500);
+      expect(RarityTier.rare.points, 300);
+      expect(RarityTier.legendary.points, 2000);
     });
 
     test('are strictly ascending — scarcity has to mean something', () {

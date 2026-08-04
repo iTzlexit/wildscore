@@ -189,9 +189,8 @@ class RarityStyle {
 }
 
 extension RarityTierStyling on RarityTier {
-  /// Positional — tier 1 through 7 — so this survives the pending rename to
-  /// Common / Frequent / Notable / Rare / Very rare / Exceptional / Legendary.
-  /// See docs/DIVERGENCES.md.
+  /// Positional — tier 1 through 6 — so this survives the pending rename of the
+  /// enum values themselves. See docs/DIVERGENCES.md.
   RarityStyle get style => switch (this) {
     // Hueless on purpose. Stone says "not the interesting one" better than any
     // colour, and it makes everything above it read as a step up.
@@ -229,17 +228,9 @@ extension RarityTierStyling on RarityTier {
       notched: true,
       foil: false,
     ),
-    // → Very rare
+    // → Very rare. Takes the old Exceptional crimson: with one fewer tier
+    // above it, this is now the last step before the top and needs to look it.
     RarityTier.rare => const RarityStyle(
-      accent: Color(0xFFC26A15),
-      fill: Color(0x24C26A15),
-      borderWidth: 1.8,
-      glow: Color(0x2EC26A15),
-      notched: true,
-      foil: false,
-    ),
-    // → Exceptional
-    RarityTier.veryRare => const RarityStyle(
       accent: Color(0xFFC0392B),
       fill: Color(0x2BC0392B),
       borderWidth: 2,
