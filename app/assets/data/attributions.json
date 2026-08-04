@@ -153,6 +153,12 @@
       "source": "https://www.inaturalist.org/observations/188001654"
     },
     {
+      "id": "common-ostrich",
+      "author": "Public domain (CC0)",
+      "license": "cc0",
+      "source": "https://www.inaturalist.org/observations/61012743"
+    },
+    {
       "id": "dwarf-mongoose",
       "author": "Tim",
       "license": "cc-by",
@@ -163,6 +169,12 @@
       "author": "Wynand Uys",
       "license": "cc-by",
       "source": "https://www.inaturalist.org/observations/8962217"
+    },
+    {
+      "id": "egyptian-goose",
+      "author": "Public domain (CC0)",
+      "license": "cc0",
+      "source": "https://www.inaturalist.org/observations/278329539"
     },
     {
       "id": "eland",
@@ -331,6 +343,12 @@
       "author": "Christiaan Viljoen",
       "license": "cc-by",
       "source": "https://www.inaturalist.org/observations/62385474"
+    },
+    {
+      "id": "secretarybird",
+      "author": "sableplains",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/330196827"
     },
     {
       "id": "serval",

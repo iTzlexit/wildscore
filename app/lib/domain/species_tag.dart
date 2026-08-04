@@ -12,9 +12,13 @@ enum SpeciesTag {
   /// Not a scientific grouping — "antelope" excludes buffalo, which is a bovid
   /// but is not what anyone means. It matches how people actually talk in a
   /// car, which is the only test that matters here.
-  antelope(label: 'Antelope', shortLabel: 'ANTELOPE', isFilter: false),
+  ///
+  /// Filterable because it is the largest natural group in the park and the one
+  /// people most often want to narrow to: seventeen species that all look
+  /// broadly similar and are genuinely hard to tell apart.
+  antelope(label: 'Antelope', shortLabel: 'ANTELOPE', isFilter: true),
 
-  snake(label: 'Snakes', shortLabel: 'SNAKE', isFilter: false),
+  snake(label: 'Snakes', shortLabel: 'SNAKE', isFilter: true),
 
   /// What a safari-goer means by "we saw a predator": things that hunt or
   /// scavenge other animals. Deliberately excludes the insectivores nobody

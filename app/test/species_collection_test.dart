@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wildscore/data/species_repository.dart';
 import 'package:wildscore/domain/conservation_status.dart';
 import 'package:wildscore/domain/species.dart';
+import 'package:wildscore/domain/species_category.dart';
 import 'package:wildscore/domain/species_collection.dart';
 
 /// The named sets are what people actually try to complete, so a set that is
@@ -134,6 +135,33 @@ void main() {
           reason: '${s.id} has no silhouette, so it would show a monogram',
         );
       }
+    });
+  });
+
+  group('the bird list is curated, not exhaustive', () {
+    test('carries the ones people actually want to find', () {
+      // Kruger has around 500 bird species. This is a game, not a checklist —
+      // the list is the birds somebody would point at, not every bird present.
+      final List<String> birds = <String>[
+        for (final Species s in _all)
+          if (s.category == SpeciesCategory.bird) s.commonName,
+      ];
+
+      expect(birds, contains('Common Ostrich'));
+      expect(birds, contains('Secretarybird'));
+      expect(birds, contains('Egyptian Goose'));
+    });
+
+    test('stays small enough to be a game', () {
+      final int birds = _all
+          .where((Species s) => s.category == SpeciesCategory.bird)
+          .length;
+
+      expect(
+        birds,
+        lessThan(40),
+        reason: 'past this it stops being a scorecard and becomes a field list',
+      );
     });
   });
 

@@ -1210,7 +1210,7 @@
     },
     {
       "id": "kori-bustard",
-      "dexNumber": 58,
+      "dexNumber": 60,
       "commonName": "Kori Bustard",
       "scientificName": "Ardeotis kori",
       "afrikaansName": "Gompou",
@@ -1231,7 +1231,7 @@
     },
     {
       "id": "lappet-faced-vulture",
-      "dexNumber": 59,
+      "dexNumber": 61,
       "commonName": "Lappet-faced Vulture",
       "scientificName": "Torgos tracheliotos",
       "afrikaansName": "Swartaasvoël",
@@ -1254,7 +1254,7 @@
     },
     {
       "id": "lilac-breasted-roller",
-      "dexNumber": 60,
+      "dexNumber": 62,
       "commonName": "Lilac-breasted Roller",
       "scientificName": "Coracias caudatus",
       "afrikaansName": "Gewone Troupant",
@@ -1274,7 +1274,7 @@
     },
     {
       "id": "martial-eagle",
-      "dexNumber": 61,
+      "dexNumber": 63,
       "commonName": "Martial Eagle",
       "scientificName": "Polemaetus bellicosus",
       "afrikaansName": "Breëkoparend",
@@ -1297,7 +1297,7 @@
     },
     {
       "id": "pels-fishing-owl",
-      "dexNumber": 62,
+      "dexNumber": 64,
       "commonName": "Pel's Fishing Owl",
       "scientificName": "Scotopelia peli",
       "afrikaansName": "Visuil",
@@ -1319,7 +1319,7 @@
     },
     {
       "id": "saddle-billed-stork",
-      "dexNumber": 64,
+      "dexNumber": 66,
       "commonName": "Saddle-billed Stork",
       "scientificName": "Ephippiorhynchus senegalensis",
       "afrikaansName": "Saalbekooievaar",
@@ -1341,7 +1341,7 @@
     },
     {
       "id": "southern-ground-hornbill",
-      "dexNumber": 65,
+      "dexNumber": 68,
       "commonName": "Southern Ground Hornbill",
       "scientificName": "Bucorvus leadbeateri",
       "afrikaansName": "Bromvoël",
@@ -1364,7 +1364,7 @@
     },
     {
       "id": "verreauxs-eagle-owl",
-      "dexNumber": 66,
+      "dexNumber": 69,
       "commonName": "Verreaux's Eagle-Owl",
       "scientificName": "Bubo lacteus",
       "afrikaansName": "Reuse-ooruil",
@@ -1387,7 +1387,7 @@
     },
     {
       "id": "white-backed-vulture",
-      "dexNumber": 67,
+      "dexNumber": 70,
       "commonName": "White-backed Vulture",
       "scientificName": "Gyps africanus",
       "afrikaansName": "Witrugaasvoël",
@@ -1409,7 +1409,7 @@
     },
     {
       "id": "black-mamba",
-      "dexNumber": 68,
+      "dexNumber": 71,
       "commonName": "Black Mamba",
       "scientificName": "Dendroaspis polylepis",
       "afrikaansName": "Swartmamba",
@@ -1432,7 +1432,7 @@
     },
     {
       "id": "leopard-tortoise",
-      "dexNumber": 69,
+      "dexNumber": 72,
       "commonName": "Leopard Tortoise",
       "scientificName": "Stigmochelys pardalis",
       "afrikaansName": "Bergskilpad",
@@ -1454,7 +1454,7 @@
     },
     {
       "id": "nile-crocodile",
-      "dexNumber": 70,
+      "dexNumber": 73,
       "commonName": "Nile Crocodile",
       "scientificName": "Crocodylus niloticus",
       "afrikaansName": "Nylkrokodil",
@@ -1476,7 +1476,7 @@
     },
     {
       "id": "african-rock-python",
-      "dexNumber": 71,
+      "dexNumber": 74,
       "commonName": "Southern African Rock Python",
       "scientificName": "Python natalensis",
       "afrikaansName": "Luislang",
@@ -1499,7 +1499,7 @@
     },
     {
       "id": "water-monitor",
-      "dexNumber": 72,
+      "dexNumber": 75,
       "commonName": "Water Monitor",
       "scientificName": "Varanus niloticus",
       "afrikaansName": "Waterlikkewaan",
@@ -1543,7 +1543,7 @@
     },
     {
       "id": "red-billed-buffalo-weaver",
-      "dexNumber": 63,
+      "dexNumber": 65,
       "commonName": "Red-billed Buffalo Weaver",
       "scientificName": "Bubalornis niger",
       "afrikaansName": "Buffelwewer",
@@ -1565,7 +1565,7 @@
     },
     {
       "id": "ant-lion",
-      "dexNumber": 73,
+      "dexNumber": 76,
       "commonName": "Ant Lion",
       "scientificName": "Myrmeleontidae",
       "afrikaansName": "Mierleeu",
@@ -1587,7 +1587,7 @@
     },
     {
       "id": "rhinoceros-beetle",
-      "dexNumber": 74,
+      "dexNumber": 77,
       "commonName": "Rhinoceros Beetle",
       "scientificName": "Oryctes boas",
       "afrikaansName": "Renosterkewer",
@@ -1600,6 +1600,67 @@
       "description": "Can carry many times its own weight, and the males fight with the horn. Turns up at camp lights on humid summer nights, which is very nearly the only time anyone sees one.",
       "habitat": "Woodland; larvae develop in rotting wood and dung",
       "bestTimeToSpot": "Summer nights, at camp lights after rain",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern"
+    },
+    {
+      "id": "common-ostrich",
+      "dexNumber": 58,
+      "commonName": "Common Ostrich",
+      "scientificName": "Struthio camelus",
+      "afrikaansName": "Volstruis",
+      "category": "bird",
+      "rarityTier": "uncommon",
+      "tags": [],
+      "isSensitive": false,
+      "description": "The largest bird alive, and the fastest thing on two legs. Localised in Kruger to the open southern and central grasslands, so it is a sighting you drive to rather than one that finds you.",
+      "habitat": "Open short grassland and sparse savanna",
+      "bestTimeToSpot": "Mid-morning on open plains",
+      "parkRegions": [
+        "southern",
+        "central"
+      ],
+      "conservationStatus": "leastConcern"
+    },
+    {
+      "id": "secretarybird",
+      "dexNumber": 67,
+      "commonName": "Secretarybird",
+      "scientificName": "Sagittarius serpentarius",
+      "afrikaansName": "Sekretarisvoël",
+      "category": "bird",
+      "rarityTier": "scarce",
+      "tags": [
+        "predator"
+      ],
+      "isSensitive": false,
+      "description": "An eagle that walks. Strides through grassland stamping on snakes with enough force to kill them outright, and roosts in a flat-topped acacia at dusk. Numbers have fallen sharply across its range.",
+      "habitat": "Open grassland and lightly wooded savanna",
+      "bestTimeToSpot": "Walking open ground in the morning",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "endangered"
+    },
+    {
+      "id": "egyptian-goose",
+      "dexNumber": 59,
+      "commonName": "Egyptian Goose",
+      "scientificName": "Alopochen aegyptiaca",
+      "afrikaansName": "Kolgans",
+      "category": "bird",
+      "rarityTier": "frequent",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Not a goose but a shelduck, and the loudest thing at any waterhole. Pairs bond for life and will see off animals many times their size to defend a nest.",
+      "habitat": "Any water — dams, rivers, waterholes",
+      "bestTimeToSpot": "All day, at the water's edge",
       "parkRegions": [
         "southern",
         "central",

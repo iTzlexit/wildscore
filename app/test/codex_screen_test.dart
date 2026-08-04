@@ -186,11 +186,15 @@ void main() {
   });
 
   testWidgets('filters by category', (WidgetTester tester) async {
-    await _pumpCodex(tester, width: 1400);
+    // Wider than it looks like it needs to be: the quick-filter row is a lazy
+    // ListView, so a chip past the right edge is never built and no finder can
+    // reach it. Every tag that becomes filterable pushes the categories
+    // further right.
+    await _pumpCodex(tester, width: 2000);
 
     await _tapQuickFilter(tester, 'Birds');
 
-    // Birds occupy No. 056–066; African Fish Eagle is the first alphabetically.
+    // African Fish Eagle is the first bird alphabetically.
     expect(find.text('African Fish Eagle'), findsOneWidget);
     expect(find.text('Aardvark'), findsNothing);
   });
@@ -208,7 +212,7 @@ void main() {
   testWidgets('clear filters restores the full list', (
     WidgetTester tester,
   ) async {
-    await _pumpCodex(tester, width: 1400);
+    await _pumpCodex(tester, width: 2000);
 
     await _tapQuickFilter(tester, 'Birds');
     expect(find.text('Clear filters'), findsOneWidget);
