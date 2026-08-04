@@ -4,6 +4,9 @@ import 'rarity_tier.dart';
 import 'species_category.dart';
 import 'species_tag.dart';
 
+/// How often a wild-card bonus comes back.
+enum WildCardScope { day, trip }
+
 /// One animal in the Codex.
 ///
 /// Immutable, and deliberately free of any Flutter import — this is the shape
@@ -123,18 +126,33 @@ class Species {
   /// Those fall back to a silhouette until a photograph is chosen by eye.
   final bool photoVerified;
 
-  /// What a claim is worth.
-  ///
-  /// Normally the tier value. The wild card overrides it: the first impala of a
-  /// trip is a real moment that a 5-point Common tile does nothing for, so it
-  /// pays 50 — once, to one person, and then it is gone.
-  int get points => isWildCard ? wildCardPoints : rarityTier.points;
+  /// What a claim is normally worth. The wild-card bonus is applied on top by
+  /// whoever creates the claim — see [wildCardBonus].
+  int get points => rarityTier.points;
 
-  /// Enough to matter on the first morning and nowhere near enough to decide a
-  /// trip. Half a Notable, and a twentieth of a leopard.
-  static const int wildCardPoints = 50;
+  /// What the *first* sighting of a wild-card species pays.
+  ///
+  /// A bonus, not a replacement, and not a lock. The first zebra of the morning
+  /// is worth 50; the second is worth 5 like any other zebra, until the day's
+  /// chances run out. Enough to matter on the first sighting and nowhere near
+  /// enough to decide a trip — half a Notable, a twentieth of a leopard.
+  static const int wildCardBonus = 50;
 
   bool get isWildCard => tags.contains(SpeciesTag.wildCard);
+
+  /// How many times this can be claimed in a day.
+  ///
+  /// Wild cards get three regardless of tier, because "the first one is worth
+  /// more" says nothing at all if there is only ever one.
+  int? get chancesPerDay => isWildCard ? 3 : rarityTier.chancesPerDay;
+
+  /// Whether the bonus resets daily or only once a trip.
+  ///
+  /// Impala is the trip one: it is *the* arrival animal, and paying out every
+  /// morning would make it a tax on whoever wakes up first. Zebra, giraffe and
+  /// wildebeest reset daily — "there's one!" is a fresh moment each morning.
+  WildCardScope get wildCardScope =>
+      id == 'impala' ? WildCardScope.trip : WildCardScope.day;
 
   /// Photographs live at `assets/species/<id>.jpg`. Missing files fall back to
   /// a generated placeholder, so the app runs before any art exists.

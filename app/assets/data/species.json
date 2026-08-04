@@ -232,7 +232,8 @@
       "category": "mammal",
       "rarityTier": "common",
       "tags": [
-        "antelope"
+        "antelope",
+        "wildCard"
       ],
       "isSensitive": false,
       "description": "Densest on the southern and central grasslands. Calving is tightly synchronised in the wet season, flooding predators with more prey than they can take.",
@@ -491,7 +492,9 @@
       "afrikaansName": "Kameelperd",
       "category": "mammal",
       "rarityTier": "common",
-      "tags": [],
+      "tags": [
+        "wildCard"
+      ],
       "isSensitive": false,
       "description": "Browses above the reach of every other herbivore. Watch for the splayed-leg stance at water, the only moment it is genuinely vulnerable.",
       "habitat": "Acacia and mopane woodland",
@@ -773,7 +776,9 @@
       "afrikaansName": "Bontsebra",
       "category": "mammal",
       "rarityTier": "common",
-      "tags": [],
+      "tags": [
+        "wildCard"
+      ],
       "isSensitive": false,
       "description": "Almost always found alongside wildebeest, which benefit from the zebra's better eyesight while the zebra benefits from their numbers.",
       "habitat": "Open grassland and savanna",

@@ -125,8 +125,11 @@ void main() {
   testWidgets('a spent species cannot be claimed again', (
     WidgetTester tester,
   ) async {
-    // Impala is Common: one chance a day. Tapping it after that must do
+    // Greater Kudu is Common: one chance a day. Tapping it after that must do
     // nothing rather than quietly score again.
+    //
+    // Deliberately not impala — impala is a wild card and gets three chances,
+    // so it is the wrong animal to prove this with.
     Species? picked;
     await tester.binding.setSurfaceSize(const Size(430, 1400));
     addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -134,7 +137,7 @@ void main() {
     final Scorecard card = _card();
     final Scorecard spent = card.withClaim(
       Claim(
-        speciesId: 'impala',
+        speciesId: 'greater-kudu',
         playerId: card.players[0].id,
         at: DateTime(2026, 8, 2, 7),
         points: 5,
@@ -162,9 +165,9 @@ void main() {
     await tester.tap(find.text('open'));
     await tester.pumpAndSettle();
 
-    await tester.enterText(find.byType(TextField), 'Aepyceros');
+    await tester.enterText(find.byType(TextField), 'strepsiceros');
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Impala'));
+    await tester.tap(find.text('Greater Kudu'));
     await tester.pumpAndSettle();
 
     expect(picked, isNull, reason: 'the screen should still be open');

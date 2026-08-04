@@ -32,8 +32,8 @@ class SpotPickerScreen extends StatefulWidget {
   final List<Species> species;
   final Scorecard card;
 
-  /// Wild cards already taken earlier in this trip. The first impala is worth
-  /// 50 once per trip, so a drive on day three has to know about day one.
+  /// Wild-card species whose first-sighting bonus has already gone. They are
+  /// still claimable — they just pay their ordinary value now.
   final Set<String> wildCardsSpent;
 
   /// Returns the chosen species, or null if dismissed.
@@ -71,17 +71,9 @@ class _SpotPickerScreenState extends State<SpotPickerScreen> {
     super.dispose();
   }
 
-  /// Chances remaining today, or null when the tier is unlimited.
+  /// Chances remaining today, or null when unlimited.
   int? _chancesLeft(Species species) {
-    // A wild card is one per trip, not one per day, so a drive on day three
-    // has to see what day one already took.
-    if (species.isWildCard) {
-      return widget.wildCardsSpent.contains(species.id) ||
-              widget.card.timesClaimed(species.id) > 0
-          ? 0
-          : 1;
-    }
-    final int? total = species.rarityTier.chancesPerDay;
+    final int? total = species.chancesPerDay;
     if (total == null) {
       return null;
     }
@@ -89,6 +81,10 @@ class _SpotPickerScreenState extends State<SpotPickerScreen> {
         .clamp(0, total)
         .toInt();
   }
+
+  /// Whether this claim would pay the first-sighting bonus.
+  bool _bonusAvailable(Species species) =>
+      species.isWildCard && !widget.wildCardsSpent.contains(species.id);
 
   List<Species> get _visible {
     final List<Species> matched = <Species>[
@@ -207,6 +203,9 @@ class _SpotPickerScreenState extends State<SpotPickerScreen> {
                         final int? left = _chancesLeft(s);
                         return SpeciesGridCard(
                           species: s,
+                          bonusPoints: _bonusAvailable(s)
+                              ? Species.wildCardBonus
+                              : null,
                           // Coloured by what the car has claimed today, not by
                           // the lifetime record — the question here is "have we
                           // got it yet", and it is a different question.

@@ -271,23 +271,34 @@ class _HomeShellState extends State<HomeShell> {
     if (card == null) {
       return;
     }
+    final Set<String> spent = Trip.bonusesSpent(
+      species,
+      visits: _visits,
+      live: card,
+    );
     final Species? chosen = await SpotPickerScreen.open(
       context,
       player: player,
       species: species,
       card: card,
-      wildCardsSpent: Trip.wildCardsSpent(_visits, live: card),
+      wildCardsSpent: spent,
     );
     if (chosen == null || !mounted) {
       return;
     }
+
+    // The first zebra of the morning pays 50; the second pays 5 like any other
+    // zebra. The bonus is decided here, once, and then stored on the claim —
+    // so a day scored months ago stays explicable even if the rule changes.
+    final bool earnsBonus = chosen.isWildCard && !spent.contains(chosen.id);
+
     await _updateCard(
       card.withClaim(
         Claim(
           speciesId: chosen.id,
           playerId: player.id,
           at: DateTime.now(),
-          points: chosen.points,
+          points: earnsBonus ? Species.wildCardBonus : chosen.points,
         ),
       ),
     );

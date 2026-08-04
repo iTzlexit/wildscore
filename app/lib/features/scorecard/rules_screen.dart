@@ -121,6 +121,15 @@ class RulesScreen extends StatelessWidget {
                 'window to ask what it is. Find it yourself — that is the fun.',
           ),
           const _Rule(
+            icon: Icons.bolt_rounded,
+            title: 'The first one is worth more',
+            body:
+                'Impala, zebra, giraffe and wildebeest pay 50 for the first '
+                'sighting instead of 5. After that they are worth what they '
+                'have always been worth. The impala bonus comes once a trip; '
+                'the others reset every morning.',
+          ),
+          const _Rule(
             icon: Icons.lock_clock_rounded,
             title: 'The common ones run out',
             body:

@@ -71,22 +71,21 @@ void main() {
     expect(lastMammal, lessThan(firstBird));
   });
 
-  test('points derive from the rarity tier, wild cards aside', () {
-    // The wild card is the one deliberate exception: the first impala of a
-    // trip pays 50 rather than its tier's 5. Everything else being tier-derived
-    // is what stops the scale drifting one hand-tuned species at a time.
-    for (final Species s in species.where((Species s) => !s.isWildCard)) {
+  test('points always derive from the rarity tier', () {
+    // Including wild cards. Their bonus is added by whoever creates the claim,
+    // not baked into the species — which is what keeps the scale honest and
+    // stops it drifting one hand-tuned animal at a time.
+    for (final Species s in species) {
       expect(s.points, s.rarityTier.points, reason: s.commonName);
     }
   });
 
-  test('the wild card is the only species that overrides its tier', () {
-    final List<Species> overriding = <Species>[
-      for (final Species s in species)
-        if (s.points != s.rarityTier.points) s,
-    ];
-
-    expect(overriding.map((Species s) => s.id), <String>['impala']);
+  test('wild cards get more chances than their tier allows', () {
+    // Otherwise "the first one is worth more" says nothing, because there is
+    // only ever one.
+    for (final Species s in species.where((Species s) => s.isWildCard)) {
+      expect(s.chancesPerDay, 3, reason: s.commonName);
+    }
   });
 
   test('every species occurs in at least one park region', () {

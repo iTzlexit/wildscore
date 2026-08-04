@@ -262,23 +262,44 @@ them against each other produced an argument rather than a score.
 The final step is deliberately the steepest. Legendary should end the
 competition, because in real life it does.
 
-## The wild card
+## Wild cards
 
-> **The first impala of the trip is worth 50 points.** Once, to whoever calls
-> it, and then it is finished for the rest of the trip.
+> **The first one is worth 50. The next one is worth what it has always been
+> worth.**
 
-First through the gate and first to shout *impala* is a real moment, and a
-5-point Common tile does nothing for it. Fifty is enough to matter on the first
-morning and nowhere near enough to decide a trip — half a Notable, a twentieth
-of a leopard.
+A bonus, not a lock, and not a new value for the species. The first zebra of the
+morning pays 50; the second pays 5 like any other zebra, until the day''s
+chances run out.
 
-**Per trip, not per day.** Repeated every morning it would just be a points tax
-on whoever wakes up first.
+| Species | Bonus resets |
+|---|---|
+| Impala | **Once a trip** |
+| Plains Zebra | Every day |
+| Giraffe | Every day |
+| Blue Wildebeest | Every day |
+
+These are the arrival animals — the ones somebody shouts about in the first
+twenty minutes, and the ones a 5-point Common tile does nothing for. Fifty
+matters on the first sighting and cannot decide a trip: half a Notable, a
+twentieth of a leopard.
+
+**Impala is the trip one.** It is *the* arrival animal, and paying out every
+morning would make it a tax on whoever wakes up first. The rest reset daily,
+because "there''s one!" is a fresh moment each morning.
+
+Two consequences worth stating:
+
+- **Wild cards get three chances a day regardless of tier.** "The first one is
+  worth more" says nothing at all if there is only ever one.
+- **The bonus is stored on the claim, not on the species.** A day scored months
+  ago stays explicable even if the rule changes, and the points scale itself
+  never drifts one hand-tuned animal at a time.
 
 A trip is **derived, never declared** — consecutive drives with no more than a
-two-day gap. Making somebody press "Start trip" on top of "Start drive" doubles
-the ceremony at a gate and they would forget to end it, leaving a trip open for
-eight months. See `lib/domain/trip.dart`.
+two-day gap, which tolerates a rest day at camp. Making somebody press "Start
+trip" on top of "Start drive" doubles the ceremony at a gate and they would
+forget to end it, leaving a trip open for eight months. See
+`lib/domain/trip.dart`.
 
 **Sense check:** claiming every Common and Frequent species in the park in a
 single day is worth **320**. One pangolin is **2,500** — nearly eight times a
