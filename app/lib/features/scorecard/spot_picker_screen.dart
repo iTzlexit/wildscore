@@ -206,6 +206,7 @@ class _SpotPickerScreenState extends State<SpotPickerScreen> {
                           bonusPoints: _bonusAvailable(s)
                               ? Species.wildCardBonus
                               : null,
+                          bonusSpent: s.isWildCard && !_bonusAvailable(s),
                           // Coloured by what the car has claimed today, not by
                           // the lifetime record — the question here is "have we
                           // got it yet", and it is a different question.

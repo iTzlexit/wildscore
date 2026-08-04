@@ -142,9 +142,14 @@ class Species {
 
   /// How many times this can be claimed in a day.
   ///
-  /// Wild cards get three regardless of tier, because "the first one is worth
-  /// more" says nothing at all if there is only ever one.
-  int? get chancesPerDay => isWildCard ? 3 : rarityTier.chancesPerDay;
+  /// Daily wild cards get three, because "the first one is worth more" says
+  /// nothing at all if there is only ever one. Impala does not: it is the most
+  /// common animal in the park and three impala a day is three shouts about
+  /// impala. Its bonus is trip-scoped anyway, so day two's single impala is
+  /// already an ordinary five-point impala.
+  int? get chancesPerDay => isWildCard && wildCardScope == WildCardScope.day
+      ? 3
+      : rarityTier.chancesPerDay;
 
   /// Whether the bonus resets daily or only once a trip.
   ///

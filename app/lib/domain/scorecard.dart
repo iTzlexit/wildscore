@@ -52,6 +52,7 @@ class Claim {
     required this.playerId,
     required this.at,
     required this.points,
+    this.road,
   });
 
   factory Claim.fromJson(Map<String, dynamic> json) => Claim(
@@ -59,12 +60,26 @@ class Claim {
     playerId: json['playerId'] as String,
     at: DateTime.parse(json['at'] as String),
     points: json['points'] as int,
+    road: json['road'] as String?,
   );
 
   final String speciesId;
   final String playerId;
   final DateTime at;
   final int points;
+
+  /// Which road it was called on — `S100`, `H1-3 · Napi Road`.
+  ///
+  /// Null whenever the app cannot be certain: location off or refused, no fix
+  /// yet, outside the park, or nowhere near a known road. Null is also the
+  /// **only** value ever stored for rhino and pangolin, no matter what the GPS
+  /// says — see docs/MAPS.md. Nothing downstream has to remember that rule,
+  /// because the coordinate never exists in the first place.
+  ///
+  /// A road name, never a coordinate. "S100" is thirty kilometres of road, and
+  /// that is precisely the point: enough to remember the morning by, useless
+  /// to anybody hunting.
+  final String? road;
 
   /// A mis-tap is fixable for five minutes. Long enough to correct the wrong
   /// name; short enough that nobody relitigates the morning at dinner.
@@ -77,6 +92,7 @@ class Claim {
     'playerId': playerId,
     'at': at.toIso8601String(),
     'points': points,
+    if (road != null) 'road': road,
   };
 }
 

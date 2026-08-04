@@ -11,6 +11,11 @@ dependencies:
     sdk: flutter
   shared_preferences: ^2.5.5
 
+  # GPS only. Works with no cell signal, which is the entire reason a road
+  # label is possible in a park that has none. No coordinate is ever stored
+  # or transmitted - see lib/data/location_service.dart.
+  geolocator: ^13.0.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

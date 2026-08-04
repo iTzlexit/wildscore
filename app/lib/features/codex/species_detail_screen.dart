@@ -87,7 +87,14 @@ class _Header extends StatelessWidget {
     // small phone and a third of a tablet; this keeps the proportion instead of
     // the number, and clamps so the portrait never gets silly at either end.
     final double height = (screen.height * 0.48).clamp(340.0, 460.0);
-    final double medallion = (height * 0.42).clamp(150.0, 210.0);
+    // Sized against the *width* as well: on a narrow phone the limit on how big
+    // the portrait can be is the screen edge, not the header height. Taking 62%
+    // of the width fills the space that was previously just blue.
+    final double medallion = <double>[
+      height * 0.52,
+      screen.width * 0.62,
+      260.0,
+    ].reduce((double a, double b) => a < b ? a : b);
 
     return SizedBox(
       height: height,

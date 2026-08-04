@@ -101,16 +101,25 @@ class _StandingsBoardState extends State<StandingsBoard> {
   List<_Haul> _haulFor(String playerId) {
     final Map<String, int> counts = <String, int>{};
     final Map<String, int> points = <String, int>{};
+    final Map<String, Set<String>> roads = <String, Set<String>>{};
     for (final Claim c in widget.card.claims) {
       if (c.playerId == playerId) {
         counts[c.speciesId] = (counts[c.speciesId] ?? 0) + 1;
         points[c.speciesId] = (points[c.speciesId] ?? 0) + c.points;
+        if (c.road != null) {
+          (roads[c.speciesId] ??= <String>{}).add(c.road!);
+        }
       }
     }
     final List<_Haul> haul = <_Haul>[
       for (final MapEntry<String, int> e in counts.entries)
         if (_lookup(e.key) case final Species s)
-          _Haul(species: s, count: e.value, points: points[e.key] ?? 0),
+          _Haul(
+            species: s,
+            count: e.value,
+            points: points[e.key] ?? 0,
+            roads: roads[e.key] ?? const <String>{},
+          ),
     ];
     // By what the animal is worth, not by what the stack totals — two impala
     // must not outrank a leopard.
@@ -138,7 +147,22 @@ class _Haul {
     required this.species,
     required this.count,
     required this.points,
+    this.roads = const <String>{},
   });
+
+  /// Roads this player found it on. Empty when location was off, refused, or
+  /// the species is one whose whereabouts are never recorded.
+  final Set<String> roads;
+
+  /// `S100`, or `S100 +1` when the same animal turned up in two places. The
+  /// full list would not fit on a tag and is not what anybody is asking.
+  String? get where {
+    if (roads.isEmpty) {
+      return null;
+    }
+    final String first = roads.first.split(' · ').first;
+    return roads.length == 1 ? first : '$first +${roads.length - 1}';
+  }
 
   final Species species;
 
@@ -426,6 +450,26 @@ class _HaulTag extends StatelessWidget {
                   fontFeatures: AppText.tabular,
                 ),
               ),
+              // Where it was found, when the phone could say. This is the part
+              // people actually recall — "the leopard on the S100" is a memory
+              // in a way that "the leopard" is not.
+              if (haul.where case final String road) ...<Widget>[
+                const SizedBox(width: 6),
+                Container(
+                  width: 1,
+                  height: 10,
+                  color: style.accent.withValues(alpha: 0.35),
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  road,
+                  style: AppText.caption.copyWith(
+                    fontSize: 10.5,
+                    color: style.accent.withValues(alpha: 0.8),
+                    fontVariations: AppFonts.weight(600),
+                  ),
+                ),
+              ],
             ],
           ),
         ),

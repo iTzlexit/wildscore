@@ -23,6 +23,7 @@ class SpeciesGridCard extends StatefulWidget {
     this.onLongPress,
     this.chancesLeft,
     this.bonusPoints,
+    this.bonusSpent = false,
     super.key,
   });
 
@@ -30,6 +31,11 @@ class SpeciesGridCard extends StatefulWidget {
   /// the tier value, because the number on the tile has to be the number the
   /// player is about to get.
   final int? bonusPoints;
+
+  /// A wild card whose bonus has already gone. Still claimable, just ordinary
+  /// now — and worth saying so, because somebody who saw 50 on this tile an
+  /// hour ago will want to know where it went.
+  final bool bonusSpent;
 
   /// Marks the species seen from the tile. Null hides the control.
   final VoidCallback? onToggleSpotted;
@@ -185,6 +191,12 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
                             bottom: 6,
                             left: 6,
                             child: _WildCardBadge(),
+                          )
+                        else if (widget.bonusSpent)
+                          const Positioned(
+                            bottom: 6,
+                            left: 6,
+                            child: _BonusSpentBadge(),
                           ),
                         if (species.tags.contains(SpeciesTag.bigFive))
                           const Positioned(
@@ -496,6 +508,38 @@ class _WildCardBadge extends StatelessWidget {
           letterSpacing: 0.7,
           color: Colors.white,
         ),
+      ),
+    );
+  }
+}
+
+/// The bonus on this species is gone. Padlocked rather than hidden, because a
+/// badge that simply disappears looks like a bug to somebody who saw it earlier.
+class _BonusSpentBadge extends StatelessWidget {
+  const _BonusSpentBadge();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+      decoration: BoxDecoration(
+        color: const Color(0xCC161C19),
+        borderRadius: BorderRadius.circular(Radii.chip - 4),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          const Icon(Icons.lock_rounded, size: 10, color: Color(0xB3FFFFFF)),
+          const SizedBox(width: 3),
+          Text(
+            'BONUS GONE',
+            style: AppText.overline.copyWith(
+              fontSize: 8,
+              letterSpacing: 0.6,
+              color: const Color(0xB3FFFFFF),
+            ),
+          ),
+        ],
       ),
     );
   }

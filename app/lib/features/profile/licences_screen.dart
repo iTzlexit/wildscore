@@ -134,6 +134,17 @@ class _LicencesScreenState extends State<LicencesScreen> {
 
                 const SizedBox(height: Space.xl),
                 const _Source(
+                  title: 'Road network',
+                  subtitle: 'OpenStreetMap contributors',
+                  body:
+                      'Kruger road centrelines, simplified and bundled so they '
+                      'work with no signal. Licensed under the Open Database '
+                      'Licence (ODbL). openstreetmap.org/copyright',
+                  count: null,
+                ),
+
+                const SizedBox(height: Space.xl),
+                const _Source(
                   title: 'Typeface',
                   subtitle: 'Inter, by Rasmus Andersson',
                   body: 'SIL Open Font License 1.1.',

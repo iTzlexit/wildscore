@@ -80,12 +80,18 @@ void main() {
     }
   });
 
-  test('wild cards get more chances than their tier allows', () {
+  test('daily wild cards get more chances than their tier allows', () {
     // Otherwise "the first one is worth more" says nothing, because there is
-    // only ever one.
-    for (final Species s in species.where((Species s) => s.isWildCard)) {
+    // only ever one. Impala is exempt: it is the most common animal in the
+    // park and three a day is three shouts about impala.
+    for (final Species s in species.where(
+      (Species s) => s.isWildCard && s.wildCardScope == WildCardScope.day,
+    )) {
       expect(s.chancesPerDay, 3, reason: s.commonName);
     }
+
+    final Species impala = species.firstWhere((Species s) => s.id == 'impala');
+    expect(impala.chancesPerDay, 1);
   });
 
   test('every species occurs in at least one park region', () {

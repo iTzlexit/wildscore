@@ -1,4 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--
+        GPS only, and only to name the road a sighting happened on. Works
+        offline, which is the point - Kruger has no cell signal. No coordinate
+        is ever stored or transmitted; see lib/data/location_service.dart.
+    -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <application
         android:label="Wild Score"
         android:name="${applicationName}"

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../data/location_service.dart';
 import '../data/scorecard_repository.dart';
 import '../data/species_repository.dart';
 import '../data/spotted_repository.dart';
@@ -45,6 +46,7 @@ class _HomeShellState extends State<HomeShell> {
   static const SpottedRepository _spottedRepo = SpottedRepository();
   static const ScorecardRepository _cardRepo = ScorecardRepository();
   static const VisitRepository _visitRepo = VisitRepository();
+  static const LocationService _location = LocationService();
 
   late final Future<List<Species>> _speciesFuture;
   int _tab = 0;
@@ -292,13 +294,25 @@ class _HomeShellState extends State<HomeShell> {
     // so a day scored months ago stays explicable even if the rule changes.
     final bool earnsBonus = chosen.isWildCard && !spent.contains(chosen.id);
 
+    // Which road, if the phone can say so. Awaited rather than fired off,
+    // because a fix that lands after the claim is written is a fix that belongs
+    // to nothing — but it is capped at a few seconds and returns null on every
+    // failure, so the claim is never blocked for long and never blocked hard.
+    final String? road = await _location.roadFor(chosen);
+
+    final Scorecard? latest = _card;
+    if (latest == null) {
+      return;
+    }
+
     await _updateCard(
-      card.withClaim(
+      latest.withClaim(
         Claim(
           speciesId: chosen.id,
           playerId: player.id,
           at: DateTime.now(),
           points: earnsBonus ? Species.wildCardBonus : chosen.points,
+          road: road,
         ),
       ),
     );
