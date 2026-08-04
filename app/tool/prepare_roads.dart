@@ -112,9 +112,7 @@ Future<void> main(List<String> args) async {
   stdout
     ..writeln('roads:  ${out.length}')
     ..writeln('points: $pointsBefore -> $pointsAfter')
-    ..writeln(
-      'size:   ${(target.lengthSync() / 1024).toStringAsFixed(0)} KB',
-    );
+    ..writeln('size:   ${(target.lengthSync() / 1024).toStringAsFixed(0)} KB');
 }
 
 /// Drops points closer than [_simplifyMetres] to the last one kept. Crude

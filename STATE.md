@@ -3,7 +3,7 @@
 > **Written for a fresh conversation with no history.** Read this file and you
 > should be able to pick up work without anyone re-explaining anything.
 >
-> Last updated: 2 August 2026.
+> Last updated: 5 August 2026.
 
 ## The machine
 
@@ -35,7 +35,7 @@ the app. One runtime dependency: `shared_preferences`.
 
 ## What is built
 
-Four tabs — **Profile, Wild Score, Animal Dex, Records**.
+Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 
 - **Onboarding** — a name, an avatar, done. No account.
 - **Animal Dex** — 74 species, search, filters, rarity sort, detail cards.
@@ -43,15 +43,18 @@ Four tabs — **Profile, Wild Score, Animal Dex, Records**.
   to silhouettes because the photos could not be trusted.
 - **Wild Score** — start a drive, add the car, tap the eye by a player's name to
   claim an animal for them, standings with per-player hauls, restart, end day.
-- **Records** — best day, rarest personal find, head-to-head against everyone
-  you have played with.
+- **Latest Sightings** — every find from Rare upwards, plus the Big Five,
+  newest first, grouped by trip, with the road it happened on. Very rare and
+  Legendary are marked "on your word" until photo verification exists. Replaced
+  the Records tab (best day / rarest / head-to-head), which the user found
+  weak; it is in git history if any of it is wanted back.
 - **Profile** — lifetime points, collections (Big Five, Small Five, Under
   threat, Antelope, Predators, Snakes, Night shift), drive history with
   year/month filters and delete, backup/restore, credits.
 - **Backup** — a pasteable code. No server; see `docs/RISKS.md` for why it
   matters more than it looks.
 
-168 tests. `flutter analyze` is clean and must stay clean.
+203 tests. `flutter analyze` is clean and must stay clean.
 
 ## Decisions already made — do not relitigate
 
@@ -64,8 +67,8 @@ Four tabs — **Profile, Wild Score, Animal Dex, Records**.
 | Banked once, at end of day — never per claim | `docs/SCORECARD.md` |
 | Rhino and pangolin never get a location, ever | `docs/MAPS.md`, `docs/SIGHTINGS-FEED.md` |
 | Light theme, single typeface, colour reserved for rarity | `docs/DESIGN-DIRECTION.md` |
-| No leaderboard — replaced by Records | `lib/features/records/` |
-| Map is not the next feature | `docs/MAPS.md` |
+| No leaderboard — the rivalry is with people in your own car | `docs/MONETISATION.md` |
+| A community sightings map is a different product, not the next commit | `docs/MAPS.md` |
 
 ## Which doc to read for what
 

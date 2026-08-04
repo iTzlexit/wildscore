@@ -14,7 +14,7 @@ import '../shared/theme.dart';
 import 'codex/codex_screen.dart';
 import 'profile/profile_screen.dart';
 import 'profile/visit_history_screen.dart';
-import 'records/records_screen.dart';
+import 'sightings/sightings_screen.dart';
 import 'scorecard/spot_picker_screen.dart';
 import 'scorecard/start_scorecard_sheet.dart';
 import 'scorecard/wild_score_screen.dart';
@@ -372,7 +372,7 @@ class _HomeShellState extends State<HomeShell> {
                 caughtIds: _spotted,
                 onToggleSpotted: _toggleSpotted,
               ),
-              RecordsScreen(visits: _visits, species: species),
+              SightingsScreen(visits: _visits, species: species, live: _card),
             ],
           ),
           // No camera button. It sat over the content on every tab and did
@@ -439,8 +439,8 @@ class _BottomBar extends StatelessWidget {
                 onTap: () => onChanged(2),
               ),
               _Tab(
-                icon: Icons.emoji_events_rounded,
-                label: 'Records',
+                icon: Icons.place_rounded,
+                label: 'Sightings',
                 selected: index == 3,
                 onTap: () => onChanged(3),
               ),

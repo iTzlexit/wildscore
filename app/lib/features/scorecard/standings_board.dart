@@ -4,6 +4,7 @@ import '../../domain/scorecard.dart';
 import '../../domain/species.dart';
 import '../../shared/theme.dart';
 import '../../shared/widgets/avatar_badge.dart';
+import '../codex/species_detail_screen.dart';
 
 /// Live standings — one row per player, bar proportional to the leader.
 ///
@@ -209,6 +210,38 @@ class _Row extends StatelessWidget {
   /// sorted first, so the cut always falls on the least interesting end.
   static const int _cap = 6;
 
+  /// What tapping an animal in somebody's haul does.
+  ///
+  /// It used to go straight to "Take it back?", which was wrong in both
+  /// directions: on a finished drive there was nothing to take back and the tag
+  /// was dead, and on a live one the only thing you could do to the leopard you
+  /// had just found was delete it. Looking at the animal is the commoner wish
+  /// by far — somebody says "what *is* a civet" and the tag is where they tap.
+  ///
+  /// So: a choice when both are possible, and straight to the card when removal
+  /// is not. A menu with one item is not a menu.
+  Future<void> _openTag(BuildContext context, _Haul haul) async {
+    if (onRemove == null) {
+      await SpeciesDetailScreen.open(context, haul.species);
+      return;
+    }
+    final _TagAction? choice = await showModalBottomSheet<_TagAction>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) =>
+          _TagSheet(haul: haul, player: player.name),
+    );
+    if (!context.mounted || choice == null) {
+      return;
+    }
+    switch (choice) {
+      case _TagAction.view:
+        await SpeciesDetailScreen.open(context, haul.species);
+      case _TagAction.remove:
+        onRemove!(haul.species);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final Color bar = leading ? AppColors.accent : AppColors.outlineStrong;
@@ -315,12 +348,7 @@ class _Row extends StatelessWidget {
                 runSpacing: 6,
                 children: <Widget>[
                   for (final _Haul h in shown)
-                    _HaulTag(
-                      haul: h,
-                      onRemove: onRemove == null
-                          ? null
-                          : () => onRemove!(h.species),
-                    ),
+                    _HaulTag(haul: h, onTap: () => _openTag(context, h)),
                   if (trimmed)
                     _MoreTag(count: haul.length - cap, onTap: onShowAll),
                 ],
@@ -387,13 +415,12 @@ class _SpotButton extends StatelessWidget {
 /// different day from one of it, and "African Wildcat ×2 · 1500" answers both
 /// "what did they get" and "why are they winning" without any arithmetic.
 class _HaulTag extends StatelessWidget {
-  const _HaulTag({required this.haul, this.onRemove});
+  const _HaulTag({required this.haul, required this.onTap});
 
   final _Haul haul;
 
-  /// Live games only. Tapping the tag is how a wrongly assigned animal gets
-  /// taken back off someone an hour after the fact.
-  final VoidCallback? onRemove;
+  /// Opens the animal, or the choice between opening it and taking it back.
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -403,7 +430,7 @@ class _HaulTag extends StatelessWidget {
       color: style.fill,
       borderRadius: BorderRadius.circular(Radii.chip - 2),
       child: InkWell(
-        onTap: onRemove,
+        onTap: onTap,
         borderRadius: BorderRadius.circular(Radii.chip - 2),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
@@ -472,6 +499,149 @@ class _HaulTag extends StatelessWidget {
               ],
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+enum _TagAction { view, remove }
+
+/// The two things worth doing to an animal sitting in somebody's haul.
+///
+/// Deliberately not a confirmation — removal still raises its own dialog after
+/// this. A sheet row is one thumb-slip away in a moving car, and an hour of
+/// scoring is not something to lose to a bump in the road.
+class _TagSheet extends StatelessWidget {
+  const _TagSheet({required this.haul, required this.player});
+
+  final _Haul haul;
+  final String player;
+
+  @override
+  Widget build(BuildContext context) {
+    final RarityStyle style = haul.species.rarityTier.style;
+
+    return SafeArea(
+      child: Container(
+        margin: const EdgeInsets.all(Space.sm),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(Radii.sheet),
+          border: Border.all(color: AppColors.outline),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                Space.lg,
+                Space.lg,
+                Space.lg,
+                Space.md,
+              ),
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    width: 10,
+                    height: 10,
+                    decoration: BoxDecoration(
+                      color: style.accent,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: Space.sm),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          haul.species.commonName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppText.title3,
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          <String>[
+                            haul.species.rarityTier.label,
+                            if (haul.count > 1) '${haul.count} sightings',
+                            '${haul.points} points',
+                            if (haul.where case final String road) road,
+                          ].join(' · '),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppText.caption.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(height: 1, color: AppColors.outline),
+            _SheetRow(
+              icon: Icons.menu_book_rounded,
+              label: 'View this animal',
+              onTap: () => Navigator.of(context).pop(_TagAction.view),
+            ),
+            const Divider(height: 1, color: AppColors.outline),
+            _SheetRow(
+              icon: Icons.undo_rounded,
+              label: 'Take it back off $player',
+              danger: true,
+              onTap: () => Navigator.of(context).pop(_TagAction.remove),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SheetRow extends StatelessWidget {
+  const _SheetRow({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    this.danger = false,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  final bool danger;
+
+  @override
+  Widget build(BuildContext context) {
+    final Color tint = danger ? AppColors.danger : AppColors.textPrimary;
+
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: Space.lg,
+          vertical: Space.lg,
+        ),
+        child: Row(
+          children: <Widget>[
+            Icon(icon, size: 19, color: tint),
+            const SizedBox(width: Space.md),
+            Expanded(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppText.body.copyWith(
+                  color: tint,
+                  fontVariations: AppFonts.weight(600),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

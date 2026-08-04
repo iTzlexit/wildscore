@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../data/attribution_repository.dart';
 import '../../domain/species.dart';
 import '../../domain/species_tag.dart';
 import '../../shared/theme.dart';
@@ -30,6 +31,36 @@ class SpeciesDetailScreen extends StatelessWidget {
     this.onToggleSpotted,
     super.key,
   });
+
+  /// Opens the card from anywhere that has a species and no credits loaded.
+  ///
+  /// The Codex holds its credit map in state because it needs one per tile; the
+  /// scorecard and the sightings feed have a single animal and no business
+  /// owning that map. Loading it here — once, then cached — keeps attribution
+  /// attached to the photograph wherever the card is opened from, which is the
+  /// licence condition and not something to leave to whoever adds the next
+  /// entry point.
+  /// The resolved map rather than the Future that produced it. Holding the
+  /// Future would mean every later caller awaits a Future created in whatever
+  /// context the first one ran in, which is fine in an app with one event loop
+  /// and not fine anywhere else.
+  static Map<String, String>? _credits;
+
+  static Future<void> open(BuildContext context, Species species) async {
+    final Map<String, String> credits =
+        _credits ?? (_credits = await const AttributionRepository().loadAll());
+    if (!context.mounted) {
+      return;
+    }
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) => SpeciesDetailScreen(
+          species: species,
+          photoCredit: credits[species.id],
+        ),
+      ),
+    );
+  }
 
   final Species species;
 
