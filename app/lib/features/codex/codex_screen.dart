@@ -128,6 +128,16 @@ class _CodexScreenState extends State<CodexScreen> {
         builder: (BuildContext context) => SpeciesDetailScreen(
           species: species,
           photoCredit: _credits[species.id],
+          spotted: widget.caughtIds.contains(species.id),
+          onToggleSpotted: widget.onToggleSpotted == null
+              ? null
+              : () {
+                  widget.onToggleSpotted!(species.id);
+                  // The detail screen is stateless and sits above this route,
+                  // so it has to be rebuilt with the new value rather than
+                  // left showing the old one.
+                  Navigator.of(context).pop();
+                },
         ),
       ),
     );

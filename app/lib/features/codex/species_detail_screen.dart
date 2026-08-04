@@ -26,6 +26,8 @@ class SpeciesDetailScreen extends StatelessWidget {
   const SpeciesDetailScreen({
     required this.species,
     this.photoCredit,
+    this.spotted = false,
+    this.onToggleSpotted,
     super.key,
   });
 
@@ -34,6 +36,16 @@ class SpeciesDetailScreen extends StatelessWidget {
   /// Photographer and licence, shown in the full-screen viewer. Required by
   /// CC-BY; null when the species has no sourced photograph.
   final String? photoCredit;
+
+  /// Already in the collection.
+  final bool spotted;
+
+  /// Adds or removes it. Null where the collection is not editable.
+  ///
+  /// Removing lives here rather than on the tile: a tick in a grid is one
+  /// mis-tap away from silently deleting something out of a collection
+  /// somebody has spent years building.
+  final VoidCallback? onToggleSpotted;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +58,13 @@ class SpeciesDetailScreen extends StatelessWidget {
         child: Column(
           children: <Widget>[
             _Header(species: species, credit: photoCredit),
-            Expanded(child: _Sheet(species: species)),
+            Expanded(
+              child: _Sheet(
+                species: species,
+                spotted: spotted,
+                onToggleSpotted: onToggleSpotted,
+              ),
+            ),
           ],
         ),
       ),
@@ -348,9 +366,15 @@ class _HeaderPill extends StatelessWidget {
 }
 
 class _Sheet extends StatelessWidget {
-  const _Sheet({required this.species});
+  const _Sheet({
+    required this.species,
+    required this.spotted,
+    this.onToggleSpotted,
+  });
 
   final Species species;
+  final bool spotted;
+  final VoidCallback? onToggleSpotted;
 
   @override
   Widget build(BuildContext context) {
@@ -391,7 +415,11 @@ class _Sheet extends StatelessWidget {
           Expanded(
             child: TabBarView(
               children: <Widget>[
-                _AboutTab(species: species),
+                _AboutTab(
+                  species: species,
+                  spotted: spotted,
+                  onToggleSpotted: onToggleSpotted,
+                ),
                 _FieldNotesTab(species: species),
                 _WhereTab(species: species),
               ],
@@ -403,10 +431,64 @@ class _Sheet extends StatelessWidget {
   }
 }
 
+/// Add to, or remove from, the collection.
+class _CollectionButton extends StatelessWidget {
+  const _CollectionButton({required this.spotted, required this.onTap});
+
+  final bool spotted;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: spotted
+          ? OutlinedButton.icon(
+              onPressed: onTap,
+              icon: const Icon(Icons.check_circle_rounded, size: 19),
+              label: Text(
+                'In your collection',
+                style: AppText.bodyStrong.copyWith(color: AppColors.verified),
+              ),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppColors.verified,
+                side: BorderSide(
+                  color: AppColors.verified.withValues(alpha: 0.45),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(Radii.chip),
+                ),
+              ),
+            )
+          : FilledButton.icon(
+              onPressed: onTap,
+              icon: const Icon(Icons.add_rounded, size: 20),
+              label: Text(
+                'I have seen this one',
+                style: AppText.bodyStrong.copyWith(color: AppColors.accentInk),
+              ),
+              style: FilledButton.styleFrom(
+                backgroundColor: AppColors.accent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(Radii.chip),
+                ),
+              ),
+            ),
+    );
+  }
+}
+
 class _AboutTab extends StatelessWidget {
-  const _AboutTab({required this.species});
+  const _AboutTab({
+    required this.species,
+    required this.spotted,
+    this.onToggleSpotted,
+  });
 
   final Species species;
+  final bool spotted;
+  final VoidCallback? onToggleSpotted;
 
   @override
   Widget build(BuildContext context) {
@@ -418,6 +500,10 @@ class _AboutTab extends StatelessWidget {
         Space.xxl,
       ),
       children: <Widget>[
+        if (onToggleSpotted != null) ...<Widget>[
+          _CollectionButton(spotted: spotted, onTap: onToggleSpotted!),
+          const SizedBox(height: Space.lg),
+        ],
         _PointsBanner(species: species),
         if (species.isSensitive) ...<Widget>[
           const SizedBox(height: Space.lg),

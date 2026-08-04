@@ -31,23 +31,19 @@ class SpeciesImage extends StatelessWidget {
 
   final Species species;
 
-  /// Not yet spotted. Desaturates the photograph; silhouettes are already
-  /// monochrome, so it only changes their tint.
+  /// Kept for call sites that still describe the collection state. It no longer
+  /// changes the photograph.
+  ///
+  /// Unspotted species used to render desaturated. It was a neat idea and it
+  /// made the field guide worse: the app is used to *identify an animal
+  /// standing in the road*, and a grey photograph is materially harder to match
+  /// against a real one. Whether you have seen it before is now said by a badge
+  /// on the tile, which is clearer anyway.
   final bool locked;
 
   /// `cover` for thumbnails and heroes; `contain` in the full-screen viewer,
   /// where cropping the animal out of its own photograph would be absurd.
   final BoxFit fit;
-
-  /// Desaturated and slightly lifted. Not a silhouette — you can still see the
-  /// animal, which keeps the free field guide usable, but it is visibly *not
-  /// yours yet*. Colour returning on a catch is the reward.
-  static const ColorFilter _grey = ColorFilter.matrix(<double>[
-    0.28, 0.50, 0.10, 0, 26, //
-    0.24, 0.55, 0.10, 0, 26, //
-    0.24, 0.50, 0.15, 0, 26, //
-    0, 0, 0, 1, 0, //
-  ]);
 
   @override
   Widget build(BuildContext context) {
@@ -55,17 +51,12 @@ class SpeciesImage extends StatelessWidget {
       return _Silhouette(species: species);
     }
 
-    final Widget photo = Image.asset(
+    return Image.asset(
       species.imageAsset,
       fit: fit,
       errorBuilder: (BuildContext context, Object error, StackTrace? stack) =>
           _Silhouette(species: species),
     );
-
-    if (!locked) {
-      return photo;
-    }
-    return ColorFiltered(colorFilter: _grey, child: photo);
   }
 }
 

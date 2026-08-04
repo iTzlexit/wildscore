@@ -10,8 +10,9 @@ import '../domain/tracker_profile.dart';
 import '../domain/visit.dart';
 import '../shared/theme.dart';
 import 'codex/codex_screen.dart';
-import 'records/records_screen.dart';
 import 'profile/profile_screen.dart';
+import 'profile/visit_history_screen.dart';
+import 'records/records_screen.dart';
 import 'scorecard/spot_picker_screen.dart';
 import 'scorecard/start_scorecard_sheet.dart';
 import 'scorecard/wild_score_screen.dart';
@@ -328,6 +329,13 @@ class _HomeShellState extends State<HomeShell> {
                 onRestart: _restartScorecard,
                 onRemoveClaim: _removeClaim,
                 onSpotFor: (Player p) => _spotFor(p, species),
+                onOpenHistory: () => VisitHistoryScreen.open(
+                  context,
+                  visits: _visits,
+                  species: species,
+                  live: _card,
+                  onDelete: _deleteVisit,
+                ),
               ),
               // Always a field guide, never a claim surface. Marking something
               // spotted here is the life list — no points, no drive — and it

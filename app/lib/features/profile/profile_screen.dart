@@ -11,7 +11,6 @@ import '../../shared/widgets/avatar_badge.dart';
 import '../codex/collection_screen.dart';
 import 'backup_screen.dart';
 import 'licences_screen.dart';
-import 'visit_history_screen.dart';
 
 /// One person's record. Not the day's game — that has its own tab.
 ///
@@ -68,6 +67,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int get _lifetimePoints =>
       widget.visits.fold(0, (int sum, Visit v) => sum + v.ownerPoints);
 
+  /// The hardest thing in the collection. A single species is a better trophy
+  /// than a count — nobody brags about owning 13 animals.
+  Species? get _rarest {
+    Species? best;
+    for (final Species s in widget.species) {
+      if (!widget.caughtIds.contains(s.id)) {
+        continue;
+      }
+      if (best == null || s.points > best.points) {
+        best = s;
+      }
+    }
+    return best;
+  }
+
   void _openCollection(CollectionMode mode) {
     CollectionScreen.open(
       context,
@@ -105,16 +119,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(height: Space.xl),
                   _LifetimeCard(
                     points: _lifetimePoints,
-                    drives: widget.visits.length,
                     spotted: spotted,
                     total: total,
-                    onTap: () => VisitHistoryScreen.open(
-                      context,
-                      visits: widget.visits,
-                      species: widget.species,
-                      live: widget.card,
-                      onDelete: widget.onDeleteVisit,
-                    ),
                   ),
                   if (widget.card != null) ...<Widget>[
                     const SizedBox(height: Space.md),
@@ -123,7 +129,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(height: Space.lg),
                   _Numbers(
                     spotted: spotted,
-                    total: total,
+                    toFind: total - spotted,
+                    rarest: _rarest,
                     onSpotted: () => _openCollection(CollectionMode.spotted),
                     onToFind: () => _openCollection(CollectionMode.toFind),
                   ),
@@ -283,104 +290,76 @@ class _DriveInPlayLink extends StatelessWidget {
   }
 }
 
-/// The headline number, and the way into the days behind it.
+/// The headline number and how far through the park you are.
 ///
-/// One number rather than a Today/Lifetime toggle. The toggle asked people to
-/// choose which question they were asking before showing them anything, and
-/// "how am I doing overall" is the only question a profile should answer — the
-/// day's score lives on the Wild Score tab, where the day lives.
+/// Not tappable, and it says nothing about drives. It used to open the drive
+/// history, which was wrong twice over: a lifetime total is not a list of
+/// days, and the game's history belongs on the game's tab. It also printed the
+/// spotted count immediately above a tile that printed the same count again.
 class _LifetimeCard extends StatelessWidget {
   const _LifetimeCard({
     required this.points,
-    required this.drives,
     required this.spotted,
     required this.total,
-    required this.onTap,
   });
 
   final int points;
-  final int drives;
   final int spotted;
   final int total;
-  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final double fraction = total == 0 ? 0 : spotted / total;
     final int percent = (fraction * 100).round();
 
-    return Material(
-      color: AppColors.surface,
-      borderRadius: BorderRadius.circular(Radii.card),
-      child: InkWell(
-        onTap: onTap,
+    return Container(
+      padding: const EdgeInsets.all(Space.screen),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(Radii.card),
-        child: Container(
-          padding: const EdgeInsets.all(Space.screen),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(Radii.card),
-            border: Border.all(color: AppColors.outline),
+        border: Border.all(color: AppColors.outline),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            '$points',
+            style: AppText.display.copyWith(
+              color: AppColors.accent,
+              fontFeatures: AppText.tabular,
+            ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          const SizedBox(height: Space.xs),
+          Text('MY LIFETIME POINTS', style: AppText.overline),
+          const SizedBox(height: Space.screen),
+          Row(
             children: <Widget>[
               Text(
-                '$points',
-                style: AppText.display.copyWith(
+                '$percent% of the park found',
+                style: AppText.label.copyWith(color: AppColors.textPrimary),
+              ),
+              const Spacer(),
+              Text(
+                '$spotted / $total',
+                style: AppText.label.copyWith(
                   color: AppColors.accent,
+                  fontVariations: AppFonts.weight(800),
                   fontFeatures: AppText.tabular,
-                ),
-              ),
-              const SizedBox(height: Space.xs),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Text('LIFETIME POINTS', style: AppText.overline),
-                  ),
-                  Text(
-                    drives == 0
-                        ? 'No drives yet'
-                        : '$drives ${drives == 1 ? 'drive' : 'drives'}',
-                    style: AppText.caption,
-                  ),
-                  const SizedBox(width: 2),
-                  const Icon(
-                    Icons.chevron_right_rounded,
-                    size: 17,
-                    color: AppColors.textMuted,
-                  ),
-                ],
-              ),
-              const SizedBox(height: Space.screen),
-              Row(
-                children: <Widget>[
-                  Text('$spotted of $total spotted', style: AppText.label),
-                  const Spacer(),
-                  Text(
-                    '$percent%',
-                    style: AppText.label.copyWith(
-                      color: AppColors.accent,
-                      fontVariations: AppFonts.weight(800),
-                      fontFeatures: AppText.tabular,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: Space.sm),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(
-                  value: fraction,
-                  minHeight: 6,
-                  backgroundColor: AppColors.surfaceAlt,
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    AppColors.accent,
-                  ),
                 ),
               ),
             ],
           ),
-        ),
+          const SizedBox(height: Space.sm),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(
+              value: fraction,
+              minHeight: 6,
+              backgroundColor: AppColors.surfaceAlt,
+              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.accent),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -431,49 +410,101 @@ class _Identity extends StatelessWidget {
 class _Numbers extends StatelessWidget {
   const _Numbers({
     required this.spotted,
-    required this.total,
+    required this.toFind,
+    required this.rarest,
     required this.onSpotted,
     required this.onToFind,
   });
 
   final int spotted;
-  final int total;
+  final int toFind;
+  final Species? rarest;
   final VoidCallback onSpotted;
   final VoidCallback onToFind;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: <Widget>[
-        Expanded(
-          child: _NumberTile(
-            icon: Icons.pets_rounded,
-            value: '$total',
-            label: 'IN THE PARK',
-            tint: AppColors.accent,
-          ),
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: _NumberTile(
+                icon: Icons.check_circle_rounded,
+                value: '$spotted',
+                label: 'FOUND',
+                tint: AppColors.verified,
+                onTap: onSpotted,
+              ),
+            ),
+            const SizedBox(width: Space.md),
+            Expanded(
+              child: _NumberTile(
+                icon: Icons.visibility_outlined,
+                value: '$toFind',
+                label: 'STILL OUT THERE',
+                tint: AppColors.textSecondary,
+                onTap: onToFind,
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: Space.md),
-        Expanded(
-          child: _NumberTile(
-            icon: Icons.check_circle_rounded,
-            value: '$spotted',
-            label: 'SPOTTED',
-            tint: AppColors.verified,
-            onTap: onSpotted,
-          ),
-        ),
-        const SizedBox(width: Space.md),
-        Expanded(
-          child: _NumberTile(
-            icon: Icons.visibility_outlined,
-            value: '${total - spotted}',
-            label: 'TO FIND',
-            tint: AppColors.textSecondary,
-            onTap: onToFind,
-          ),
-        ),
+        // A single species is a better trophy than a count. "13 animals" is a
+        // statistic; "Ground Pangolin" is a story somebody tells at dinner.
+        if (rarest != null) ...<Widget>[
+          const SizedBox(height: Space.md),
+          _RarestTile(species: rarest!),
+        ],
       ],
+    );
+  }
+}
+
+class _RarestTile extends StatelessWidget {
+  const _RarestTile({required this.species});
+
+  final Species species;
+
+  @override
+  Widget build(BuildContext context) {
+    final RarityStyle style = species.rarityTier.style;
+
+    return Container(
+      padding: const EdgeInsets.all(Space.lg),
+      decoration: BoxDecoration(
+        color: style.fill,
+        borderRadius: BorderRadius.circular(Radii.card),
+        border: Border.all(color: style.accent, width: style.borderWidth),
+      ),
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.workspace_premium_rounded, size: 19, color: style.accent),
+          const SizedBox(width: Space.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'RAREST YOU HAVE FOUND',
+                  style: AppText.overline.copyWith(fontSize: 8.5),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  species.commonName,
+                  style: AppText.bodyStrong.copyWith(fontSize: 15),
+                ),
+              ],
+            ),
+          ),
+          Text(
+            '${species.points}',
+            style: AppText.title3.copyWith(
+              color: style.accent,
+              fontFeatures: AppText.tabular,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

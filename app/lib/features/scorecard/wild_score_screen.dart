@@ -24,6 +24,7 @@ class WildScoreScreen extends StatelessWidget {
     this.onRestart,
     this.onRemoveClaim,
     this.onSpotFor,
+    this.onOpenHistory,
     super.key,
   });
 
@@ -35,6 +36,11 @@ class WildScoreScreen extends StatelessWidget {
   final void Function(Player player, Species species)? onRemoveClaim;
   final ValueChanged<Player>? onSpotFor;
 
+  /// Past drives. They live on this tab because they are the game's history,
+  /// not the player's — the profile is one person's record and a list of days
+  /// spent with other people in a car is not that.
+  final VoidCallback? onOpenHistory;
+
   @override
   Widget build(BuildContext context) {
     final Scorecard? live = card;
@@ -45,16 +51,28 @@ class WildScoreScreen extends StatelessWidget {
         child: Column(
           children: <Widget>[
             AppHeader(
-              trailing: IconButton(
-                onPressed: () => RulesScreen.open(context),
-                icon: const Icon(Icons.help_outline_rounded),
-                color: AppColors.textSecondary,
-                tooltip: 'How to play',
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  if (onOpenHistory != null)
+                    IconButton(
+                      onPressed: onOpenHistory,
+                      icon: const Icon(Icons.history_rounded),
+                      color: AppColors.textSecondary,
+                      tooltip: 'Past drives',
+                    ),
+                  IconButton(
+                    onPressed: () => RulesScreen.open(context),
+                    icon: const Icon(Icons.help_outline_rounded),
+                    color: AppColors.textSecondary,
+                    tooltip: 'How to play',
+                  ),
+                ],
               ),
             ),
             Expanded(
               child: live == null
-                  ? _Invitation(onStart: onStart)
+                  ? _Invitation(onStart: onStart, onOpenHistory: onOpenHistory)
                   : _LiveGame(
                       card: live,
                       species: species,
@@ -73,9 +91,10 @@ class WildScoreScreen extends StatelessWidget {
 
 /// No drive running.
 class _Invitation extends StatelessWidget {
-  const _Invitation({this.onStart});
+  const _Invitation({this.onStart, this.onOpenHistory});
 
   final VoidCallback? onStart;
+  final VoidCallback? onOpenHistory;
 
   @override
   Widget build(BuildContext context) {
@@ -114,6 +133,30 @@ class _Invitation extends StatelessWidget {
             ),
           ),
         ),
+        if (onOpenHistory != null) ...<Widget>[
+          const SizedBox(height: Space.md),
+          SizedBox(
+            width: double.infinity,
+            height: 50,
+            child: OutlinedButton.icon(
+              onPressed: onOpenHistory,
+              icon: const Icon(Icons.history_rounded, size: 19),
+              label: Text(
+                'Past drives',
+                style: AppText.bodyStrong.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+              ),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppColors.textSecondary,
+                side: const BorderSide(color: AppColors.outlineStrong),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(Radii.card),
+                ),
+              ),
+            ),
+          ),
+        ],
         const SizedBox(height: Space.section),
         const _HowItWorks(),
         const SizedBox(height: Space.lg),

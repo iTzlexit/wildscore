@@ -403,7 +403,12 @@ class _LiveCard extends StatelessWidget {
   }
 }
 
-class _VisitCard extends StatelessWidget {
+/// One finished drive, collapsed to a header until asked.
+///
+/// A season of expanded cards is a very long screen to scroll past to reach
+/// last March. The header carries what identifies a day - when, who, what it
+/// was worth - and the standings unfold underneath on a tap.
+class _VisitCard extends StatefulWidget {
   const _VisitCard({required this.visit, required this.species, this.onDelete});
 
   final Visit visit;
@@ -411,11 +416,19 @@ class _VisitCard extends StatelessWidget {
   final VoidCallback? onDelete;
 
   @override
+  State<_VisitCard> createState() => _VisitCardState();
+}
+
+class _VisitCardState extends State<_VisitCard> {
+  bool _open = false;
+
+  @override
   Widget build(BuildContext context) {
+    final Visit visit = widget.visit;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: Space.md),
       child: Container(
-        padding: const EdgeInsets.all(Space.screen),
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(Radii.card),
@@ -425,63 +438,111 @@ class _VisitCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: Text(
-                    formatLongDate(visit.endedAt),
-                    style: AppText.title3,
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () => setState(() => _open = !_open),
+                borderRadius: BorderRadius.circular(Radii.card),
+                child: Padding(
+                  padding: const EdgeInsets.all(Space.screen),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              formatLongDate(visit.endedAt),
+                              style: AppText.title3,
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              visit.wasSolo
+                                  ? 'On your own · ${visit.claims.length} claimed'
+                                  : '${visit.players.length} played · ${visit.claims.length} claimed',
+                              style: AppText.caption,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Text(
+                        '+${visit.ownerPoints}',
+                        style: AppText.title3.copyWith(
+                          color: AppColors.accent,
+                          fontFeatures: AppText.tabular,
+                        ),
+                      ),
+                      const SizedBox(width: Space.sm),
+                      Icon(
+                        _open
+                            ? Icons.keyboard_arrow_up_rounded
+                            : Icons.keyboard_arrow_down_rounded,
+                        size: 20,
+                        color: AppColors.textMuted,
+                      ),
+                    ],
                   ),
                 ),
-                Text(
-                  '+${visit.ownerPoints}',
-                  style: AppText.title3.copyWith(
-                    color: AppColors.accent,
-                    fontFeatures: AppText.tabular,
-                  ),
-                ),
-                if (onDelete != null)
-                  IconButton(
-                    onPressed: onDelete,
-                    icon: const Icon(Icons.delete_outline_rounded, size: 19),
-                    color: AppColors.textMuted,
-                    visualDensity: VisualDensity.compact,
-                    tooltip: 'Delete this drive',
-                  ),
-              ],
-            ),
-            Text(
-              visit.wasSolo
-                  ? 'Solo · ${visit.claims.length} claimed'
-                  : '${visit.players.length} in the car · '
-                        '${visit.claims.length} claimed',
-              style: AppText.caption,
-            ),
-            if (!visit.wasSolo) ...<Widget>[
-              const SizedBox(height: Space.md),
-              // Who was with you, faces and all. This is the part of a trip
-              // people actually reminisce about.
-              Wrap(
-                spacing: Space.sm,
-                runSpacing: Space.sm,
-                children: <Widget>[
-                  for (final Player p in visit.asScorecard.standings)
-                    _Passenger(
-                      player: p,
-                      points: visit.pointsFor(p.id),
-                      won: p.id == visit.asScorecard.standings.first.id,
-                    ),
-                ],
               ),
-            ],
-            const SizedBox(height: Space.lg),
-            const Divider(height: 1, color: AppColors.outline),
-            const SizedBox(height: Space.md),
-            StandingsBoard(
-              card: visit.asScorecard,
-              species: species,
-              expanded: true,
             ),
+            if (_open)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  Space.screen,
+                  0,
+                  Space.screen,
+                  Space.screen,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    if (!visit.wasSolo) ...<Widget>[
+                      Wrap(
+                        spacing: Space.sm,
+                        runSpacing: Space.sm,
+                        children: <Widget>[
+                          for (final Player p in visit.asScorecard.standings)
+                            _Passenger(
+                              player: p,
+                              points: visit.pointsFor(p.id),
+                              won: p.id == visit.asScorecard.standings.first.id,
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: Space.lg),
+                    ],
+                    const Divider(height: 1, color: AppColors.outline),
+                    const SizedBox(height: Space.md),
+                    StandingsBoard(
+                      card: visit.asScorecard,
+                      species: widget.species,
+                      expanded: true,
+                    ),
+                    if (widget.onDelete != null) ...<Widget>[
+                      const SizedBox(height: Space.sm),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton.icon(
+                          onPressed: widget.onDelete,
+                          icon: const Icon(
+                            Icons.delete_outline_rounded,
+                            size: 17,
+                          ),
+                          label: Text(
+                            'Delete this drive',
+                            style: AppText.label.copyWith(
+                              color: AppColors.danger,
+                            ),
+                          ),
+                          style: TextButton.styleFrom(
+                            foregroundColor: AppColors.danger,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
           ],
         ),
       ),

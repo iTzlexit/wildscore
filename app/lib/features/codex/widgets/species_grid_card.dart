@@ -58,12 +58,12 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
   @override
   Widget build(BuildContext context) {
     final Species species = widget.species;
-    final bool locked = widget.locked;
+    // `locked` now means only "not in your collection". The photograph is shown
+    // in full colour either way — see SpeciesImage for why.
+    final bool spotted = !widget.locked;
     final RarityStyle style = species.rarityTier.style;
-    // A gold frame on an animal you have never seen gives away the surprise,
-    // so the frame stays neutral until the species is caught.
-    final Color frame = locked ? AppColors.outline : style.border;
-    final double frameWidth = locked ? 1 : style.borderWidth;
+    final Color frame = style.border;
+    final double frameWidth = style.borderWidth;
 
     /// Chances used up — claimed as many times as it can be today.
     final bool spent = widget.chancesLeft == 0;
@@ -92,7 +92,7 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
           color: AppColors.surface,
           borderRadius: radius,
           border: Border.all(color: frame, width: frameWidth),
-          boxShadow: (locked || style.glow == null)
+          boxShadow: style.glow == null
               ? null
               : <BoxShadow>[
                   BoxShadow(
@@ -120,7 +120,7 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
                     child: Stack(
                       fit: StackFit.expand,
                       children: <Widget>[
-                        SpeciesImage(species: species, locked: locked),
+                        SpeciesImage(species: species),
                         // Softens the join between photo and label strip so the
                         // tile reads as one object rather than two stacked.
                         const DecoratedBox(
@@ -141,7 +141,7 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
                         // than a database row. Static, not animated — eighteen
                         // shimmering cards in a scrolling grid would be both
                         // distracting and expensive.
-                        if (style.foil && !locked)
+                        if (style.foil)
                           IgnorePointer(
                             child: DecoratedBox(
                               decoration: BoxDecoration(
@@ -183,17 +183,23 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
                             right: 6,
                             child: _CornerBadge(label: 'BIG 6'),
                           ),
-                        // Mark-as-spotted. A tap target on the tile itself,
-                        // because the alternative is opening a species just to
-                        // tick it — and in a moving car nobody does that.
-                        if (widget.onToggleSpotted != null)
+                        // Spotted is a *status*, not a button. Adding from the
+                        // tile is quick because in a moving car nobody opens a
+                        // species just to tick it — but removing from here was
+                        // one mis-tap away from silently deleting something
+                        // out of a collection, so that moved to the species
+                        // screen where it can be deliberate.
+                        if (spotted)
+                          const Positioned(
+                            bottom: 6,
+                            right: 6,
+                            child: _SpottedMark(),
+                          )
+                        else if (widget.onToggleSpotted != null)
                           Positioned(
                             bottom: 6,
                             right: 6,
-                            child: _SpotToggle(
-                              spotted: !locked,
-                              onTap: widget.onToggleSpotted!,
-                            ),
+                            child: _AddButton(onTap: widget.onToggleSpotted!),
                           ),
                         // Spent tiles stay visible and greyed rather than
                         // disappearing — who got the impala at the gate is part
@@ -235,7 +241,7 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
                       ],
                     ),
                   ),
-                  _Label(species: species, style: style, locked: locked),
+                  _Label(species: species, style: style, spotted: spotted),
                 ],
               ),
             ),
@@ -272,33 +278,63 @@ class _ChancesBadge extends StatelessWidget {
   }
 }
 
-/// Tap to mark a species seen, or unmark it.
+/// "You have found this one." Not interactive.
 ///
-/// Deliberately reads as a checkbox rather than a camera. This is the honest
-/// "I saw it" — a *verified* catch needs a photograph taken in the park, and
-/// conflating the two visually would undermine the whole trust model.
-class _SpotToggle extends StatelessWidget {
-  const _SpotToggle({required this.spotted, required this.onTap});
+/// Has to survive being read at arm's length in sunlight over a photograph that
+/// might be any colour, which is why it is a filled disc with a white tick and
+/// a white ring rather than a tint or a border.
+class _SpottedMark extends StatelessWidget {
+  const _SpottedMark();
 
-  final bool spotted;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 30,
+      height: 30,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: AppColors.verified,
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.white, width: 2),
+        boxShadow: const <BoxShadow>[
+          BoxShadow(
+            color: Color(0x4D000000),
+            blurRadius: 6,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: const Icon(Icons.check_rounded, size: 16, color: Colors.white),
+    );
+  }
+}
+
+/// Adds a species to the collection, straight from the tile.
+///
+/// This is the honest "I saw it" — a *verified* catch needs a photograph taken
+/// in the park, and conflating the two visually would undermine the trust
+/// model.
+class _AddButton extends StatelessWidget {
+  const _AddButton({required this.onTap});
+
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: spotted ? AppColors.verified : const Color(0xE6FFFFFF),
+      color: const Color(0xE6FFFFFF),
       shape: const CircleBorder(),
       elevation: 1,
       child: InkWell(
         onTap: onTap,
         customBorder: const CircleBorder(),
-        child: SizedBox(
+        child: const SizedBox(
           width: 30,
           height: 30,
           child: Icon(
-            spotted ? Icons.check_rounded : Icons.add_rounded,
+            Icons.add_rounded,
             size: 17,
-            color: spotted ? Colors.white : AppColors.textSecondary,
+            color: AppColors.textSecondary,
           ),
         ),
       ),
@@ -310,12 +346,12 @@ class _Label extends StatelessWidget {
   const _Label({
     required this.species,
     required this.style,
-    required this.locked,
+    required this.spotted,
   });
 
   final Species species;
   final RarityStyle style;
-  final bool locked;
+  final bool spotted;
 
   @override
   Widget build(BuildContext context) {
@@ -377,7 +413,7 @@ class _Label extends StatelessWidget {
             style: AppText.title3.copyWith(
               fontSize: 14,
               height: 1.15,
-              color: locked ? AppColors.textSecondary : AppColors.textPrimary,
+              color: spotted ? AppColors.textPrimary : AppColors.textSecondary,
             ),
           ),
         ],
