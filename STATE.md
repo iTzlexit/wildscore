@@ -26,7 +26,7 @@ serve the web build: `dart run tool/serve_web.dart 8080` from `app/`.
 
 ## What the app is
 
-A field guide to 74 Kruger species, a lifetime collection, and **a scorecard
+A field guide to 77 Kruger species, a lifetime collection, and **a scorecard
 game played by a car full of people on a game drive**. The game is the
 differentiator; the collection is the reason anyone still has it in March.
 
@@ -40,7 +40,7 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 - **Onboarding** — a three-slide picture tour of the game (car scene, scoring
   with the live rarity table, the Ultimate Spotter), then a name. No account.
   Replayable from How to play.
-- **Animal Dex** — 74 species, search, filters, rarity sort, detail cards.
+- **Animal Dex** — 77 species, search, filters, rarity sort, detail cards.
   Photos are CC0/CC-BY from iNaturalist; caracal and African wildcat fall back
   to silhouettes because the photos could not be trusted.
 - **Wild Score** — start a drive, add the car, tap the eye by a player's name to
@@ -112,7 +112,11 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 
 - Big Five / Big Six bonuses, First Call double (designed in `docs/SCORECARD.md`)
 - House rules screen
-- Better caracal and African wildcat photographs
+- Better caracal and African wildcat photographs (they fall back to silhouettes)
+- **A better ostrich photograph.** The current one is a foraging bird with its
+  head down in the grass, which is close to useless for identifying one. The
+  full-bleed detail header made it obvious — the old medallion hid weak photos
+  inside a small disc. Worth re-checking the whole set against the new layout.
 - A drawn Kruger map — `docs/MAPS.md` step 1 first
 
 ## House style
