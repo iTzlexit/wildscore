@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 
 import '../../data/attribution_repository.dart';
@@ -10,20 +12,24 @@ import 'widgets/region_strip.dart';
 
 /// The species card, full screen.
 ///
-/// Structure: **the animal owns the top of the screen**, edge to edge, with its
-/// name over the foot of the photograph and everything else in the sheet below.
+/// Structure: **the animal owns the top of the screen**, whole and uncropped,
+/// with its name over the foot of the photograph and everything else in the
+/// sheet below.
 ///
-/// It took two wrong turns to get here. First the portrait sat in the
-/// bottom-right corner, straddling the seam into the sheet, where it looked
-/// like an afterthought and got clipped on a narrow phone. Then it became a
-/// centred medallion with concentric halos — prettier, and still wrong: a disc
-/// crops an animal to a disc, a rhino lost its horn to the curve, and most of
-/// the header was coloured space around a small picture.
+/// It took three goes. First the portrait sat in the bottom-right corner,
+/// straddling the seam into the sheet, where it looked like an afterthought and
+/// got clipped on a narrow phone. Then a centred medallion with concentric
+/// halos — prettier, and still wrong: a disc crops an animal to a disc, the
+/// black rhino lost its horn to the curve, and most of the header was coloured
+/// space around a small picture. Then a single full-bleed `cover` photograph,
+/// which showed far more animal and cut the sides off the wide ones.
 ///
-/// The deciding argument is what this screen is *for*. Somebody is holding the
-/// phone up next to an animal standing in the road. The photograph is the
-/// product; the ceremony is not. So it gets the full width, nothing is laid
-/// over it, and rarity is said by the colour it sits on rather than by a ring.
+/// What settles every one of those arguments is what this screen is *for*.
+/// Somebody is holding the phone up next to an animal standing in the road. The
+/// photograph is the product and the whole of it has to be there, so the
+/// portrait is `contain`ed and the header is filled behind it with a blurred
+/// copy of the same image. Rarity is said by the colour it sits on rather than
+/// by a ring around it.
 ///
 /// This layout is also the skeleton of the Phase 2 reveal. When you photograph
 /// a pangolin, this is the card that turns over.
@@ -122,7 +128,7 @@ class _Header extends StatelessWidget {
     // Sized from the screen rather than fixed. A 300pt header is most of a
     // small phone and a third of a tablet; this keeps the proportion instead of
     // the number.
-    final double height = (screen.height * 0.52).clamp(360.0, 520.0);
+    final double height = (screen.height * 0.50).clamp(340.0, 500.0);
 
     return SizedBox(
       height: height,
@@ -140,12 +146,39 @@ class _Header extends StatelessWidget {
               ),
             ),
           ),
-          // The animal, edge to edge. This used to be a circular medallion with
-          // concentric halos, which looked like a specimen plate and cropped
-          // the animal to a disc — a rhino lost its horn to the curve. This is
-          // a field guide first: the photograph gets held up against a real
-          // animal standing in the road, so it gets the whole width and no
-          // decoration laid over it.
+          // The photograph twice: blurred and cropped to fill the box, then
+          // whole and sharp on top of itself.
+          //
+          // Filling the header with a single `cover` copy was the obvious thing
+          // and it was wrong. Sixty-three of the seventy-seven photographs are
+          // landscape — the median is 4:3 and one is 2.43:1 — and this box is
+          // portrait, so covering it threw away a third of the width, and well
+          // over half on the wide ones. Animals came out with their heads or
+          // hindquarters missing, which in a *field guide* is the one failure
+          // that matters.
+          //
+          // So the sharp copy is `contain`: every photograph is whole, always,
+          // whatever shape it is. The blurred copy exists only so that the
+          // bands `contain` leaves are made of the animal's own colours rather
+          // than a flat rectangle.
+          if (species.photoVerified)
+            Positioned.fill(
+              child: ClipRect(
+                child: ImageFiltered(
+                  imageFilter: ui.ImageFilter.blur(sigmaX: 26, sigmaY: 26),
+                  // Overscaled because a blur samples past the edges of what it
+                  // is given, which leaves a pale fringe on all four sides.
+                  child: Transform.scale(
+                    scale: 1.2,
+                    child: SpeciesImage(species: species),
+                  ),
+                ),
+              ),
+            ),
+          if (species.photoVerified)
+            Positioned.fill(
+              child: ColoredBox(color: style.headerInk.withValues(alpha: 0.45)),
+            ),
           Positioned.fill(
             child: GestureDetector(
               onTap: () => Navigator.of(
@@ -153,7 +186,18 @@ class _Header extends StatelessWidget {
               ).push(PhotoViewerScreen.route(species, credit: credit)),
               child: Hero(
                 tag: 'species-photo-${species.id}',
-                child: SpeciesImage(species: species, onDark: true),
+                child: SpeciesImage(
+                  // Named so tests can tell the sharp copy from the blurred
+                  // one behind it.
+                  key: const Key('species-portrait'),
+                  species: species,
+                  fit: BoxFit.contain,
+                  onDark: true,
+                  // Sat above centre so the band a landscape photograph leaves
+                  // falls at the bottom, under the name, instead of splitting
+                  // evenly and putting the animal behind it.
+                  alignment: const Alignment(0, -0.45),
+                ),
               ),
             ),
           ),
@@ -211,60 +255,79 @@ class _Header extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Spacer(),
                 // Left-aligned now, not centred. Centred text belongs over a
-                // centred subject; over a full-bleed photograph it floats, and
-                // a long name centred across three lines is harder to read than
-                // the same name ranged left.
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    Space.screen,
-                    0,
-                    Space.screen,
-                    Space.lg,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        species.commonName,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppText.title1.copyWith(
-                          color: Colors.white,
-                          fontSize: species.commonName.length > 20 ? 27 : 33,
-                          height: 1.1,
-                          shadows: _inkShadow,
-                        ),
-                      ),
-                      const SizedBox(height: 3),
-                      Text(
-                        species.scientificName,
-                        style: AppText.caption.copyWith(
-                          color: const Color(0xC7FFFFFF),
-                          fontSize: 13,
-                          fontStyle: FontStyle.italic,
-                          shadows: _inkShadow,
-                        ),
-                      ),
-                      const SizedBox(height: Space.md),
-                      Wrap(
-                        spacing: Space.sm,
-                        runSpacing: 6,
-                        children: <Widget>[
-                          _HeaderPill(
-                            label: species.rarityTier.label,
-                            solid: true,
+                // centred subject; over a photograph it floats, and a long name
+                // centred across three lines is harder to read than the same
+                // name ranged left.
+                //
+                // FittedBox around a width-pinned block: the name still wraps
+                // at the real screen width, and only shrinks when it genuinely
+                // will not fit — "Southern Ground Hornbill" at 1.5× text on a
+                // 360pt phone overflowed the header by six pixels otherwise.
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.bottomLeft,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.bottomLeft,
+                      child: SizedBox(
+                        width: screen.width,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                            Space.screen,
+                            0,
+                            Space.screen,
+                            Space.lg,
                           ),
-                          // Two at most. Every tag is also on the tile and in
-                          // the sheet, and a third row of pills eats into the
-                          // photograph to say something nobody came here to
-                          // read.
-                          for (final SpeciesTag tag in species.tags.take(2))
-                            _HeaderPill(label: tag.label, solid: false),
-                        ],
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                species.commonName,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppText.title1.copyWith(
+                                  color: Colors.white,
+                                  fontSize: species.commonName.length > 20
+                                      ? 27
+                                      : 33,
+                                  height: 1.1,
+                                  shadows: _inkShadow,
+                                ),
+                              ),
+                              const SizedBox(height: 3),
+                              Text(
+                                species.scientificName,
+                                style: AppText.caption.copyWith(
+                                  color: const Color(0xC7FFFFFF),
+                                  fontSize: 13,
+                                  fontStyle: FontStyle.italic,
+                                  shadows: _inkShadow,
+                                ),
+                              ),
+                              const SizedBox(height: Space.md),
+                              Wrap(
+                                spacing: Space.sm,
+                                runSpacing: 6,
+                                children: <Widget>[
+                                  _HeaderPill(
+                                    label: species.rarityTier.label,
+                                    solid: true,
+                                  ),
+                                  // Two at most. Every tag is also on the tile and in
+                                  // the sheet, and a third row of pills eats into the
+                                  // photograph to say something nobody came here to
+                                  // read.
+                                  for (final SpeciesTag tag
+                                      in species.tags.take(2))
+                                    _HeaderPill(label: tag.label, solid: false),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ],

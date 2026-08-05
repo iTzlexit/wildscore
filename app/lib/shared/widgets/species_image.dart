@@ -27,6 +27,7 @@ class SpeciesImage extends StatelessWidget {
     this.locked = false,
     this.fit = BoxFit.cover,
     this.onDark = false,
+    this.alignment = Alignment.center,
     super.key,
   });
 
@@ -50,9 +51,14 @@ class SpeciesImage extends StatelessWidget {
   /// on the tile, which is clearer anyway.
   final bool locked;
 
-  /// `cover` for thumbnails and heroes; `contain` in the full-screen viewer,
-  /// where cropping the animal out of its own photograph would be absurd.
+  /// `cover` for thumbnails; `contain` wherever the whole animal has to be
+  /// visible, which is the full-screen viewer and the detail header.
   final BoxFit fit;
+
+  /// Where a `contain`ed photograph sits in its box. Sixty-three of the
+  /// seventy-seven photographs are landscape, so `contain` in a portrait box
+  /// leaves a band, and it is usually better above the animal than below it.
+  final Alignment alignment;
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +69,7 @@ class SpeciesImage extends StatelessWidget {
     return Image.asset(
       species.imageAsset,
       fit: fit,
+      alignment: alignment,
       errorBuilder: (BuildContext context, Object error, StackTrace? stack) =>
           _Silhouette(species: species, onDark: onDark),
     );

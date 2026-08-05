@@ -36,13 +36,16 @@ void main() {
     _catalogue = await const SpeciesRepository().loadAll();
   });
 
+  /// The sharp, contained copy — not the blurred one filling the box behind it.
+  final Finder portrait = find.byKey(const Key('species-portrait'));
+
   testWidgets('the photograph runs the full width of the screen', (
     WidgetTester tester,
   ) async {
     const Size screen = Size(390, 844);
     await _pump(tester, _byId('leopard'), size: screen);
 
-    final Size image = tester.getSize(find.byType(SpeciesImage).first);
+    final Size image = tester.getSize(portrait);
 
     expect(image.width, screen.width, reason: 'edge to edge, not a medallion');
     // Comfortably over half the screen height. The medallion it replaced
@@ -50,12 +53,66 @@ void main() {
     expect(image.height, greaterThan(screen.height * 0.4));
   });
 
+  testWidgets('the whole animal is shown, never cropped to fit', (
+    WidgetTester tester,
+  ) async {
+    // The regression this exists to catch: `cover` in a portrait box threw
+    // away a third of the width of a 4:3 photograph and well over half of a
+    // 2.43:1 one, which cut heads and hindquarters off animals in a *field
+    // guide*. Sixty-three of the seventy-seven photographs are landscape, so
+    // this is the common case rather than an edge one.
+    await _pump(tester, _byId('leopard'));
+
+    final Image image = tester.widget<Image>(
+      find.descendant(of: portrait, matching: find.byType(Image)),
+    );
+
+    expect(image.fit, BoxFit.contain);
+  });
+
+  testWidgets('even the widest photograph in the set fits whole', (
+    WidgetTester tester,
+  ) async {
+    // The worst case is 2.43:1 against a header of roughly 0.9:1. Under
+    // `cover` that lost about 63% of the width — most of an animal. This
+    // measures what actually gets painted rather than trusting the BoxFit
+    // constant, so a later change to the layout around it cannot quietly
+    // reintroduce the crop.
+    const Size screen = Size(390, 844);
+    await _pump(tester, _byId('leopard'), size: screen);
+
+    final RenderBox box = tester.renderObject<RenderBox>(portrait);
+    const double widest = 2.43;
+    final Size painted = applyBoxFit(
+      BoxFit.contain,
+      const Size(widest * 1000, 1000),
+      box.size,
+    ).destination;
+
+    expect(painted.width, lessThanOrEqualTo(box.size.width + 0.01));
+    expect(painted.height, lessThanOrEqualTo(box.size.height + 0.01));
+    // And it is still a usefully large picture, not a letterboxed sliver.
+    expect(painted.width, screen.width);
+  });
+
+  testWidgets('a blurred copy fills the box behind the portrait', (
+    WidgetTester tester,
+  ) async {
+    // Otherwise `contain` leaves flat bands above and below a landscape
+    // photograph, which is the coloured dead space the medallion was rejected
+    // for in the first place.
+    await _pump(tester, _byId('leopard'));
+
+    expect(find.byType(ImageFiltered), findsOneWidget);
+    expect(find.byType(SpeciesImage), findsNWidgets(2));
+  });
+
   testWidgets('the name sits over the photograph, not under it', (
     WidgetTester tester,
   ) async {
     await _pump(tester, _byId('leopard'));
 
-    final Rect image = tester.getRect(find.byType(SpeciesImage).first);
+    final Rect image = tester.getRect(portrait);
     final Rect name = tester.getRect(find.text('Leopard'));
 
     expect(name.bottom, lessThanOrEqualTo(image.bottom));
@@ -73,8 +130,12 @@ void main() {
 
     await _pump(tester, caracal);
 
-    expect(tester.getSize(find.byType(SpeciesImage).first).width, 390);
+    expect(tester.getSize(portrait).width, 390);
     expect(find.text('Caracal'), findsOneWidget);
+    // No blur behind a silhouette — blurring a flat shape makes a smear, and
+    // the tier gradient is a better backdrop than a smudge of itself.
+    expect(find.byType(ImageFiltered), findsNothing);
+    expect(find.byType(SpeciesImage), findsOneWidget);
   });
 
   testWidgets('the header holds up on a small screen and at 1.5x text', (
