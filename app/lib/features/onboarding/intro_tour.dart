@@ -547,11 +547,11 @@ class _ScoringScene extends StatelessWidget {
           child: const Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              _MockRow(avatar: 3, name: 'Thandi', points: 415, fraction: 1),
+              _MockRow(avatar: 3, name: 'Alex', points: 415, fraction: 1),
               SizedBox(height: Space.md),
               _MockRow(avatar: 9, name: 'Dad', points: 260, fraction: 0.63),
               SizedBox(height: Space.md),
-              _MockRow(avatar: 14, name: 'Jo', points: 95, fraction: 0.23),
+              _MockRow(avatar: 14, name: 'Sarah', points: 95, fraction: 0.23),
             ],
           ),
         ),

@@ -1,228 +1,262 @@
 <!doctype html>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Wild Score — settle the rankings</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Wild Score — how rare is it, really?</title>
 <style>
- :root{--bg:#f6f6f3;--card:#fff;--ink:#151a17;--mute:#8a938c;--line:#e2e4de;--accent:#1b7a54}
- *{box-sizing:border-box}
- body{margin:0;background:var(--bg);color:var(--ink);
-      font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
- header{position:sticky;top:0;z-index:20;background:#fffffff5;backdrop-filter:blur(8px);
-        border-bottom:1px solid var(--line);padding:10px 16px;
-        display:flex;gap:10px;align-items:center;flex-wrap:wrap}
- h1{font-size:15px;margin:0;font-weight:800;margin-right:auto}
- .count{color:var(--mute);font-size:13px}
- button{font:inherit;font-weight:700;border-radius:9px;padding:8px 13px;
-        border:1px solid var(--line);background:#fff;cursor:pointer;color:var(--ink)}
- button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
- button:disabled{opacity:.4;cursor:default}
- main{padding:16px;max-width:940px;margin:0 auto}
- .hide{display:none!important}
+:root{
+  --bg:#f6f6f3; --card:#fff; --ink:#151a17; --mute:#6d766f; --line:#e2e4de;
+  --accent:#1b7a54; --accent-wash:#1b7a5414;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{
+  background:var(--bg);color:var(--ink);
+  font:17px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  display:flex;flex-direction:column;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+header{
+  padding:12px 16px;border-bottom:1px solid var(--line);background:#fffffff2;
+  display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:5;
+}
+header h1{font-size:15px;font-weight:800;margin:0;flex:1}
+header .n{font-size:13px;color:var(--mute);font-variant-numeric:tabular-nums}
+.bar{height:4px;background:var(--line)}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+main{flex:1;padding:18px 16px 26px;max-width:640px;margin:0 auto;width:100%}
+button{font:inherit;cursor:pointer;border-radius:12px;border:1px solid var(--line);
+  background:#fff;color:var(--ink);padding:12px 16px}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+.hide{display:none!important}
 
- /* duel */
- .lede{text-align:center;color:#3d463f;margin:6px 0 20px;line-height:1.5}
- .lede b{color:var(--ink)}
- .duel{display:grid;grid-template-columns:1fr 1fr;gap:14px}
- .pick{background:var(--card);border:2px solid var(--line);border-radius:16px;
-       padding:22px 14px;cursor:pointer;text-align:center;transition:.12s;
-       display:flex;flex-direction:column;justify-content:center;min-height:170px}
- .pick:hover{border-color:var(--accent);transform:translateY(-2px)}
- .pick .nm{font-size:19px;font-weight:800;line-height:1.25}
- .pick .sci{color:var(--mute);font-size:12px;font-style:italic;margin-top:5px}
- .pick .cur{margin-top:12px;font-size:10.5px;font-weight:800;letter-spacing:1px;
-            color:var(--mute)}
- .mid{text-align:center;margin:16px 0;color:var(--mute);font-size:13px}
- .bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:18px 0 0}
- .bar i{display:block;height:100%;background:var(--accent);transition:width .25s}
+/* ---- the duel ---- */
+.q{text-align:center;font-weight:800;font-size:15px;margin:0 0 4px}
+.q small{display:block;font-weight:400;color:var(--mute);font-size:13.5px;margin-top:4px}
+.pair{display:grid;gap:12px;margin:20px 0 14px}
+@media(min-width:560px){.pair{grid-template-columns:1fr 1fr}}
+.pick{
+  background:var(--card);border:2px solid var(--line);border-radius:16px;
+  padding:16px;text-align:left;transition:.12s;width:100%;
+}
+.pick:active{border-color:var(--accent);background:var(--accent-wash)}
+.pick .nm{font-size:20px;font-weight:800;line-height:1.2}
+.pick .af{color:var(--mute);font-size:13px;margin-top:3px}
+.pick .ds{color:#48524a;font-size:13.5px;margin-top:9px;line-height:1.45}
+.pick .cat{font-size:10.5px;font-weight:800;letter-spacing:1.1px;color:var(--mute);
+  text-transform:uppercase;margin-top:10px}
+.alt{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.alt button{font-size:14.5px;font-weight:600;color:var(--mute)}
 
- /* results */
- .grp{margin:24px 0 8px;font-size:12px;font-weight:800;letter-spacing:1px;color:var(--mute)}
- .row{background:var(--card);border:1px solid var(--line);border-radius:11px;
-      padding:9px 12px;margin-bottom:6px;display:flex;gap:10px;align-items:center}
- .row .nm{font-weight:700;flex:1;font-size:14.5px}
- .row .moved{font-size:11px;font-weight:800;color:var(--accent);white-space:nowrap}
- .row select{font:inherit;font-size:13px;padding:5px 7px;border-radius:8px;
-             border:1px solid var(--line);background:#fff;color:var(--ink)}
- .t0{border-left:5px solid #77817a}.t1{border-left:5px solid #2e8b57}
- .t2{border-left:5px solid #2372a8}.t3{border-left:5px solid #6b47c0}
- .t4{border-left:5px solid #c26a15}.t5{border-left:5px solid #c0392b}
- .t6{border-left:5px solid #9c6b10}
- #out{position:fixed;inset:auto 12px 12px 12px;max-width:620px;margin:0 auto;background:#fff;
-      border:1px solid var(--line);border-radius:16px;padding:16px;display:none;
-      box-shadow:0 10px 40px #0003;z-index:30}
- textarea{width:100%;height:140px;font:12px/1.4 ui-monospace,monospace;
-          border:1px solid var(--line);border-radius:10px;padding:10px}
+/* ---- intro & done ---- */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:14px}
+.panel h2{margin:0 0 10px;font-size:19px}
+.panel p{margin:0 0 12px;color:#3d463f}
+.panel p:last-child{margin-bottom:0}
+input[type=text]{font:inherit;width:100%;padding:13px;border:1px solid var(--line);
+  border-radius:12px;background:#fff;color:var(--ink)}
+textarea{width:100%;height:110px;font:12px/1.45 ui-monospace,SFMono-Regular,monospace;
+  border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;color:var(--ink)}
+.big{width:100%;padding:16px;font-size:17px;font-weight:700;margin-top:10px}
+.res{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:9px 12px;
+  margin-bottom:6px;display:flex;gap:10px;align-items:center;font-size:14.5px}
+.res .r{color:var(--mute);font-variant-numeric:tabular-nums;width:26px}
+.res .nm{flex:1;font-weight:600}
+.res .sc{color:var(--mute);font-variant-numeric:tabular-nums;font-size:12.5px}
+.note{font-size:13px;color:var(--mute);line-height:1.5}
 </style>
+
 <header>
-  <h1>Settle the rankings</h1>
-  <span class="count" id="count"></span>
-  <button id="modeBtn" onclick="toggle()">See the order</button>
-  <button class="primary" onclick="exp()">Export</button>
+  <h1>How rare is it, really?</h1>
+  <span class="n" id="n"></span>
 </header>
+<div class="bar"><i id="prog"></i></div>
+
 <main>
-  <section id="duel">
-    <p class="lede">Which is <b>harder to find</b> in Kruger?<br>
-       Not which is more exciting — which one would you drive more days without seeing.</p>
-    <div class="duel">
-      <div class="pick" id="pA" onclick="choose(0)"></div>
-      <div class="pick" id="pB" onclick="choose(1)"></div>
-    </div>
-    <div class="mid">
-      <button onclick="skip()">Too close to call</button>
-    </div>
-    <div class="bar"><i id="prog"></i></div>
-    <p class="lede" id="progText" style="margin-top:10px"></p>
-  </section>
 
-  <section id="list" class="hide">
-    <p class="lede">Every species in the order your answers put them, rarest first.
-       Override any tier directly.</p>
-    <div id="rows"></div>
-  </section>
+<!-- ============ intro ============ -->
+<section id="intro">
+  <div class="panel">
+    <h2>Help us score the animals</h2>
+    <p>I'm building <b>Wild Score</b>, a game you play in the car in Kruger —
+       everyone competes to spot animals, and rarer animals are worth more points.</p>
+    <p><b>The problem:</b> I had to guess how rare every animal is, and I'm one
+       person. You almost certainly know better.</p>
+    <p>You'll be shown two animals at a time. Just tap the one that is
+       <b>harder to find in Kruger</b>. Not the more impressive one — the one you
+       see less often.</p>
+    <p class="note">Takes about three minutes. Nothing is sent anywhere — at the
+       end you get a short code to send back. No sign-up, no email, no app.</p>
+  </div>
+  <div class="panel">
+    <p style="margin-bottom:8px"><b>Your name</b> <span class="note">(so I know whose answers these are)</span></p>
+    <input type="text" id="who" placeholder="First name, or your channel" autocomplete="name">
+    <p class="note" style="margin-top:10px">If you guide or work in the park, add
+       that — I'll weight your answers more heavily.</p>
+  </div>
+  <button class="primary big" onclick="start()">Start</button>
+</section>
+
+<!-- ============ the duel ============ -->
+<section id="duel" class="hide">
+  <p class="q">Which is harder to find in Kruger?
+    <small>Not the more impressive one. The one you see less often.</small></p>
+  <div class="pair">
+    <button class="pick" id="pa" onclick="vote(0)"></button>
+    <button class="pick" id="pb" onclick="vote(1)"></button>
+  </div>
+  <div class="alt">
+    <button onclick="vote(0.5)">About the same</button>
+    <button onclick="skip()">Don't know</button>
+  </div>
+  <p class="note" style="text-align:center;margin-top:18px">
+    <a href="#" onclick="finish();return false" style="color:var(--mute)">Finish early</a>
+  </p>
+</section>
+
+<!-- ============ done ============ -->
+<section id="done" class="hide">
+  <div class="panel">
+    <h2>Thank you — genuinely</h2>
+    <p>Copy the code below and send it back to me. That's it.</p>
+    <textarea id="code" readonly onclick="this.select()"></textarea>
+    <button class="primary big" onclick="copyCode()" id="copyBtn">Copy the code</button>
+    <button class="big" onclick="wa()">Send on WhatsApp</button>
+  </div>
+  <div class="panel">
+    <h2>What you said, rarest first</h2>
+    <div id="list"></div>
+    <p class="note" style="margin-top:12px">Only animals you actually compared
+       appear here. Everything you skipped is left out.</p>
+  </div>
+</section>
+
 </main>
-<div id="out">
-  <p style="margin:0 0 8px"><b>Paste this back into the chat.</b></p>
-  <textarea id="json" readonly></textarea>
-  <p style="margin:10px 0 0"><button onclick="cp()">Copy</button>
-  <button onclick="document.getElementById('out').style.display='none'">Close</button></p>
-</div>
+
 <script>
-const SP = [{"id":"aardvark","name":"Aardvark","sci":"Orycteropus afer","cat":"mammal","tier":"veryRare"},{"id":"aardwolf","name":"Aardwolf","sci":"Proteles cristata","cat":"mammal","tier":"veryRare"},{"id":"african-civet","name":"African Civet","sci":"Civettictis civetta","cat":"mammal","tier":"scarce"},{"id":"african-elephant","name":"African Elephant","sci":"Loxodonta africana","cat":"mammal","tier":"frequent"},{"id":"african-wild-dog","name":"African Wild Dog","sci":"Lycaon pictus","cat":"mammal","tier":"rare"},{"id":"african-wildcat","name":"African Wildcat","sci":"Felis lybica","cat":"mammal","tier":"rare"},{"id":"banded-mongoose","name":"Banded Mongoose","sci":"Mungos mungo","cat":"mammal","tier":"frequent"},{"id":"bat-eared-fox","name":"Bat-eared Fox","sci":"Otocyon megalotis","cat":"mammal","tier":"veryRare"},{"id":"black-rhinoceros","name":"Black Rhinoceros","sci":"Diceros bicornis","cat":"mammal","tier":"veryRare"},{"id":"black-backed-jackal","name":"Black-backed Jackal","sci":"Lupulella mesomelas","cat":"mammal","tier":"frequent"},{"id":"blue-wildebeest","name":"Blue Wildebeest","sci":"Connochaetes taurinus","cat":"mammal","tier":"common"},{"id":"brown-hyena","name":"Brown Hyena","sci":"Parahyaena brunnea","cat":"mammal","tier":"legendary"},{"id":"bushbuck","name":"Bushbuck","sci":"Tragelaphus sylvaticus","cat":"mammal","tier":"frequent"},{"id":"bushpig","name":"Bushpig","sci":"Potamochoerus larvatus","cat":"mammal","tier":"scarce"},{"id":"cape-buffalo","name":"Cape Buffalo","sci":"Syncerus caffer","cat":"mammal","tier":"frequent"},{"id":"cape-porcupine","name":"Cape Porcupine","sci":"Hystrix africaeaustralis","cat":"mammal","tier":"scarce"},{"id":"caracal","name":"Caracal","sci":"Caracal caracal","cat":"mammal","tier":"legendary"},{"id":"chacma-baboon","name":"Chacma Baboon","sci":"Papio ursinus","cat":"mammal","tier":"common"},{"id":"cheetah","name":"Cheetah","sci":"Acinonyx jubatus","cat":"mammal","tier":"rare"},{"id":"common-duiker","name":"Common Duiker","sci":"Sylvicapra grimmia","cat":"mammal","tier":"frequent"},{"id":"eland","name":"Common Eland","sci":"Taurotragus oryx","cat":"mammal","tier":"scarce"},{"id":"dwarf-mongoose","name":"Dwarf Mongoose","sci":"Helogale parvula","cat":"mammal","tier":"frequent"},{"id":"eastern-rock-elephant-shrew","name":"Eastern Rock Elephant Shrew","sci":"Elephantulus myurus","cat":"mammal","tier":"rare"},{"id":"giraffe","name":"Giraffe","sci":"Giraffa camelopardalis","cat":"mammal","tier":"common"},{"id":"greater-kudu","name":"Greater Kudu","sci":"Tragelaphus strepsiceros","cat":"mammal","tier":"common"},{"id":"ground-pangolin","name":"Ground Pangolin","sci":"Smutsia temminckii","cat":"mammal","tier":"legendary"},{"id":"hippopotamus","name":"Hippopotamus","sci":"Hippopotamus amphibius","cat":"mammal","tier":"common"},{"id":"honey-badger","name":"Honey Badger","sci":"Mellivora capensis","cat":"mammal","tier":"scarce"},{"id":"impala","name":"Impala","sci":"Aepyceros melampus","cat":"mammal","tier":"common"},{"id":"klipspringer","name":"Klipspringer","sci":"Oreotragus oreotragus","cat":"mammal","tier":"uncommon"},{"id":"large-spotted-genet","name":"Large-spotted Genet","sci":"Genetta maculata","cat":"mammal","tier":"scarce"},{"id":"leopard","name":"Leopard","sci":"Panthera pardus","cat":"mammal","tier":"scarce"},{"id":"lesser-bushbaby","name":"Lesser Bushbaby","sci":"Galago moholi","cat":"mammal","tier":"scarce"},{"id":"lion","name":"Lion","sci":"Panthera leo","cat":"mammal","tier":"uncommon"},{"id":"mountain-reedbuck","name":"Mountain Reedbuck","sci":"Redunca fulvorufula","cat":"mammal","tier":"rare"},{"id":"nyala","name":"Nyala","sci":"Tragelaphus angasii","cat":"mammal","tier":"frequent"},{"id":"plains-zebra","name":"Plains Zebra","sci":"Equus quagga","cat":"mammal","tier":"common"},{"id":"roan-antelope","name":"Roan Antelope","sci":"Hippotragus equinus","cat":"mammal","tier":"rare"},{"id":"sable-antelope","name":"Sable Antelope","sci":"Hippotragus niger","cat":"mammal","tier":"scarce"},{"id":"scrub-hare","name":"Scrub Hare","sci":"Lepus saxatilis","cat":"mammal","tier":"frequent"},{"id":"serval","name":"Serval","sci":"Leptailurus serval","cat":"mammal","tier":"rare"},{"id":"sharpes-grysbok","name":"Sharpe's Grysbok","sci":"Raphicerus sharpei","cat":"mammal","tier":"scarce"},{"id":"slender-mongoose","name":"Slender Mongoose","sci":"Herpestes sanguineus","cat":"mammal","tier":"frequent"},{"id":"southern-reedbuck","name":"Southern Reedbuck","sci":"Redunca arundinum","cat":"mammal","tier":"scarce"},{"id":"spotted-hyena","name":"Spotted Hyena","sci":"Crocuta crocuta","cat":"mammal","tier":"frequent"},{"id":"steenbok","name":"Steenbok","sci":"Raphicerus campestris","cat":"mammal","tier":"common"},{"id":"suni","name":"Suni","sci":"Neotragus moschatus","cat":"mammal","tier":"veryRare"},{"id":"thick-tailed-bushbaby","name":"Thick-tailed Bushbaby","sci":"Otolemur crassicaudatus","cat":"mammal","tier":"scarce"},{"id":"tree-squirrel","name":"Tree Squirrel","sci":"Paraxerus cepapi","cat":"mammal","tier":"common"},{"id":"tsessebe","name":"Tsessebe","sci":"Damaliscus lunatus","cat":"mammal","tier":"scarce"},{"id":"vervet-monkey","name":"Vervet Monkey","sci":"Chlorocebus pygerythrus","cat":"mammal","tier":"common"},{"id":"warthog","name":"Warthog","sci":"Phacochoerus africanus","cat":"mammal","tier":"common"},{"id":"waterbuck","name":"Waterbuck","sci":"Kobus ellipsiprymnus","cat":"mammal","tier":"common"},{"id":"white-rhinoceros","name":"White Rhinoceros","sci":"Ceratotherium simum","cat":"mammal","tier":"uncommon"},{"id":"white-tailed-mongoose","name":"White-tailed Mongoose","sci":"Ichneumia albicauda","cat":"mammal","tier":"uncommon"},{"id":"african-fish-eagle","name":"African Fish Eagle","sci":"Haliaeetus vocifer","cat":"bird","tier":"frequent"},{"id":"bateleur","name":"Bateleur","sci":"Terathopius ecaudatus","cat":"bird","tier":"frequent"},{"id":"kori-bustard","name":"Kori Bustard","sci":"Ardeotis kori","cat":"bird","tier":"uncommon"},{"id":"lappet-faced-vulture","name":"Lappet-faced Vulture","sci":"Torgos tracheliotos","cat":"bird","tier":"scarce"},{"id":"lilac-breasted-roller","name":"Lilac-breasted Roller","sci":"Coracias caudatus","cat":"bird","tier":"common"},{"id":"martial-eagle","name":"Martial Eagle","sci":"Polemaetus bellicosus","cat":"bird","tier":"scarce"},{"id":"pels-fishing-owl","name":"Pel's Fishing Owl","sci":"Scotopelia peli","cat":"bird","tier":"legendary"},{"id":"red-billed-buffalo-weaver","name":"Red-billed Buffalo Weaver","sci":"Bubalornis niger","cat":"bird","tier":"frequent"},{"id":"saddle-billed-stork","name":"Saddle-billed Stork","sci":"Ephippiorhynchus senegalensis","cat":"bird","tier":"scarce"},{"id":"southern-ground-hornbill","name":"Southern Ground Hornbill","sci":"Bucorvus leadbeateri","cat":"bird","tier":"uncommon"},{"id":"verreauxs-eagle-owl","name":"Verreaux's Eagle-Owl","sci":"Bubo lacteus","cat":"bird","tier":"uncommon"},{"id":"white-backed-vulture","name":"White-backed Vulture","sci":"Gyps africanus","cat":"bird","tier":"frequent"},{"id":"black-mamba","name":"Black Mamba","sci":"Dendroaspis polylepis","cat":"reptile","tier":"rare"},{"id":"leopard-tortoise","name":"Leopard Tortoise","sci":"Stigmochelys pardalis","cat":"reptile","tier":"frequent"},{"id":"nile-crocodile","name":"Nile Crocodile","sci":"Crocodylus niloticus","cat":"reptile","tier":"frequent"},{"id":"african-rock-python","name":"Southern African Rock Python","sci":"Python natalensis","cat":"reptile","tier":"rare"},{"id":"water-monitor","name":"Water Monitor","sci":"Varanus niloticus","cat":"reptile","tier":"frequent"},{"id":"ant-lion","name":"Ant Lion","sci":"Myrmeleontidae","cat":"invertebrate","tier":"uncommon"},{"id":"rhinoceros-beetle","name":"Rhinoceros Beetle","sci":"Oryctes boas","cat":"invertebrate","tier":"scarce"}]
-;
-const TIERS = [
- ['common','Common'],['frequent','Frequent'],['uncommon','Notable'],
- ['scarce','Rare'],['rare','Very rare'],['veryRare','Exceptional'],
- ['legendary','Legendary']];
-const KEY='wildscore-duels-v2';
+// The catalogue, injected by app/tool/build_ranker.dart. Regenerate whenever
+// species.json changes so this never drifts from the app.
+const SPECIES = [{"id":"aardvark","name":"Aardvark","afr":"Erdvark","cat":"mammal","desc":"Widespread but almost never seen."},{"id":"aardwolf","name":"Aardwolf","afr":"Aardwolf","cat":"mammal","desc":"A hyena that eats nothing but harvester termites — up to 300,000 in a night."},{"id":"african-civet","name":"African Civet","afr":"Afrikaanse Siwet","cat":"mammal","desc":"Blotched and heavy-set with a raised black crest along the spine."},{"id":"african-elephant","name":"African Elephant","afr":"Olifant","cat":"mammal","desc":"Kruger holds well over ten thousand."},{"id":"african-wild-dog","name":"African Wild Dog","afr":"Wildehond","cat":"mammal","desc":"Perhaps 300 in the whole park."},{"id":"african-wildcat","name":"African Wildcat","afr":"Vaalboskat","cat":"mammal","desc":"The ancestor of every domestic cat."},{"id":"banded-mongoose","name":"Banded Mongoose","afr":"Gebande Muishond","cat":"mammal","desc":"Moves in noisy packs of twenty or more, constantly chattering to stay in contact while foraging through leaf litter."},{"id":"bat-eared-fox","name":"Bat-eared Fox","afr":"Bakoorvos","cat":"mammal","desc":"Enormous ears used to listen for termites underground."},{"id":"black-rhinoceros","name":"Black Rhinoceros","afr":"Swartrenoster","cat":"mammal","desc":"A browser with a hooked prehensile lip, smaller and far more aggressive than the white rhino."},{"id":"black-backed-jackal","name":"Black-backed Jackal","afr":"Rooijakkals","cat":"mammal","desc":"Pairs bond for life and hold a territory together."},{"id":"blue-wildebeest","name":"Blue Wildebeest","afr":"Blouwildebees","cat":"mammal","desc":"Densest on the southern and central grasslands."},{"id":"brown-hyena","name":"Brown Hyena","afr":"Bruin Hiëna","cat":"mammal","desc":"A handful of records in the entire park, all in the far north."},{"id":"bushbuck","name":"Bushbuck","afr":"Bosbok","cat":"mammal","desc":"Solitary and shy, sticking tight to cover."},{"id":"bushpig","name":"Bushpig","afr":"Bosvark","cat":"mammal","desc":"Nocturnal, hairy and bad-tempered — everything the warthog is not."},{"id":"cape-buffalo","name":"Cape Buffalo","afr":"Buffel","cat":"mammal","desc":"Herds run to several hundred."},{"id":"cape-porcupine","name":"Cape Porcupine","afr":"Ystervark","cat":"mammal","desc":"Africa's largest rodent."},{"id":"caracal","name":"Caracal","afr":"Rooikat","cat":"mammal","desc":"Black-tufted ears and enough vertical leap to take birds out of the air."},{"id":"chacma-baboon","name":"Chacma Baboon","afr":"Bobbejaan","cat":"mammal","desc":"Troops of up to a hundred, rigidly hierarchical."},{"id":"cheetah","name":"Cheetah","afr":"Jagluiperd","cat":"mammal","desc":"Needs open ground to run and loses kills constantly to lion and hyena, which keeps numbers low."},{"id":"common-duiker","name":"Common Duiker","afr":"Gewone Duiker","cat":"mammal","desc":"Named for its diving run into cover."},{"id":"eland","name":"Common Eland","afr":"Eland","cat":"mammal","desc":"The largest antelope on earth, and shy out of proportion to its size."},{"id":"dwarf-mongoose","name":"Dwarf Mongoose","afr":"Dwergmuishond","cat":"mammal","desc":"Africa's smallest carnivore."},{"id":"eastern-rock-elephant-shrew","name":"Eastern Rock Elephant Shrew","afr":"Klipklaasneus","cat":"mammal","desc":"Not a shrew and not related to elephants — its closest living relatives are elephants, aardvarks and hyraxes."},{"id":"giraffe","name":"Giraffe","afr":"Kameelperd","cat":"mammal","desc":"Browses above the reach of every other herbivore."},{"id":"greater-kudu","name":"Greater Kudu","afr":"Koedoe","cat":"mammal","desc":"Bulls carry spiralled horns over a metre long."},{"id":"ground-pangolin","name":"Ground Pangolin","afr":"Ietermagog","cat":"mammal","desc":"The most trafficked mammal on earth and the sighting of a lifetime."},{"id":"hippopotamus","name":"Hippopotamus","afr":"Seekoei","cat":"mammal","desc":"Spends the day submerged and grazes on land at night, walking many kilometres from water."},{"id":"honey-badger","name":"Honey Badger","afr":"Ratel","cat":"mammal","desc":"Loose, thick skin lets it twist round inside its own hide when grabbed."},{"id":"impala","name":"Impala","afr":"Rooibok","cat":"mammal","desc":"The most abundant antelope in the park and the staple prey of almost every predator in it."},{"id":"klipspringer","name":"Klipspringer","afr":"Klipspringer","cat":"mammal","desc":"Stands on the very tips of cylindrical hooves and is found nowhere but rock."},{"id":"large-spotted-genet","name":"Large-spotted Genet","afr":"Rooikolmuskejaatkat","cat":"mammal","desc":"Cat-like but not a cat."},{"id":"leopard","name":"Leopard","afr":"Luiperd","cat":"mammal","desc":"Solitary, largely nocturnal, and hauls kills into trees to keep them from hyena."},{"id":"lesser-bushbaby","name":"Lesser Bushbaby","afr":"Nagapie","cat":"mammal","desc":"Tiny, huge-eyed, and capable of leaping several metres between branches."},{"id":"lion","name":"Lion","afr":"Leeu","cat":"mammal","desc":"Sleeps up to twenty hours a day, which is why most sightings are of a flat cat under a bush."},{"id":"mountain-reedbuck","name":"Mountain Reedbuck","afr":"Rooiribbok","cat":"mammal","desc":"Confined to a handful of rocky hillsides in the north of the park."},{"id":"nyala","name":"Nyala","afr":"Njala","cat":"mammal","desc":"Males and females look like different species entirely — shaggy slate-grey bulls, bright chestnut ewes."},{"id":"plains-zebra","name":"Plains Zebra","afr":"Bontsebra","cat":"mammal","desc":"Almost always found alongside wildebeest, which benefit from the zebra's better eyesight while the zebra benefits from their numbers."},{"id":"roan-antelope","name":"Roan Antelope","afr":"Bastergemsbok","cat":"mammal","desc":"One of the rarest large antelope in Kruger, down to a few dozen animals in the far northern sandveld."},{"id":"sable-antelope","name":"Sable Antelope","afr":"Swartwitpens","cat":"mammal","desc":"Jet-black bulls with scimitar horns swept back over the shoulders."},{"id":"scrub-hare","name":"Scrub Hare","afr":"Kolhaas","cat":"mammal","desc":"Lies up motionless all day and bolts only at the last second."},{"id":"serval","name":"Serval","afr":"Tierboskat","cat":"mammal","desc":"Long-legged and huge-eared, hunting rodents by sound alone in long grass and pouncing vertically."},{"id":"sharpes-grysbok","name":"Sharpe's Grysbok","afr":"Sharpe se Grysbok","cat":"mammal","desc":"Small, grizzled and almost entirely nocturnal, which is why it is so rarely recorded despite being reasonably common."},{"id":"slender-mongoose","name":"Slender Mongoose","afr":"Swartkwasmuishond","cat":"mammal","desc":"Solitary and quick, identified by the black tail tip it flicks upward as it runs across a road."},{"id":"southern-reedbuck","name":"Southern Reedbuck","afr":"Rietbok","cat":"mammal","desc":"Bound away with a shrill whistle and a distinctive rocking-horse gait, flashing the white underside of the tail."},{"id":"spotted-hyena","name":"Spotted Hyena","afr":"Gevlekte Hiëna","cat":"mammal","desc":"A capable hunter, not merely a scavenger — clans kill more than they steal."},{"id":"steenbok","name":"Steenbok","afr":"Steenbok","cat":"mammal","desc":"A small, rufous antelope seen alone or in pairs."},{"id":"suni","name":"Suni","afr":"Soenie","cat":"mammal","desc":"One of the smallest antelope in Africa, standing barely 35cm."},{"id":"thick-tailed-bushbaby","name":"Thick-tailed Bushbaby","afr":"Bosnagaap","cat":"mammal","desc":"Far larger than the lesser bushbaby, with a wailing call that sounds unnervingly like a child."},{"id":"tree-squirrel","name":"Tree Squirrel","afr":"Boomeekhoring","cat":"mammal","desc":"Also called the mopane squirrel."},{"id":"tsessebe","name":"Tsessebe","afr":"Tsessebe","cat":"mammal","desc":"The fastest antelope in southern Africa."},{"id":"vervet-monkey","name":"Vervet Monkey","afr":"Blouaap","cat":"mammal","desc":"Uses distinct alarm calls for leopard, eagle and snake, and other species listen in."},{"id":"warthog","name":"Warthog","afr":"Vlakvark","cat":"mammal","desc":"Runs with its tail held vertical like a flag."},{"id":"waterbuck","name":"Waterbuck","afr":"Waterbok","cat":"mammal","desc":"Marked with a white ring on the rump that looks like it sat on a freshly painted toilet seat."},{"id":"white-rhinoceros","name":"White Rhinoceros","afr":"Witrenoster","cat":"mammal","desc":"A grazer with a broad square lip — the name is a corruption of the Dutch for wide, not a colour."},{"id":"white-tailed-mongoose","name":"White-tailed Mongoose","afr":"Witstertmuishond","cat":"mammal","desc":"The largest mongoose in Africa, and strictly nocturnal."},{"id":"african-fish-eagle","name":"African Fish Eagle","afr":"Visarend","cat":"bird","desc":"The ringing call thrown back over its shoulder is the sound most people associate with African water, whether or not they know the bird."},{"id":"african-hawk-eagle","name":"African Hawk-Eagle","afr":"Grootjagarend","cat":"bird","desc":"Black above, white below with heavy black streaks, and fast — it hunts francolin and guineafowl in a flat charge through the trees rather than a stoop from height."},{"id":"african-hoopoe","name":"African Hoopoe","afr":"Hoephoep","cat":"bird","desc":"Cinnamon, with a black-and-white barred back and a crest it raises like a fan when it lands."},{"id":"bateleur","name":"Bateleur","afr":"Berghaan","cat":"bird","desc":"Rocks side to side in flight like a tightrope walker, which is what the French name means."},{"id":"brown-snake-eagle","name":"Brown Snake Eagle","afr":"Bruinslangarend","cat":"bird","desc":"Plain chocolate brown with startling yellow eyes and bare legs — the bare legs are the point, because it hunts snakes and scales stop fangs."},{"id":"cape-glossy-starling","name":"Cape Glossy Starling","afr":"Kleinglansspreeu","cat":"bird","desc":"Every camp has them and everybody photographs them anyway."},{"id":"cape-vulture","name":"Cape Vulture","afr":"Kransaasvoël","cat":"bird","desc":"Bigger and paler than the White-backed, with a bare blue throat patch."},{"id":"common-ostrich","name":"Common Ostrich","afr":"Volstruis","cat":"bird","desc":"The largest bird alive, and the fastest thing on two legs."},{"id":"egyptian-goose","name":"Egyptian Goose","afr":"Kolgans","cat":"bird","desc":"Not a goose but a shelduck, and the loudest thing at any waterhole."},{"id":"giant-kingfisher","name":"Giant Kingfisher","afr":"Reusevisvanger","cat":"bird","desc":"Crow-sized, which is startling the first time — Africa's largest kingfisher, shaggy-crested, with a bill like a chisel."},{"id":"helmeted-guineafowl","name":"Helmeted Guineafowl","afr":"Gewone Tarentaal","cat":"bird","desc":"Runs down the middle of the road ahead of the car rather than stepping aside, for miles, and never learns."},{"id":"hooded-vulture","name":"Hooded Vulture","afr":"Monnikaasvoël","cat":"bird","desc":"The small, dark one at the edge of the scrum, waiting for the big vultures to finish."},{"id":"kori-bustard","name":"Kori Bustard","afr":"Gompou","cat":"bird","desc":"Among the heaviest flying birds on earth."},{"id":"lappet-faced-vulture","name":"Lappet-faced Vulture","afr":"Swartaasvoël","cat":"bird","desc":"The largest vulture in Africa and dominant at a carcass — its bill opens hides the others cannot."},{"id":"lilac-breasted-roller","name":"Lilac-breasted Roller","afr":"Gewone Troupant","cat":"bird","desc":"The most photographed bird in the park."},{"id":"malachite-kingfisher","name":"Malachite Kingfisher","afr":"Kuifkopvisvanger","cat":"bird","desc":"Barely bigger than your thumb and impossibly bright — cobalt above, orange below, with a red dagger of a bill."},{"id":"martial-eagle","name":"Martial Eagle","afr":"Breëkoparend","cat":"bird","desc":"Africa's largest eagle, powerful enough to take a young impala."},{"id":"pels-fishing-owl","name":"Pel's Fishing Owl","afr":"Visuil","cat":"bird","desc":"A huge ginger owl that hunts fish by touch from a low branch."},{"id":"pied-kingfisher","name":"Pied Kingfisher","afr":"Bontvisvanger","cat":"bird","desc":"Black and white, and the only kingfisher that hovers — it hangs dead still over the water, then folds and drops."},{"id":"red-billed-buffalo-weaver","name":"Red-billed Buffalo Weaver","afr":"Buffelwewer","cat":"bird","desc":"Builds the untidy stick tenements that hang off the western side of tall trees and windmills."},{"id":"saddle-billed-stork","name":"Saddle-billed Stork","afr":"Saalbekooievaar","cat":"bird","desc":"Fewer than thirty breeding pairs in the whole park."},{"id":"secretarybird","name":"Secretarybird","afr":"Sekretarisvoël","cat":"bird","desc":"An eagle that walks."},{"id":"southern-ground-hornbill","name":"Southern Ground Hornbill","afr":"Bromvoël","cat":"bird","desc":"Turkey-sized, walks rather than flies, and booms at dawn like a distant lion."},{"id":"southern-yellow-billed-hornbill","name":"Southern Yellow-billed Hornbill","afr":"Geelbekneushoringvoël","cat":"bird","desc":"The bird Zazu was drawn from, and it knows it."},{"id":"tawny-eagle","name":"Tawny Eagle","afr":"Roofarend","cat":"bird","desc":"The park's commonest big eagle and the hardest to name, because it comes in every shade from cream to dark brown."},{"id":"verreauxs-eagle-owl","name":"Verreaux's Eagle-Owl","afr":"Reuse-ooruil","cat":"bird","desc":"Africa's largest owl, identified instantly by pink eyelids it shows when blinking."},{"id":"western-barn-owl","name":"Western Barn Owl","afr":"Nonnetjie-uil","cat":"bird","desc":"A white heart-shaped face that appears in the headlights and is gone."},{"id":"white-backed-vulture","name":"White-backed Vulture","afr":"Witrugaasvoël","cat":"bird","desc":"The commonest vulture at a kill, and collapsing fast across its range through poisoning."},{"id":"white-headed-vulture","name":"White-headed Vulture","afr":"Witkopaasvoël","cat":"bird","desc":"The handsome one: white head, pink bill, clean white belly and a sharp white line along the wing."},{"id":"woodland-kingfisher","name":"Woodland Kingfisher","afr":"Bosveldvisvanger","cat":"bird","desc":"Arrives in November and announces it — a piercing trill from every second tree until March."},{"id":"black-mamba","name":"Black Mamba","afr":"Swartmamba","cat":"reptile","desc":"Named for the ink-black mouth, not the body, which is gunmetal grey."},{"id":"boomslang","name":"Boomslang","afr":"Boomslang","cat":"reptile","desc":"An enormous eye, a short blunt head, and a tail that goes on forever."},{"id":"leopard-tortoise","name":"Leopard Tortoise","afr":"Bergskilpad","cat":"reptile","desc":"The largest tortoise in the park and the only one that cannot pull its head straight back — it folds the neck sideways."},{"id":"mozambique-spitting-cobra","name":"Mozambique Spitting Cobra","afr":"Mosambiekse Spoegkobra","cat":"reptile","desc":"Rears, spreads a narrow hood, and sprays venom at your eyes from two metres."},{"id":"nile-crocodile","name":"Nile Crocodile","afr":"Nylkrokodil","cat":"reptile","desc":"Large individuals in the Olifants and Luvuvhu exceed four metres."},{"id":"puff-adder","name":"Puff Adder","afr":"Pofadder","cat":"reptile","desc":"Thick, short and beautifully marked in chevrons."},{"id":"african-rock-python","name":"Southern African Rock Python","afr":"Luislang","cat":"reptile","desc":"Africa's largest snake, reaching five metres."},{"id":"water-monitor","name":"Water Monitor","afr":"Waterlikkewaan","cat":"reptile","desc":"Africa's largest lizard, up to two metres."},{"id":"ant-lion","name":"Ant Lion","afr":"Mierleeu","cat":"invertebrate","desc":"The conical pits in soft sand at every picnic site are its traps."},{"id":"rhinoceros-beetle","name":"Rhinoceros Beetle","afr":"Renosterkewer","cat":"invertebrate","desc":"Can carry many times its own weight, and the males fight with the horn."},{"id":"baobab","name":"Baobab","afr":"Kremetartboom","cat":"plant","desc":"Not an animal, and worth stopping for anyway."}];
 
-const orig = {}; SP.forEach(s => orig[s.id] = s.tier);
-const saved = JSON.parse(localStorage.getItem(KEY) || '{}');
-// Elo rating per species. Seeded from the current tier so the first few
-// answers refine an informed guess rather than starting from nothing.
-const rating = {};
-SP.forEach(s => rating[s.id] = saved.rating?.[s.id] ?? (1200 + TIERS.findIndex(t=>t[0]===s.tier) * 90));
-let done = saved.done ?? 0;
-let overrides = saved.overrides ?? {};
-let pair = null, listMode = false;
+// WhatsApp number to send results to, injected at build time. Empty disables
+// the button rather than opening a broken link.
+const WHATSAPP = "";
 
-const TARGET = 70;   // enough for a stable order across 74 species
+// How many duels one sitting asks for.
+//
+// Elo over 96 species would want several hundred comparisons to converge on its
+// own, which is forty minutes and nobody finishes that. The design assumes
+// *many* people doing a short stint each, and the aggregator merges them — so
+// this is tuned to "will a stranger on Facebook finish it", not to statistical
+// comfort. Sixty pairs is about three minutes.
+const ROUNDS = 60;
 
-function save(){
-  localStorage.setItem(KEY, JSON.stringify({rating, done, overrides}));
+const K = 32;            // Elo step. Deliberately large: few games, want movement.
+const rating = {};       // id -> elo
+const seen = {};         // id -> how many duels it has been in
+const votes = [];        // every judgement, so the aggregator can re-derive
+let pair = null, done = 0, who = "";
+
+for (const s of SPECIES) { rating[s.id] = 1500; seen[s.id] = 0; }
+
+function start(){
+  who = (document.getElementById("who").value || "").trim() || "anonymous";
+  document.getElementById("intro").classList.add("hide");
+  document.getElementById("duel").classList.remove("hide");
+  next();
 }
 
-/* ---- duel ---------------------------------------------------------- */
-
-function nextPair(){
-  // Compare near-neighbours: telling a pangolin from an impala teaches
-  // nothing, telling a cheetah from a leopard is the whole question.
-  const order = [...SP].sort((a,b) => rating[a.id] - rating[b.id]);
-  const i = Math.floor(Math.random() * (order.length - 1));
-  const window = Math.min(6, order.length - 1 - i);
-  const j = i + 1 + Math.floor(Math.random() * window);
-  pair = [order[i], order[j]];
-  if (Math.random() < 0.5) pair.reverse();
-  paintDuel();
-}
-
-function paintDuel(){
-  ['pA','pB'].forEach((id, n) => {
-    const s = pair[n];
-    document.getElementById(id).innerHTML =
-      `<div class="nm">${s.name}</div><div class="sci">${s.sci}</div>
-       <div class="cur">NOW: ${TIERS.find(t=>t[0]===tierOf(s.id))[1].toUpperCase()}</div>`;
-  });
-  const pct = Math.min(100, done / TARGET * 100);
-  document.getElementById('prog').style.width = pct + '%';
-  document.getElementById('progText').textContent =
-    done >= TARGET
-      ? `${done} answered — that is plenty. Check the order, then export.`
-      : `${done} of about ${TARGET}. Keep going until the order looks right.`;
-  tally();
-}
-
-function choose(n){
-  const winner = pair[n], loser = pair[1-n];
-  elo(winner.id, loser.id, 1);
-  done++; save(); nextPair();
-}
-function skip(){
-  elo(pair[0].id, pair[1].id, 0.5);
-  done++; save(); nextPair();
-}
-
-function elo(a, b, score){
-  const K = 32;
-  const ea = 1 / (1 + Math.pow(10, (rating[b] - rating[a]) / 400));
-  rating[a] += K * (score - ea);
-  rating[b] += K * ((1 - score) - (1 - ea));
-}
-
-/* ---- results ------------------------------------------------------- */
-
-// Split the rated order into the seven tiers, keeping roughly the shape the
-// catalogue already has — most animals are common, almost none are legendary.
-const SHAPE = [0.18, 0.26, 0.16, 0.16, 0.12, 0.08, 0.04];
-
-function computed(){
-  const order = [...SP].sort((a,b) => rating[b.id] - rating[a.id]); // rarest first
-  const out = {};
-  let idx = 0;
-  for (let t = TIERS.length - 1; t >= 0; t--){
-    const take = t === 0 ? order.length - idx : Math.round(SHAPE[t] * order.length);
-    for (let k = 0; k < take && idx < order.length; k++, idx++) out[order[idx].id] = TIERS[t][0];
+// Picks the most informative pair we can cheaply find.
+//
+// Two rules, both mattering: prefer species that have been seen least, so
+// nothing is left unrated; and among those prefer opponents of *similar*
+// rating, because a duel whose outcome is obvious teaches nothing. Comparing a
+// pangolin with an impala is a wasted question.
+function choose(){
+  const pool = [...SPECIES].sort((a,b) => (seen[a.id]-seen[b.id]) || Math.random()-0.5);
+  const a = pool[Math.floor(Math.random()*Math.min(12,pool.length))];
+  let best = null, bestGap = Infinity;
+  for (const c of pool.slice(0,40)) {
+    if (c.id === a.id) continue;
+    const gap = Math.abs(rating[c.id]-rating[a.id]) + Math.random()*60;
+    if (gap < bestGap) { bestGap = gap; best = c; }
   }
-  return out;
+  return Math.random() < 0.5 ? [a,best] : [best,a];
 }
 
-function tierOf(id){ return overrides[id] ?? computed()[id] ?? orig[id]; }
-
-function toggle(){
-  listMode = !listMode;
-  document.getElementById('duel').classList.toggle('hide', listMode);
-  document.getElementById('list').classList.toggle('hide', !listMode);
-  document.getElementById('modeBtn').textContent = listMode ? 'Back to comparing' : 'See the order';
-  if (listMode) paintList();
+function next(){
+  if (done >= ROUNDS) return finish();
+  pair = choose();
+  for (const [el,s] of [["pa",pair[0]],["pb",pair[1]]]) {
+    document.getElementById(el).innerHTML =
+      '<div class="nm"></div><div class="af"></div><div class="ds"></div><div class="cat"></div>';
+    const n = document.getElementById(el);
+    n.querySelector(".nm").textContent = s.name;
+    n.querySelector(".af").textContent = s.afr || "";
+    n.querySelector(".ds").textContent = s.desc || "";
+    n.querySelector(".cat").textContent = s.cat;
+  }
+  document.getElementById("n").textContent = done + " / " + ROUNDS;
+  document.getElementById("prog").style.width = (100*done/ROUNDS) + "%";
 }
 
-function paintList(){
-  const calc = computed();
-  const order = [...SP].sort((a,b) => rating[b.id] - rating[a.id]);
-  let html = '', last = null;
-  order.forEach(s => {
-    const t = overrides[s.id] ?? calc[s.id];
-    if (t !== last){ last = t; html += `<div class="grp">${TIERS.find(x=>x[0]===t)[1].toUpperCase()}</div>`; }
-    const ti = TIERS.findIndex(x=>x[0]===t);
-    const moved = t !== orig[s.id]
-      ? `<span class="moved">was ${TIERS.find(x=>x[0]===orig[s.id])[1]}</span>` : '';
-    html += `<div class="row t${ti}"><span class="nm">${s.name}</span>${moved}
-      <select onchange="override('${s.id}', this.value)">
-      ${TIERS.map(x=>`<option value="${x[0]}"${x[0]===t?' selected':''}>${x[1]}</option>`).join('')}
-      </select></div>`;
-  });
-  document.getElementById('rows').innerHTML = html;
-  tally();
+// score: 1 = first is rarer, 0 = second is rarer, 0.5 = the same
+function vote(score){
+  const [a,b] = pair;
+  const s = score === 0 ? 1 : score === 1 ? 0 : 0.5;   // tap-index -> Elo score
+  const ea = 1/(1+Math.pow(10,(rating[b.id]-rating[a.id])/400));
+  rating[a.id] += K*(s-ea);
+  rating[b.id] += K*((1-s)-(1-ea));
+  seen[a.id]++; seen[b.id]++;
+  votes.push([a.id, b.id, s]);
+  done++;
+  next();
 }
 
-function override(id, tier){ overrides[id] = tier; save(); paintList(); }
+function skip(){ pair = null; done++; next(); }
 
-function tally(){
-  const calc = computed();
-  const n = SP.filter(s => (overrides[s.id] ?? calc[s.id]) !== orig[s.id]).length;
-  document.getElementById('count').textContent = `${n} would change`;
+function finish(){
+  document.getElementById("duel").classList.add("hide");
+  document.getElementById("done").classList.remove("hide");
+  document.getElementById("prog").style.width = "100%";
+  document.getElementById("n").textContent = votes.length + " answered";
+
+  const rated = SPECIES.filter(s => seen[s.id] > 0)
+                       .sort((a,b) => rating[b.id]-rating[a.id]);
+
+  document.getElementById("list").innerHTML = rated.map((s,i) =>
+    '<div class="res"><span class="r">' + (i+1) + '</span>' +
+    '<span class="nm"></span><span class="sc">' + Math.round(rating[s.id]) + '</span></div>'
+  ).join("");
+  // Names set as text, never as HTML — this file gets handed to strangers and
+  // the catalogue is the only thing it should ever render.
+  document.querySelectorAll("#list .nm").forEach((el,i) => el.textContent = rated[i].name);
+
+  // Raw judgements rather than final ratings. Ratings from a 60-duel session
+  // are noisy and cannot be pooled meaningfully; the individual comparisons
+  // can, so the aggregator re-runs Elo over everybody's answers at once.
+  const payload = {
+    v: 1,
+    who: who,
+    at: new Date().toISOString().slice(0,10),
+    votes: votes.map(v => [SPECIES.findIndex(s=>s.id===v[0]),
+                           SPECIES.findIndex(s=>s.id===v[1]), v[2]])
+  };
+  document.getElementById("code").value =
+    "WSRANK1:" + btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
 }
 
-function exp(){
-  const calc = computed();
-  const out = {};
-  SP.forEach(s => {
-    const t = overrides[s.id] ?? calc[s.id];
-    if (t !== orig[s.id]) out[s.id] = t;
-  });
-  document.getElementById('json').value = JSON.stringify({comparisons: done, changes: out});
-  document.getElementById('out').style.display = 'block';
+function copyCode(){
+  const t = document.getElementById("code");
+  t.select(); t.setSelectionRange(0, 999999);
+  navigator.clipboard.writeText(t.value).then(
+    () => { document.getElementById("copyBtn").textContent = "Copied — now paste it to me"; },
+    () => { document.execCommand("copy"); }
+  );
 }
-function cp(){ const t = document.getElementById('json'); t.select(); document.execCommand('copy'); }
 
-nextPair();
+function wa(){
+  const msg = "Wild Score rankings from " + who + "\n\n" + document.getElementById("code").value;
+  const base = WHATSAPP ? "https://wa.me/" + WHATSAPP + "?text=" : "https://wa.me/?text=";
+  window.open(base + encodeURIComponent(msg), "_blank");
+}
 </script>

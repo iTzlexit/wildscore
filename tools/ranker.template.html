@@ -1,0 +1,262 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Wild Score — how rare is it, really?</title>
+<style>
+:root{
+  --bg:#f6f6f3; --card:#fff; --ink:#151a17; --mute:#6d766f; --line:#e2e4de;
+  --accent:#1b7a54; --accent-wash:#1b7a5414;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{
+  background:var(--bg);color:var(--ink);
+  font:17px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  display:flex;flex-direction:column;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+header{
+  padding:12px 16px;border-bottom:1px solid var(--line);background:#fffffff2;
+  display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:5;
+}
+header h1{font-size:15px;font-weight:800;margin:0;flex:1}
+header .n{font-size:13px;color:var(--mute);font-variant-numeric:tabular-nums}
+.bar{height:4px;background:var(--line)}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+main{flex:1;padding:18px 16px 26px;max-width:640px;margin:0 auto;width:100%}
+button{font:inherit;cursor:pointer;border-radius:12px;border:1px solid var(--line);
+  background:#fff;color:var(--ink);padding:12px 16px}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+.hide{display:none!important}
+
+/* ---- the duel ---- */
+.q{text-align:center;font-weight:800;font-size:15px;margin:0 0 4px}
+.q small{display:block;font-weight:400;color:var(--mute);font-size:13.5px;margin-top:4px}
+.pair{display:grid;gap:12px;margin:20px 0 14px}
+@media(min-width:560px){.pair{grid-template-columns:1fr 1fr}}
+.pick{
+  background:var(--card);border:2px solid var(--line);border-radius:16px;
+  padding:16px;text-align:left;transition:.12s;width:100%;
+}
+.pick:active{border-color:var(--accent);background:var(--accent-wash)}
+.pick .nm{font-size:20px;font-weight:800;line-height:1.2}
+.pick .af{color:var(--mute);font-size:13px;margin-top:3px}
+.pick .ds{color:#48524a;font-size:13.5px;margin-top:9px;line-height:1.45}
+.pick .cat{font-size:10.5px;font-weight:800;letter-spacing:1.1px;color:var(--mute);
+  text-transform:uppercase;margin-top:10px}
+.alt{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.alt button{font-size:14.5px;font-weight:600;color:var(--mute)}
+
+/* ---- intro & done ---- */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:14px}
+.panel h2{margin:0 0 10px;font-size:19px}
+.panel p{margin:0 0 12px;color:#3d463f}
+.panel p:last-child{margin-bottom:0}
+input[type=text]{font:inherit;width:100%;padding:13px;border:1px solid var(--line);
+  border-radius:12px;background:#fff;color:var(--ink)}
+textarea{width:100%;height:110px;font:12px/1.45 ui-monospace,SFMono-Regular,monospace;
+  border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;color:var(--ink)}
+.big{width:100%;padding:16px;font-size:17px;font-weight:700;margin-top:10px}
+.res{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:9px 12px;
+  margin-bottom:6px;display:flex;gap:10px;align-items:center;font-size:14.5px}
+.res .r{color:var(--mute);font-variant-numeric:tabular-nums;width:26px}
+.res .nm{flex:1;font-weight:600}
+.res .sc{color:var(--mute);font-variant-numeric:tabular-nums;font-size:12.5px}
+.note{font-size:13px;color:var(--mute);line-height:1.5}
+</style>
+
+<header>
+  <h1>How rare is it, really?</h1>
+  <span class="n" id="n"></span>
+</header>
+<div class="bar"><i id="prog"></i></div>
+
+<main>
+
+<!-- ============ intro ============ -->
+<section id="intro">
+  <div class="panel">
+    <h2>Help us score the animals</h2>
+    <p>I'm building <b>Wild Score</b>, a game you play in the car in Kruger —
+       everyone competes to spot animals, and rarer animals are worth more points.</p>
+    <p><b>The problem:</b> I had to guess how rare every animal is, and I'm one
+       person. You almost certainly know better.</p>
+    <p>You'll be shown two animals at a time. Just tap the one that is
+       <b>harder to find in Kruger</b>. Not the more impressive one — the one you
+       see less often.</p>
+    <p class="note">Takes about three minutes. Nothing is sent anywhere — at the
+       end you get a short code to send back. No sign-up, no email, no app.</p>
+  </div>
+  <div class="panel">
+    <p style="margin-bottom:8px"><b>Your name</b> <span class="note">(so I know whose answers these are)</span></p>
+    <input type="text" id="who" placeholder="First name, or your channel" autocomplete="name">
+    <p class="note" style="margin-top:10px">If you guide or work in the park, add
+       that — I'll weight your answers more heavily.</p>
+  </div>
+  <button class="primary big" onclick="start()">Start</button>
+</section>
+
+<!-- ============ the duel ============ -->
+<section id="duel" class="hide">
+  <p class="q">Which is harder to find in Kruger?
+    <small>Not the more impressive one. The one you see less often.</small></p>
+  <div class="pair">
+    <button class="pick" id="pa" onclick="vote(0)"></button>
+    <button class="pick" id="pb" onclick="vote(1)"></button>
+  </div>
+  <div class="alt">
+    <button onclick="vote(0.5)">About the same</button>
+    <button onclick="skip()">Don't know</button>
+  </div>
+  <p class="note" style="text-align:center;margin-top:18px">
+    <a href="#" onclick="finish();return false" style="color:var(--mute)">Finish early</a>
+  </p>
+</section>
+
+<!-- ============ done ============ -->
+<section id="done" class="hide">
+  <div class="panel">
+    <h2>Thank you — genuinely</h2>
+    <p>Copy the code below and send it back to me. That's it.</p>
+    <textarea id="code" readonly onclick="this.select()"></textarea>
+    <button class="primary big" onclick="copyCode()" id="copyBtn">Copy the code</button>
+    <button class="big" onclick="wa()">Send on WhatsApp</button>
+  </div>
+  <div class="panel">
+    <h2>What you said, rarest first</h2>
+    <div id="list"></div>
+    <p class="note" style="margin-top:12px">Only animals you actually compared
+       appear here. Everything you skipped is left out.</p>
+  </div>
+</section>
+
+</main>
+
+<script>
+// The catalogue, injected by app/tool/build_ranker.dart. Regenerate whenever
+// species.json changes so this never drifts from the app.
+const SPECIES = /*__CATALOGUE__*/[];
+
+// WhatsApp number to send results to, injected at build time. Empty disables
+// the button rather than opening a broken link.
+const WHATSAPP = "/*__WHATSAPP__*/";
+
+// How many duels one sitting asks for.
+//
+// Elo over 96 species would want several hundred comparisons to converge on its
+// own, which is forty minutes and nobody finishes that. The design assumes
+// *many* people doing a short stint each, and the aggregator merges them — so
+// this is tuned to "will a stranger on Facebook finish it", not to statistical
+// comfort. Sixty pairs is about three minutes.
+const ROUNDS = 60;
+
+const K = 32;            // Elo step. Deliberately large: few games, want movement.
+const rating = {};       // id -> elo
+const seen = {};         // id -> how many duels it has been in
+const votes = [];        // every judgement, so the aggregator can re-derive
+let pair = null, done = 0, who = "";
+
+for (const s of SPECIES) { rating[s.id] = 1500; seen[s.id] = 0; }
+
+function start(){
+  who = (document.getElementById("who").value || "").trim() || "anonymous";
+  document.getElementById("intro").classList.add("hide");
+  document.getElementById("duel").classList.remove("hide");
+  next();
+}
+
+// Picks the most informative pair we can cheaply find.
+//
+// Two rules, both mattering: prefer species that have been seen least, so
+// nothing is left unrated; and among those prefer opponents of *similar*
+// rating, because a duel whose outcome is obvious teaches nothing. Comparing a
+// pangolin with an impala is a wasted question.
+function choose(){
+  const pool = [...SPECIES].sort((a,b) => (seen[a.id]-seen[b.id]) || Math.random()-0.5);
+  const a = pool[Math.floor(Math.random()*Math.min(12,pool.length))];
+  let best = null, bestGap = Infinity;
+  for (const c of pool.slice(0,40)) {
+    if (c.id === a.id) continue;
+    const gap = Math.abs(rating[c.id]-rating[a.id]) + Math.random()*60;
+    if (gap < bestGap) { bestGap = gap; best = c; }
+  }
+  return Math.random() < 0.5 ? [a,best] : [best,a];
+}
+
+function next(){
+  if (done >= ROUNDS) return finish();
+  pair = choose();
+  for (const [el,s] of [["pa",pair[0]],["pb",pair[1]]]) {
+    document.getElementById(el).innerHTML =
+      '<div class="nm"></div><div class="af"></div><div class="ds"></div><div class="cat"></div>';
+    const n = document.getElementById(el);
+    n.querySelector(".nm").textContent = s.name;
+    n.querySelector(".af").textContent = s.afr || "";
+    n.querySelector(".ds").textContent = s.desc || "";
+    n.querySelector(".cat").textContent = s.cat;
+  }
+  document.getElementById("n").textContent = done + " / " + ROUNDS;
+  document.getElementById("prog").style.width = (100*done/ROUNDS) + "%";
+}
+
+// score: 1 = first is rarer, 0 = second is rarer, 0.5 = the same
+function vote(score){
+  const [a,b] = pair;
+  const s = score === 0 ? 1 : score === 1 ? 0 : 0.5;   // tap-index -> Elo score
+  const ea = 1/(1+Math.pow(10,(rating[b.id]-rating[a.id])/400));
+  rating[a.id] += K*(s-ea);
+  rating[b.id] += K*((1-s)-(1-ea));
+  seen[a.id]++; seen[b.id]++;
+  votes.push([a.id, b.id, s]);
+  done++;
+  next();
+}
+
+function skip(){ pair = null; done++; next(); }
+
+function finish(){
+  document.getElementById("duel").classList.add("hide");
+  document.getElementById("done").classList.remove("hide");
+  document.getElementById("prog").style.width = "100%";
+  document.getElementById("n").textContent = votes.length + " answered";
+
+  const rated = SPECIES.filter(s => seen[s.id] > 0)
+                       .sort((a,b) => rating[b.id]-rating[a.id]);
+
+  document.getElementById("list").innerHTML = rated.map((s,i) =>
+    '<div class="res"><span class="r">' + (i+1) + '</span>' +
+    '<span class="nm"></span><span class="sc">' + Math.round(rating[s.id]) + '</span></div>'
+  ).join("");
+  // Names set as text, never as HTML — this file gets handed to strangers and
+  // the catalogue is the only thing it should ever render.
+  document.querySelectorAll("#list .nm").forEach((el,i) => el.textContent = rated[i].name);
+
+  // Raw judgements rather than final ratings. Ratings from a 60-duel session
+  // are noisy and cannot be pooled meaningfully; the individual comparisons
+  // can, so the aggregator re-runs Elo over everybody's answers at once.
+  const payload = {
+    v: 1,
+    who: who,
+    at: new Date().toISOString().slice(0,10),
+    votes: votes.map(v => [SPECIES.findIndex(s=>s.id===v[0]),
+                           SPECIES.findIndex(s=>s.id===v[1]), v[2]])
+  };
+  document.getElementById("code").value =
+    "WSRANK1:" + btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+}
+
+function copyCode(){
+  const t = document.getElementById("code");
+  t.select(); t.setSelectionRange(0, 999999);
+  navigator.clipboard.writeText(t.value).then(
+    () => { document.getElementById("copyBtn").textContent = "Copied — now paste it to me"; },
+    () => { document.execCommand("copy"); }
+  );
+}
+
+function wa(){
+  const msg = "Wild Score rankings from " + who + "\n\n" + document.getElementById("code").value;
+  const base = WHATSAPP ? "https://wa.me/" + WHATSAPP + "?text=" : "https://wa.me/?text=";
+  window.open(base + encodeURIComponent(msg), "_blank");
+}
+</script>
