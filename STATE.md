@@ -26,7 +26,7 @@ serve the web build: `dart run tool/serve_web.dart 8080` from `app/`.
 
 ## What the app is
 
-A field guide to 77 Kruger species, a lifetime collection, and **a scorecard
+A field guide to 96 Kruger species, a lifetime collection, and **a scorecard
 game played by a car full of people on a game drive**. The game is the
 differentiator; the collection is the reason anyone still has it in March.
 
@@ -40,7 +40,8 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 - **Onboarding** — a three-slide picture tour of the game (car scene, scoring
   with the live rarity table, the Ultimate Spotter), then a name. No account.
   Replayable from How to play.
-- **Animal Dex** — 77 species, search, filters, rarity sort, detail cards.
+- **Animal Dex** — 96 species (55 mammals, 30 birds, 8 reptiles, 2 invertebrates,
+  and the baobab), search, filters, rarity sort, detail cards.
   Photos are CC0/CC-BY from iNaturalist; caracal and African wildcat fall back
   to silhouettes because the photos could not be trusted.
 - **Wild Score** — start a drive, add the car, tap the eye by a player's name to
@@ -56,7 +57,7 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 - **Backup** — a pasteable code. No server; see `docs/RISKS.md` for why it
   matters more than it looks.
 
-218 tests. `flutter analyze` is clean and must stay clean.
+219 tests. `flutter analyze` is clean and must stay clean.
 
 ## Decisions already made — do not relitigate
 
@@ -94,6 +95,8 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 | `tools/photo-picker.html` | Pick species photographs from CC candidates |
 | `app/tool/generate_icon.dart` | Launcher icons at every density |
 | `app/tool/serve_web.dart` | Static server for the web build |
+| `app/tool/source_species_photos.dart` | **Fetch CC0/CC-BY photos from iNaturalist.** `--candidates` for options |
+| `app/tool/contact_sheet.dart` | Grid of photos to eyeball. **Never merge a sourced photo unseen** |
 | `app/tool/prepare_species_photos.dart` | Downscale sourced photos into assets |
 
 ## What is outstanding

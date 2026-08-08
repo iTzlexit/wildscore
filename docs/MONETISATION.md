@@ -260,7 +260,7 @@ so it is bought once. The cloud costs money every month, so it recurs. That is
 easy to explain and impossible to resent.
 
 **The field guide and the collection are free forever, and always will be.**
-Browse all 77 species, mark what you find, fill the Collections, keep it for
+Browse all 96 species, mark what you find, fill the Collections, keep it for
 twenty years. That is the top of the funnel and the reason anyone still has the
 app in March.
 

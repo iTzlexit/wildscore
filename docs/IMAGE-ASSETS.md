@@ -228,3 +228,44 @@ discovered when the storage bill arrives.
 
 **Den sprites capped at ~12 species** — confirmed, in MASTER-VISION.md and
 carried into ROADMAP Phase 7.
+
+---
+
+## The sourcing pipeline (August 2026)
+
+The question "how are we going to add all these birds" has an answer now, and
+it is three commands from `app/`:
+
+```bash
+dart run tool/source_species_photos.dart      # fetch what is missing
+dart run tool/contact_sheet.dart              # look at all of it at once
+dart run tool/prepare_species_photos.dart build/sourced-photos
+```
+
+`source_species_photos` queries iNaturalist for research-grade observations,
+prefers South African ones, and **filters on licence twice** — once in the API
+request and once in the parser — because a filter that silently stops working
+would put a non-commercial image into a paid app. CC0 and CC-BY only, hard-coded.
+
+### The middle step is not optional
+
+The first automated run produced nineteen photographs and **five of them were
+unusable**: a dead barn owl on tar, a flattened boomslang on gravel, and three
+vultures too distant to identify. A later run offered a skinned puff adder.
+
+That is not a bug in the tool. **iNaturalist is a biodiversity record, not a
+photo library** — a dead animal by the road is a perfectly good record, and it
+gets uploaded constantly. Research-grade means the identification is right, not
+that the picture is any use to somebody trying to name an animal standing in
+front of them.
+
+So `--candidates` fetches eight per species and `contact_sheet` lays them out
+for a human to pick from. **Never merge a sourced photo without looking at it.**
+
+### One thing that was got wrong and then fixed
+
+The first ranking put CC0 ahead of CC-BY, on the theory that no attribution
+obligation is safer than one. It is not safer, it is just narrower: both
+licences are equally fine to ship, so preferring one throws away better
+pictures for nothing. That preference is what produced the dead owl. Licence is
+a filter; filters do not belong in sort orders.

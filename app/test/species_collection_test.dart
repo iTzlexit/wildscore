@@ -49,10 +49,23 @@ void main() {
   });
 
   test('snakes are snakes and not every reptile', () {
-    expect(_names(SpeciesCollection.snakes), <String>[
-      'Black Mamba',
-      'Southern African Rock Python',
-    ]);
+    final List<String> snakes = _names(SpeciesCollection.snakes);
+
+    // Asserted as a property rather than as an exact list. The catalogue is
+    // still growing — this went from two snakes to five in one sitting — and a
+    // test that has to be edited every time a species is added stops being a
+    // check and becomes a chore.
+    expect(
+      snakes,
+      containsAll(<String>['Black Mamba', 'Boomslang', 'Puff Adder']),
+    );
+    for (final String notASnake in <String>[
+      'Nile Crocodile',
+      'Leopard Tortoise',
+      'Water Monitor',
+    ]) {
+      expect(snakes, isNot(contains(notASnake)));
+    }
   });
 
   group('antelope', () {

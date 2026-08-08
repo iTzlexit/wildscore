@@ -125,8 +125,8 @@
         "nocturnal",
         "predator"
       ],
-      "photoVerified": false,
       "isSensitive": false,
+      "photoVerified": false,
       "description": "The ancestor of every domestic cat. Told apart by rich rufous behind the ears and much longer legs than a housecat.",
       "habitat": "Woodland and scrub",
       "bestTimeToSpot": "Night drives",
@@ -366,8 +366,8 @@
         "nocturnal",
         "predator"
       ],
-      "photoVerified": false,
       "isSensitive": false,
+      "photoVerified": false,
       "description": "Black-tufted ears and enough vertical leap to take birds out of the air. Secretive and very seldom seen in daylight.",
       "habitat": "Scrub, koppies and open woodland",
       "bestTimeToSpot": "Night drives",
@@ -477,6 +477,28 @@
       "description": "Africa's smallest carnivore. Lives inside termite mounds and posts a sentry on top while the rest of the group feeds.",
       "habitat": "Termite mounds in open woodland",
       "bestTimeToSpot": "Mid-morning, sunning on mounds",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern"
+    },
+    {
+      "id": "eastern-rock-elephant-shrew",
+      "dexNumber": 23,
+      "commonName": "Eastern Rock Elephant Shrew",
+      "scientificName": "Elephantulus myurus",
+      "afrikaansName": "Klipklaasneus",
+      "category": "mammal",
+      "rarityTier": "rare",
+      "tags": [
+        "smallFive"
+      ],
+      "isSensitive": false,
+      "description": "Not a shrew and not related to elephants — its closest living relatives are elephants, aardvarks and hyraxes. Bolts between rocks on fixed, swept trails it keeps clear of leaf litter.",
+      "habitat": "Rocky outcrops and boulder-strewn koppies",
+      "bestTimeToSpot": "Early morning on rocks, before the heat",
       "parkRegions": [
         "southern",
         "central",
@@ -1193,8 +1215,50 @@
       "conservationStatus": "leastConcern"
     },
     {
-      "id": "bateleur",
+      "id": "african-hawk-eagle",
       "dexNumber": 57,
+      "commonName": "African Hawk-Eagle",
+      "scientificName": "Aquila spilogaster",
+      "afrikaansName": "Grootjagarend",
+      "category": "bird",
+      "rarityTier": "scarce",
+      "tags": [
+        "predator"
+      ],
+      "isSensitive": false,
+      "description": "Black above, white below with heavy black streaks, and fast — it hunts francolin and guineafowl in a flat charge through the trees rather than a stoop from height.",
+      "habitat": "Riverine woodland and broken hills",
+      "bestTimeToSpot": "Morning, hunting low through woodland",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern"
+    },
+    {
+      "id": "african-hoopoe",
+      "dexNumber": 58,
+      "commonName": "African Hoopoe",
+      "scientificName": "Upupa africana",
+      "afrikaansName": "Hoephoep",
+      "category": "bird",
+      "rarityTier": "frequent",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Cinnamon, with a black-and-white barred back and a crest it raises like a fan when it lands. Probes the ground with a long curved bill. Named for the call, which is exactly hoop-hoop-hoop.",
+      "habitat": "Open woodland, lawns, camp grounds",
+      "bestTimeToSpot": "Morning, feeding on the ground",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern"
+    },
+    {
+      "id": "bateleur",
+      "dexNumber": 59,
       "commonName": "Bateleur",
       "scientificName": "Terathopius ecaudatus",
       "afrikaansName": "Berghaan",
@@ -1215,8 +1279,172 @@
       "conservationStatus": "endangered"
     },
     {
-      "id": "kori-bustard",
+      "id": "brown-snake-eagle",
       "dexNumber": 60,
+      "commonName": "Brown Snake Eagle",
+      "scientificName": "Circaetus cinereus",
+      "afrikaansName": "Bruinslangarend",
+      "category": "bird",
+      "rarityTier": "uncommon",
+      "tags": [
+        "predator"
+      ],
+      "isSensitive": false,
+      "description": "Plain chocolate brown with startling yellow eyes and bare legs — the bare legs are the point, because it hunts snakes and scales stop fangs. Sits bolt upright on a dead tree for hours.",
+      "habitat": "Open woodland, on prominent perches",
+      "bestTimeToSpot": "Midday, perched on a dead tree",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern"
+    },
+    {
+      "id": "cape-glossy-starling",
+      "dexNumber": 61,
+      "commonName": "Cape Glossy Starling",
+      "scientificName": "Lamprotornis nitens",
+      "afrikaansName": "Kleinglansspreeu",
+      "category": "bird",
+      "rarityTier": "common",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Every camp has them and everybody photographs them anyway. Looks black until the light catches it, then goes electric blue-green with a bright orange eye.",
+      "habitat": "Camps, picnic sites, open woodland",
+      "bestTimeToSpot": "All day, on the table next to you",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern"
+    },
+    {
+      "id": "cape-vulture",
+      "dexNumber": 62,
+      "commonName": "Cape Vulture",
+      "scientificName": "Gyps coprotheres",
+      "afrikaansName": "Kransaasvoël",
+      "category": "bird",
+      "rarityTier": "rare",
+      "tags": [
+        "predator"
+      ],
+      "isSensitive": false,
+      "description": "Bigger and paler than the White-backed, with a bare blue throat patch. It breeds on cliffs outside the park and only visits, so finding one in Kruger is genuine luck.",
+      "habitat": "Ranges widely; breeds on cliffs elsewhere",
+      "bestTimeToSpot": "At a large carcass, among White-backed Vultures",
+      "parkRegions": [
+        "southern",
+        "central"
+      ],
+      "conservationStatus": "vulnerable"
+    },
+    {
+      "id": "common-ostrich",
+      "dexNumber": 63,
+      "commonName": "Common Ostrich",
+      "scientificName": "Struthio camelus",
+      "afrikaansName": "Volstruis",
+      "category": "bird",
+      "rarityTier": "uncommon",
+      "tags": [],
+      "isSensitive": false,
+      "description": "The largest bird alive, and the fastest thing on two legs. Localised in Kruger to the open southern and central grasslands, so it is a sighting you drive to rather than one that finds you.",
+      "habitat": "Open short grassland and sparse savanna",
+      "bestTimeToSpot": "Mid-morning on open plains",
+      "parkRegions": [
+        "southern",
+        "central"
+      ],
+      "conservationStatus": "leastConcern"
+    },
+    {
+      "id": "egyptian-goose",
+      "dexNumber": 64,
+      "commonName": "Egyptian Goose",
+      "scientificName": "Alopochen aegyptiaca",
+      "afrikaansName": "Kolgans",
+      "category": "bird",
+      "rarityTier": "frequent",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Not a goose but a shelduck, and the loudest thing at any waterhole. Pairs bond for life and will see off animals many times their size to defend a nest.",
+      "habitat": "Any water — dams, rivers, waterholes",
+      "bestTimeToSpot": "All day, at the water's edge",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern"
+    },
+    {
+      "id": "giant-kingfisher",
+      "dexNumber": 65,
+      "commonName": "Giant Kingfisher",
+      "scientificName": "Megaceryle maxima",
+      "afrikaansName": "Reusevisvanger",
+      "category": "bird",
+      "rarityTier": "uncommon",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Crow-sized, which is startling the first time — Africa's largest kingfisher, shaggy-crested, with a bill like a chisel. Usually heard clattering off downriver before it is seen.",
+      "habitat": "Wooded rivers and quiet dams",
+      "bestTimeToSpot": "Early morning, low over the water",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern"
+    },
+    {
+      "id": "helmeted-guineafowl",
+      "dexNumber": 66,
+      "commonName": "Helmeted Guineafowl",
+      "scientificName": "Numida meleagris",
+      "afrikaansName": "Gewone Tarentaal",
+      "category": "bird",
+      "rarityTier": "common",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Runs down the middle of the road ahead of the car rather than stepping aside, for miles, and never learns. Blue head, red cap, body like a spotted rugby ball.",
+      "habitat": "Anywhere with open ground",
+      "bestTimeToSpot": "Early morning, in noisy flocks",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern"
+    },
+    {
+      "id": "hooded-vulture",
+      "dexNumber": 67,
+      "commonName": "Hooded Vulture",
+      "scientificName": "Necrosyrtes monachus",
+      "afrikaansName": "Monnikaasvoël",
+      "category": "bird",
+      "rarityTier": "uncommon",
+      "tags": [
+        "predator"
+      ],
+      "isSensitive": false,
+      "description": "The small, dark one at the edge of the scrum, waiting for the big vultures to finish. Thin bill for picking scraps the others cannot reach. Critically endangered and still overlooked.",
+      "habitat": "Anywhere there is a carcass",
+      "bestTimeToSpot": "At a kill, on the outside of the crowd",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "criticallyEndangered"
+    },
+    {
+      "id": "kori-bustard",
+      "dexNumber": 68,
       "commonName": "Kori Bustard",
       "scientificName": "Ardeotis kori",
       "afrikaansName": "Gompou",
@@ -1237,7 +1465,7 @@
     },
     {
       "id": "lappet-faced-vulture",
-      "dexNumber": 61,
+      "dexNumber": 69,
       "commonName": "Lappet-faced Vulture",
       "scientificName": "Torgos tracheliotos",
       "afrikaansName": "Swartaasvoël",
@@ -1260,7 +1488,7 @@
     },
     {
       "id": "lilac-breasted-roller",
-      "dexNumber": 62,
+      "dexNumber": 70,
       "commonName": "Lilac-breasted Roller",
       "scientificName": "Coracias caudatus",
       "afrikaansName": "Gewone Troupant",
@@ -1279,8 +1507,28 @@
       "conservationStatus": "leastConcern"
     },
     {
+      "id": "malachite-kingfisher",
+      "dexNumber": 71,
+      "commonName": "Malachite Kingfisher",
+      "scientificName": "Corythornis cristatus",
+      "afrikaansName": "Kuifkopvisvanger",
+      "category": "bird",
+      "rarityTier": "uncommon",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Barely bigger than your thumb and impossibly bright — cobalt above, orange below, with a red dagger of a bill. Sits on a reed a hand's width above the water.",
+      "habitat": "Reeded edges of dams and slow rivers",
+      "bestTimeToSpot": "Morning, on a low reed at the water line",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern"
+    },
+    {
       "id": "martial-eagle",
-      "dexNumber": 63,
+      "dexNumber": 72,
       "commonName": "Martial Eagle",
       "scientificName": "Polemaetus bellicosus",
       "afrikaansName": "Breëkoparend",
@@ -1303,7 +1551,7 @@
     },
     {
       "id": "pels-fishing-owl",
-      "dexNumber": 64,
+      "dexNumber": 73,
       "commonName": "Pel's Fishing Owl",
       "scientificName": "Scotopelia peli",
       "afrikaansName": "Visuil",
@@ -1324,8 +1572,50 @@
       "conservationStatus": "leastConcern"
     },
     {
+      "id": "pied-kingfisher",
+      "dexNumber": 74,
+      "commonName": "Pied Kingfisher",
+      "scientificName": "Ceryle rudis",
+      "afrikaansName": "Bontvisvanger",
+      "category": "bird",
+      "rarityTier": "frequent",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Black and white, and the only kingfisher that hovers — it hangs dead still over the water, then folds and drops. Every causeway in the park has a pair.",
+      "habitat": "Dams, rivers and causeways",
+      "bestTimeToSpot": "All day, hovering over open water",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern"
+    },
+    {
+      "id": "red-billed-buffalo-weaver",
+      "dexNumber": 75,
+      "commonName": "Red-billed Buffalo Weaver",
+      "scientificName": "Bubalornis niger",
+      "afrikaansName": "Buffelwewer",
+      "category": "bird",
+      "rarityTier": "frequent",
+      "tags": [
+        "smallFive"
+      ],
+      "isSensitive": false,
+      "description": "Builds the untidy stick tenements that hang off the western side of tall trees and windmills. Easy to see and almost never looked at, which is the joke of the Small Five.",
+      "habitat": "Open woodland, usually near large trees and camps",
+      "bestTimeToSpot": "All day, around camps and picnic sites",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern"
+    },
+    {
       "id": "saddle-billed-stork",
-      "dexNumber": 66,
+      "dexNumber": 76,
       "commonName": "Saddle-billed Stork",
       "scientificName": "Ephippiorhynchus senegalensis",
       "afrikaansName": "Saalbekooievaar",
@@ -1346,8 +1636,30 @@
       "conservationStatus": "leastConcern"
     },
     {
+      "id": "secretarybird",
+      "dexNumber": 77,
+      "commonName": "Secretarybird",
+      "scientificName": "Sagittarius serpentarius",
+      "afrikaansName": "Sekretarisvoël",
+      "category": "bird",
+      "rarityTier": "scarce",
+      "tags": [
+        "predator"
+      ],
+      "isSensitive": false,
+      "description": "An eagle that walks. Strides through grassland stamping on snakes with enough force to kill them outright, and roosts in a flat-topped acacia at dusk. Numbers have fallen sharply across its range.",
+      "habitat": "Open grassland and lightly wooded savanna",
+      "bestTimeToSpot": "Walking open ground in the morning",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "endangered"
+    },
+    {
       "id": "southern-ground-hornbill",
-      "dexNumber": 68,
+      "dexNumber": 78,
       "commonName": "Southern Ground Hornbill",
       "scientificName": "Bucorvus leadbeateri",
       "afrikaansName": "Bromvoël",
@@ -1369,8 +1681,50 @@
       "conservationStatus": "vulnerable"
     },
     {
+      "id": "southern-yellow-billed-hornbill",
+      "dexNumber": 79,
+      "commonName": "Southern Yellow-billed Hornbill",
+      "scientificName": "Tockus leucomelas",
+      "afrikaansName": "Geelbekneushoringvoël",
+      "category": "bird",
+      "rarityTier": "common",
+      "tags": [],
+      "isSensitive": false,
+      "description": "The bird Zazu was drawn from, and it knows it. Hops about the picnic sites at Tshokwane looking for your chips, and will take them off the table if you turn your back.",
+      "habitat": "Woodland, camps and picnic sites",
+      "bestTimeToSpot": "All day, usually at eye level beside the road",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern"
+    },
+    {
+      "id": "tawny-eagle",
+      "dexNumber": 80,
+      "commonName": "Tawny Eagle",
+      "scientificName": "Aquila rapax",
+      "afrikaansName": "Roofarend",
+      "category": "bird",
+      "rarityTier": "uncommon",
+      "tags": [
+        "predator"
+      ],
+      "isSensitive": false,
+      "description": "The park's commonest big eagle and the hardest to name, because it comes in every shade from cream to dark brown. Feathered legs and a gape that reaches back under the eye.",
+      "habitat": "Open woodland and savanna",
+      "bestTimeToSpot": "Morning, soaring or on a kill",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "vulnerable"
+    },
+    {
       "id": "verreauxs-eagle-owl",
-      "dexNumber": 69,
+      "dexNumber": 81,
       "commonName": "Verreaux's Eagle-Owl",
       "scientificName": "Bubo lacteus",
       "afrikaansName": "Reuse-ooruil",
@@ -1392,8 +1746,31 @@
       "conservationStatus": "leastConcern"
     },
     {
+      "id": "western-barn-owl",
+      "dexNumber": 82,
+      "commonName": "Western Barn Owl",
+      "scientificName": "Tyto alba",
+      "afrikaansName": "Nonnetjie-uil",
+      "category": "bird",
+      "rarityTier": "uncommon",
+      "tags": [
+        "predator",
+        "nocturnal"
+      ],
+      "isSensitive": false,
+      "description": "A white heart-shaped face that appears in the headlights and is gone. Hunts by sound alone, in complete darkness, accurately enough to take a mouse under grass.",
+      "habitat": "Camps, culverts and old buildings",
+      "bestTimeToSpot": "After dark, low along the road edge",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern"
+    },
+    {
       "id": "white-backed-vulture",
-      "dexNumber": 70,
+      "dexNumber": 83,
       "commonName": "White-backed Vulture",
       "scientificName": "Gyps africanus",
       "afrikaansName": "Witrugaasvoël",
@@ -1414,8 +1791,49 @@
       "conservationStatus": "criticallyEndangered"
     },
     {
+      "id": "white-headed-vulture",
+      "dexNumber": 84,
+      "commonName": "White-headed Vulture",
+      "scientificName": "Trigonoceps occipitalis",
+      "afrikaansName": "Witkopaasvoël",
+      "category": "bird",
+      "rarityTier": "rare",
+      "tags": [
+        "predator"
+      ],
+      "isSensitive": false,
+      "description": "The handsome one: white head, pink bill, clean white belly and a sharp white line along the wing. Kruger holds most of what is left of them, and there are only a few hundred.",
+      "habitat": "Undisturbed woodland, thinly spread",
+      "bestTimeToSpot": "Late morning, first at a fresh carcass",
+      "parkRegions": [
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "criticallyEndangered"
+    },
+    {
+      "id": "woodland-kingfisher",
+      "dexNumber": 85,
+      "commonName": "Woodland Kingfisher",
+      "scientificName": "Halcyon senegalensis",
+      "afrikaansName": "Bosveldvisvanger",
+      "category": "bird",
+      "rarityTier": "frequent",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Arrives in November and announces it — a piercing trill from every second tree until March. Brilliant blue with a red-and-black bill, and it eats insects rather than fish.",
+      "habitat": "Woodland, often far from water",
+      "bestTimeToSpot": "November to March, calling from a bare branch",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern"
+    },
+    {
       "id": "black-mamba",
-      "dexNumber": 71,
+      "dexNumber": 86,
       "commonName": "Black Mamba",
       "scientificName": "Dendroaspis polylepis",
       "afrikaansName": "Swartmamba",
@@ -1437,8 +1855,30 @@
       "conservationStatus": "leastConcern"
     },
     {
+      "id": "boomslang",
+      "dexNumber": 87,
+      "commonName": "Boomslang",
+      "scientificName": "Dispholidus typus",
+      "afrikaansName": "Boomslang",
+      "category": "reptile",
+      "rarityTier": "scarce",
+      "tags": [
+        "snake"
+      ],
+      "isSensitive": false,
+      "description": "An enormous eye, a short blunt head, and a tail that goes on forever. Males are green, females brown. It lives in the canopy and flees upwards, so almost every sighting is a shape moving away through leaves.",
+      "habitat": "Trees, especially along rivers",
+      "bestTimeToSpot": "Midday, moving through the canopy",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern"
+    },
+    {
       "id": "leopard-tortoise",
-      "dexNumber": 72,
+      "dexNumber": 88,
       "commonName": "Leopard Tortoise",
       "scientificName": "Stigmochelys pardalis",
       "afrikaansName": "Bergskilpad",
@@ -1459,8 +1899,30 @@
       "conservationStatus": "leastConcern"
     },
     {
+      "id": "mozambique-spitting-cobra",
+      "dexNumber": 89,
+      "commonName": "Mozambique Spitting Cobra",
+      "scientificName": "Naja mossambica",
+      "afrikaansName": "Mosambiekse Spoegkobra",
+      "category": "reptile",
+      "rarityTier": "scarce",
+      "tags": [
+        "snake"
+      ],
+      "isSensitive": false,
+      "description": "Rears, spreads a narrow hood, and sprays venom at your eyes from two metres. Salmon-pink underneath with black bars at the throat. Common around camps and almost never seen.",
+      "habitat": "Camps, rocky ground, near water",
+      "bestTimeToSpot": "Warm evenings, near buildings",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern"
+    },
+    {
       "id": "nile-crocodile",
-      "dexNumber": 73,
+      "dexNumber": 90,
       "commonName": "Nile Crocodile",
       "scientificName": "Crocodylus niloticus",
       "afrikaansName": "Nylkrokodil",
@@ -1481,8 +1943,30 @@
       "conservationStatus": "leastConcern"
     },
     {
+      "id": "puff-adder",
+      "dexNumber": 91,
+      "commonName": "Puff Adder",
+      "scientificName": "Bitis arietans",
+      "afrikaansName": "Pofadder",
+      "category": "reptile",
+      "rarityTier": "uncommon",
+      "tags": [
+        "snake"
+      ],
+      "isSensitive": false,
+      "description": "Thick, short and beautifully marked in chevrons. It will not move for you, which is why it bites more people in Africa than any other snake. On a warm road at dusk it looks exactly like a stick.",
+      "habitat": "Everywhere; often on warm roads at dusk",
+      "bestTimeToSpot": "Late afternoon, on tar still holding the day’s heat",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern"
+    },
+    {
       "id": "african-rock-python",
-      "dexNumber": 74,
+      "dexNumber": 92,
       "commonName": "Southern African Rock Python",
       "scientificName": "Python natalensis",
       "afrikaansName": "Luislang",
@@ -1505,7 +1989,7 @@
     },
     {
       "id": "water-monitor",
-      "dexNumber": 75,
+      "dexNumber": 93,
       "commonName": "Water Monitor",
       "scientificName": "Varanus niloticus",
       "afrikaansName": "Waterlikkewaan",
@@ -1524,54 +2008,10 @@
         "northern"
       ],
       "conservationStatus": "leastConcern"
-    },
-    {
-      "id": "eastern-rock-elephant-shrew",
-      "dexNumber": 23,
-      "commonName": "Eastern Rock Elephant Shrew",
-      "scientificName": "Elephantulus myurus",
-      "afrikaansName": "Klipklaasneus",
-      "category": "mammal",
-      "rarityTier": "rare",
-      "tags": [
-        "smallFive"
-      ],
-      "isSensitive": false,
-      "description": "Not a shrew and not related to elephants — its closest living relatives are elephants, aardvarks and hyraxes. Bolts between rocks on fixed, swept trails it keeps clear of leaf litter.",
-      "habitat": "Rocky outcrops and boulder-strewn koppies",
-      "bestTimeToSpot": "Early morning on rocks, before the heat",
-      "parkRegions": [
-        "southern",
-        "central",
-        "northern"
-      ],
-      "conservationStatus": "leastConcern"
-    },
-    {
-      "id": "red-billed-buffalo-weaver",
-      "dexNumber": 65,
-      "commonName": "Red-billed Buffalo Weaver",
-      "scientificName": "Bubalornis niger",
-      "afrikaansName": "Buffelwewer",
-      "category": "bird",
-      "rarityTier": "frequent",
-      "tags": [
-        "smallFive"
-      ],
-      "isSensitive": false,
-      "description": "Builds the untidy stick tenements that hang off the western side of tall trees and windmills. Easy to see and almost never looked at, which is the joke of the Small Five.",
-      "habitat": "Open woodland, usually near large trees and camps",
-      "bestTimeToSpot": "All day, around camps and picnic sites",
-      "parkRegions": [
-        "southern",
-        "central",
-        "northern"
-      ],
-      "conservationStatus": "leastConcern"
     },
     {
       "id": "ant-lion",
-      "dexNumber": 76,
+      "dexNumber": 94,
       "commonName": "Ant Lion",
       "scientificName": "Myrmeleontidae",
       "afrikaansName": "Mierleeu",
@@ -1593,7 +2033,7 @@
     },
     {
       "id": "rhinoceros-beetle",
-      "dexNumber": 77,
+      "dexNumber": 95,
       "commonName": "Rhinoceros Beetle",
       "scientificName": "Oryctes boas",
       "afrikaansName": "Renosterkewer",
@@ -1612,64 +2052,21 @@
         "northern"
       ],
       "conservationStatus": "leastConcern"
-    },
+    },
     {
-      "id": "common-ostrich",
-      "dexNumber": 58,
-      "commonName": "Common Ostrich",
-      "scientificName": "Struthio camelus",
-      "afrikaansName": "Volstruis",
-      "category": "bird",
+      "id": "baobab",
+      "dexNumber": 96,
+      "commonName": "Baobab",
+      "scientificName": "Adansonia digitata",
+      "afrikaansName": "Kremetartboom",
+      "category": "plant",
       "rarityTier": "uncommon",
       "tags": [],
       "isSensitive": false,
-      "description": "The largest bird alive, and the fastest thing on two legs. Localised in Kruger to the open southern and central grasslands, so it is a sighting you drive to rather than one that finds you.",
-      "habitat": "Open short grassland and sparse savanna",
-      "bestTimeToSpot": "Mid-morning on open plains",
+      "description": "Not an animal, and worth stopping for anyway. Bare for most of the year, so the story goes that it was planted upside down with its roots in the air. Some in the far north were standing before Van Riebeeck landed.",
+      "habitat": "Hot, dry country north of the Olifants",
+      "bestTimeToSpot": "North of Mopani, impossible to miss",
       "parkRegions": [
-        "southern",
-        "central"
-      ],
-      "conservationStatus": "leastConcern"
-    },
-    {
-      "id": "secretarybird",
-      "dexNumber": 67,
-      "commonName": "Secretarybird",
-      "scientificName": "Sagittarius serpentarius",
-      "afrikaansName": "Sekretarisvoël",
-      "category": "bird",
-      "rarityTier": "scarce",
-      "tags": [
-        "predator"
-      ],
-      "isSensitive": false,
-      "description": "An eagle that walks. Strides through grassland stamping on snakes with enough force to kill them outright, and roosts in a flat-topped acacia at dusk. Numbers have fallen sharply across its range.",
-      "habitat": "Open grassland and lightly wooded savanna",
-      "bestTimeToSpot": "Walking open ground in the morning",
-      "parkRegions": [
-        "southern",
-        "central",
-        "northern"
-      ],
-      "conservationStatus": "endangered"
-    },
-    {
-      "id": "egyptian-goose",
-      "dexNumber": 59,
-      "commonName": "Egyptian Goose",
-      "scientificName": "Alopochen aegyptiaca",
-      "afrikaansName": "Kolgans",
-      "category": "bird",
-      "rarityTier": "frequent",
-      "tags": [],
-      "isSensitive": false,
-      "description": "Not a goose but a shelduck, and the loudest thing at any waterhole. Pairs bond for life and will see off animals many times their size to defend a nest.",
-      "habitat": "Any water — dams, rivers, waterholes",
-      "bestTimeToSpot": "All day, at the water's edge",
-      "parkRegions": [
-        "southern",
-        "central",
         "northern"
       ],
       "conservationStatus": "leastConcern"
