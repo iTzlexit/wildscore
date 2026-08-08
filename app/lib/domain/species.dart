@@ -2,10 +2,53 @@ import 'conservation_status.dart';
 import 'park_region.dart';
 import 'rarity_tier.dart';
 import 'species_category.dart';
+import 'sighting_context.dart';
 import 'species_tag.dart';
 
 /// How often a wild-card bonus comes back.
 enum WildCardScope { day, trip }
+
+/// A version of an animal that is worth more than the animal.
+///
+/// One species has one at the moment and it is the obvious one: **a male
+/// lion**. A lioness is a lion sighting; a black-maned male standing in the
+/// road is the photograph on the front of every Kruger brochure, and scoring
+/// them identically is the kind of thing a car will argue about for an hour.
+///
+/// Deliberately a bonus on top rather than a second dex entry. A separate
+/// "Male Lion" species would double the animal in the collection, in the
+/// filters and in every count, to record one fact about one sighting.
+class SpeciesVariant {
+  const SpeciesVariant({
+    required this.label,
+    required this.question,
+    required this.bonus,
+  });
+
+  factory SpeciesVariant.fromJson(Map<String, dynamic> json) => SpeciesVariant(
+    label: json['label'] as String,
+    question: json['question'] as String,
+    bonus: json['bonus'] as int,
+  );
+
+  /// Shown on the tag: "Lion · MALE".
+  final String label;
+
+  /// Asked once, right after the animal is picked. Phrased so that yes is the
+  /// interesting answer — nobody should have to think about it at the moment
+  /// somebody is shouting from the back seat.
+  final String question;
+
+  /// Added to the claim. Sixty on a forty-point lion, so a male is worth 100 —
+  /// the same as a honey badger, and about right for how a car reacts to one.
+  final int bonus;
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+    'label': label,
+    'question': question,
+    'bonus': bonus,
+  };
+}
 
 /// One animal in the Codex.
 ///
@@ -30,6 +73,7 @@ class Species {
     required this.conservationStatus,
     this.photoVerified = true,
     this.discovered = true,
+    this.variant,
   });
 
   /// Parses one entry of `assets/data/species.json`.
@@ -83,6 +127,9 @@ class Species {
       // Absent means trusted. Only the handful we know to be wrong carry the
       // flag, so a new species is not silently hidden by a forgotten field.
       photoVerified: json['photoVerified'] as bool? ?? true,
+      variant: json['variant'] == null
+          ? null
+          : SpeciesVariant.fromJson(json['variant']! as Map<String, dynamic>),
     );
   }
 
@@ -126,9 +173,46 @@ class Species {
   /// Those fall back to a silhouette until a photograph is chosen by eye.
   final bool photoVerified;
 
-  /// What a claim is normally worth. The wild-card bonus is applied on top by
-  /// whoever creates the claim — see [wildCardBonus].
+  /// A version of this animal worth more than the animal — a male lion. Null
+  /// for almost everything.
+  final SpeciesVariant? variant;
+
+  /// What a claim is normally worth. The wild-card bonus, the variant bonus and
+  /// the crowd multiplier are all applied on top by whoever creates the claim —
+  /// see [wildCardBonus], [SpeciesVariant] and [SightingContext].
   int get points => rarityTier.points;
+
+  /// What one sighting of this animal is worth, all in.
+  ///
+  /// **The only place the scoring formula exists.** It used to be a ternary at
+  /// the call site, which was fine with one modifier and would not have stayed
+  /// fine with three.
+  ///
+  /// Order matters and is deliberate: the wild-card bonus *replaces* the tier
+  /// value rather than adding to it (the first zebra is worth 50, not 55), the
+  /// variant adds on top, and the crowd multiplier applies to the lot. So a
+  /// male lion found on an empty road is (40 + 60) × 2 = 200, and the same lion
+  /// at a jam of eleven cars is 50.
+  int scoreFor({
+    bool wildCardBonusEarned = false,
+    bool variantApplied = false,
+    SightingContext context = SightingContext.normal,
+  }) {
+    final int base = wildCardBonusEarned ? wildCardBonus : points;
+    final int withVariant =
+        base + (variantApplied && variant != null ? variant!.bonus : 0);
+    return context.applyTo(withVariant);
+  }
+
+  /// Whether to ask who else was there.
+  ///
+  /// **Not on everything.** A prompt after every claim is a tax on the fun part
+  /// of the game, and for an impala the answer changes nothing anybody cares
+  /// about. Jams only form around animals worth stopping for, so the question
+  /// is only asked about those — the same bar the sightings feed uses, which is
+  /// Rare and up plus the Big Five.
+  bool get crowdMatters =>
+      rarityTier.points >= 100 || tags.contains(SpeciesTag.bigFive);
 
   /// What the *first* sighting of a wild-card species pays.
   ///

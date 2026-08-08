@@ -141,6 +141,23 @@ class RulesScreen extends StatelessWidget {
                 'window to ask what it is. Find it yourself — that is the fun.',
           ),
           const _Rule(
+            icon: Icons.groups_2_rounded,
+            title: 'Finding it yourself is worth double',
+            body:
+                'For anything Rare and up, and for the Big Five, the app asks '
+                'who else was there. An empty road pays double. Rolling up to '
+                'eleven parked cars pays half — it still counts, you did see '
+                'it, but somebody else found it.',
+          ),
+          const _Rule(
+            icon: Icons.workspace_premium_rounded,
+            title: 'A male lion is worth more',
+            body:
+                'A lioness is a lion. A black-maned male standing in the road '
+                'is the picture on the front of the brochure, and it pays 100 '
+                'instead of 40.',
+          ),
+          const _Rule(
             icon: Icons.bolt_rounded,
             title: 'The first one is worth more',
             body:

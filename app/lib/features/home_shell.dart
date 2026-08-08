@@ -14,10 +14,11 @@ import '../shared/theme.dart';
 import 'codex/codex_screen.dart';
 import 'profile/profile_screen.dart';
 import 'profile/visit_history_screen.dart';
-import 'sightings/sightings_screen.dart';
+import 'scorecard/claim_details_sheet.dart';
 import 'scorecard/spot_picker_screen.dart';
 import 'scorecard/start_scorecard_sheet.dart';
 import 'scorecard/wild_score_screen.dart';
+import 'sightings/sightings_screen.dart';
 
 /// The four tabs.
 ///
@@ -182,11 +183,21 @@ class _HomeShellState extends State<HomeShell> {
     if (card == null) {
       return;
     }
+    // What that claim actually paid, not what the species is worth. Since
+    // sightings carry a crowd multiplier and a variant bonus those are two
+    // different numbers — a male lion found alone is 200 against a tier value
+    // of 40, and a dialog that says 40 is about to lose somebody 200.
+    Claim? claim;
+    for (final Claim c in card.claims) {
+      if (c.playerId == player.id && c.speciesId == species.id) {
+        claim = c;
+      }
+    }
     final bool ok = await _confirm(
       title: 'Take it back?',
       message:
           'Removes one ${species.commonName} from ${player.name} '
-          '— ${species.points} points.',
+          '— ${claim?.points ?? species.points} points.',
       action: 'Remove',
     );
     if (!ok) {
@@ -294,6 +305,15 @@ class _HomeShellState extends State<HomeShell> {
     // so a day scored months ago stays explicable even if the rule changes.
     final bool earnsBonus = chosen.isWildCard && !spent.contains(chosen.id);
 
+    // Was it a male, and was anybody else there. Only asked about animals
+    // where the answer changes something, so an impala never sees this.
+    // Dismissing it cancels the claim rather than scoring an ordinary one —
+    // backing out of a half-finished claim must not quietly bank points.
+    final ClaimDetails? details = await ClaimDetailsSheet.ask(context, chosen);
+    if (details == null || !mounted) {
+      return;
+    }
+
     // Which road, if the phone can say so. Awaited rather than fired off,
     // because a fix that lands after the claim is written is a fix that belongs
     // to nothing — but it is capped at a few seconds and returns null on every
@@ -311,8 +331,14 @@ class _HomeShellState extends State<HomeShell> {
           speciesId: chosen.id,
           playerId: player.id,
           at: DateTime.now(),
-          points: earnsBonus ? Species.wildCardBonus : chosen.points,
+          points: chosen.scoreFor(
+            wildCardBonusEarned: earnsBonus,
+            variantApplied: details.variant,
+            context: details.context,
+          ),
           road: road,
+          context: details.context,
+          variant: details.variant,
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'avatar_seed.dart';
+import 'sighting_context.dart';
 
 /// One person in the car, for one day. Not an account — just a name.
 ///
@@ -53,6 +54,8 @@ class Claim {
     required this.at,
     required this.points,
     this.road,
+    this.context = SightingContext.normal,
+    this.variant = false,
   });
 
   factory Claim.fromJson(Map<String, dynamic> json) => Claim(
@@ -61,12 +64,33 @@ class Claim {
     at: DateTime.parse(json['at'] as String),
     points: json['points'] as int,
     road: json['road'] as String?,
+    // Absent on every claim written before August 2026. Defaulting to normal
+    // leaves old drives scoring exactly as they did, which matters — a
+    // lifetime total that shifts when the app updates is a bug people notice
+    // and cannot explain.
+    context: json['context'] == null
+        ? SightingContext.normal
+        : SightingContext.byName(json['context']! as String),
+    variant: json['variant'] as bool? ?? false,
   );
 
   final String speciesId;
   final String playerId;
   final DateTime at;
+
+  /// What this was worth, worked out when it was claimed and then frozen.
+  ///
+  /// Every modifier is already baked in: the tier, the wild-card bonus, the
+  /// variant, the crowd multiplier. Nothing recomputes it later. A tier
+  /// revalued next season must not silently rewrite last winter's card.
   final int points;
+
+  /// Who else was there. Only ever asked about animals worth stopping for —
+  /// see [Species.crowdMatters].
+  final SightingContext context;
+
+  /// The species' own variant applied — in practice, that the lion was a male.
+  final bool variant;
 
   /// Which road it was called on — `S100`, `H1-3 · Napi Road`.
   ///
@@ -93,6 +117,10 @@ class Claim {
     'at': at.toIso8601String(),
     'points': points,
     if (road != null) 'road': road,
+    // Omitted when ordinary, so the common claim stays the size it was and a
+    // backup code does not grow for saying nothing.
+    if (context != SightingContext.normal) 'context': context.name,
+    if (variant) 'variant': true,
   };
 }
 

@@ -747,7 +747,12 @@
         "central",
         "northern"
       ],
-      "conservationStatus": "vulnerable"
+      "conservationStatus": "vulnerable",
+      "variant": {
+        "label": "Male",
+        "question": "Was it a male?",
+        "bonus": 60
+      }
     },
     {
       "id": "mountain-reedbuck",

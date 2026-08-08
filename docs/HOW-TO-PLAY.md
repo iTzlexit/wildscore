@@ -112,6 +112,36 @@ herd of elephant.
 Cars stopped up ahead means something good. **Nobody may wind down a window and
 ask what it is.** Find it yourself — that is the entire fun of it.
 
+### Finding it yourself is worth double
+
+For anything Rare and up, and for the Big Five, the app asks **who else was
+there**:
+
+| | |
+|---|---|
+| **Just us** — an empty road | **Double** |
+| We spotted it — other cars about | Normal |
+| **Cars were already there** — a jam | **Half** |
+
+A jam still counts. Refusing the points for an animal somebody genuinely saw
+just invites them to lie about it, and pretending you did not see the leopard
+is silly. It counts for half, because somebody else found it.
+
+This is the "no asking at a jam" rule with teeth. That one relied on honesty
+about a thing nobody could check; this one puts the difference in the score,
+where the car can see it.
+
+The question is **only asked for animals a jam would form around** — the same
+bar the sightings feed uses. Nobody is prompted about an impala.
+
+### A male lion is worth more
+
+A lioness is a lion sighting. A black-maned male standing in the road is the
+photograph on the front of every Kruger brochure. **100 instead of 40.**
+
+Asked as one tap right after you pick the lion. It is the only animal with a
+question like this so far.
+
 ## Claiming a sighting
 
 Whoever calls it first gets it.

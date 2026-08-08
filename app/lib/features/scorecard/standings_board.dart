@@ -103,12 +103,21 @@ class _StandingsBoardState extends State<StandingsBoard> {
     final Map<String, int> counts = <String, int>{};
     final Map<String, int> points = <String, int>{};
     final Map<String, Set<String>> roads = <String, Set<String>>{};
+    final Map<String, Set<String>> marks = <String, Set<String>>{};
     for (final Claim c in widget.card.claims) {
       if (c.playerId == playerId) {
         counts[c.speciesId] = (counts[c.speciesId] ?? 0) + 1;
         points[c.speciesId] = (points[c.speciesId] ?? 0) + c.points;
         if (c.road != null) {
           (roads[c.speciesId] ??= <String>{}).add(c.road!);
+        }
+        if (c.context.short.isNotEmpty) {
+          (marks[c.speciesId] ??= <String>{}).add(c.context.short);
+        }
+        if (c.variant) {
+          if (_lookup(c.speciesId)?.variant case final SpeciesVariant v) {
+            (marks[c.speciesId] ??= <String>{}).add(v.label.toUpperCase());
+          }
         }
       }
     }
@@ -120,6 +129,7 @@ class _StandingsBoardState extends State<StandingsBoard> {
             count: e.value,
             points: points[e.key] ?? 0,
             roads: roads[e.key] ?? const <String>{},
+            marks: marks[e.key] ?? const <String>{},
           ),
     ];
     // By what the animal is worth, not by what the stack totals — two impala
@@ -149,7 +159,15 @@ class _Haul {
     required this.count,
     required this.points,
     this.roads = const <String>{},
+    this.marks = const <String>{},
   });
+
+  /// Why this stack is worth what it is: `MALE`, `ALONE`, `JAM`.
+  ///
+  /// Worth the space because the number on its own invites an argument. "Lion
+  /// 200" reads as a mistake; "Lion · MALE · ALONE · 200" reads as a very good
+  /// morning, and settles the question before anybody asks it.
+  final Set<String> marks;
 
   /// Roads this player found it on. Empty when location was off, refused, or
   /// the species is one whose whereabouts are never recorded.
@@ -477,6 +495,26 @@ class _HaulTag extends StatelessWidget {
                   fontFeatures: AppText.tabular,
                 ),
               ),
+              for (final String mark in haul.marks) ...<Widget>[
+                const SizedBox(width: 5),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 1,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    color: style.accent.withValues(alpha: 0.16),
+                  ),
+                  child: Text(
+                    mark,
+                    style: AppText.label.copyWith(
+                      fontSize: 8.5,
+                      color: style.accent,
+                    ),
+                  ),
+                ),
+              ],
               // Where it was found, when the phone could say. This is the part
               // people actually recall — "the leopard on the S100" is a memory
               // in a way that "the leopard" is not.

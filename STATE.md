@@ -46,6 +46,8 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
   to silhouettes because the photos could not be trusted.
 - **Wild Score** — start a drive, add the car, tap the eye by a player's name to
   claim an animal for them, standings with per-player hauls, restart, end day.
+  Claims on notable animals ask who else was there (alone doubles, a jam halves)
+  and whether a lion was male (+60).
 - **Latest Sightings** — every find from Rare upwards, plus the Big Five,
   newest first, grouped by trip, with the road it happened on. Very rare and
   Legendary are marked "on your word" until photo verification exists. Replaced
@@ -57,7 +59,7 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 - **Backup** — a pasteable code. No server; see `docs/RISKS.md` for why it
   matters more than it looks.
 
-219 tests. `flutter analyze` is clean and must stay clean.
+240 tests. `flutter analyze` is clean and must stay clean.
 
 ## Decisions already made — do not relitigate
 
@@ -68,6 +70,7 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 | Ship free first, price later | `docs/MONETISATION.md` |
 | Points ≠ collection: points to the caller, collection to everyone in the car | `docs/SCORECARD.md` |
 | Banked once, at end of day — never per claim | `docs/SCORECARD.md` |
+| Crowd multiplier: alone x2, jam x0.5, asked only for Rare+ and Big Five | `docs/HOW-TO-PLAY.md` |
 | Rhino and pangolin never get a location, ever | `docs/MAPS.md`, `docs/SIGHTINGS-FEED.md` |
 | Light theme, single typeface, colour reserved for rarity | `docs/DESIGN-DIRECTION.md` |
 | No leaderboard — the rivalry is with people in your own car | `docs/MONETISATION.md` |
