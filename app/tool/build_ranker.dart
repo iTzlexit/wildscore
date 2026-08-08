@@ -8,18 +8,27 @@
 //
 // Run from the app/ directory:
 //   dart run tool/build_ranker.dart
-//   dart run tool/build_ranker.dart --whatsapp 27821234567
+//   dart run tool/build_ranker.dart --whatsapp 27821234567 --email me@example.com
 //
-// The WhatsApp number is optional and is only used to pre-fill the share
-// button. Without it the button still works, it just asks the sender to pick
-// a contact.
+// Both are optional and both only affect how a finished set of answers gets
+// back to you. The WhatsApp number pre-fills the share sheet; without it the
+// button still works, it just asks the sender to pick a contact. The email
+// address is not defaulted, because this file gets posted in public Facebook
+// groups and an address sitting in the source is an address that gets scraped —
+// so leaving it out hides the button entirely.
+//
+// Hosted on Netlify the page also posts the answers by itself, via a Netlify
+// Form that needs no configuration beyond deploying the file. That is the route
+// that actually collects most of the responses; the buttons are the fallback.
 
 import 'dart:convert';
 import 'dart:io';
 
 void main(List<String> args) {
-  final int flag = args.indexOf('--whatsapp');
-  final String whatsapp = flag == -1 ? '' : args[flag + 1].replaceAll('+', '');
+  final int wa = args.indexOf('--whatsapp');
+  final String whatsapp = wa == -1 ? '' : args[wa + 1].replaceAll('+', '');
+  final int em = args.indexOf('--email');
+  final String email = em == -1 ? '' : args[em + 1];
 
   final File template = File('../tools/ranker.template.html');
   final File catalogue = File('assets/data/species.json');
@@ -49,18 +58,29 @@ void main(List<String> args) {
   final String out = template
       .readAsStringSync()
       .replaceFirst('/*__CATALOGUE__*/[]', json.encode(lean))
-      .replaceFirst('/*__WHATSAPP__*/', whatsapp);
+      .replaceFirst('/*__WHATSAPP__*/', whatsapp)
+      .replaceFirst('/*__EMAIL__*/', email);
 
   File('../tools/ranker.html').writeAsStringSync(out);
 
   final int kb = (out.length / 1024).round();
   stdout
     ..writeln('tools/ranker.html — ${lean.length} species, $kb KB')
+    ..writeln('')
+    ..writeln('How answers come back:')
+    ..writeln('  1. Automatically, if you host it on Netlify — no setup needed')
     ..writeln(
       whatsapp.isEmpty
-          ? 'No WhatsApp number baked in; the share button will ask for a contact.'
-          : 'WhatsApp share goes to $whatsapp.',
-    );
+          ? '  2. WhatsApp button — asks the sender to pick a contact '
+                '(pass --whatsapp 27… to aim it at you)'
+          : '  2. WhatsApp button — goes straight to $whatsapp',
+    )
+    ..writeln(
+      email.isEmpty
+          ? '  3. Email button — hidden (pass --email you@example.com to show it)'
+          : '  3. Email button — goes to $email',
+    )
+    ..writeln('  4. The code on screen, copied and pasted anywhere');
 }
 
 /// The first sentence of the description, so a card stays a card.

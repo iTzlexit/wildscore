@@ -42,9 +42,25 @@ Roughly in the order they need starting.
       until this exists.
 - [ ] **12 testers × 14 consecutive days** on Play's closed track. **Calendar
       time — cannot be compressed.** Start the day the account exists.
-- [ ] **Rarity tiers reviewed** — `tools/ranker.html`, still unused. The whole
-      scoring system rests on numbers nobody has checked. The YouTube couple are
-      the ideal reviewers for this.
+- [ ] **Rarity tiers reviewed.** The whole scoring system rests on numbers
+      nobody has checked. The tool is built and ready; what is left is getting
+      people to it.
+
+      1. **Host `tools/ranker.html` on Netlify.** Drag the file onto
+         `netlify.com/drop` — no account, no CLI, a real URL in ten seconds.
+         **Hosting it there is what makes answers collect themselves**: the page
+         posts to Netlify Forms, which needs no setup beyond deploying it. Read
+         them under Forms → rankings in the Netlify dashboard.
+         Free tier is **100 submissions a month**, which is plenty; if it goes
+         past that the code on screen still works as a fallback.
+      2. Rebuild first with your own contact details so the fallbacks aim at
+         you: `dart run tool/build_ranker.dart --whatsapp 27… --email …`
+      3. Post the link to Kruger Facebook groups and send it to any guides.
+      4. **Aim for 20–30 responses.** Simulated with eight, the extremes sort
+         correctly and the middle is visibly noisy. Fewer than twenty is not
+         worth acting on.
+      5. Paste the codes into a text file, one per line, and run
+         `dart run tool/merge_rankings.dart codes.txt`.
 - [ ] **Privacy policy URL** — required by both stores even though the app
       collects nothing. Needs somewhere to host it.
 - [ ] **Name check** — "Wild Score" against both stores and CIPC. The Android

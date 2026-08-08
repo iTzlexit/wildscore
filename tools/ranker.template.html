@@ -97,15 +97,12 @@ textarea{width:100%;height:110px;font:12px/1.45 ui-monospace,SFMono-Regular,mono
 <!-- ============ intro ============ -->
 <section id="intro">
   <div class="panel">
-    <h2>You know Kruger. I need your brain.</h2>
-    <p>I'm gathering data for an app, and the one thing I can't work out on my
-       own is <b>how rare each animal really is</b> to find in the park.</p>
-    <p>People who are in Kruger properly — regulars, guides, anyone who has done
-       the hours — know this far better than any book does. That's you.</p>
-    <p>Two animals at a time. Tap whichever is <b>harder to find</b>. Not the
-       more impressive one — the one you see less often.</p>
-    <p class="note">Three minutes. No sign-up, no email, nothing sent anywhere —
-       you get a short code at the end to send back.</p>
+    <h2>How rare is it, really?</h2>
+    <p>I'm gathering data from Kruger lovers on <b>how rare each animal is to
+       find in the park</b>, and I'd really appreciate your help.</p>
+    <p>Two animals at a time — tap whichever is <b>harder to find</b>. Not the
+       more impressive one, the one you see less often.</p>
+    <p class="note">A couple of minutes, and no sign-up.</p>
   </div>
   <div class="panel">
     <p style="margin-bottom:8px"><b>Your name</b> <span class="note">(so I know whose answers these are)</span></p>
@@ -133,14 +130,26 @@ textarea{width:100%;height:110px;font:12px/1.45 ui-monospace,SFMono-Regular,mono
   </p>
 </section>
 
+<!-- Netlify picks this up at deploy time and collects submissions for free, no
+     server and no account for the person answering. Hidden because the app
+     submits it in the background; it exists so the form is *detected*. Opened
+     as a local file or hosted anywhere else the POST simply fails, and the
+     manual code below is the fallback — which is why that never goes away. -->
+<form name="rankings" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <input type="text" name="who">
+  <input type="text" name="bot-field">
+  <textarea name="payload"></textarea>
+</form>
+
 <!-- ============ done ============ -->
 <section id="done" class="hide">
   <div class="panel">
     <h2>Thank you — genuinely</h2>
-    <p>Copy the code below and send it back to me. That's it.</p>
+    <p id="sendState">Sending your answers…</p>
     <textarea id="code" readonly onclick="this.select()"></textarea>
     <button class="primary big" onclick="copyCode()" id="copyBtn">Copy the code</button>
     <button class="big" onclick="wa()">Send on WhatsApp</button>
+    <button class="big" onclick="mail()" id="mailBtn">Send by email</button>
   </div>
   <div class="panel">
     <h2>What you said, rarest first</h2>
@@ -160,6 +169,12 @@ const SPECIES = /*__CATALOGUE__*/[];
 // WhatsApp number to send results to, injected at build time. Empty disables
 // the button rather than opening a broken link.
 const WHATSAPP = "/*__WHATSAPP__*/";
+
+// Where the "send by email" button goes. Empty hides the button rather than
+// opening a blank mail window. Passed at build time rather than hard-coded,
+// because this file gets posted in public Facebook groups and an email address
+// sitting in the source is an address that gets scraped.
+const EMAIL = "/*__EMAIL__*/";
 
 // How many duels one sitting asks for.
 //
@@ -269,8 +284,41 @@ function finish(){
     votes: votes.map(v => [SPECIES.findIndex(s=>s.id===v[0]),
                            SPECIES.findIndex(s=>s.id===v[1]), v[2]])
   };
-  document.getElementById("code").value =
-    "WSRANK1:" + btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+  const code = "WSRANK1:" +
+    btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+  document.getElementById("code").value = code;
+  send(code);
+}
+
+// Posts the answers by itself when the page is hosted on Netlify.
+//
+// Without this the results only come back if somebody bothers to copy a code
+// into WhatsApp, and most people will not — which would quietly lose most of
+// the responses and look like nobody was interested. Netlify Forms collects
+// them for free with no server and no account for the person answering.
+//
+// It fails silently anywhere else, including from a local file, and the code
+// stays on screen either way. A failed automatic send must never leave somebody
+// with no way to hand over three minutes of work.
+function send(code){
+  const state = document.getElementById("sendState");
+  const shown = () => {
+    state.textContent = "Copy the code below and send it to me — that's it.";
+    document.getElementById("copyBtn").classList.remove("hide");
+  };
+
+  fetch("/", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      "form-name": "rankings", "who": who, "payload": code,
+    }).toString(),
+  }).then(r => {
+    if (!r.ok) return shown();
+    state.innerHTML = "<b>Sent — nothing else needed.</b> " +
+      "If you'd like a copy for yourself, it's below.";
+    document.getElementById("copyBtn").textContent = "Copy my answers";
+  }).catch(shown);
 }
 
 function copyCode(){
@@ -282,9 +330,23 @@ function copyCode(){
   );
 }
 
-function wa(){
-  const msg = "Kruger rarity rankings from " + who + "\n\n" + document.getElementById("code").value;
-  const base = WHATSAPP ? "https://wa.me/" + WHATSAPP + "?text=" : "https://wa.me/?text=";
-  window.open(base + encodeURIComponent(msg), "_blank");
+function message(){
+  return "Kruger rarity rankings from " + who + "\n\n" +
+         document.getElementById("code").value;
 }
+
+function wa(){
+  const base = WHATSAPP ? "https://wa.me/" + WHATSAPP + "?text=" : "https://wa.me/?text=";
+  window.open(base + encodeURIComponent(message()), "_blank");
+}
+
+// Third route home, for anybody who does not use WhatsApp and will not paste a
+// code. Around 900 characters, comfortably inside what a mailto URL carries.
+function mail(){
+  window.location.href = "mailto:" + EMAIL +
+    "?subject=" + encodeURIComponent("Kruger rarity rankings — " + who) +
+    "&body=" + encodeURIComponent(message());
+}
+
+if (!EMAIL) { document.getElementById("mailBtn").classList.add("hide"); }
 </script>
