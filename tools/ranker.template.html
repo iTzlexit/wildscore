@@ -1,7 +1,7 @@
 <!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Wild Score — how rare is it, really?</title>
+<title>How rare is it, really? — Kruger</title>
 <style>
 :root{
   --bg:#f6f6f3; --card:#fff; --ink:#151a17; --mute:#6d766f; --line:#e2e4de;
@@ -76,22 +76,21 @@ textarea{width:100%;height:110px;font:12px/1.45 ui-monospace,SFMono-Regular,mono
 <!-- ============ intro ============ -->
 <section id="intro">
   <div class="panel">
-    <h2>Help us score the animals</h2>
-    <p>I'm building <b>Wild Score</b>, a game you play in the car in Kruger —
-       everyone competes to spot animals, and rarer animals are worth more points.</p>
-    <p><b>The problem:</b> I had to guess how rare every animal is, and I'm one
-       person. You almost certainly know better.</p>
-    <p>You'll be shown two animals at a time. Just tap the one that is
-       <b>harder to find in Kruger</b>. Not the more impressive one — the one you
-       see less often.</p>
-    <p class="note">Takes about three minutes. Nothing is sent anywhere — at the
-       end you get a short code to send back. No sign-up, no email, no app.</p>
+    <h2>You know Kruger. I need your brain.</h2>
+    <p>I'm gathering data for an app, and the one thing I can't work out on my
+       own is <b>how rare each animal really is</b> to find in the park.</p>
+    <p>People who are in Kruger properly — regulars, guides, anyone who has done
+       the hours — know this far better than any book does. That's you.</p>
+    <p>Two animals at a time. Tap whichever is <b>harder to find</b>. Not the
+       more impressive one — the one you see less often.</p>
+    <p class="note">Three minutes. No sign-up, no email, nothing sent anywhere —
+       you get a short code at the end to send back.</p>
   </div>
   <div class="panel">
     <p style="margin-bottom:8px"><b>Your name</b> <span class="note">(so I know whose answers these are)</span></p>
     <input type="text" id="who" placeholder="First name, or your channel" autocomplete="name">
-    <p class="note" style="margin-top:10px">If you guide or work in the park, add
-       that — I'll weight your answers more heavily.</p>
+    <p class="note" style="margin-top:10px">If you guide or work in the park, say
+       so here — I weight those answers more heavily.</p>
   </div>
   <button class="primary big" onclick="start()">Start</button>
 </section>
@@ -255,7 +254,7 @@ function copyCode(){
 }
 
 function wa(){
-  const msg = "Wild Score rankings from " + who + "\n\n" + document.getElementById("code").value;
+  const msg = "Kruger rarity rankings from " + who + "\n\n" + document.getElementById("code").value;
   const base = WHATSAPP ? "https://wa.me/" + WHATSAPP + "?text=" : "https://wa.me/?text=";
   window.open(base + encodeURIComponent(msg), "_blank");
 }
