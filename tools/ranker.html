@@ -73,6 +73,27 @@ textarea{width:100%;height:110px;font:12px/1.45 ui-monospace,SFMono-Regular,mono
 
 <main>
 
+<!-- ============ not the file you want ============ -->
+<!--
+  Shown only when the catalogue placeholder has not been filled in, which means
+  somebody has opened ranker.template.html rather than ranker.html. That is an
+  easy mistake — the two sit side by side and the template is the one that looks
+  like the original — and without this it presents as a broken app with no
+  animals in it rather than as the wrong file.
+-->
+<section id="istemplate" class="hide">
+  <div class="panel">
+    <h2>This is the template, not the app</h2>
+    <p>There are no animals in this file. It is the source that the real one is
+       built from.</p>
+    <p><b>Open <code>ranker.html</code></b>, in this same folder. That is the one
+       with the 96 species in it, and the one to send people.</p>
+    <p class="note">To rebuild it after adding species, from the
+       <code>app</code> folder:<br>
+       <code>dart run tool/build_ranker.dart</code></p>
+  </div>
+</section>
+
 <!-- ============ intro ============ -->
 <section id="intro">
   <div class="panel">
@@ -154,6 +175,14 @@ const rating = {};       // id -> elo
 const seen = {};         // id -> how many duels it has been in
 const votes = [];        // every judgement, so the aggregator can re-derive
 let pair = null, done = 0, who = "";
+
+// The placeholder was never replaced, so this is the template rather than the
+// built file. Say so instead of presenting an app with nothing in it.
+if (SPECIES.length === 0) {
+  document.getElementById("intro").classList.add("hide");
+  document.getElementById("istemplate").classList.remove("hide");
+  document.querySelector("header h1").textContent = "ranker.template.html";
+}
 
 for (const s of SPECIES) { rating[s.id] = 1500; seen[s.id] = 0; }
 
