@@ -109,8 +109,8 @@ class _Invitation extends StatelessWidget {
         Text('Wild Score', style: AppText.title1),
         const SizedBox(height: Space.sm),
         Text(
-          'A game for long drives in the park. Hand the phone around the car '
-          'and find out who is actually any good at spotting.',
+          'Add everyone in the car, then tap a name whenever somebody spots '
+          'something. Rare animals pay more.',
           style: AppText.body.copyWith(height: 1.55),
         ),
         const SizedBox(height: Space.xl),
@@ -158,14 +158,18 @@ class _Invitation extends StatelessWidget {
           ),
         ],
         const SizedBox(height: Space.section),
-        const _HowItWorks(),
-        const SizedBox(height: Space.lg),
+        // The four-step walkthrough used to sit here. It also sits on the
+        // rules screen and on the second slide of the intro tour — three
+        // copies of the same four steps in three slightly different wordings,
+        // which is three places to keep in step and two more than anybody
+        // needs. The tour teaches the game, the rules screen is the reference,
+        // and this screen's one job is to start a drive.
         Center(
           child: TextButton.icon(
             onPressed: () => RulesScreen.open(context),
             icon: const Icon(Icons.menu_book_rounded, size: 18),
             label: Text(
-              'Read the rules',
+              'How to play',
               style: AppText.label.copyWith(
                 color: AppColors.accent,
                 fontVariations: AppFonts.weight(700),
@@ -175,105 +179,6 @@ class _Invitation extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _HowItWorks extends StatelessWidget {
-  const _HowItWorks();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(Space.screen),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(Radii.card),
-        border: Border.all(color: AppColors.outline),
-      ),
-      child: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          _Step(
-            number: '1',
-            title: 'Enter the players',
-            body: 'Everyone in the car who wants to play. First names only.',
-          ),
-          _Step(
-            number: '2',
-            title: 'Spot something',
-            body:
-                'Every animal has a scarcity level. The rarer it is, the more '
-                'it is worth.',
-          ),
-          _Step(
-            number: '3',
-            title: 'Points go to whoever saw it first',
-            body: 'Tap the eye beside their name, then tap the animal.',
-          ),
-          _Step(
-            number: '4',
-            title: 'Tally up at the end',
-            body: 'Highest score takes the bragging rights until tomorrow.',
-            last: true,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Step extends StatelessWidget {
-  const _Step({
-    required this.number,
-    required this.title,
-    required this.body,
-    this.last = false,
-  });
-
-  final String number;
-  final String title;
-  final String body;
-  final bool last;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: last ? 0 : Space.lg),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            width: 26,
-            height: 26,
-            alignment: Alignment.center,
-            decoration: const BoxDecoration(
-              color: AppColors.accent,
-              shape: BoxShape.circle,
-            ),
-            child: Text(
-              number,
-              style: TextStyle(
-                color: AppColors.accentInk,
-                fontSize: 12.5,
-                fontFamily: AppFonts.ui,
-                fontVariations: AppFonts.weight(800),
-              ),
-            ),
-          ),
-          const SizedBox(width: Space.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(title, style: AppText.bodyStrong),
-                const SizedBox(height: 2),
-                Text(body, style: AppText.caption.copyWith(height: 1.45)),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

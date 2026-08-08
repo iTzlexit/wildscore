@@ -59,7 +59,7 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 - **Backup** — a pasteable code. No server; see `docs/RISKS.md` for why it
   matters more than it looks.
 
-240 tests. `flutter analyze` is clean and must stay clean.
+245 tests. `flutter analyze` is clean and must stay clean.
 
 ## Decisions already made — do not relitigate
 

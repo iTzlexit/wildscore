@@ -729,7 +729,7 @@ class _SlideThree extends StatelessWidget {
     return const _Slide(
       art: _VictoryScene(),
       eyebrow: 'AND THEN TOMORROW',
-      title: 'End the day. Crown the\nUltimate Spotter.',
+      title: 'End the day. Crown the Ultimate Spotter.',
       body:
           'Whoever is top when you get back to camp wins the day. Then it '
           'starts again in the morning, with everything you found kept for good.',

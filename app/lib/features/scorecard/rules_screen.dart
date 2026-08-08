@@ -43,8 +43,8 @@ class RulesScreen extends StatelessWidget {
         ),
         children: <Widget>[
           Text(
-            'A game for long drives in the park. Find out who is actually any '
-            'good at spotting.',
+            'Everyone in the car competes to spot animals first. The harder an '
+            'animal is to find, the more it pays.',
             style: AppText.body.copyWith(height: 1.55),
           ),
           const SizedBox(height: Space.lg),
@@ -66,60 +66,57 @@ class RulesScreen extends StatelessWidget {
             ),
             label: const Text('Show me the quick tour'),
           ),
+          const SizedBox(height: Space.lg),
+          // Near the top rather than in a section of its own further down.
+          // Somebody who does not want a competition needs to hear that before
+          // they read four screens of scoring rules and decide the app is not
+          // for them — and it used to be at the bottom, under a heading reading
+          // "OR DO NOT PLAY AT ALL", which nobody reached.
+          const _Way(
+            icon: Icons.menu_book_rounded,
+            title: 'Not one for keeping score?',
+            body:
+                'Ignore all of this and just tick animals off in the Animal '
+                'Dex. Your collection fills up the same.',
+            last: true,
+          ),
           const SizedBox(height: Space.xl),
 
-          const _Section('HOW IT IS PLAYED'),
+          const _Section('PLAYING A DRIVE'),
           const _Step(
             number: 1,
-            title: 'Enter the players',
-            body:
-                'Everyone in the car who wants to play. First names only — no '
-                'accounts, no sign-ups. On your own works too.',
+            title: 'Add everyone in the car',
+            body: 'First names. No accounts, no sign-ups. On your own is fine.',
           ),
           const _Step(
             number: 2,
-            title: 'Every animal has a scarcity level',
+            title: 'Somebody shouts — tap their name',
             body:
-                'From Common up to Legendary, based on how hard it is to find '
-                'in Kruger. An impala is 5 points. A pangolin is 2,000.',
-          ),
-          const _Step(
-            number: 3,
-            title: 'Points go to whoever spots it first',
-            body:
-                'Tap the eye beside their name, then tap the animal. Tap the '
-                'animal again later to take it back off them.',
+                'Tap the eye beside them, then pick the animal. The points '
+                'land on them.',
             icon: Icons.visibility_rounded,
           ),
           const _Step(
-            number: 4,
-            title: 'Tally up at the end of the drive',
+            number: 3,
+            title: 'End the day back at camp',
             body:
-                'Highest score takes the bragging rights. Tomorrow everyone '
-                'starts level again.',
+                'Top score wins. Everything the car saw joins your collection '
+                'for good, and tomorrow starts level.',
             last: true,
           ),
           const SizedBox(height: Space.xl),
 
-          const _Section('OR DO NOT PLAY AT ALL'),
-          const _Way(
-            icon: Icons.menu_book_rounded,
-            title: 'Just keep a list',
-            body:
-                'Tick animals off in the Animal Dex as you find them. No game, '
-                'no scores, nobody keeping count — your collection fills up '
-                'all the same.',
-            last: true,
-          ),
-          const SizedBox(height: Space.xl),
-
-          const _Section('THE RULES'),
+          // Split from the scoring rules on purpose. These four answer "does
+          // that count", which is what a car argues about; the next four answer
+          // "what is it worth", which is what a car is *pleased* about. They
+          // used to be one list of eight and read as a wall.
+          const _Section('DOES IT COUNT?'),
           const _Rule(
             icon: Icons.fence_rounded,
             title: 'Inside the park only',
             body:
-                'The gate is the line. That kudu on the way in was lovely, '
-                'and it does not count.',
+                'The gate is the line. That kudu on the way in was lovely, and '
+                'it does not count.',
           ),
           const _Rule(
             icon: Icons.u_turn_left_rounded,
@@ -138,37 +135,36 @@ class RulesScreen extends StatelessWidget {
             title: 'No asking at a jam',
             body:
                 'Cars stopped ahead means something good. No winding down a '
-                'window to ask what it is. Find it yourself — that is the fun.',
+                'window to ask what it is.',
           ),
+          const SizedBox(height: Space.xl),
+
+          const _Section('WHAT PAYS MORE'),
           const _Rule(
             icon: Icons.groups_2_rounded,
-            title: 'Finding it yourself is worth double',
+            title: 'Finding it yourself — double',
             body:
-                'For anything Rare and up, and for the Big Five, the app asks '
-                'who else was there. An empty road pays double. Rolling up to '
-                'eleven parked cars pays half — it still counts, you did see '
-                'it, but somebody else found it.',
+                'For rare animals the app asks who else was there. An empty '
+                'road pays double. A jam pays half — you did see it, but '
+                'somebody else found it.',
           ),
           const _Rule(
             icon: Icons.workspace_premium_rounded,
-            title: 'A male lion is worth more',
+            title: 'A male lion — 100 instead of 40',
             body:
-                'A lioness is a lion. A black-maned male standing in the road '
-                'is the picture on the front of the brochure, and it pays 100 '
-                'instead of 40.',
+                'A lioness is a lion. A black-maned male in the road is the '
+                'picture on the front of the brochure.',
           ),
           const _Rule(
             icon: Icons.bolt_rounded,
-            title: 'The first one is worth more',
+            title: 'The first one — 50 instead of 5',
             body:
-                'Impala, zebra, giraffe and wildebeest pay 50 for the first '
-                'sighting instead of 5. After that they are worth what they '
-                'have always been worth. The impala bonus comes once a trip; '
-                'the others reset every morning.',
+                'Impala, zebra, giraffe and wildebeest. Zebra, giraffe and '
+                'wildebeest reset every morning; the impala comes once a trip.',
           ),
           const _Rule(
             icon: Icons.lock_clock_rounded,
-            title: 'The common ones run out',
+            title: 'Common animals run out',
             body:
                 'Impala and friends: once a day. Middling ones: three times. '
                 'Anything rare stays open all day — every leopard counts.',
@@ -195,8 +191,7 @@ class RulesScreen extends StatelessWidget {
           ),
           const SizedBox(height: Space.md),
           Text(
-            'Not how impressive an animal is — how hard it is to find. Sweep '
-            'up every common animal in the park in one day and a single '
+            'Sweep up every common animal in the park in one day and a single '
             'pangolin still beats the lot of you.',
             style: AppText.caption.copyWith(height: 1.5),
           ),
@@ -398,12 +393,10 @@ class SpiritOfTheGame extends StatelessWidget {
                 ),
                 const SizedBox(height: Space.xs),
                 Text(
-                  'Every animal out there is worth the same. The points only '
-                  'measure how hard something is to find — a pangolin beats an '
-                  'elephant because the elephant is standing in the road.\n\n'
-                  'Nothing is checked or verified. It runs on trust, same as '
-                  'the paper version. Watch the animal first; the phone can '
-                  'wait.',
+                  'The points measure how hard an animal is to find, nothing '
+                  'else. Out there they are all worth the same.\n\n'
+                  'Nothing is checked. It runs on trust, same as the paper '
+                  'version. Watch the animal first — the phone can wait.',
                   style: AppText.caption.copyWith(height: 1.55),
                 ),
               ],

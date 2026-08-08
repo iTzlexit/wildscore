@@ -27,14 +27,39 @@ Stated up front and given equal weight. Somebody who never wants to compete
 should not have to read past a wall of scoring rules to find out the app is
 still for them.
 
-> **On structure.** Four questions in the order a newcomer asks them: *what is
-> this, which way do I want to use it, how do I play, what are the rules.* The
-> points table is reference and goes last.
+> **On structure.** The in-app screen is now four blocks, in the order a
+> newcomer needs them:
+>
+> 1. What this is, in two lines, plus the way out for somebody who does not want
+>    a competition at all
+> 2. **PLAYING A DRIVE** — three steps
+> 3. **DOES IT COUNT?** — the four rules a car argues about
+> 4. **WHAT PAYS MORE** — the four rules a car is pleased about
+> 5. The points table, as reference
+>
+> **The two rule lists were one list of eight** and read as a wall. They answer
+> different questions and a car asks them at different moments — "does that
+> count" mid-argument, "what's it worth" mid-celebration. Splitting them was the
+> single biggest improvement to the screen.
+>
+> **The opt-out moved to the top.** It used to sit near the bottom under a
+> heading reading "OR DO NOT PLAY AT ALL", which nobody reached. Somebody who
+> does not want to keep score needs to hear that *before* four screens of
+> scoring rules convince them the app is not for them.
 >
 > **One card style means one kind of thing.** An earlier version had a "handy to
 > know" section that put a rule which changes how you play next to help for a
 > button, in identical cards. Everything in it was folded into the step or the
 > rule it belonged to.
+>
+> **The walkthrough is three steps, not four.** "Every animal has a scarcity
+> level" was never a step — it is a fact about scoring, and it is already the
+> table at the bottom of the same screen.
+>
+> **It is not repeated anywhere else.** The same four steps used to appear on
+> the Wild Score tab, on this screen, and on slide two of the intro tour, in
+> three slightly different wordings. The tour teaches the game, this screen is
+> the reference, and the tab's one job is to start a drive.
 >
 > And keep it **short**. A rules page nobody finishes has explained nothing;
 > every addition has to earn its place by displacing something.

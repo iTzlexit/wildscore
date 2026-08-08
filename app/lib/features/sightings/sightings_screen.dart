@@ -417,11 +417,9 @@ class _VerificationNote extends StatelessWidget {
           Text('What is coming', style: AppText.title3),
           const SizedBox(height: Space.sm),
           Text(
-            'Very rare and Legendary finds are marked "on your word" for now. '
-            'Later you will be able to photograph one, and the app will check '
-            'it when you next have signal — so a wild dog on your card means '
-            'you really saw a wild dog.\n\nA proper map, with your sightings '
-            'pinned on it, comes after that.',
+            'Your rarest finds are marked "on your word" for now. Later you '
+            'will be able to photograph one and have it checked, and after '
+            'that, a proper map with your sightings pinned on it.',
             style: AppText.caption.copyWith(height: 1.55),
           ),
         ],
