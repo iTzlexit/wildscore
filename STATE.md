@@ -89,6 +89,9 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 | `docs/IMAGE-ASSETS.md` | Photo sourcing and the non-commercial licence trap |
 | `docs/DESIGN-DIRECTION.md` | Palette, type, rarity treatments |
 | `MASTER-VISION.md` | The original brief. Partly superseded — check `docs/DIVERGENCES.md` |
+| **`CHECKLIST.md`** | Done / blocking launch / to decide. The plan, as opposed to the code |
+| `docs/PROMOTION.md` | The YouTube approach, and what a creator deal should look like |
+| `docs/EXTERNAL-REVIEW-PROMPT.md` | Brief for an outside copy/UX review, with the output format |
 
 ## Tools
 
