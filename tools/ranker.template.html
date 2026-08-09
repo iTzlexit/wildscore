@@ -39,11 +39,9 @@ button.primary{background:var(--accent);border-color:var(--accent);color:#fff;fo
   padding:16px;text-align:left;transition:.12s;width:100%;
 }
 .pick:active{border-color:var(--accent);background:var(--accent-wash)}
-.pick .nm{font-size:20px;font-weight:800;line-height:1.2}
-.pick .af{color:var(--mute);font-size:13px;margin-top:3px}
-.pick .ds{color:#48524a;font-size:13.5px;margin-top:9px;line-height:1.45}
-.pick .cat{font-size:10.5px;font-weight:800;letter-spacing:1.1px;color:var(--mute);
-  text-transform:uppercase;margin-top:10px}
+.pick{min-height:112px;display:flex;flex-direction:column;justify-content:center}
+.pick .nm{font-size:22px;font-weight:800;line-height:1.2}
+.pick .af{color:var(--mute);font-size:13.5px;margin-top:4px}
 .alt{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .alt button{font-size:14.5px;font-weight:600;color:var(--mute)}
 
@@ -144,18 +142,25 @@ textarea{width:100%;height:110px;font:12px/1.45 ui-monospace,SFMono-Regular,mono
 <!-- ============ done ============ -->
 <section id="done" class="hide">
   <div class="panel">
-    <h2>Thank you — genuinely</h2>
-    <p id="sendState">Sending your answers…</p>
-    <textarea id="code" readonly onclick="this.select()"></textarea>
-    <button class="primary big" onclick="copyCode()" id="copyBtn">Copy the code</button>
-    <button class="big" onclick="wa()">Send on WhatsApp</button>
-    <button class="big" onclick="mail()" id="mailBtn">Send by email</button>
+    <h2 id="doneTitle">Sending your answers…</h2>
+    <p id="sendState">One moment.</p>
+
+    <!-- Only appears if the automatic send failed. Somebody who has just given
+         three minutes should not be handed a chore; they should be told it is
+         done and left alone. -->
+    <div id="manual" class="hide">
+      <button class="primary big" onclick="mail()" id="mailBtn">Email me the answers</button>
+      <button class="big" onclick="copyCode()" id="copyBtn">Copy them instead</button>
+      <textarea id="code" readonly onclick="this.select()" style="margin-top:12px"></textarea>
+    </div>
+    <textarea id="codeHidden" class="hide"></textarea>
   </div>
   <div class="panel">
-    <h2>What you said, rarest first</h2>
+    <h2>Your order, rarest first</h2>
     <div id="list"></div>
-    <p class="note" style="margin-top:12px">Only animals you actually compared
-       appear here. Everything you skipped is left out.</p>
+    <p class="note" style="margin-top:12px">You were given a random handful of
+       the park's animals rather than all of them — everyone gets a different
+       set, and they get combined afterwards.</p>
   </div>
 </section>
 
@@ -166,30 +171,38 @@ textarea{width:100%;height:110px;font:12px/1.45 ui-monospace,SFMono-Regular,mono
 // species.json changes so this never drifts from the app.
 const SPECIES = /*__CATALOGUE__*/[];
 
-// WhatsApp number to send results to, injected at build time. Empty disables
-// the button rather than opening a broken link.
-const WHATSAPP = "/*__WHATSAPP__*/";
-
 // Where the "send by email" button goes. Empty hides the button rather than
 // opening a blank mail window. Passed at build time rather than hard-coded,
 // because this file gets posted in public Facebook groups and an email address
 // sitting in the source is an address that gets scraped.
 const EMAIL = "/*__EMAIL__*/";
 
-// How many duels one sitting asks for.
+// One sitting ranks a RANDOM SUBSET properly, rather than the whole catalogue
+// badly. This is the single most important decision in the file.
 //
-// Elo over 96 species would want several hundred comparisons to converge on its
-// own, which is forty minutes and nobody finishes that. The design assumes
-// *many* people doing a short stint each, and the aggregator merges them — so
-// this is tuned to "will a stranger on Facebook finish it", not to statistical
-// comfort. Sixty pairs is about three minutes.
+// The first version spread sixty questions across all ninety-six species, which
+// is barely one comparison each. One comparison tells you almost nothing: an
+// animal that happened to beat an impala floated to the top and sat above a
+// cheetah it had never been measured against. That is not a close call, it is
+// an absence of data wearing a number.
+//
+// Sixty comparisons over twenty-four species is five each, which is enough to
+// order them. Different people get different subsets, they overlap at random,
+// and the aggregator stitches the overlaps into one global order — the same way
+// you can rank every chess player in the world without everyone playing
+// everyone. What matters is that each *local* ordering is solid.
+const SUBSET = 24;
 const ROUNDS = 60;
 
-const K = 32;            // Elo step. Deliberately large: few games, want movement.
-const rating = {};       // id -> elo
-const seen = {};         // id -> how many duels it has been in
-const votes = [];        // every judgement, so the aggregator can re-derive
+const K = 40;            // Elo step, used only to pick good pairs, never to rank.
+const rating = {};       // id -> elo, in-session only
+const seen = {};         // id -> comparisons so far, in-session only
+const votes = [];        // every judgement — the only thing that gets sent
+const asked = new Set(); // pairs already put to this person
+let field = [];          // the subset this person is ranking
 let pair = null, done = 0, who = "";
+
+const key = (a,b) => a < b ? a + "|" + b : b + "|" + a;
 
 // The placeholder was never replaced, so this is the template rather than the
 // built file. Say so instead of presenting an app with nothing in it.
@@ -203,40 +216,62 @@ for (const s of SPECIES) { rating[s.id] = 1500; seen[s.id] = 0; }
 
 function start(){
   who = (document.getElementById("who").value || "").trim() || "anonymous";
+  // A fresh random subset each time, so two people who both open the link get
+  // different animals and the overlaps accumulate across everybody.
+  field = [...SPECIES].sort(() => Math.random()-0.5).slice(0, Math.min(SUBSET, SPECIES.length));
   document.getElementById("intro").classList.add("hide");
   document.getElementById("duel").classList.remove("hide");
   next();
 }
 
-// Picks the most informative pair we can cheaply find.
+// Picks the most informative pair left in this person's subset.
 //
-// Two rules, both mattering: prefer species that have been seen least, so
-// nothing is left unrated; and among those prefer opponents of *similar*
-// rating, because a duel whose outcome is obvious teaches nothing. Comparing a
-// pangolin with an impala is a wasted question.
+// Two rules. Prefer the species compared least so far, so nothing in the subset
+// is left with one data point — that neglect is exactly what produced a caracal
+// sitting above a cheetah it had never met. Then, among those, prefer an
+// opponent of *similar* current rating, because a question whose answer is
+// obvious teaches nothing: pangolin against impala is a wasted turn.
+//
+// The in-session Elo exists only to steer this choice. It is never sent and
+// never used to rank anything — the aggregator fits a proper model to the raw
+// comparisons instead.
 function choose(){
-  const pool = [...SPECIES].sort((a,b) => (seen[a.id]-seen[b.id]) || Math.random()-0.5);
-  const a = pool[Math.floor(Math.random()*Math.min(12,pool.length))];
+  const pool = [...field].sort((a,b) => (seen[a.id]-seen[b.id]) || Math.random()-0.5);
+  const a = pool[Math.floor(Math.random()*Math.min(6,pool.length))];
   let best = null, bestGap = Infinity;
-  for (const c of pool.slice(0,40)) {
-    if (c.id === a.id) continue;
-    const gap = Math.abs(rating[c.id]-rating[a.id]) + Math.random()*60;
+  for (const c of pool) {
+    if (c.id === a.id || asked.has(key(a.id,c.id))) continue;
+    const gap = Math.abs(rating[c.id]-rating[a.id]) + Math.random()*40;
     if (gap < bestGap) { bestGap = gap; best = c; }
   }
+  // Every pairing in the subset has been asked. Widen rather than repeat.
+  if (!best) {
+    const extra = SPECIES.filter(s => !field.some(f => f.id === s.id));
+    if (extra.length) {
+      best = extra[Math.floor(Math.random()*extra.length)];
+      field.push(best);
+      rating[best.id] = 1500; seen[best.id] = 0;
+    } else {
+      best = pool.find(c => c.id !== a.id);
+    }
+  }
+  asked.add(key(a.id,best.id));
   return Math.random() < 0.5 ? [a,best] : [best,a];
 }
 
 function next(){
   if (done >= ROUNDS) return finish();
   pair = choose();
+  // Name and Afrikaans name only. The cards used to carry a line of field
+  // notes, which was wrong for who this is for: somebody who knows Kruger reads
+  // "Serval" and is already deciding, and a description underneath is text they
+  // have to skip sixty times. Smaller cards also mean both fit on a phone
+  // without scrolling, which is what keeps the pace up.
   for (const [el,s] of [["pa",pair[0]],["pb",pair[1]]]) {
-    document.getElementById(el).innerHTML =
-      '<div class="nm"></div><div class="af"></div><div class="ds"></div><div class="cat"></div>';
     const n = document.getElementById(el);
+    n.innerHTML = '<div class="nm"></div><div class="af"></div>';
     n.querySelector(".nm").textContent = s.name;
     n.querySelector(".af").textContent = s.afr || "";
-    n.querySelector(".ds").textContent = s.desc || "";
-    n.querySelector(".cat").textContent = s.cat;
   }
   document.getElementById("n").textContent = done + " / " + ROUNDS;
   document.getElementById("prog").style.width = (100*done/ROUNDS) + "%";
@@ -263,20 +298,20 @@ function finish(){
   document.getElementById("prog").style.width = "100%";
   document.getElementById("n").textContent = votes.length + " answered";
 
-  const rated = SPECIES.filter(s => seen[s.id] > 0)
-                       .sort((a,b) => rating[b.id]-rating[a.id]);
+  const rated = field.filter(s => seen[s.id] > 0)
+                     .sort((a,b) => rating[b.id]-rating[a.id]);
 
   document.getElementById("list").innerHTML = rated.map((s,i) =>
-    '<div class="res"><span class="r">' + (i+1) + '</span>' +
-    '<span class="nm"></span><span class="sc">' + Math.round(rating[s.id]) + '</span></div>'
+    '<div class="res"><span class="r">' + (i+1) + '</span><span class="nm"></span></div>'
   ).join("");
   // Names set as text, never as HTML — this file gets handed to strangers and
   // the catalogue is the only thing it should ever render.
   document.querySelectorAll("#list .nm").forEach((el,i) => el.textContent = rated[i].name);
 
-  // Raw judgements rather than final ratings. Ratings from a 60-duel session
-  // are noisy and cannot be pooled meaningfully; the individual comparisons
-  // can, so the aggregator re-runs Elo over everybody's answers at once.
+  // Raw judgements, never the in-session ratings. Those are a rough steering
+  // aid over sixty answers and pooling them would carry every bit of that noise
+  // into the result; the comparisons themselves pool properly, and the
+  // aggregator fits a real model to all of them at once.
   const payload = {
     v: 1,
     who: who,
@@ -301,10 +336,16 @@ function finish(){
 // stays on screen either way. A failed automatic send must never leave somebody
 // with no way to hand over three minutes of work.
 function send(code){
+  const title = document.getElementById("doneTitle");
   const state = document.getElementById("sendState");
-  const shown = () => {
-    state.textContent = "Copy the code below and send it to me — that's it.";
-    document.getElementById("copyBtn").classList.remove("hide");
+
+  const failed = () => {
+    title.textContent = "Almost — one tap left";
+    state.textContent = "I couldn't send that automatically. Tap below and it " +
+      "goes straight to me.";
+    document.getElementById("code").value = code;
+    document.getElementById("manual").classList.remove("hide");
+    if (!EMAIL) document.getElementById("mailBtn").classList.add("hide");
   };
 
   fetch("/", {
@@ -314,11 +355,10 @@ function send(code){
       "form-name": "rankings", "who": who, "payload": code,
     }).toString(),
   }).then(r => {
-    if (!r.ok) return shown();
-    state.innerHTML = "<b>Sent — nothing else needed.</b> " +
-      "If you'd like a copy for yourself, it's below.";
-    document.getElementById("copyBtn").textContent = "Copy my answers";
-  }).catch(shown);
+    if (!r.ok) return failed();
+    title.textContent = "Done — thank you";
+    state.textContent = "Your answers are in. Nothing else needed.";
+  }).catch(failed);
 }
 
 function copyCode(){
@@ -330,23 +370,13 @@ function copyCode(){
   );
 }
 
-function message(){
-  return "Kruger rarity rankings from " + who + "\n\n" +
-         document.getElementById("code").value;
-}
-
-function wa(){
-  const base = WHATSAPP ? "https://wa.me/" + WHATSAPP + "?text=" : "https://wa.me/?text=";
-  window.open(base + encodeURIComponent(message()), "_blank");
-}
-
-// Third route home, for anybody who does not use WhatsApp and will not paste a
-// code. Around 900 characters, comfortably inside what a mailto URL carries.
+// The fallback, and only ever the fallback. Around 900 characters, comfortably
+// inside what a mailto URL carries.
 function mail(){
   window.location.href = "mailto:" + EMAIL +
     "?subject=" + encodeURIComponent("Kruger rarity rankings — " + who) +
-    "&body=" + encodeURIComponent(message());
+    "&body=" + encodeURIComponent(
+      "Kruger rarity rankings from " + who + "\n\n" +
+      document.getElementById("code").value);
 }
-
-if (!EMAIL) { document.getElementById("mailBtn").classList.add("hide"); }
 </script>

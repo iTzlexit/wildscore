@@ -39,11 +39,9 @@ button.primary{background:var(--accent);border-color:var(--accent);color:#fff;fo
   padding:16px;text-align:left;transition:.12s;width:100%;
 }
 .pick:active{border-color:var(--accent);background:var(--accent-wash)}
-.pick .nm{font-size:20px;font-weight:800;line-height:1.2}
-.pick .af{color:var(--mute);font-size:13px;margin-top:3px}
-.pick .ds{color:#48524a;font-size:13.5px;margin-top:9px;line-height:1.45}
-.pick .cat{font-size:10.5px;font-weight:800;letter-spacing:1.1px;color:var(--mute);
-  text-transform:uppercase;margin-top:10px}
+.pick{min-height:112px;display:flex;flex-direction:column;justify-content:center}
+.pick .nm{font-size:22px;font-weight:800;line-height:1.2}
+.pick .af{color:var(--mute);font-size:13.5px;margin-top:4px}
 .alt{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .alt button{font-size:14.5px;font-weight:600;color:var(--mute)}
 
@@ -144,18 +142,25 @@ textarea{width:100%;height:110px;font:12px/1.45 ui-monospace,SFMono-Regular,mono
 <!-- ============ done ============ -->
 <section id="done" class="hide">
   <div class="panel">
-    <h2>Thank you — genuinely</h2>
-    <p id="sendState">Sending your answers…</p>
-    <textarea id="code" readonly onclick="this.select()"></textarea>
-    <button class="primary big" onclick="copyCode()" id="copyBtn">Copy the code</button>
-    <button class="big" onclick="wa()">Send on WhatsApp</button>
-    <button class="big" onclick="mail()" id="mailBtn">Send by email</button>
+    <h2 id="doneTitle">Sending your answers…</h2>
+    <p id="sendState">One moment.</p>
+
+    <!-- Only appears if the automatic send failed. Somebody who has just given
+         three minutes should not be handed a chore; they should be told it is
+         done and left alone. -->
+    <div id="manual" class="hide">
+      <button class="primary big" onclick="mail()" id="mailBtn">Email me the answers</button>
+      <button class="big" onclick="copyCode()" id="copyBtn">Copy them instead</button>
+      <textarea id="code" readonly onclick="this.select()" style="margin-top:12px"></textarea>
+    </div>
+    <textarea id="codeHidden" class="hide"></textarea>
   </div>
   <div class="panel">
-    <h2>What you said, rarest first</h2>
+    <h2>Your order, rarest first</h2>
     <div id="list"></div>
-    <p class="note" style="margin-top:12px">Only animals you actually compared
-       appear here. Everything you skipped is left out.</p>
+    <p class="note" style="margin-top:12px">You were given a random handful of
+       the park's animals rather than all of them — everyone gets a different
+       set, and they get combined afterwards.</p>
   </div>
 </section>
 
@@ -164,11 +169,7 @@ textarea{width:100%;height:110px;font:12px/1.45 ui-monospace,SFMono-Regular,mono
 <script>
 // The catalogue, injected by app/tool/build_ranker.dart. Regenerate whenever
 // species.json changes so this never drifts from the app.
-const SPECIES = [{"id":"aardvark","name":"Aardvark","afr":"Erdvark","cat":"mammal","desc":"Widespread but almost never seen."},{"id":"aardwolf","name":"Aardwolf","afr":"Aardwolf","cat":"mammal","desc":"A hyena that eats nothing but harvester termites — up to 300,000 in a night."},{"id":"african-civet","name":"African Civet","afr":"Afrikaanse Siwet","cat":"mammal","desc":"Blotched and heavy-set with a raised black crest along the spine."},{"id":"african-elephant","name":"African Elephant","afr":"Olifant","cat":"mammal","desc":"Kruger holds well over ten thousand."},{"id":"african-wild-dog","name":"African Wild Dog","afr":"Wildehond","cat":"mammal","desc":"Perhaps 300 in the whole park."},{"id":"african-wildcat","name":"African Wildcat","afr":"Vaalboskat","cat":"mammal","desc":"The ancestor of every domestic cat."},{"id":"banded-mongoose","name":"Banded Mongoose","afr":"Gebande Muishond","cat":"mammal","desc":"Moves in noisy packs of twenty or more, constantly chattering to stay in contact while foraging through leaf litter."},{"id":"bat-eared-fox","name":"Bat-eared Fox","afr":"Bakoorvos","cat":"mammal","desc":"Enormous ears used to listen for termites underground."},{"id":"black-rhinoceros","name":"Black Rhinoceros","afr":"Swartrenoster","cat":"mammal","desc":"A browser with a hooked prehensile lip, smaller and far more aggressive than the white rhino."},{"id":"black-backed-jackal","name":"Black-backed Jackal","afr":"Rooijakkals","cat":"mammal","desc":"Pairs bond for life and hold a territory together."},{"id":"blue-wildebeest","name":"Blue Wildebeest","afr":"Blouwildebees","cat":"mammal","desc":"Densest on the southern and central grasslands."},{"id":"brown-hyena","name":"Brown Hyena","afr":"Bruin Hiëna","cat":"mammal","desc":"A handful of records in the entire park, all in the far north."},{"id":"bushbuck","name":"Bushbuck","afr":"Bosbok","cat":"mammal","desc":"Solitary and shy, sticking tight to cover."},{"id":"bushpig","name":"Bushpig","afr":"Bosvark","cat":"mammal","desc":"Nocturnal, hairy and bad-tempered — everything the warthog is not."},{"id":"cape-buffalo","name":"Cape Buffalo","afr":"Buffel","cat":"mammal","desc":"Herds run to several hundred."},{"id":"cape-porcupine","name":"Cape Porcupine","afr":"Ystervark","cat":"mammal","desc":"Africa's largest rodent."},{"id":"caracal","name":"Caracal","afr":"Rooikat","cat":"mammal","desc":"Black-tufted ears and enough vertical leap to take birds out of the air."},{"id":"chacma-baboon","name":"Chacma Baboon","afr":"Bobbejaan","cat":"mammal","desc":"Troops of up to a hundred, rigidly hierarchical."},{"id":"cheetah","name":"Cheetah","afr":"Jagluiperd","cat":"mammal","desc":"Needs open ground to run and loses kills constantly to lion and hyena, which keeps numbers low."},{"id":"common-duiker","name":"Common Duiker","afr":"Gewone Duiker","cat":"mammal","desc":"Named for its diving run into cover."},{"id":"eland","name":"Common Eland","afr":"Eland","cat":"mammal","desc":"The largest antelope on earth, and shy out of proportion to its size."},{"id":"dwarf-mongoose","name":"Dwarf Mongoose","afr":"Dwergmuishond","cat":"mammal","desc":"Africa's smallest carnivore."},{"id":"eastern-rock-elephant-shrew","name":"Eastern Rock Elephant Shrew","afr":"Klipklaasneus","cat":"mammal","desc":"Not a shrew and not related to elephants — its closest living relatives are elephants, aardvarks and hyraxes."},{"id":"giraffe","name":"Giraffe","afr":"Kameelperd","cat":"mammal","desc":"Browses above the reach of every other herbivore."},{"id":"greater-kudu","name":"Greater Kudu","afr":"Koedoe","cat":"mammal","desc":"Bulls carry spiralled horns over a metre long."},{"id":"ground-pangolin","name":"Ground Pangolin","afr":"Ietermagog","cat":"mammal","desc":"The most trafficked mammal on earth and the sighting of a lifetime."},{"id":"hippopotamus","name":"Hippopotamus","afr":"Seekoei","cat":"mammal","desc":"Spends the day submerged and grazes on land at night, walking many kilometres from water."},{"id":"honey-badger","name":"Honey Badger","afr":"Ratel","cat":"mammal","desc":"Loose, thick skin lets it twist round inside its own hide when grabbed."},{"id":"impala","name":"Impala","afr":"Rooibok","cat":"mammal","desc":"The most abundant antelope in the park and the staple prey of almost every predator in it."},{"id":"klipspringer","name":"Klipspringer","afr":"Klipspringer","cat":"mammal","desc":"Stands on the very tips of cylindrical hooves and is found nowhere but rock."},{"id":"large-spotted-genet","name":"Large-spotted Genet","afr":"Rooikolmuskejaatkat","cat":"mammal","desc":"Cat-like but not a cat."},{"id":"leopard","name":"Leopard","afr":"Luiperd","cat":"mammal","desc":"Solitary, largely nocturnal, and hauls kills into trees to keep them from hyena."},{"id":"lesser-bushbaby","name":"Lesser Bushbaby","afr":"Nagapie","cat":"mammal","desc":"Tiny, huge-eyed, and capable of leaping several metres between branches."},{"id":"lion","name":"Lion","afr":"Leeu","cat":"mammal","desc":"Sleeps up to twenty hours a day, which is why most sightings are of a flat cat under a bush."},{"id":"mountain-reedbuck","name":"Mountain Reedbuck","afr":"Rooiribbok","cat":"mammal","desc":"Confined to a handful of rocky hillsides in the north of the park."},{"id":"nyala","name":"Nyala","afr":"Njala","cat":"mammal","desc":"Males and females look like different species entirely — shaggy slate-grey bulls, bright chestnut ewes."},{"id":"plains-zebra","name":"Plains Zebra","afr":"Bontsebra","cat":"mammal","desc":"Almost always found alongside wildebeest, which benefit from the zebra's better eyesight while the zebra benefits from their numbers."},{"id":"roan-antelope","name":"Roan Antelope","afr":"Bastergemsbok","cat":"mammal","desc":"One of the rarest large antelope in Kruger, down to a few dozen animals in the far northern sandveld."},{"id":"sable-antelope","name":"Sable Antelope","afr":"Swartwitpens","cat":"mammal","desc":"Jet-black bulls with scimitar horns swept back over the shoulders."},{"id":"scrub-hare","name":"Scrub Hare","afr":"Kolhaas","cat":"mammal","desc":"Lies up motionless all day and bolts only at the last second."},{"id":"serval","name":"Serval","afr":"Tierboskat","cat":"mammal","desc":"Long-legged and huge-eared, hunting rodents by sound alone in long grass and pouncing vertically."},{"id":"sharpes-grysbok","name":"Sharpe's Grysbok","afr":"Sharpe se Grysbok","cat":"mammal","desc":"Small, grizzled and almost entirely nocturnal, which is why it is so rarely recorded despite being reasonably common."},{"id":"slender-mongoose","name":"Slender Mongoose","afr":"Swartkwasmuishond","cat":"mammal","desc":"Solitary and quick, identified by the black tail tip it flicks upward as it runs across a road."},{"id":"southern-reedbuck","name":"Southern Reedbuck","afr":"Rietbok","cat":"mammal","desc":"Bound away with a shrill whistle and a distinctive rocking-horse gait, flashing the white underside of the tail."},{"id":"spotted-hyena","name":"Spotted Hyena","afr":"Gevlekte Hiëna","cat":"mammal","desc":"A capable hunter, not merely a scavenger — clans kill more than they steal."},{"id":"steenbok","name":"Steenbok","afr":"Steenbok","cat":"mammal","desc":"A small, rufous antelope seen alone or in pairs."},{"id":"suni","name":"Suni","afr":"Soenie","cat":"mammal","desc":"One of the smallest antelope in Africa, standing barely 35cm."},{"id":"thick-tailed-bushbaby","name":"Thick-tailed Bushbaby","afr":"Bosnagaap","cat":"mammal","desc":"Far larger than the lesser bushbaby, with a wailing call that sounds unnervingly like a child."},{"id":"tree-squirrel","name":"Tree Squirrel","afr":"Boomeekhoring","cat":"mammal","desc":"Also called the mopane squirrel."},{"id":"tsessebe","name":"Tsessebe","afr":"Tsessebe","cat":"mammal","desc":"The fastest antelope in southern Africa."},{"id":"vervet-monkey","name":"Vervet Monkey","afr":"Blouaap","cat":"mammal","desc":"Uses distinct alarm calls for leopard, eagle and snake, and other species listen in."},{"id":"warthog","name":"Warthog","afr":"Vlakvark","cat":"mammal","desc":"Runs with its tail held vertical like a flag."},{"id":"waterbuck","name":"Waterbuck","afr":"Waterbok","cat":"mammal","desc":"Marked with a white ring on the rump that looks like it sat on a freshly painted toilet seat."},{"id":"white-rhinoceros","name":"White Rhinoceros","afr":"Witrenoster","cat":"mammal","desc":"A grazer with a broad square lip — the name is a corruption of the Dutch for wide, not a colour."},{"id":"white-tailed-mongoose","name":"White-tailed Mongoose","afr":"Witstertmuishond","cat":"mammal","desc":"The largest mongoose in Africa, and strictly nocturnal."},{"id":"african-fish-eagle","name":"African Fish Eagle","afr":"Visarend","cat":"bird","desc":"The ringing call thrown back over its shoulder is the sound most people associate with African water, whether or not they know the bird."},{"id":"african-hawk-eagle","name":"African Hawk-Eagle","afr":"Grootjagarend","cat":"bird","desc":"Black above, white below with heavy black streaks, and fast — it hunts francolin and guineafowl in a flat charge through the trees rather than a stoop from height."},{"id":"african-hoopoe","name":"African Hoopoe","afr":"Hoephoep","cat":"bird","desc":"Cinnamon, with a black-and-white barred back and a crest it raises like a fan when it lands."},{"id":"bateleur","name":"Bateleur","afr":"Berghaan","cat":"bird","desc":"Rocks side to side in flight like a tightrope walker, which is what the French name means."},{"id":"brown-snake-eagle","name":"Brown Snake Eagle","afr":"Bruinslangarend","cat":"bird","desc":"Plain chocolate brown with startling yellow eyes and bare legs — the bare legs are the point, because it hunts snakes and scales stop fangs."},{"id":"cape-glossy-starling","name":"Cape Glossy Starling","afr":"Kleinglansspreeu","cat":"bird","desc":"Every camp has them and everybody photographs them anyway."},{"id":"cape-vulture","name":"Cape Vulture","afr":"Kransaasvoël","cat":"bird","desc":"Bigger and paler than the White-backed, with a bare blue throat patch."},{"id":"common-ostrich","name":"Common Ostrich","afr":"Volstruis","cat":"bird","desc":"The largest bird alive, and the fastest thing on two legs."},{"id":"egyptian-goose","name":"Egyptian Goose","afr":"Kolgans","cat":"bird","desc":"Not a goose but a shelduck, and the loudest thing at any waterhole."},{"id":"giant-kingfisher","name":"Giant Kingfisher","afr":"Reusevisvanger","cat":"bird","desc":"Crow-sized, which is startling the first time — Africa's largest kingfisher, shaggy-crested, with a bill like a chisel."},{"id":"helmeted-guineafowl","name":"Helmeted Guineafowl","afr":"Gewone Tarentaal","cat":"bird","desc":"Runs down the middle of the road ahead of the car rather than stepping aside, for miles, and never learns."},{"id":"hooded-vulture","name":"Hooded Vulture","afr":"Monnikaasvoël","cat":"bird","desc":"The small, dark one at the edge of the scrum, waiting for the big vultures to finish."},{"id":"kori-bustard","name":"Kori Bustard","afr":"Gompou","cat":"bird","desc":"Among the heaviest flying birds on earth."},{"id":"lappet-faced-vulture","name":"Lappet-faced Vulture","afr":"Swartaasvoël","cat":"bird","desc":"The largest vulture in Africa and dominant at a carcass — its bill opens hides the others cannot."},{"id":"lilac-breasted-roller","name":"Lilac-breasted Roller","afr":"Gewone Troupant","cat":"bird","desc":"The most photographed bird in the park."},{"id":"malachite-kingfisher","name":"Malachite Kingfisher","afr":"Kuifkopvisvanger","cat":"bird","desc":"Barely bigger than your thumb and impossibly bright — cobalt above, orange below, with a red dagger of a bill."},{"id":"martial-eagle","name":"Martial Eagle","afr":"Breëkoparend","cat":"bird","desc":"Africa's largest eagle, powerful enough to take a young impala."},{"id":"pels-fishing-owl","name":"Pel's Fishing Owl","afr":"Visuil","cat":"bird","desc":"A huge ginger owl that hunts fish by touch from a low branch."},{"id":"pied-kingfisher","name":"Pied Kingfisher","afr":"Bontvisvanger","cat":"bird","desc":"Black and white, and the only kingfisher that hovers — it hangs dead still over the water, then folds and drops."},{"id":"red-billed-buffalo-weaver","name":"Red-billed Buffalo Weaver","afr":"Buffelwewer","cat":"bird","desc":"Builds the untidy stick tenements that hang off the western side of tall trees and windmills."},{"id":"saddle-billed-stork","name":"Saddle-billed Stork","afr":"Saalbekooievaar","cat":"bird","desc":"Fewer than thirty breeding pairs in the whole park."},{"id":"secretarybird","name":"Secretarybird","afr":"Sekretarisvoël","cat":"bird","desc":"An eagle that walks."},{"id":"southern-ground-hornbill","name":"Southern Ground Hornbill","afr":"Bromvoël","cat":"bird","desc":"Turkey-sized, walks rather than flies, and booms at dawn like a distant lion."},{"id":"southern-yellow-billed-hornbill","name":"Southern Yellow-billed Hornbill","afr":"Geelbekneushoringvoël","cat":"bird","desc":"The bird Zazu was drawn from, and it knows it."},{"id":"tawny-eagle","name":"Tawny Eagle","afr":"Roofarend","cat":"bird","desc":"The park's commonest big eagle and the hardest to name, because it comes in every shade from cream to dark brown."},{"id":"verreauxs-eagle-owl","name":"Verreaux's Eagle-Owl","afr":"Reuse-ooruil","cat":"bird","desc":"Africa's largest owl, identified instantly by pink eyelids it shows when blinking."},{"id":"western-barn-owl","name":"Western Barn Owl","afr":"Nonnetjie-uil","cat":"bird","desc":"A white heart-shaped face that appears in the headlights and is gone."},{"id":"white-backed-vulture","name":"White-backed Vulture","afr":"Witrugaasvoël","cat":"bird","desc":"The commonest vulture at a kill, and collapsing fast across its range through poisoning."},{"id":"white-headed-vulture","name":"White-headed Vulture","afr":"Witkopaasvoël","cat":"bird","desc":"The handsome one: white head, pink bill, clean white belly and a sharp white line along the wing."},{"id":"woodland-kingfisher","name":"Woodland Kingfisher","afr":"Bosveldvisvanger","cat":"bird","desc":"Arrives in November and announces it — a piercing trill from every second tree until March."},{"id":"black-mamba","name":"Black Mamba","afr":"Swartmamba","cat":"reptile","desc":"Named for the ink-black mouth, not the body, which is gunmetal grey."},{"id":"boomslang","name":"Boomslang","afr":"Boomslang","cat":"reptile","desc":"An enormous eye, a short blunt head, and a tail that goes on forever."},{"id":"leopard-tortoise","name":"Leopard Tortoise","afr":"Bergskilpad","cat":"reptile","desc":"The largest tortoise in the park and the only one that cannot pull its head straight back — it folds the neck sideways."},{"id":"mozambique-spitting-cobra","name":"Mozambique Spitting Cobra","afr":"Mosambiekse Spoegkobra","cat":"reptile","desc":"Rears, spreads a narrow hood, and sprays venom at your eyes from two metres."},{"id":"nile-crocodile","name":"Nile Crocodile","afr":"Nylkrokodil","cat":"reptile","desc":"Large individuals in the Olifants and Luvuvhu exceed four metres."},{"id":"puff-adder","name":"Puff Adder","afr":"Pofadder","cat":"reptile","desc":"Thick, short and beautifully marked in chevrons."},{"id":"african-rock-python","name":"Southern African Rock Python","afr":"Luislang","cat":"reptile","desc":"Africa's largest snake, reaching five metres."},{"id":"water-monitor","name":"Water Monitor","afr":"Waterlikkewaan","cat":"reptile","desc":"Africa's largest lizard, up to two metres."},{"id":"ant-lion","name":"Ant Lion","afr":"Mierleeu","cat":"invertebrate","desc":"The conical pits in soft sand at every picnic site are its traps."},{"id":"rhinoceros-beetle","name":"Rhinoceros Beetle","afr":"Renosterkewer","cat":"invertebrate","desc":"Can carry many times its own weight, and the males fight with the horn."},{"id":"baobab","name":"Baobab","afr":"Kremetartboom","cat":"plant","desc":"Not an animal, and worth stopping for anyway."}];
-
-// WhatsApp number to send results to, injected at build time. Empty disables
-// the button rather than opening a broken link.
-const WHATSAPP = "";
+const SPECIES = [{"id":"aardvark","name":"Aardvark","afr":"Erdvark"},{"id":"aardwolf","name":"Aardwolf","afr":"Aardwolf"},{"id":"african-civet","name":"African Civet","afr":"Afrikaanse Siwet"},{"id":"african-elephant","name":"African Elephant","afr":"Olifant"},{"id":"african-wild-dog","name":"African Wild Dog","afr":"Wildehond"},{"id":"african-wildcat","name":"African Wildcat","afr":"Vaalboskat"},{"id":"banded-mongoose","name":"Banded Mongoose","afr":"Gebande Muishond"},{"id":"bat-eared-fox","name":"Bat-eared Fox","afr":"Bakoorvos"},{"id":"black-rhinoceros","name":"Black Rhinoceros","afr":"Swartrenoster"},{"id":"black-backed-jackal","name":"Black-backed Jackal","afr":"Rooijakkals"},{"id":"blue-wildebeest","name":"Blue Wildebeest","afr":"Blouwildebees"},{"id":"brown-hyena","name":"Brown Hyena","afr":"Bruin Hiëna"},{"id":"bushbuck","name":"Bushbuck","afr":"Bosbok"},{"id":"bushpig","name":"Bushpig","afr":"Bosvark"},{"id":"cape-buffalo","name":"Cape Buffalo","afr":"Buffel"},{"id":"cape-porcupine","name":"Cape Porcupine","afr":"Ystervark"},{"id":"caracal","name":"Caracal","afr":"Rooikat"},{"id":"chacma-baboon","name":"Chacma Baboon","afr":"Bobbejaan"},{"id":"cheetah","name":"Cheetah","afr":"Jagluiperd"},{"id":"common-duiker","name":"Common Duiker","afr":"Gewone Duiker"},{"id":"eland","name":"Common Eland","afr":"Eland"},{"id":"dwarf-mongoose","name":"Dwarf Mongoose","afr":"Dwergmuishond"},{"id":"eastern-rock-elephant-shrew","name":"Eastern Rock Elephant Shrew","afr":"Klipklaasneus"},{"id":"giraffe","name":"Giraffe","afr":"Kameelperd"},{"id":"greater-kudu","name":"Greater Kudu","afr":"Koedoe"},{"id":"ground-pangolin","name":"Ground Pangolin","afr":"Ietermagog"},{"id":"hippopotamus","name":"Hippopotamus","afr":"Seekoei"},{"id":"honey-badger","name":"Honey Badger","afr":"Ratel"},{"id":"impala","name":"Impala","afr":"Rooibok"},{"id":"klipspringer","name":"Klipspringer","afr":"Klipspringer"},{"id":"large-spotted-genet","name":"Large-spotted Genet","afr":"Rooikolmuskejaatkat"},{"id":"leopard","name":"Leopard","afr":"Luiperd"},{"id":"lesser-bushbaby","name":"Lesser Bushbaby","afr":"Nagapie"},{"id":"lion","name":"Lion","afr":"Leeu"},{"id":"mountain-reedbuck","name":"Mountain Reedbuck","afr":"Rooiribbok"},{"id":"nyala","name":"Nyala","afr":"Njala"},{"id":"plains-zebra","name":"Plains Zebra","afr":"Bontsebra"},{"id":"roan-antelope","name":"Roan Antelope","afr":"Bastergemsbok"},{"id":"sable-antelope","name":"Sable Antelope","afr":"Swartwitpens"},{"id":"scrub-hare","name":"Scrub Hare","afr":"Kolhaas"},{"id":"serval","name":"Serval","afr":"Tierboskat"},{"id":"sharpes-grysbok","name":"Sharpe's Grysbok","afr":"Sharpe se Grysbok"},{"id":"slender-mongoose","name":"Slender Mongoose","afr":"Swartkwasmuishond"},{"id":"southern-reedbuck","name":"Southern Reedbuck","afr":"Rietbok"},{"id":"spotted-hyena","name":"Spotted Hyena","afr":"Gevlekte Hiëna"},{"id":"steenbok","name":"Steenbok","afr":"Steenbok"},{"id":"suni","name":"Suni","afr":"Soenie"},{"id":"thick-tailed-bushbaby","name":"Thick-tailed Bushbaby","afr":"Bosnagaap"},{"id":"tree-squirrel","name":"Tree Squirrel","afr":"Boomeekhoring"},{"id":"tsessebe","name":"Tsessebe","afr":"Tsessebe"},{"id":"vervet-monkey","name":"Vervet Monkey","afr":"Blouaap"},{"id":"warthog","name":"Warthog","afr":"Vlakvark"},{"id":"waterbuck","name":"Waterbuck","afr":"Waterbok"},{"id":"white-rhinoceros","name":"White Rhinoceros","afr":"Witrenoster"},{"id":"white-tailed-mongoose","name":"White-tailed Mongoose","afr":"Witstertmuishond"},{"id":"african-fish-eagle","name":"African Fish Eagle","afr":"Visarend"},{"id":"african-hawk-eagle","name":"African Hawk-Eagle","afr":"Grootjagarend"},{"id":"african-hoopoe","name":"African Hoopoe","afr":"Hoephoep"},{"id":"bateleur","name":"Bateleur","afr":"Berghaan"},{"id":"brown-snake-eagle","name":"Brown Snake Eagle","afr":"Bruinslangarend"},{"id":"cape-glossy-starling","name":"Cape Glossy Starling","afr":"Kleinglansspreeu"},{"id":"cape-vulture","name":"Cape Vulture","afr":"Kransaasvoël"},{"id":"common-ostrich","name":"Common Ostrich","afr":"Volstruis"},{"id":"egyptian-goose","name":"Egyptian Goose","afr":"Kolgans"},{"id":"giant-kingfisher","name":"Giant Kingfisher","afr":"Reusevisvanger"},{"id":"helmeted-guineafowl","name":"Helmeted Guineafowl","afr":"Gewone Tarentaal"},{"id":"hooded-vulture","name":"Hooded Vulture","afr":"Monnikaasvoël"},{"id":"kori-bustard","name":"Kori Bustard","afr":"Gompou"},{"id":"lappet-faced-vulture","name":"Lappet-faced Vulture","afr":"Swartaasvoël"},{"id":"lilac-breasted-roller","name":"Lilac-breasted Roller","afr":"Gewone Troupant"},{"id":"malachite-kingfisher","name":"Malachite Kingfisher","afr":"Kuifkopvisvanger"},{"id":"martial-eagle","name":"Martial Eagle","afr":"Breëkoparend"},{"id":"pels-fishing-owl","name":"Pel's Fishing Owl","afr":"Visuil"},{"id":"pied-kingfisher","name":"Pied Kingfisher","afr":"Bontvisvanger"},{"id":"red-billed-buffalo-weaver","name":"Red-billed Buffalo Weaver","afr":"Buffelwewer"},{"id":"saddle-billed-stork","name":"Saddle-billed Stork","afr":"Saalbekooievaar"},{"id":"secretarybird","name":"Secretarybird","afr":"Sekretarisvoël"},{"id":"southern-ground-hornbill","name":"Southern Ground Hornbill","afr":"Bromvoël"},{"id":"southern-yellow-billed-hornbill","name":"Southern Yellow-billed Hornbill","afr":"Geelbekneushoringvoël"},{"id":"tawny-eagle","name":"Tawny Eagle","afr":"Roofarend"},{"id":"verreauxs-eagle-owl","name":"Verreaux's Eagle-Owl","afr":"Reuse-ooruil"},{"id":"western-barn-owl","name":"Western Barn Owl","afr":"Nonnetjie-uil"},{"id":"white-backed-vulture","name":"White-backed Vulture","afr":"Witrugaasvoël"},{"id":"white-headed-vulture","name":"White-headed Vulture","afr":"Witkopaasvoël"},{"id":"woodland-kingfisher","name":"Woodland Kingfisher","afr":"Bosveldvisvanger"},{"id":"black-mamba","name":"Black Mamba","afr":"Swartmamba"},{"id":"boomslang","name":"Boomslang","afr":"Boomslang"},{"id":"leopard-tortoise","name":"Leopard Tortoise","afr":"Bergskilpad"},{"id":"mozambique-spitting-cobra","name":"Mozambique Spitting Cobra","afr":"Mosambiekse Spoegkobra"},{"id":"nile-crocodile","name":"Nile Crocodile","afr":"Nylkrokodil"},{"id":"puff-adder","name":"Puff Adder","afr":"Pofadder"},{"id":"african-rock-python","name":"Southern African Rock Python","afr":"Luislang"},{"id":"water-monitor","name":"Water Monitor","afr":"Waterlikkewaan"},{"id":"ant-lion","name":"Ant Lion","afr":"Mierleeu"},{"id":"rhinoceros-beetle","name":"Rhinoceros Beetle","afr":"Renosterkewer"},{"id":"baobab","name":"Baobab","afr":"Kremetartboom"}];
 
 // Where the "send by email" button goes. Empty hides the button rather than
 // opening a blank mail window. Passed at build time rather than hard-coded,
@@ -176,20 +177,32 @@ const WHATSAPP = "";
 // sitting in the source is an address that gets scraped.
 const EMAIL = "";
 
-// How many duels one sitting asks for.
+// One sitting ranks a RANDOM SUBSET properly, rather than the whole catalogue
+// badly. This is the single most important decision in the file.
 //
-// Elo over 96 species would want several hundred comparisons to converge on its
-// own, which is forty minutes and nobody finishes that. The design assumes
-// *many* people doing a short stint each, and the aggregator merges them — so
-// this is tuned to "will a stranger on Facebook finish it", not to statistical
-// comfort. Sixty pairs is about three minutes.
+// The first version spread sixty questions across all ninety-six species, which
+// is barely one comparison each. One comparison tells you almost nothing: an
+// animal that happened to beat an impala floated to the top and sat above a
+// cheetah it had never been measured against. That is not a close call, it is
+// an absence of data wearing a number.
+//
+// Sixty comparisons over twenty-four species is five each, which is enough to
+// order them. Different people get different subsets, they overlap at random,
+// and the aggregator stitches the overlaps into one global order — the same way
+// you can rank every chess player in the world without everyone playing
+// everyone. What matters is that each *local* ordering is solid.
+const SUBSET = 24;
 const ROUNDS = 60;
 
-const K = 32;            // Elo step. Deliberately large: few games, want movement.
-const rating = {};       // id -> elo
-const seen = {};         // id -> how many duels it has been in
-const votes = [];        // every judgement, so the aggregator can re-derive
+const K = 40;            // Elo step, used only to pick good pairs, never to rank.
+const rating = {};       // id -> elo, in-session only
+const seen = {};         // id -> comparisons so far, in-session only
+const votes = [];        // every judgement — the only thing that gets sent
+const asked = new Set(); // pairs already put to this person
+let field = [];          // the subset this person is ranking
 let pair = null, done = 0, who = "";
+
+const key = (a,b) => a < b ? a + "|" + b : b + "|" + a;
 
 // The placeholder was never replaced, so this is the template rather than the
 // built file. Say so instead of presenting an app with nothing in it.
@@ -203,40 +216,62 @@ for (const s of SPECIES) { rating[s.id] = 1500; seen[s.id] = 0; }
 
 function start(){
   who = (document.getElementById("who").value || "").trim() || "anonymous";
+  // A fresh random subset each time, so two people who both open the link get
+  // different animals and the overlaps accumulate across everybody.
+  field = [...SPECIES].sort(() => Math.random()-0.5).slice(0, Math.min(SUBSET, SPECIES.length));
   document.getElementById("intro").classList.add("hide");
   document.getElementById("duel").classList.remove("hide");
   next();
 }
 
-// Picks the most informative pair we can cheaply find.
+// Picks the most informative pair left in this person's subset.
 //
-// Two rules, both mattering: prefer species that have been seen least, so
-// nothing is left unrated; and among those prefer opponents of *similar*
-// rating, because a duel whose outcome is obvious teaches nothing. Comparing a
-// pangolin with an impala is a wasted question.
+// Two rules. Prefer the species compared least so far, so nothing in the subset
+// is left with one data point — that neglect is exactly what produced a caracal
+// sitting above a cheetah it had never met. Then, among those, prefer an
+// opponent of *similar* current rating, because a question whose answer is
+// obvious teaches nothing: pangolin against impala is a wasted turn.
+//
+// The in-session Elo exists only to steer this choice. It is never sent and
+// never used to rank anything — the aggregator fits a proper model to the raw
+// comparisons instead.
 function choose(){
-  const pool = [...SPECIES].sort((a,b) => (seen[a.id]-seen[b.id]) || Math.random()-0.5);
-  const a = pool[Math.floor(Math.random()*Math.min(12,pool.length))];
+  const pool = [...field].sort((a,b) => (seen[a.id]-seen[b.id]) || Math.random()-0.5);
+  const a = pool[Math.floor(Math.random()*Math.min(6,pool.length))];
   let best = null, bestGap = Infinity;
-  for (const c of pool.slice(0,40)) {
-    if (c.id === a.id) continue;
-    const gap = Math.abs(rating[c.id]-rating[a.id]) + Math.random()*60;
+  for (const c of pool) {
+    if (c.id === a.id || asked.has(key(a.id,c.id))) continue;
+    const gap = Math.abs(rating[c.id]-rating[a.id]) + Math.random()*40;
     if (gap < bestGap) { bestGap = gap; best = c; }
   }
+  // Every pairing in the subset has been asked. Widen rather than repeat.
+  if (!best) {
+    const extra = SPECIES.filter(s => !field.some(f => f.id === s.id));
+    if (extra.length) {
+      best = extra[Math.floor(Math.random()*extra.length)];
+      field.push(best);
+      rating[best.id] = 1500; seen[best.id] = 0;
+    } else {
+      best = pool.find(c => c.id !== a.id);
+    }
+  }
+  asked.add(key(a.id,best.id));
   return Math.random() < 0.5 ? [a,best] : [best,a];
 }
 
 function next(){
   if (done >= ROUNDS) return finish();
   pair = choose();
+  // Name and Afrikaans name only. The cards used to carry a line of field
+  // notes, which was wrong for who this is for: somebody who knows Kruger reads
+  // "Serval" and is already deciding, and a description underneath is text they
+  // have to skip sixty times. Smaller cards also mean both fit on a phone
+  // without scrolling, which is what keeps the pace up.
   for (const [el,s] of [["pa",pair[0]],["pb",pair[1]]]) {
-    document.getElementById(el).innerHTML =
-      '<div class="nm"></div><div class="af"></div><div class="ds"></div><div class="cat"></div>';
     const n = document.getElementById(el);
+    n.innerHTML = '<div class="nm"></div><div class="af"></div>';
     n.querySelector(".nm").textContent = s.name;
     n.querySelector(".af").textContent = s.afr || "";
-    n.querySelector(".ds").textContent = s.desc || "";
-    n.querySelector(".cat").textContent = s.cat;
   }
   document.getElementById("n").textContent = done + " / " + ROUNDS;
   document.getElementById("prog").style.width = (100*done/ROUNDS) + "%";
@@ -263,20 +298,20 @@ function finish(){
   document.getElementById("prog").style.width = "100%";
   document.getElementById("n").textContent = votes.length + " answered";
 
-  const rated = SPECIES.filter(s => seen[s.id] > 0)
-                       .sort((a,b) => rating[b.id]-rating[a.id]);
+  const rated = field.filter(s => seen[s.id] > 0)
+                     .sort((a,b) => rating[b.id]-rating[a.id]);
 
   document.getElementById("list").innerHTML = rated.map((s,i) =>
-    '<div class="res"><span class="r">' + (i+1) + '</span>' +
-    '<span class="nm"></span><span class="sc">' + Math.round(rating[s.id]) + '</span></div>'
+    '<div class="res"><span class="r">' + (i+1) + '</span><span class="nm"></span></div>'
   ).join("");
   // Names set as text, never as HTML — this file gets handed to strangers and
   // the catalogue is the only thing it should ever render.
   document.querySelectorAll("#list .nm").forEach((el,i) => el.textContent = rated[i].name);
 
-  // Raw judgements rather than final ratings. Ratings from a 60-duel session
-  // are noisy and cannot be pooled meaningfully; the individual comparisons
-  // can, so the aggregator re-runs Elo over everybody's answers at once.
+  // Raw judgements, never the in-session ratings. Those are a rough steering
+  // aid over sixty answers and pooling them would carry every bit of that noise
+  // into the result; the comparisons themselves pool properly, and the
+  // aggregator fits a real model to all of them at once.
   const payload = {
     v: 1,
     who: who,
@@ -301,10 +336,16 @@ function finish(){
 // stays on screen either way. A failed automatic send must never leave somebody
 // with no way to hand over three minutes of work.
 function send(code){
+  const title = document.getElementById("doneTitle");
   const state = document.getElementById("sendState");
-  const shown = () => {
-    state.textContent = "Copy the code below and send it to me — that's it.";
-    document.getElementById("copyBtn").classList.remove("hide");
+
+  const failed = () => {
+    title.textContent = "Almost — one tap left";
+    state.textContent = "I couldn't send that automatically. Tap below and it " +
+      "goes straight to me.";
+    document.getElementById("code").value = code;
+    document.getElementById("manual").classList.remove("hide");
+    if (!EMAIL) document.getElementById("mailBtn").classList.add("hide");
   };
 
   fetch("/", {
@@ -314,11 +355,10 @@ function send(code){
       "form-name": "rankings", "who": who, "payload": code,
     }).toString(),
   }).then(r => {
-    if (!r.ok) return shown();
-    state.innerHTML = "<b>Sent — nothing else needed.</b> " +
-      "If you'd like a copy for yourself, it's below.";
-    document.getElementById("copyBtn").textContent = "Copy my answers";
-  }).catch(shown);
+    if (!r.ok) return failed();
+    title.textContent = "Done — thank you";
+    state.textContent = "Your answers are in. Nothing else needed.";
+  }).catch(failed);
 }
 
 function copyCode(){
@@ -330,23 +370,13 @@ function copyCode(){
   );
 }
 
-function message(){
-  return "Kruger rarity rankings from " + who + "\n\n" +
-         document.getElementById("code").value;
-}
-
-function wa(){
-  const base = WHATSAPP ? "https://wa.me/" + WHATSAPP + "?text=" : "https://wa.me/?text=";
-  window.open(base + encodeURIComponent(message()), "_blank");
-}
-
-// Third route home, for anybody who does not use WhatsApp and will not paste a
-// code. Around 900 characters, comfortably inside what a mailto URL carries.
+// The fallback, and only ever the fallback. Around 900 characters, comfortably
+// inside what a mailto URL carries.
 function mail(){
   window.location.href = "mailto:" + EMAIL +
     "?subject=" + encodeURIComponent("Kruger rarity rankings — " + who) +
-    "&body=" + encodeURIComponent(message());
+    "&body=" + encodeURIComponent(
+      "Kruger rarity rankings from " + who + "\n\n" +
+      document.getElementById("code").value);
 }
-
-if (!EMAIL) { document.getElementById("mailBtn").classList.add("hide"); }
 </script>

@@ -8,25 +8,20 @@
 //
 // Run from the app/ directory:
 //   dart run tool/build_ranker.dart
-//   dart run tool/build_ranker.dart --whatsapp 27821234567 --email me@example.com
+//   dart run tool/build_ranker.dart --email me@example.com
 //
-// Both are optional and both only affect how a finished set of answers gets
-// back to you. The WhatsApp number pre-fills the share sheet; without it the
-// button still works, it just asks the sender to pick a contact. The email
-// address is not defaulted, because this file gets posted in public Facebook
-// groups and an address sitting in the source is an address that gets scraped —
-// so leaving it out hides the button entirely.
+// Hosted on Netlify the page posts the answers by itself, through a Netlify
+// Form that needs no configuration beyond deploying the file. That is how
+// results are meant to arrive — the person answering does nothing at all.
 //
-// Hosted on Netlify the page also posts the answers by itself, via a Netlify
-// Form that needs no configuration beyond deploying the file. That is the route
-// that actually collects most of the responses; the buttons are the fallback.
+// --email is only the fallback, shown when that automatic send fails. It is
+// not defaulted, because this file gets posted in public Facebook groups and
+// an address sitting in the source is an address that gets scraped.
 
 import 'dart:convert';
 import 'dart:io';
 
 void main(List<String> args) {
-  final int wa = args.indexOf('--whatsapp');
-  final String whatsapp = wa == -1 ? '' : args[wa + 1].replaceAll('+', '');
   final int em = args.indexOf('--email');
   final String email = em == -1 ? '' : args[em + 1];
 
@@ -41,24 +36,25 @@ void main(List<String> args) {
   final Map<String, dynamic> data =
       json.decode(catalogue.readAsStringSync()) as Map<String, dynamic>;
 
-  // Only what the ranker needs to ask a fair question. No points and no tier:
-  // showing somebody the answer we already guessed would anchor them to it, and
-  // the whole reason this exists is that our guess is not trustworthy.
+  // Only what the ranker needs to ask a fair question.
+  //
+  // No points and no tier: showing somebody the answer we already guessed would
+  // anchor them to it, and the whole reason this exists is that our guess is
+  // not trustworthy. No description either — the audience is people who know
+  // Kruger, who read "Serval" and are already deciding, and sixty descriptions
+  // is sixty things to skip.
   final List<Map<String, String>> lean = <Map<String, String>>[
     for (final dynamic s in data['species'] as List<dynamic>)
       <String, String>{
         'id': (s as Map<String, dynamic>)['id'] as String,
         'name': s['commonName'] as String,
         'afr': s['afrikaansName'] as String,
-        'cat': s['category'] as String,
-        'desc': _firstSentence(s['description'] as String),
       },
   ];
 
   final String out = template
       .readAsStringSync()
       .replaceFirst('/*__CATALOGUE__*/[]', json.encode(lean))
-      .replaceFirst('/*__WHATSAPP__*/', whatsapp)
       .replaceFirst('/*__EMAIL__*/', email);
 
   File('../tools/ranker.html').writeAsStringSync(out);
@@ -68,27 +64,14 @@ void main(List<String> args) {
     ..writeln('tools/ranker.html — ${lean.length} species, $kb KB')
     ..writeln('')
     ..writeln('How answers come back:')
-    ..writeln('  1. Automatically, if you host it on Netlify — no setup needed')
     ..writeln(
-      whatsapp.isEmpty
-          ? '  2. WhatsApp button — asks the sender to pick a contact '
-                '(pass --whatsapp 27… to aim it at you)'
-          : '  2. WhatsApp button — goes straight to $whatsapp',
+      '  1. By themselves, if you host this on Netlify. The person '
+      'answering does nothing.',
     )
     ..writeln(
       email.isEmpty
-          ? '  3. Email button — hidden (pass --email you@example.com to show it)'
-          : '  3. Email button — goes to $email',
-    )
-    ..writeln('  4. The code on screen, copied and pasted anywhere');
-}
-
-/// The first sentence of the description, so a card stays a card.
-///
-/// Somebody being asked to rank a suni needs to know what a suni is, and the
-/// full description is three sentences of field notes that nobody reads at the
-/// pace this thing is answered.
-String _firstSentence(String description) {
-  final int stop = description.indexOf('. ');
-  return stop == -1 ? description : description.substring(0, stop + 1);
+          ? '  2. Fallback only, if that fails: no email button '
+                '(pass --email you@example.com to add one)'
+          : '  2. Fallback only, if that fails: email button to $email',
+    );
 }
