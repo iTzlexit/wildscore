@@ -35,6 +35,10 @@
  .c.on{border-color:var(--accent);box-shadow:0 0 0 3px #1b7a5422}
  .c.now{border-style:dashed}
  .c img{width:100%;height:150px;object-fit:contain;display:block;background:#e9eae6}
+ .c.broken img{display:none}
+ .c.broken .fail{display:block}
+ .fail{display:none;height:150px;background:#f3ece8;color:#a05a3c;font-size:12px;
+       padding:14px;line-height:1.45}
  .meta{padding:8px 10px;font-size:11px;color:var(--mute);line-height:1.35}
  .meta .lic{font-weight:800;color:var(--ink)}
  .on .meta .lic{color:var(--accent)}
@@ -60,7 +64,7 @@
     <b>IN THE APP</b> is what is there now — leave it alone if it is fine.
     <br><br>
     Everything here is <b>CC0 or CC-BY</b>, so all of it is legal in a paid app.
-    Broken thumbnails are iNaturalist being slow; reload the page.
+    The thumbnails load from iNaturalist, so this page <b>needs a connection</b>.
     <br><br>
     Your picks are saved in this browser as you go, so you can close the tab and
     come back. When you are done, press <b>Export</b> and paste the result into
@@ -78,6 +82,17 @@
 const C = /*__CANDIDATES__*/[];
 const KEY = 'wildscore-photo-picks';
 let picks = JSON.parse(localStorage.getItem(KEY) || '{}');
+
+// Thumbnails come off iNaturalist's 240px variant, not the 1024px one.
+//
+// This page had every tile pointing at `large.jpg` — around 650 KB each, for a
+// box 200 pixels wide. Nine of those per species across 191 species is most of
+// a gigabyte, so on any ordinary connection the grid sat empty and looked
+// broken. `small` is about 39 KB and is still twice the size it is drawn at.
+//
+// The **large** URL is what gets stored in a pick and what apply_photo_picks
+// downloads, because that is the one worth keeping.
+const thumb = (url) => url.replace(/\/large\.(jpe?g|png)$/i, '/small.$1');
 
 const ids = [...new Set(C.map(c => c.id))];
 const list = document.getElementById('list');
@@ -107,9 +122,15 @@ ids.forEach(id => {
 
   // What is in the app right now, first, so a pick is a comparison rather
   // than a guess. Served straight off disk — this page is opened locally.
+  // Only resolves when this page is served from inside the repo. A copy saved
+  // to Downloads has no app/ folder beside it, and a silently broken image
+  // there looks identical to the page not working at all.
   const cur = document.createElement('div');
   cur.className = 'c now';
-  cur.innerHTML = `<img loading="lazy" src="../app/assets/species/${id}.jpg" alt="">
+  cur.innerHTML = `<img loading="lazy" src="../app/assets/species/${id}.jpg" alt=""
+      onerror="this.closest('.c').classList.add('broken')">
+    <div class="fail">Can’t show what’s in the app from here.<br><br>
+      Serve the repo and open it from there — see tools/README.md.</div>
     <div class="meta"><span class="tag">IN THE APP</span><br>Keep this one by
     not picking anything.</div>`;
   g.appendChild(cur);
@@ -118,7 +139,10 @@ ids.forEach(id => {
     const el = document.createElement('div');
     el.className = 'c';
     el.dataset.photo = c.photo;
-    el.innerHTML = `<img loading="lazy" src="${c.photo}" alt="">
+    el.innerHTML = `<img loading="lazy" decoding="async" src="${thumb(c.photo)}" alt=""
+        onerror="this.closest('.c').classList.add('broken')">
+      <div class="fail">Photo would not load. Reload the page — iNaturalist is
+        sometimes slow. If none of them load, check the connection.</div>
       <div class="meta"><span class="lic">${c.license.toUpperCase()}</span> · ${c.author}
       <br>${c.place ? c.place.slice(0, 44) : ''}</div>`;
     el.onclick = () => {

@@ -117,6 +117,10 @@ cd app && dart run tool/serve_web.dart --root .. 8099
 
 Then <http://localhost:8099/tools/photo-picker.html>.
 
+Thumbnails are iNaturalist's 240px variant, so the page needs a connection but
+not much of one. A pick still stores the full-size URL — that is what gets
+downloaded and shipped.
+
 Each species shows what is **in the app now** first, then the alternatives.
 Click one to change it; click it again to go back to leaving it alone. Picks
 save to `localStorage`, so you can close the tab. **Export** gives a JSON blob
