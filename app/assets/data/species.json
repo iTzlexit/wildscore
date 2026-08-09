@@ -1198,8 +1198,28 @@
       "conservationStatus": "leastConcern"
     },
     {
+      "id": "african-darter",
+      "commonName": "African Darter",
+      "scientificName": "Anhinga rufa",
+      "afrikaansName": "Slanghalsvoël",
+      "category": "bird",
+      "rarityTier": "frequent",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Swims with only a kinked neck above the surface, which is how it got the name snakebird. Spears fish rather than grabbing them, then sits with its wings spread to dry.",
+      "habitat": "Deep pools and dams",
+      "bestTimeToSpot": "Midday, wings out on a dead branch",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 56
+    },
+    {
       "id": "african-fish-eagle",
-      "dexNumber": 56,
+      "dexNumber": 57,
       "commonName": "African Fish Eagle",
       "scientificName": "Haliaeetus vocifer",
       "afrikaansName": "Visarend",
@@ -1220,8 +1240,28 @@
       "conservationStatus": "leastConcern"
     },
     {
+      "id": "african-grey-hornbill",
+      "commonName": "African Grey Hornbill",
+      "scientificName": "Lophoceros nasutus",
+      "afrikaansName": "Grysneushoringvoël",
+      "category": "bird",
+      "rarityTier": "frequent",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Dark grey and slimmer than the other hornbills, with a bill like a scythe. Flies in a deep swooping bound and whistles a plaintive, rising *phee-phee-phee*.",
+      "habitat": "Broadleaved woodland",
+      "bestTimeToSpot": "Morning, calling from a bare branch",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 58
+    },
+    {
       "id": "african-hawk-eagle",
-      "dexNumber": 57,
+      "dexNumber": 59,
       "commonName": "African Hawk-Eagle",
       "scientificName": "Aquila spilogaster",
       "afrikaansName": "Grootjagarend",
@@ -1243,7 +1283,7 @@
     },
     {
       "id": "african-hoopoe",
-      "dexNumber": 58,
+      "dexNumber": 60,
       "commonName": "African Hoopoe",
       "scientificName": "Upupa africana",
       "afrikaansName": "Hoephoep",
@@ -1262,8 +1302,68 @@
       "conservationStatus": "leastConcern"
     },
     {
+      "id": "african-jacana",
+      "commonName": "African Jacana",
+      "scientificName": "Actophilornis africanus",
+      "afrikaansName": "Grootlangtoon",
+      "category": "bird",
+      "rarityTier": "frequent",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Chestnut, with a blue frontal shield and preposterous toes that let it walk across floating lilies as though on solid ground. The male carries the chicks tucked under his wings.",
+      "habitat": "Lily-covered dams and backwaters",
+      "bestTimeToSpot": "Morning, walking on the lilies",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 61
+    },
+    {
+      "id": "african-openbill",
+      "commonName": "African Openbill",
+      "scientificName": "Anastomus lamelligerus",
+      "afrikaansName": "Oopbekooievaar",
+      "category": "bird",
+      "rarityTier": "uncommon",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Glossy black, with a bill that does not close — the gap is a tool for holding water snails while it cuts them out of the shell. Nothing else in the park looks like it.",
+      "habitat": "Floodplains and shallow pans",
+      "bestTimeToSpot": "Morning, wading in loose flocks",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 62
+    },
+    {
+      "id": "african-spoonbill",
+      "commonName": "African Spoonbill",
+      "scientificName": "Platalea alba",
+      "afrikaansName": "Lepelaar",
+      "category": "bird",
+      "rarityTier": "uncommon",
+      "tags": [],
+      "isSensitive": false,
+      "description": "White, with red legs and a face like a mask, and a grey bill flattened into a spatula that it sweeps side to side through the water.",
+      "habitat": "Shallow dams and floodplains",
+      "bestTimeToSpot": "Morning, sweeping the shallows",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 63
+    },
+    {
       "id": "bateleur",
-      "dexNumber": 59,
+      "dexNumber": 64,
       "commonName": "Bateleur",
       "scientificName": "Terathopius ecaudatus",
       "afrikaansName": "Berghaan",
@@ -1284,8 +1384,48 @@
       "conservationStatus": "endangered"
     },
     {
+      "id": "black-headed-heron",
+      "commonName": "Black-headed Heron",
+      "scientificName": "Ardea melanocephala",
+      "afrikaansName": "Swartkopreier",
+      "category": "bird",
+      "rarityTier": "frequent",
+      "tags": [],
+      "isSensitive": false,
+      "description": "The heron that hunts away from water — stalking mice and frogs across open grass, well away from any river, which surprises everybody the first time.",
+      "habitat": "Open grassland, often nowhere near water",
+      "bestTimeToSpot": "Morning, walking through short grass",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 65
+    },
+    {
+      "id": "blacksmith-lapwing",
+      "commonName": "Blacksmith Lapwing",
+      "scientificName": "Vanellus armatus",
+      "afrikaansName": "Bontkiewiet",
+      "category": "bird",
+      "rarityTier": "common",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Black, white and grey in bold blocks, with a call like a hammer on an anvil — which is exactly where the name comes from. Nests on open ground and will dive at anything that comes near.",
+      "habitat": "Dam edges, floodplains, short grass",
+      "bestTimeToSpot": "All day, near water",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 66
+    },
+    {
       "id": "brown-snake-eagle",
-      "dexNumber": 60,
+      "dexNumber": 67,
       "commonName": "Brown Snake Eagle",
       "scientificName": "Circaetus cinereus",
       "afrikaansName": "Bruinslangarend",
@@ -1306,8 +1446,28 @@
       "conservationStatus": "leastConcern"
     },
     {
+      "id": "burchells-coucal",
+      "commonName": "Burchell's Coucal",
+      "scientificName": "Centropus burchellii",
+      "afrikaansName": "Gewone Vleiloerie",
+      "category": "bird",
+      "rarityTier": "uncommon",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Heavy, skulking and copper-backed, with a black cap and a red eye. Its call is a descending bubble of notes that sounds like water pouring from a bottle, and it means rain is coming.",
+      "habitat": "Thick riverine scrub and reeds",
+      "bestTimeToSpot": "Before rain, calling from cover",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 68
+    },
+    {
       "id": "cape-glossy-starling",
-      "dexNumber": 61,
+      "dexNumber": 69,
       "commonName": "Cape Glossy Starling",
       "scientificName": "Lamprotornis nitens",
       "afrikaansName": "Kleinglansspreeu",
@@ -1327,7 +1487,7 @@
     },
     {
       "id": "cape-vulture",
-      "dexNumber": 62,
+      "dexNumber": 70,
       "commonName": "Cape Vulture",
       "scientificName": "Gyps coprotheres",
       "afrikaansName": "Kransaasvoël",
@@ -1348,7 +1508,7 @@
     },
     {
       "id": "common-ostrich",
-      "dexNumber": 63,
+      "dexNumber": 71,
       "commonName": "Common Ostrich",
       "scientificName": "Struthio camelus",
       "afrikaansName": "Volstruis",
@@ -1366,8 +1526,28 @@
       "conservationStatus": "leastConcern"
     },
     {
+      "id": "crowned-lapwing",
+      "commonName": "Crowned Lapwing",
+      "scientificName": "Vanellus coronatus",
+      "afrikaansName": "Kroonkiewiet",
+      "category": "bird",
+      "rarityTier": "frequent",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Sandy brown with a black cap ringed in white and long red legs. Lives on burnt ground and short grass well away from water, and screams at you for driving past.",
+      "habitat": "Short grass and recently burnt veld",
+      "bestTimeToSpot": "All day, on open ground",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 72
+    },
+    {
       "id": "egyptian-goose",
-      "dexNumber": 64,
+      "dexNumber": 73,
       "commonName": "Egyptian Goose",
       "scientificName": "Alopochen aegyptiaca",
       "afrikaansName": "Kolgans",
@@ -1387,7 +1567,7 @@
     },
     {
       "id": "european-roller",
-      "dexNumber": 65,
+      "dexNumber": 74,
       "commonName": "European Roller",
       "scientificName": "Coracias garrulus",
       "afrikaansName": "Europese Troupant",
@@ -1406,8 +1586,28 @@
       "conservationStatus": "leastConcern"
     },
     {
+      "id": "fork-tailed-drongo",
+      "commonName": "Fork-tailed Drongo",
+      "scientificName": "Dicrurus adsimilis",
+      "afrikaansName": "Mikstertbyvanger",
+      "category": "bird",
+      "rarityTier": "common",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Glossy black with red eyes and a deeply forked tail. A gifted liar — it copies other animals' alarm calls to scare them off food and then takes it.",
+      "habitat": "Woodland, on exposed perches",
+      "bestTimeToSpot": "All day, on a fence or dead branch",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 75
+    },
+    {
       "id": "giant-kingfisher",
-      "dexNumber": 66,
+      "dexNumber": 76,
       "commonName": "Giant Kingfisher",
       "scientificName": "Megaceryle maxima",
       "afrikaansName": "Reusevisvanger",
@@ -1426,8 +1626,128 @@
       "conservationStatus": "leastConcern"
     },
     {
+      "id": "goliath-heron",
+      "commonName": "Goliath Heron",
+      "scientificName": "Ardea goliath",
+      "afrikaansName": "Reusereier",
+      "category": "bird",
+      "rarityTier": "uncommon",
+      "tags": [],
+      "isSensitive": false,
+      "description": "The largest heron on earth — nearly a metre and a half of rust-and-slate patience standing in the shallows. Once you have seen one, every other heron looks like a rehearsal.",
+      "habitat": "Quiet backwaters of the big rivers and dams",
+      "bestTimeToSpot": "Early morning, motionless at the water edge",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 77
+    },
+    {
+      "id": "great-egret",
+      "commonName": "Great Egret",
+      "scientificName": "Ardea alba",
+      "afrikaansName": "Grootwitreier",
+      "category": "bird",
+      "rarityTier": "frequent",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Brilliant white and long-necked, with a yellow bill that turns black when it is breeding. The biggest of the white egrets and the most elegant thing at any dam.",
+      "habitat": "Dams, floodplains and river shallows",
+      "bestTimeToSpot": "All day, at open water",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 78
+    },
+    {
+      "id": "grey-go-away-bird",
+      "commonName": "Grey Go-away-bird",
+      "scientificName": "Corythaixoides concolor",
+      "afrikaansName": "Kwêvoël",
+      "category": "bird",
+      "rarityTier": "common",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Long-tailed, grey and permanently outraged. Its call is an unmistakable nasal *g'way*, which is why every hunter in the lowveld curses it — it announces you to everything within a kilometre.",
+      "habitat": "Woodland, camps and picnic sites",
+      "bestTimeToSpot": "All day, complaining from the top of a tree",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 79
+    },
+    {
+      "id": "grey-heron",
+      "commonName": "Grey Heron",
+      "scientificName": "Ardea cinerea",
+      "afrikaansName": "Bloureier",
+      "category": "bird",
+      "rarityTier": "frequent",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Tall, grey and unhurried, with a black eyebrow running back from a yellow eye. Stands in the shallows for so long that people mistake it for a stick.",
+      "habitat": "Rivers, dams and causeways",
+      "bestTimeToSpot": "All day, at any water",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 80
+    },
+    {
+      "id": "hadada-ibis",
+      "commonName": "Hadada Ibis",
+      "scientificName": "Bostrychia hagedash",
+      "afrikaansName": "Hadeda",
+      "category": "bird",
+      "rarityTier": "common",
+      "tags": [],
+      "isSensitive": false,
+      "description": "You will hear it long before you see it. An iridescent green wing-patch and a call like somebody dropping a saxophone down a stairwell, usually at 05:00.",
+      "habitat": "Camps, lawns, riverine woodland",
+      "bestTimeToSpot": "Dawn and dusk, loudly",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 81
+    },
+    {
+      "id": "hamerkop",
+      "commonName": "Hamerkop",
+      "scientificName": "Scopus umbretta",
+      "afrikaansName": "Hamerkop",
+      "category": "bird",
+      "rarityTier": "frequent",
+      "tags": [],
+      "isSensitive": false,
+      "description": "All brown, with a heavy crest at the back of the head that gives it the hammer profile it is named for. Builds an enormous domed nest, big enough to hold a person, and Africa is full of stories about it.",
+      "habitat": "Streams, pans and culverts",
+      "bestTimeToSpot": "Late afternoon, hunting frogs in shallow water",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 82
+    },
+    {
       "id": "helmeted-guineafowl",
-      "dexNumber": 67,
+      "dexNumber": 83,
       "commonName": "Helmeted Guineafowl",
       "scientificName": "Numida meleagris",
       "afrikaansName": "Gewone Tarentaal",
@@ -1447,7 +1767,7 @@
     },
     {
       "id": "hooded-vulture",
-      "dexNumber": 68,
+      "dexNumber": 84,
       "commonName": "Hooded Vulture",
       "scientificName": "Necrosyrtes monachus",
       "afrikaansName": "Monnikaasvoël",
@@ -1469,7 +1789,7 @@
     },
     {
       "id": "kori-bustard",
-      "dexNumber": 69,
+      "dexNumber": 85,
       "commonName": "Kori Bustard",
       "scientificName": "Ardeotis kori",
       "afrikaansName": "Gompou",
@@ -1490,7 +1810,7 @@
     },
     {
       "id": "lappet-faced-vulture",
-      "dexNumber": 70,
+      "dexNumber": 86,
       "commonName": "Lappet-faced Vulture",
       "scientificName": "Torgos tracheliotos",
       "afrikaansName": "Swartaasvoël",
@@ -1513,7 +1833,7 @@
     },
     {
       "id": "lilac-breasted-roller",
-      "dexNumber": 71,
+      "dexNumber": 87,
       "commonName": "Lilac-breasted Roller",
       "scientificName": "Coracias caudatus",
       "afrikaansName": "Gewone Troupant",
@@ -1532,8 +1852,48 @@
       "conservationStatus": "leastConcern"
     },
     {
+      "id": "little-bee-eater",
+      "commonName": "Little Bee-eater",
+      "scientificName": "Merops pusillus",
+      "afrikaansName": "Kleinbyvreter",
+      "category": "bird",
+      "rarityTier": "frequent",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Green above, deep gold below, with a black gorget and a turquoise eyebrow. Sits in pairs on a low stem, dashes out for a bee, and comes back to exactly the same twig.",
+      "habitat": "Grassy edges near water",
+      "bestTimeToSpot": "All day, on low perches",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 88
+    },
+    {
+      "id": "magpie-shrike",
+      "commonName": "Magpie Shrike",
+      "scientificName": "Urolestes melanoleucus",
+      "afrikaansName": "Langstertlaksman",
+      "category": "bird",
+      "rarityTier": "common",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Black and white with a tail longer than the rest of it. Sits in small noisy groups on the top of a thorn tree and drops onto insects in the grass.",
+      "habitat": "Open thornveld",
+      "bestTimeToSpot": "All day, in family parties",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 89
+    },
+    {
       "id": "malachite-kingfisher",
-      "dexNumber": 72,
+      "dexNumber": 90,
       "commonName": "Malachite Kingfisher",
       "scientificName": "Corythornis cristatus",
       "afrikaansName": "Kuifkopvisvanger",
@@ -1552,8 +1912,28 @@
       "conservationStatus": "leastConcern"
     },
     {
+      "id": "marabou-stork",
+      "commonName": "Marabou Stork",
+      "scientificName": "Leptoptilos crumenifer",
+      "afrikaansName": "Maraboe",
+      "category": "bird",
+      "rarityTier": "uncommon",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Enormous, bald and stooped, with a pink throat pouch that inflates as it displays. Genuinely ugly and genuinely magnificent, and it stands at a carcass among the vultures like an undertaker waiting to be paid.",
+      "habitat": "Carcasses, rubbish pits and drying pans",
+      "bestTimeToSpot": "Midday, at a kill or soaring on the thermals",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 91
+    },
+    {
       "id": "martial-eagle",
-      "dexNumber": 73,
+      "dexNumber": 92,
       "commonName": "Martial Eagle",
       "scientificName": "Polemaetus bellicosus",
       "afrikaansName": "Breëkoparend",
@@ -1576,7 +1956,7 @@
     },
     {
       "id": "pels-fishing-owl",
-      "dexNumber": 74,
+      "dexNumber": 93,
       "commonName": "Pel's Fishing Owl",
       "scientificName": "Scotopelia peli",
       "afrikaansName": "Visuil",
@@ -1598,7 +1978,7 @@
     },
     {
       "id": "pied-kingfisher",
-      "dexNumber": 75,
+      "dexNumber": 94,
       "commonName": "Pied Kingfisher",
       "scientificName": "Ceryle rudis",
       "afrikaansName": "Bontvisvanger",
@@ -1617,8 +1997,28 @@
       "conservationStatus": "leastConcern"
     },
     {
+      "id": "purple-crested-turaco",
+      "commonName": "Purple-crested Turaco",
+      "scientificName": "Gallirex porphyreolophus",
+      "afrikaansName": "Bloukuifloerie",
+      "category": "bird",
+      "rarityTier": "uncommon",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Green and violet with a crimson flash in the wing that only shows in flight. The green is a real pigment rather than a trick of the light, which is rare in birds.",
+      "habitat": "Dense riverine forest",
+      "bestTimeToSpot": "Morning, bounding through the canopy",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 95
+    },
+    {
       "id": "red-billed-buffalo-weaver",
-      "dexNumber": 76,
+      "dexNumber": 96,
       "commonName": "Red-billed Buffalo Weaver",
       "scientificName": "Bubalornis niger",
       "afrikaansName": "Buffelwewer",
@@ -1639,8 +2039,48 @@
       "conservationStatus": "leastConcern"
     },
     {
+      "id": "red-billed-oxpecker",
+      "commonName": "Red-billed Oxpecker",
+      "scientificName": "Buphagus erythrorynchus",
+      "afrikaansName": "Rooibekrenostervoël",
+      "category": "bird",
+      "rarityTier": "frequent",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Lives on the backs of buffalo, giraffe and rhino, eating ticks and reopening wounds. A yellow ring around a red eye, and a hiss that warns the whole herd you are there.",
+      "habitat": "On the backs of large mammals",
+      "bestTimeToSpot": "Any time you find a buffalo herd",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 97
+    },
+    {
+      "id": "red-billed-quelea",
+      "commonName": "Red-billed Quelea",
+      "scientificName": "Quelea quelea",
+      "afrikaansName": "Rooibekkwelea",
+      "category": "bird",
+      "rarityTier": "frequent",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Individually forgettable, collectively the most numerous bird on earth. Flocks move like smoke and can strip a field in an afternoon.",
+      "habitat": "Grassland and water edges",
+      "bestTimeToSpot": "Late afternoon, coming to drink in thousands",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 98
+    },
+    {
       "id": "saddle-billed-stork",
-      "dexNumber": 77,
+      "dexNumber": 99,
       "commonName": "Saddle-billed Stork",
       "scientificName": "Ephippiorhynchus senegalensis",
       "afrikaansName": "Saalbekooievaar",
@@ -1662,7 +2102,7 @@
     },
     {
       "id": "secretarybird",
-      "dexNumber": 78,
+      "dexNumber": 100,
       "commonName": "Secretarybird",
       "scientificName": "Sagittarius serpentarius",
       "afrikaansName": "Sekretarisvoël",
@@ -1683,8 +2123,28 @@
       "conservationStatus": "endangered"
     },
     {
+      "id": "southern-carmine-bee-eater",
+      "commonName": "Southern Carmine Bee-eater",
+      "scientificName": "Merops nubicoides",
+      "afrikaansName": "Rooiborsbyvreter",
+      "category": "bird",
+      "rarityTier": "uncommon",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Impossibly pink-red with a turquoise cap. Arrives in spring, hunts insects flushed by moving animals, and will ride on the back of a kori bustard to do it.",
+      "habitat": "Open ground near rivers",
+      "bestTimeToSpot": "September to March only; a summer visitor",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 101
+    },
+    {
       "id": "southern-ground-hornbill",
-      "dexNumber": 79,
+      "dexNumber": 102,
       "commonName": "Southern Ground Hornbill",
       "scientificName": "Bucorvus leadbeateri",
       "afrikaansName": "Bromvoël",
@@ -1706,8 +2166,48 @@
       "conservationStatus": "vulnerable"
     },
     {
+      "id": "southern-masked-weaver",
+      "commonName": "Southern Masked Weaver",
+      "scientificName": "Ploceus velatus",
+      "afrikaansName": "Swartkeelgeelvink",
+      "category": "bird",
+      "rarityTier": "common",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Yellow with a black mask and a red eye. Builds a nest, invites a female to inspect it, and tears it down and starts again when she refuses — which she usually does.",
+      "habitat": "Camps, reedbeds, anywhere with a thorn tree",
+      "bestTimeToSpot": "Spring and summer, weaving over water",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 103
+    },
+    {
+      "id": "southern-red-billed-hornbill",
+      "commonName": "Southern Red-billed Hornbill",
+      "scientificName": "Tockus rufirostris",
+      "afrikaansName": "Rooibekneushoringvoël",
+      "category": "bird",
+      "rarityTier": "common",
+      "tags": [],
+      "isSensitive": false,
+      "description": "The other Zazu. Smaller than the yellow-billed, with a slim red bill and a habit of following mongooses about to catch whatever they disturb.",
+      "habitat": "Open woodland and camps",
+      "bestTimeToSpot": "All day, low down beside the road",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 104
+    },
+    {
       "id": "southern-yellow-billed-hornbill",
-      "dexNumber": 80,
+      "dexNumber": 105,
       "commonName": "Southern Yellow-billed Hornbill",
       "scientificName": "Tockus leucomelas",
       "afrikaansName": "Geelbekneushoringvoël",
@@ -1727,7 +2227,7 @@
     },
     {
       "id": "tawny-eagle",
-      "dexNumber": 81,
+      "dexNumber": 106,
       "commonName": "Tawny Eagle",
       "scientificName": "Aquila rapax",
       "afrikaansName": "Roofarend",
@@ -1748,8 +2248,28 @@
       "conservationStatus": "vulnerable"
     },
     {
+      "id": "three-banded-plover",
+      "commonName": "Three-banded Plover",
+      "scientificName": "Charadrius tricollaris",
+      "afrikaansName": "Driebandstrandkiewiet",
+      "category": "bird",
+      "rarityTier": "frequent",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Small and neat, with two black bands across a white chest and a red ring around the eye. Runs a few steps, stops dead, runs again — the way every plover moves.",
+      "habitat": "Muddy edges of dams and rivers",
+      "bestTimeToSpot": "All day, at the water line",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 107
+    },
+    {
       "id": "verreauxs-eagle-owl",
-      "dexNumber": 82,
+      "dexNumber": 108,
       "commonName": "Verreaux's Eagle-Owl",
       "scientificName": "Bubo lacteus",
       "afrikaansName": "Reuse-ooruil",
@@ -1771,8 +2291,30 @@
       "conservationStatus": "leastConcern"
     },
     {
+      "id": "water-thick-knee",
+      "commonName": "Water Thick-knee",
+      "scientificName": "Burhinus vermiculatus",
+      "afrikaansName": "Waterdikkop",
+      "category": "bird",
+      "rarityTier": "uncommon",
+      "tags": [
+        "nocturnal"
+      ],
+      "isSensitive": false,
+      "description": "Cryptic grey-brown with an enormous yellow eye for a bird that does most of its living after dark. Sits tight on a sandbank all day and calls in a rising, mournful whistle at dusk.",
+      "habitat": "Sandbanks and rocky river edges",
+      "bestTimeToSpot": "Dusk, calling from the riverbed",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 109
+    },
+    {
       "id": "western-barn-owl",
-      "dexNumber": 83,
+      "dexNumber": 110,
       "commonName": "Western Barn Owl",
       "scientificName": "Tyto alba",
       "afrikaansName": "Nonnetjie-uil",
@@ -1795,7 +2337,7 @@
     },
     {
       "id": "white-backed-vulture",
-      "dexNumber": 84,
+      "dexNumber": 111,
       "commonName": "White-backed Vulture",
       "scientificName": "Gyps africanus",
       "afrikaansName": "Witrugaasvoël",
@@ -1816,8 +2358,28 @@
       "conservationStatus": "criticallyEndangered"
     },
     {
+      "id": "white-fronted-bee-eater",
+      "commonName": "White-fronted Bee-eater",
+      "scientificName": "Merops bullockoides",
+      "afrikaansName": "Rooikeelbyvreter",
+      "category": "bird",
+      "rarityTier": "frequent",
+      "tags": [],
+      "isSensitive": false,
+      "description": "White forehead, scarlet throat, green back. Nests in colonies in river banks and lives in extended families where last year's young help raise this year's — one of the most social birds in Africa.",
+      "habitat": "River banks with soft earth",
+      "bestTimeToSpot": "Morning, in noisy colonies",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 112
+    },
+    {
       "id": "white-headed-vulture",
-      "dexNumber": 85,
+      "dexNumber": 113,
       "commonName": "White-headed Vulture",
       "scientificName": "Trigonoceps occipitalis",
       "afrikaansName": "Witkopaasvoël",
@@ -1838,7 +2400,7 @@
     },
     {
       "id": "woodland-kingfisher",
-      "dexNumber": 86,
+      "dexNumber": 114,
       "commonName": "Woodland Kingfisher",
       "scientificName": "Halcyon senegalensis",
       "afrikaansName": "Bosveldvisvanger",
@@ -1857,8 +2419,48 @@
       "conservationStatus": "leastConcern"
     },
     {
+      "id": "woolly-necked-stork",
+      "commonName": "Woolly-necked Stork",
+      "scientificName": "Ciconia episcopus",
+      "afrikaansName": "Wolnekooievaar",
+      "category": "bird",
+      "rarityTier": "uncommon",
+      "tags": [],
+      "isSensitive": false,
+      "description": "Black with a white woolly collar and a black skullcap, like a small vicar. Usually alone or in pairs on a riverbank, and far less common than the storks it stands among.",
+      "habitat": "Riverbanks and wet grassland",
+      "bestTimeToSpot": "Morning, on a sandbank",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "nearThreatened",
+      "dexNumber": 115
+    },
+    {
+      "id": "yellow-billed-stork",
+      "commonName": "Yellow-billed Stork",
+      "scientificName": "Mycteria ibis",
+      "afrikaansName": "Nimmersat",
+      "category": "bird",
+      "rarityTier": "frequent",
+      "tags": [],
+      "isSensitive": false,
+      "description": "White with a black tail, a deep yellow bill and a bare red face. Fishes by feel, sweeping a half-open bill through muddy water with one foot stirring the bottom.",
+      "habitat": "Shallow rivers and drying pans",
+      "bestTimeToSpot": "Morning, in groups at the water",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "dexNumber": 116
+    },
+    {
       "id": "black-mamba",
-      "dexNumber": 87,
+      "dexNumber": 117,
       "commonName": "Black Mamba",
       "scientificName": "Dendroaspis polylepis",
       "afrikaansName": "Swartmamba",
@@ -1881,7 +2483,7 @@
     },
     {
       "id": "boomslang",
-      "dexNumber": 88,
+      "dexNumber": 118,
       "commonName": "Boomslang",
       "scientificName": "Dispholidus typus",
       "afrikaansName": "Boomslang",
@@ -1903,7 +2505,7 @@
     },
     {
       "id": "leopard-tortoise",
-      "dexNumber": 89,
+      "dexNumber": 119,
       "commonName": "Leopard Tortoise",
       "scientificName": "Stigmochelys pardalis",
       "afrikaansName": "Bergskilpad",
@@ -1925,7 +2527,7 @@
     },
     {
       "id": "mozambique-spitting-cobra",
-      "dexNumber": 90,
+      "dexNumber": 120,
       "commonName": "Mozambique Spitting Cobra",
       "scientificName": "Naja mossambica",
       "afrikaansName": "Mosambiekse Spoegkobra",
@@ -1947,7 +2549,7 @@
     },
     {
       "id": "nile-crocodile",
-      "dexNumber": 91,
+      "dexNumber": 121,
       "commonName": "Nile Crocodile",
       "scientificName": "Crocodylus niloticus",
       "afrikaansName": "Nylkrokodil",
@@ -1969,7 +2571,7 @@
     },
     {
       "id": "puff-adder",
-      "dexNumber": 92,
+      "dexNumber": 122,
       "commonName": "Puff Adder",
       "scientificName": "Bitis arietans",
       "afrikaansName": "Pofadder",
@@ -1991,7 +2593,7 @@
     },
     {
       "id": "african-rock-python",
-      "dexNumber": 93,
+      "dexNumber": 123,
       "commonName": "Southern African Rock Python",
       "scientificName": "Python natalensis",
       "afrikaansName": "Luislang",
@@ -2014,7 +2616,7 @@
     },
     {
       "id": "water-monitor",
-      "dexNumber": 94,
+      "dexNumber": 124,
       "commonName": "Water Monitor",
       "scientificName": "Varanus niloticus",
       "afrikaansName": "Waterlikkewaan",
@@ -2036,7 +2638,7 @@
     },
     {
       "id": "ant-lion",
-      "dexNumber": 95,
+      "dexNumber": 125,
       "commonName": "Ant Lion",
       "scientificName": "Myrmeleontidae",
       "afrikaansName": "Mierleeu",
@@ -2058,7 +2660,7 @@
     },
     {
       "id": "rhinoceros-beetle",
-      "dexNumber": 96,
+      "dexNumber": 126,
       "commonName": "Rhinoceros Beetle",
       "scientificName": "Oryctes boas",
       "afrikaansName": "Renosterkewer",
@@ -2080,7 +2682,7 @@
     },
     {
       "id": "baobab",
-      "dexNumber": 97,
+      "dexNumber": 127,
       "commonName": "Baobab",
       "scientificName": "Adansonia digitata",
       "afrikaansName": "Kremetartboom",

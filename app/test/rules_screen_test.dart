@@ -94,7 +94,7 @@ void main() {
     for (final String title in <String>[
       'Start a drive',
       'Add everyone in the car',
-      'Whoever shouts first gets it',
+      'Call it out loud — first voice wins',
       'End the day back at camp',
     ]) {
       expect(find.text(title), findsOneWidget, reason: title);

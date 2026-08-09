@@ -65,7 +65,10 @@ void main(List<String> args) {
   img.fill(sheet, color: img.ColorRgb8(16, 16, 16));
 
   for (int i = 0; i < ids.length; i++) {
-    final img.Image? photo = img.decodeJpg(
+    // Format-agnostic. iNaturalist serves PNG for some observations regardless
+    // of what the filename says, and `decodeJpg` throws on the first one —
+    // taking the whole sheet down rather than the one picture.
+    final img.Image? photo = img.decodeImage(
       File('$folder/${ids[i]}.jpg').readAsBytesSync(),
     );
     if (photo == null) {

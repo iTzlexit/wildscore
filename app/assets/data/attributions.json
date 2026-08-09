@@ -21,6 +21,12 @@
       "source": "https://www.inaturalist.org/observations/121559159"
     },
     {
+      "id": "african-darter",
+      "author": "Paul Hoekman",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/249349276"
+    },
+    {
       "id": "african-elephant",
       "author": "Fábio Olmos",
       "license": "cc-by",
@@ -31,6 +37,12 @@
       "author": "svetlanarussia",
       "license": "cc0",
       "source": "https://www.inaturalist.org/observations/180741436"
+    },
+    {
+      "id": "african-grey-hornbill",
+      "author": "Peter Archdale",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/143808094"
     },
     {
       "id": "african-hawk-eagle",
@@ -45,10 +57,28 @@
       "source": "https://www.inaturalist.org/observations/121543152"
     },
     {
+      "id": "african-jacana",
+      "author": "Christiaan Viljoen",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/199823657"
+    },
+    {
+      "id": "african-openbill",
+      "author": "Alan Manson",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/325364063"
+    },
+    {
       "id": "african-rock-python",
       "author": "Robert Taylor",
       "license": "cc-by",
       "source": "https://www.inaturalist.org/observations/323654079"
+    },
+    {
+      "id": "african-spoonbill",
+      "author": "Christiaan Viljoen",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/67574561"
     },
     {
       "id": "african-wild-dog",
@@ -99,6 +129,12 @@
       "source": "https://www.inaturalist.org/observations/294196996"
     },
     {
+      "id": "black-headed-heron",
+      "author": "Karen Eichholz",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/249649698"
+    },
+    {
       "id": "black-mamba",
       "author": "Wynand Uys",
       "license": "cc-by",
@@ -109,6 +145,12 @@
       "author": "tcager",
       "license": "cc0",
       "source": "https://www.inaturalist.org/observations/262291949"
+    },
+    {
+      "id": "blacksmith-lapwing",
+      "author": "tlaloc27",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/253951443"
     },
     {
       "id": "blue-wildebeest",
@@ -133,6 +175,12 @@
       "author": "Rich Agar",
       "license": "cc-by",
       "source": "https://www.inaturalist.org/observations/239988978"
+    },
+    {
+      "id": "burchells-coucal",
+      "author": "nmoorhatch",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/38474105"
     },
     {
       "id": "bushbuck",
@@ -201,6 +249,12 @@
       "source": "https://www.inaturalist.org/observations/61012743"
     },
     {
+      "id": "crowned-lapwing",
+      "author": "Paul Hoekman",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/290059337"
+    },
+    {
       "id": "dwarf-mongoose",
       "author": "Tim",
       "license": "cc-by",
@@ -231,6 +285,12 @@
       "source": "https://www.inaturalist.org/observations/342734357"
     },
     {
+      "id": "fork-tailed-drongo",
+      "author": "Public domain (CC0)",
+      "license": "cc0",
+      "source": "https://www.inaturalist.org/observations/92093325"
+    },
+    {
       "id": "giant-kingfisher",
       "author": "Jakob Horz",
       "license": "cc-by",
@@ -243,16 +303,52 @@
       "source": "https://www.inaturalist.org/observations/330772102"
     },
     {
+      "id": "goliath-heron",
+      "author": "Codrin Bucur",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/331326178"
+    },
+    {
+      "id": "great-egret",
+      "author": "Bruno - Yolande Zanette",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/297611003"
+    },
+    {
       "id": "greater-kudu",
       "author": "Loren Cassin Sackett",
       "license": "cc-by",
       "source": "https://www.inaturalist.org/observations/117920070"
     },
     {
+      "id": "grey-go-away-bird",
+      "author": "nmoorhatch",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/40300947"
+    },
+    {
+      "id": "grey-heron",
+      "author": "Public domain (CC0)",
+      "license": "cc0",
+      "source": "https://www.inaturalist.org/observations/303788470"
+    },
+    {
       "id": "ground-pangolin",
       "author": "Peter Archdale",
       "license": "cc-by",
       "source": "https://www.inaturalist.org/observations/93016098"
+    },
+    {
+      "id": "hadada-ibis",
+      "author": "Public domain (CC0)",
+      "license": "cc0",
+      "source": "https://www.inaturalist.org/observations/250330527"
+    },
+    {
+      "id": "hamerkop",
+      "author": "Public domain (CC0)",
+      "license": "cc0",
+      "source": "https://www.inaturalist.org/observations/71001110"
     },
     {
       "id": "helmeted-guineafowl",
@@ -339,10 +435,28 @@
       "source": "https://www.inaturalist.org/observations/104686412"
     },
     {
+      "id": "little-bee-eater",
+      "author": "Carrie Powers",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/125585044"
+    },
+    {
+      "id": "magpie-shrike",
+      "author": "gwar",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/228944356"
+    },
+    {
       "id": "malachite-kingfisher",
       "author": "Christiaan Viljoen",
       "license": "cc-by",
       "source": "https://www.inaturalist.org/observations/137623342"
+    },
+    {
+      "id": "marabou-stork",
+      "author": "Public domain (CC0)",
+      "license": "cc0",
+      "source": "https://www.inaturalist.org/observations/307957467"
     },
     {
       "id": "martial-eagle",
@@ -399,10 +513,28 @@
       "source": "https://www.inaturalist.org/observations/84551638"
     },
     {
+      "id": "purple-crested-turaco",
+      "author": "Public domain (CC0)",
+      "license": "cc0",
+      "source": "https://www.inaturalist.org/observations/67180965"
+    },
+    {
       "id": "red-billed-buffalo-weaver",
       "author": "Public domain (CC0)",
       "license": "cc0",
       "source": "https://www.inaturalist.org/observations/383777898"
+    },
+    {
+      "id": "red-billed-oxpecker",
+      "author": "Rosario Douglas",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/266733229"
+    },
+    {
+      "id": "red-billed-quelea",
+      "author": "Public domain (CC0)",
+      "license": "cc0",
+      "source": "https://www.inaturalist.org/observations/64722068"
     },
     {
       "id": "rhinoceros-beetle",
@@ -459,10 +591,28 @@
       "source": "https://www.inaturalist.org/observations/266024438"
     },
     {
+      "id": "southern-carmine-bee-eater",
+      "author": "Public domain (CC0)",
+      "license": "cc0",
+      "source": "https://www.inaturalist.org/observations/40869556"
+    },
+    {
       "id": "southern-ground-hornbill",
       "author": "Wynand Uys",
       "license": "cc-by",
       "source": "https://www.inaturalist.org/observations/18058749"
+    },
+    {
+      "id": "southern-masked-weaver",
+      "author": "Public domain (CC0)",
+      "license": "cc0",
+      "source": "https://www.inaturalist.org/observations/190321364"
+    },
+    {
+      "id": "southern-red-billed-hornbill",
+      "author": "Public domain (CC0)",
+      "license": "cc0",
+      "source": "https://www.inaturalist.org/observations/66831882"
     },
     {
       "id": "southern-reedbuck",
@@ -507,6 +657,12 @@
       "source": "https://www.inaturalist.org/observations/245987000"
     },
     {
+      "id": "three-banded-plover",
+      "author": "amantedarmanin",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/156454066"
+    },
+    {
       "id": "tree-squirrel",
       "author": "Juvia Heuchert",
       "license": "cc-by",
@@ -543,6 +699,12 @@
       "source": "https://www.inaturalist.org/observations/168626156"
     },
     {
+      "id": "water-thick-knee",
+      "author": "Public domain (CC0)",
+      "license": "cc0",
+      "source": "https://www.inaturalist.org/observations/304302944"
+    },
+    {
       "id": "waterbuck",
       "author": "Tim",
       "license": "cc-by",
@@ -559,6 +721,12 @@
       "author": "andrewdeacon",
       "license": "cc0",
       "source": "https://www.inaturalist.org/observations/15716294"
+    },
+    {
+      "id": "white-fronted-bee-eater",
+      "author": "tlaloc27",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/253951322"
     },
     {
       "id": "white-headed-vulture",
@@ -583,6 +751,18 @@
       "author": "Public domain (CC0)",
       "license": "cc0",
       "source": "https://www.inaturalist.org/observations/8211999"
+    },
+    {
+      "id": "woolly-necked-stork",
+      "author": "Shedron Mukhumo",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/344949182"
+    },
+    {
+      "id": "yellow-billed-stork",
+      "author": "scaup",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/269472474"
     }
   ]
 }

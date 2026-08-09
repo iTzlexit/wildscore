@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../domain/rarity_tier.dart';
+import '../../shared/emphasis.dart';
 import '../../shared/theme.dart';
 import '../onboarding/intro_tour.dart';
 
@@ -76,8 +77,8 @@ class RulesScreen extends StatelessWidget {
             icon: Icons.menu_book_rounded,
             title: 'Not one for keeping score?',
             body:
-                'Ignore all of this and just tick animals off in the Animal '
-                'Dex. Your collection fills up the same.',
+                'Ignore all of this and just **tick animals off in the Animal '
+                'Dex**. Your collection fills up the same.',
             last: true,
           ),
           const SizedBox(height: Space.xl),
@@ -95,10 +96,12 @@ class RulesScreen extends StatelessWidget {
           ),
           const _Step(
             number: 3,
-            title: 'Whoever shouts first gets it',
+            title: 'Call it out loud — first voice wins',
             body:
-                'Tap the eye beside their name, then pick the animal. The '
-                'rarer it is, the more it pays.',
+                'The **first player to say the animal out loud** claims it. '
+                'Pointing does not count, and neither does whoever gets to the '
+                'phone first.\n\n'
+                'Then tap the **eye** beside their name and pick the animal.',
             icon: Icons.visibility_rounded,
           ),
           const _Step(
@@ -120,23 +123,24 @@ class RulesScreen extends StatelessWidget {
             icon: Icons.u_turn_left_rounded,
             title: 'The same animal only counts once',
             body:
-                'Not the same sighting twice, and not the same animal later in '
-                'the day. Coming back past that pride after lunch is the same '
-                'pride — lovely, and worth nothing.',
+                '**One sighting, one claim.** Not the same animal twice, and '
+                'not the same animal later in the day.\n\n'
+                'Coming back past that pride after lunch is the **same pride** '
+                '— lovely, and worth nothing.',
           ),
           const _Rule(
             icon: Icons.groups_rounded,
             title: 'A pride is one lion',
             body:
-                'Twelve lions at a kill is one claim, not twelve. Same for a '
-                'breeding herd of elephant. Sorry.',
+                'Twelve lions at a kill is **one claim, not twelve**. Same for '
+                'a breeding herd of elephant. Sorry.',
           ),
           const _Rule(
             icon: Icons.no_transfer_rounded,
             title: 'No asking at a jam',
             body:
-                'Cars stopped ahead means something good. No winding down a '
-                'window to ask what it is.',
+                'Cars stopped ahead means something good. **No winding down a '
+                'window to ask what it is.**',
           ),
           const SizedBox(height: Space.xl),
 
@@ -145,34 +149,35 @@ class RulesScreen extends StatelessWidget {
             icon: Icons.groups_2_rounded,
             title: 'Spot it yourself — double points',
             body:
-                'For the rare ones the app asks who else was there. An empty '
-                'road pays double.',
+                'For the rare ones the app asks who else was there. An **empty '
+                'road pays double**.',
           ),
           const _Rule(
             icon: Icons.traffic_rounded,
             title: 'A traffic jam gets taxed — a quarter off',
             body:
-                'Rolling up to eleven parked cars still counts. You did see it. '
-                'But somebody else found it.',
+                'Rolling up to eleven parked cars **still counts** — you did '
+                'see it. It just pays less, because somebody else found it.',
           ),
           const _Rule(
             icon: Icons.auto_awesome_rounded,
             title: 'Wild cards',
             body:
-                'A male lion pays more than a lioness.\n'
-                'A mother with young pays half again.\n'
-                'An animal on a kill pays half again.\n'
-                'The first impala of the trip pays 40 instead of 5.',
+                'A **male lion** pays more than a lioness.\n'
+                'A **mother with young** pays half again.\n'
+                'An **animal on a kill** pays half again.\n'
+                'The **first impala** of the trip pays 40 instead of 5.',
           ),
           const _Rule(
             icon: Icons.lock_clock_rounded,
             title: 'The common ones run out for the day',
             body:
                 'Nobody wants to tap every impala from Malelane to Satara, so '
-                'the everyday animals are capped at four a day.\n\n'
-                'Impala gets two: the first is the arrival moment and pays the '
-                'bonus, the second is an ordinary impala, and then it is done.'
-                '\n\nNothing rare is capped. Find six leopards and all six '
+                'the everyday animals are capped at **four a day**.\n\n'
+                '**Impala gets two.** The first is the arrival moment and pays '
+                'the bonus; the second is an ordinary impala, and then it is '
+                'done.\n\n'
+                '**Nothing rare is capped.** Find six leopards and all six '
                 'count.',
           ),
           const SizedBox(height: Space.lg),
@@ -246,7 +251,10 @@ class _Way extends StatelessWidget {
                     style: AppText.bodyStrong.copyWith(fontSize: 14.5),
                   ),
                   const SizedBox(height: 2),
-                  Text(body, style: AppText.caption.copyWith(height: 1.45)),
+                  emphasised(
+                    body,
+                    style: AppText.caption.copyWith(height: 1.45),
+                  ),
                 ],
               ),
             ),
@@ -348,7 +356,10 @@ class _Step extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 3),
-                  Text(body, style: AppText.caption.copyWith(height: 1.5)),
+                  emphasised(
+                    body,
+                    style: AppText.caption.copyWith(height: 1.5),
+                  ),
                 ],
               ),
             ),
@@ -466,7 +477,10 @@ class _Rule extends StatelessWidget {
                 children: <Widget>[
                   Text(title, style: AppText.title3),
                   const SizedBox(height: Space.xs),
-                  Text(body, style: AppText.caption.copyWith(height: 1.5)),
+                  emphasised(
+                    body,
+                    style: AppText.caption.copyWith(height: 1.5),
+                  ),
                 ],
               ),
             ),

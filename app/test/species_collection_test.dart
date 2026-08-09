@@ -170,9 +170,18 @@ void main() {
           .where((Species s) => s.category == SpeciesCategory.bird)
           .length;
 
+      // The bound was 40 and the list has since roughly doubled, on the user's
+      // instruction and rightly — thirty-one birds for Kruger left out the
+      // herons, the storks, the bee-eaters and the go-away bird, which is most
+      // of what a car actually points at.
+      //
+      // The principle has not changed, only the number: **curated, not
+      // exhaustive.** Kruger has around five hundred species and a scorecard
+      // carrying all of them is a checklist nobody scrolls. Every addition
+      // still has to be a bird somebody would shout about.
       expect(
         birds,
-        lessThan(40),
+        lessThan(100),
         reason: 'past this it stops being a scorecard and becomes a field list',
       );
     });
