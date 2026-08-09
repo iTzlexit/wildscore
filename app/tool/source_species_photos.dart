@@ -47,6 +47,12 @@ const int southAfricaPlaceId = 6986;
 /// How many candidates `--candidates` fetches per species.
 const int candidateCount = 8;
 
+/// How many `--wide` offers instead.
+///
+/// For the species where every local option is poor, more of the same eight is
+/// no help — the sheet has to get both bigger and less parochial.
+const int wideCandidateCount = 20;
+
 Future<void> main(List<String> args) async {
   final bool all = args.contains('--all');
   // Downloads several options per species instead of picking one, for the
@@ -64,10 +70,14 @@ Future<void> main(List<String> args) async {
   // and finishes in minutes for the whole catalogue. Nothing is fetched until
   // he has chosen — see tool/apply_photo_picks.dart.
   final bool picker = args.contains('--picker');
+
+  // A bigger, less parochial sheet for the species where every local option
+  // was poor. Named ids only — see _ranked.
+  final bool wide = args.contains('--wide');
   final Set<String> only = args.where((String a) => !a.startsWith('-')).toSet();
 
   if (picker) {
-    await _buildPicker(only, all);
+    await _buildPicker(only, all, wide);
     return;
   }
 
@@ -215,7 +225,7 @@ Future<void> main(List<String> args) async {
 /// the next hundred species were chosen by a machine instead, and the machine
 /// picked a dead hornbill. This makes the page reproducible for any set of
 /// species, which is the only version of it worth having.
-Future<void> _buildPicker(Set<String> only, bool all) async {
+Future<void> _buildPicker(Set<String> only, bool all, bool wide) async {
   final Map<String, dynamic> catalogue =
       json.decode(File('assets/data/species.json').readAsStringSync())
           as Map<String, dynamic>;
@@ -244,9 +254,11 @@ Future<void> _buildPicker(Set<String> only, bool all) async {
     final List<_Candidate> options = await _ranked(
       http,
       species['scientificName'] as String,
+      wide: wide,
     );
 
-    for (int i = 0; i < options.length && i < candidateCount; i++) {
+    final int cap = wide ? wideCandidateCount : candidateCount;
+    for (int i = 0; i < options.length && i < cap; i++) {
       rows.add(<String, dynamic>{
         'id': id,
         'name': species['commonName'],
@@ -281,8 +293,14 @@ Future<void> _buildPicker(Set<String> only, bool all) async {
     return;
   }
 
-  File('../tools/photo-candidates.json').writeAsStringSync(json.encode(rows));
-  File('../tools/photo-picker.html').writeAsStringSync(
+  // A run for named species writes its own page rather than replacing the full
+  // one. Redoing nine birds should not throw away the sheet for the other
+  // hundred and eighty.
+  final String suffix = only.isEmpty ? '' : '-redo';
+  File(
+    '../tools/photo-candidates$suffix.json',
+  ).writeAsStringSync(json.encode(rows));
+  File('../tools/photo-picker$suffix.html').writeAsStringSync(
     template
         .readAsStringSync()
         .replaceFirst('/*__CANDIDATES__*/[]', json.encode(rows))
@@ -296,7 +314,7 @@ Future<void> _buildPicker(Set<String> only, bool all) async {
   stdout
     ..writeln('')
     ..writeln(
-      'tools/photo-picker.html — ${wanted.length} species, '
+      'tools/photo-picker$suffix.html — ${wanted.length} species, '
       '${rows.length} options, $kb KB',
     )
     ..writeln('')
@@ -320,11 +338,21 @@ Future<_Candidate?> _best(HttpClient http, String latin) async {
 /// Votes are the only quality signal the API gives, and a photograph other
 /// naturalists have faved is one where the animal is visible and correctly
 /// named. It is a weak signal, which is why `--candidates` exists.
-Future<List<_Candidate>> _ranked(HttpClient http, String latin) async {
+Future<List<_Candidate>> _ranked(
+  HttpClient http,
+  String latin, {
+  bool wide = false,
+}) async {
   final List<_Candidate> found = <_Candidate>[
     ...await _search(http, latin, place: southAfricaPlaceId),
   ];
-  if (found.length < candidateCount) {
+
+  // Normally the rest of the world is only consulted when South Africa cannot
+  // fill the sheet. `--wide` always consults it, which is the whole point: for
+  // a species where all eight local options are poor, "eight local options" is
+  // the problem and not the answer. A white-headed vulture in Botswana is the
+  // same bird.
+  if (wide || found.length < candidateCount) {
     final Set<String> have = found.map((_Candidate c) => c.photoUrl).toSet();
     for (final _Candidate c in await _search(http, latin)) {
       if (have.add(c.photoUrl)) {

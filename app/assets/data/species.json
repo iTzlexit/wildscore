@@ -3339,28 +3339,8 @@
       "conservationStatus": "leastConcern"
     },
     {
-      "id": "little-swift",
-      "dexNumber": 152,
-      "commonName": "Little Swift",
-      "scientificName": "Apus affinis",
-      "afrikaansName": "Kleinwindswael",
-      "category": "bird",
-      "rarityTier": "common",
-      "tags": [],
-      "isSensitive": false,
-      "description": "Square tail and a white rump patch, screaming around a bridge in a tight flock. Never lands anywhere a person can reach.",
-      "habitat": "Bridges, cliffs and camp buildings",
-      "bestTimeToSpot": "All day, overhead",
-      "parkRegions": [
-        "northern",
-        "central",
-        "southern"
-      ],
-      "conservationStatus": "leastConcern"
-    },
-    {
       "id": "african-palm-swift",
-      "dexNumber": 153,
+      "dexNumber": 152,
       "commonName": "African Palm Swift",
       "scientificName": "Cypsiurus parvus",
       "afrikaansName": "Palmwindswael",
@@ -3380,7 +3360,7 @@
     },
     {
       "id": "yellow-billed-oxpecker",
-      "dexNumber": 154,
+      "dexNumber": 153,
       "commonName": "Yellow-billed Oxpecker",
       "scientificName": "Buphagus africanus",
       "afrikaansName": "Geelbekrenostervoël",
@@ -3399,7 +3379,7 @@
     },
     {
       "id": "black-backed-puffback",
-      "dexNumber": 155,
+      "dexNumber": 154,
       "commonName": "Black-backed Puffback",
       "scientificName": "Dryoscopus cubla",
       "afrikaansName": "Sneeubal",
@@ -3419,7 +3399,7 @@
     },
     {
       "id": "southern-black-tit",
-      "dexNumber": 156,
+      "dexNumber": 155,
       "commonName": "Southern Black Tit",
       "scientificName": "Melaniparus niger",
       "afrikaansName": "Gewone Swartmees",
@@ -3439,7 +3419,7 @@
     },
     {
       "id": "diederik-cuckoo",
-      "dexNumber": 157,
+      "dexNumber": 156,
       "commonName": "Diederik Cuckoo",
       "scientificName": "Chrysococcyx caprius",
       "afrikaansName": "Diederikkie",
@@ -3459,7 +3439,7 @@
     },
     {
       "id": "green-wood-hoopoe",
-      "dexNumber": 158,
+      "dexNumber": 157,
       "commonName": "Green Wood-hoopoe",
       "scientificName": "Phoeniculus purpureus",
       "afrikaansName": "Rooibekkakelaar",
@@ -3479,7 +3459,7 @@
     },
     {
       "id": "speckled-mousebird",
-      "dexNumber": 159,
+      "dexNumber": 158,
       "commonName": "Speckled Mousebird",
       "scientificName": "Colius striatus",
       "afrikaansName": "Gevlekte Muisvoël",
@@ -3499,7 +3479,7 @@
     },
     {
       "id": "red-faced-mousebird",
-      "dexNumber": 160,
+      "dexNumber": 159,
       "commonName": "Red-faced Mousebird",
       "scientificName": "Urocolius indicus",
       "afrikaansName": "Rooiwangmuisvoël",
@@ -3519,7 +3499,7 @@
     },
     {
       "id": "brown-headed-parrot",
-      "dexNumber": 161,
+      "dexNumber": 160,
       "commonName": "Brown-headed Parrot",
       "scientificName": "Poicephalus cryptoxanthus",
       "afrikaansName": "Bruinkoppapegaai",
@@ -3539,7 +3519,7 @@
     },
     {
       "id": "brown-hooded-kingfisher",
-      "dexNumber": 162,
+      "dexNumber": 161,
       "commonName": "Brown-hooded Kingfisher",
       "scientificName": "Halcyon albiventris",
       "afrikaansName": "Bruinkopvisvanger",
@@ -3559,7 +3539,7 @@
     },
     {
       "id": "european-bee-eater",
-      "dexNumber": 163,
+      "dexNumber": 162,
       "commonName": "European Bee-eater",
       "scientificName": "Merops apiaster",
       "afrikaansName": "Europese Byvreter",
@@ -3579,7 +3559,7 @@
     },
     {
       "id": "african-green-pigeon",
-      "dexNumber": 164,
+      "dexNumber": 163,
       "commonName": "African Green Pigeon",
       "scientificName": "Treron calvus",
       "afrikaansName": "Papegaaiduif",
@@ -3599,7 +3579,7 @@
     },
     {
       "id": "red-eyed-dove",
-      "dexNumber": 165,
+      "dexNumber": 164,
       "commonName": "Red-eyed Dove",
       "scientificName": "Streptopelia semitorquata",
       "afrikaansName": "Grootringduif",
@@ -3619,7 +3599,7 @@
     },
     {
       "id": "cape-turtle-dove",
-      "dexNumber": 166,
+      "dexNumber": 165,
       "commonName": "Cape Turtle Dove",
       "scientificName": "Streptopelia capicola",
       "afrikaansName": "Gewone Tortelduif",
@@ -3639,7 +3619,7 @@
     },
     {
       "id": "laughing-dove",
-      "dexNumber": 167,
+      "dexNumber": 166,
       "commonName": "Laughing Dove",
       "scientificName": "Spilopelia senegalensis",
       "afrikaansName": "Rooiborsduifie",
@@ -3659,7 +3639,7 @@
     },
     {
       "id": "white-crested-helmetshrike",
-      "dexNumber": 168,
+      "dexNumber": 167,
       "commonName": "White-crested Helmetshrike",
       "scientificName": "Prionops plumatus",
       "afrikaansName": "Withelmlaksman",
@@ -3679,7 +3659,7 @@
     },
     {
       "id": "black-collared-barbet",
-      "dexNumber": 169,
+      "dexNumber": 168,
       "commonName": "Black-collared Barbet",
       "scientificName": "Lybius torquatus",
       "afrikaansName": "Rooikophoutkapper",
@@ -3699,7 +3679,7 @@
     },
     {
       "id": "crested-barbet",
-      "dexNumber": 170,
+      "dexNumber": 169,
       "commonName": "Crested Barbet",
       "scientificName": "Trachyphonus vaillantii",
       "afrikaansName": "Kuifkophoutkapper",
@@ -3719,7 +3699,7 @@
     },
     {
       "id": "grey-headed-bushshrike",
-      "dexNumber": 171,
+      "dexNumber": 170,
       "commonName": "Grey-headed Bushshrike",
       "scientificName": "Malaconotus blanchoti",
       "afrikaansName": "Spookvoël",
@@ -3741,7 +3721,7 @@
     },
     {
       "id": "black-headed-oriole",
-      "dexNumber": 172,
+      "dexNumber": 171,
       "commonName": "Black-headed Oriole",
       "scientificName": "Oriolus larvatus",
       "afrikaansName": "Swartkopwielewaal",
@@ -3761,7 +3741,7 @@
     },
     {
       "id": "arrow-marked-babbler",
-      "dexNumber": 173,
+      "dexNumber": 172,
       "commonName": "Arrow-marked Babbler",
       "scientificName": "Turdoides jardineii",
       "afrikaansName": "Pylvlekkatlagter",
@@ -3781,7 +3761,7 @@
     },
     {
       "id": "dark-capped-bulbul",
-      "dexNumber": 174,
+      "dexNumber": 173,
       "commonName": "Dark-capped Bulbul",
       "scientificName": "Pycnonotus tricolor",
       "afrikaansName": "Swartoogtiptol",
@@ -3801,7 +3781,7 @@
     },
     {
       "id": "groundscraper-thrush",
-      "dexNumber": 175,
+      "dexNumber": 174,
       "commonName": "Groundscraper Thrush",
       "scientificName": "Turdus litsitsirupa",
       "afrikaansName": "Gevlekte Lyster",
@@ -3821,7 +3801,7 @@
     },
     {
       "id": "kurrichane-thrush",
-      "dexNumber": 176,
+      "dexNumber": 175,
       "commonName": "Kurrichane Thrush",
       "scientificName": "Turdus libonyana",
       "afrikaansName": "Rooibeklyster",
@@ -3841,7 +3821,7 @@
     },
     {
       "id": "long-billed-crombec",
-      "dexNumber": 177,
+      "dexNumber": 176,
       "commonName": "Long-billed Crombec",
       "scientificName": "Sylvietta rufescens",
       "afrikaansName": "Bosveldstompstert",
@@ -3861,7 +3841,7 @@
     },
     {
       "id": "yellow-breasted-apalis",
-      "dexNumber": 178,
+      "dexNumber": 177,
       "commonName": "Yellow-breasted Apalis",
       "scientificName": "Apalis flavida",
       "afrikaansName": "Geelborskleinjantjie",
@@ -3881,7 +3861,7 @@
     },
     {
       "id": "african-paradise-flycatcher",
-      "dexNumber": 179,
+      "dexNumber": 178,
       "commonName": "African Paradise Flycatcher",
       "scientificName": "Terpsiphone viridis",
       "afrikaansName": "Paradysvlieëvanger",
@@ -3901,7 +3881,7 @@
     },
     {
       "id": "burchells-starling",
-      "dexNumber": 180,
+      "dexNumber": 179,
       "commonName": "Burchell's Starling",
       "scientificName": "Lamprotornis australis",
       "afrikaansName": "Grootglansspreeu",
@@ -3921,7 +3901,7 @@
     },
     {
       "id": "white-browed-robin-chat",
-      "dexNumber": 181,
+      "dexNumber": 180,
       "commonName": "White-browed Robin-Chat",
       "scientificName": "Cossypha heuglini",
       "afrikaansName": "Heuglinse Janfrederik",
@@ -3941,7 +3921,7 @@
     },
     {
       "id": "african-pied-wagtail",
-      "dexNumber": 182,
+      "dexNumber": 181,
       "commonName": "African Pied Wagtail",
       "scientificName": "Motacilla aguimp",
       "afrikaansName": "Bontkwikkie",
@@ -3961,7 +3941,7 @@
     },
     {
       "id": "white-winged-widowbird",
-      "dexNumber": 183,
+      "dexNumber": 182,
       "commonName": "White-winged Widowbird",
       "scientificName": "Euplectes albonotatus",
       "afrikaansName": "Witvlerkflap",
@@ -3981,7 +3961,7 @@
     },
     {
       "id": "village-weaver",
-      "dexNumber": 184,
+      "dexNumber": 183,
       "commonName": "Village Weaver",
       "scientificName": "Ploceus cucullatus",
       "afrikaansName": "Bontrugwewer",
@@ -4001,7 +3981,7 @@
     },
     {
       "id": "southern-red-bishop",
-      "dexNumber": 185,
+      "dexNumber": 184,
       "commonName": "Southern Red Bishop",
       "scientificName": "Euplectes orix",
       "afrikaansName": "Rooivink",
@@ -4021,7 +4001,7 @@
     },
     {
       "id": "white-bellied-sunbird",
-      "dexNumber": 186,
+      "dexNumber": 185,
       "commonName": "White-bellied Sunbird",
       "scientificName": "Cinnyris talatala",
       "afrikaansName": "Witpenssuikerbekkie",
@@ -4041,7 +4021,7 @@
     },
     {
       "id": "scarlet-chested-sunbird",
-      "dexNumber": 187,
+      "dexNumber": 186,
       "commonName": "Scarlet-chested Sunbird",
       "scientificName": "Chalcomitra senegalensis",
       "afrikaansName": "Rooiborssuikerbekkie",
@@ -4061,7 +4041,7 @@
     },
     {
       "id": "yellow-fronted-canary",
-      "dexNumber": 188,
+      "dexNumber": 187,
       "commonName": "Yellow-fronted Canary",
       "scientificName": "Crithagra mozambica",
       "afrikaansName": "Geeloogkanarie",
@@ -4081,7 +4061,7 @@
     },
     {
       "id": "southern-grey-headed-sparrow",
-      "dexNumber": 189,
+      "dexNumber": 188,
       "commonName": "Southern Grey-headed Sparrow",
       "scientificName": "Passer diffusus",
       "afrikaansName": "Gryskopmossie",
@@ -4101,7 +4081,7 @@
     },
     {
       "id": "blue-waxbill",
-      "dexNumber": 190,
+      "dexNumber": 189,
       "commonName": "Blue Waxbill",
       "scientificName": "Uraeginthus angolensis",
       "afrikaansName": "Gewone Blousysie",
@@ -4121,7 +4101,7 @@
     },
     {
       "id": "golden-breasted-bunting",
-      "dexNumber": 191,
+      "dexNumber": 190,
       "commonName": "Golden-breasted Bunting",
       "scientificName": "Emberiza flaviventris",
       "afrikaansName": "Rooirugstreepkoppie",

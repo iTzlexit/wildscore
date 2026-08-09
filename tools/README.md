@@ -142,3 +142,17 @@ the catalogue.
 **Ant Lion has no candidates.** Its "scientific name" is a family
 (Myrmeleontidae) rather than a species, so the search returns nothing. It keeps
 the photograph that was picked by hand for the Small Five.
+
+### Redoing a handful of species
+
+When the eight options for a species are all poor, more South African options
+are not the answer — the local pool *is* the problem:
+
+```bash
+cd app && dart run tool/source_species_photos.dart --picker --wide african-darter magpie-shrike
+```
+
+`--wide` always searches the rest of the world as well as South Africa, and
+offers 20 options instead of 8. Naming species writes `photo-picker-redo.html`
+rather than replacing the full sheet, so redoing nine birds does not throw away
+the page for the other hundred and eighty.
