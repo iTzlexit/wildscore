@@ -40,23 +40,12 @@ void main() {
     // and a car asks them at different moments.
     expect(find.text('HOW TO PLAY'), findsOneWidget);
     expect(find.text('THE RULES'), findsOneWidget);
-    expect(find.text('WILD CARDS AND BONUSES'), findsOneWidget);
+    // Split in two. Wild cards are about *how* you spotted it and change with
+    // the crowd; bonuses are about what the animal was doing. One heading over
+    // both made them look like the same mechanic.
+    expect(find.text('WILD CARDS'), findsOneWidget);
+    expect(find.text('BONUS CARDS'), findsOneWidget);
     expect(find.text('WHAT EVERYTHING IS WORTH'), findsOneWidget);
-  });
-
-  testWidgets('the opt-out is near the top, not buried at the bottom', (
-    WidgetTester tester,
-  ) async {
-    // Somebody who does not want a competition has to hear that before they
-    // read four screens of scoring rules and decide the app is not for them.
-    await _pump(tester, size: const Size(390, 5200));
-
-    final double optOut = tester
-        .getTopLeft(find.text('Not one for keeping score?'))
-        .dy;
-    final double firstRule = tester.getTopLeft(find.text('THE RULES')).dy;
-
-    expect(optOut, lessThan(firstRule));
   });
 
   testWidgets('the points table is generated from the tiers', (
@@ -92,10 +81,10 @@ void main() {
     // contains a bare "5" for the Common tier, which an earlier version of this
     // test mistook for a fifth step.
     for (final String title in <String>[
-      'Start a drive',
-      'Add everyone in the car',
-      'Call it out loud — first voice wins',
-      'End the day back at camp',
+      'Start a Drive',
+      'Add Players',
+      'Claim a Spot',
+      'End the Day',
     ]) {
       expect(find.text(title), findsOneWidget, reason: title);
     }
@@ -104,11 +93,28 @@ void main() {
   testWidgets('the everyday cap is explained without jargon', (
     WidgetTester tester,
   ) async {
-    // "The common ones run out" meant nothing on its own. What a player needs
-    // to know is why it exists and what it costs them.
+    // The heading used to be "The common ones run out for the day", which
+    // meant nothing until you had already read the card. It now says what it
+    // is, and the two numbers a player actually needs are in the body.
     await _pump(tester, size: const Size(390, 5200));
 
-    expect(find.textContaining('every impala'), findsOneWidget);
-    expect(find.textContaining('Nothing rare is capped'), findsOneWidget);
+    expect(find.text('Common animals have a daily limit'), findsOneWidget);
+    expect(find.textContaining('Impala scores'), findsOneWidget);
+    expect(
+      find.textContaining('Rare animals are never capped'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('the two crowd outcomes are stated as scoring, not as advice', (
+    WidgetTester tester,
+  ) async {
+    // Spotting it yourself pays what the card says and a jam pays a fifth
+    // less. Both halves have to be on this screen or the claim sheet is the
+    // first place anybody learns there is a penalty at all.
+    await _pump(tester, size: const Size(390, 5200));
+
+    expect(find.textContaining('normal points'), findsOneWidget);
+    expect(find.textContaining('20% fewer points'), findsOneWidget);
   });
 }

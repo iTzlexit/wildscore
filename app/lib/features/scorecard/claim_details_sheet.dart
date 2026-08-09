@@ -69,6 +69,17 @@ class _ClaimDetailsSheetState extends State<ClaimDetailsSheet> {
   bool _variant = false;
   final Set<SightingExtra> _extras = <SightingExtra>{};
 
+  /// What the claim would be worth answered one way, everything else held.
+  ///
+  /// So the buttons can show their own consequence rather than only moving the
+  /// total at the top, and so the two numbers stay honest when a male lion or a
+  /// kill is already ticked.
+  int _pointsIn(SightingContext crowd) => widget.species.scoreFor(
+    variantApplied: _variant,
+    context: crowd,
+    extras: _extras,
+  );
+
   @override
   Widget build(BuildContext context) {
     final Species species = widget.species;
@@ -197,6 +208,13 @@ class _ClaimDetailsSheetState extends State<ClaimDetailsSheet> {
               // Two marks, not three choices. Neither selected is the ordinary
               // sighting and needs no answer — most of them are ordinary, and a
               // three-way radio made every claim a decision.
+              //
+              // **Stacked, not side by side.** Two half-width chips could not
+              // fit "Lone sighting" next to what it was worth, so the label
+              // ellipsed and the owner could not read his own buttons. Full
+              // width also makes room for the arithmetic, which is the point:
+              // the sheet should show what a jam costs, not leave somebody to
+              // work it out from a total that moved.
               if (species.crowdMatters) ...<Widget>[
                 const Divider(height: 1, color: AppColors.outline),
                 const _Question(label: 'Who else was there?'),
@@ -207,31 +225,34 @@ class _ClaimDetailsSheetState extends State<ClaimDetailsSheet> {
                     Space.lg,
                     Space.lg,
                   ),
-                  child: Row(
+                  child: Column(
                     children: <Widget>[
-                      Expanded(
-                        child: _Choice(
-                          label: SightingContext.alone.label,
-                          detail: 'Double',
-                          selected: _context == SightingContext.alone,
-                          onTap: () => setState(
-                            () => _context = _context == SightingContext.alone
-                                ? SightingContext.normal
-                                : SightingContext.alone,
-                          ),
+                      _CrowdChoice(
+                        label: SightingContext.alone.label,
+                        note: 'You spotted it yourself',
+                        total: _pointsIn(SightingContext.alone),
+                        accent: style.accent,
+                        selected: _context == SightingContext.alone,
+                        onTap: () => setState(
+                          () => _context = _context == SightingContext.alone
+                              ? SightingContext.normal
+                              : SightingContext.alone,
                         ),
                       ),
-                      const SizedBox(width: Space.sm),
-                      Expanded(
-                        child: _Choice(
-                          label: SightingContext.jam.label,
-                          detail: '−25%',
-                          selected: _context == SightingContext.jam,
-                          onTap: () => setState(
-                            () => _context = _context == SightingContext.jam
-                                ? SightingContext.normal
-                                : SightingContext.jam,
-                          ),
+                      const SizedBox(height: Space.sm),
+                      _CrowdChoice(
+                        label: SightingContext.jam.label,
+                        note: 'Cars were already there',
+                        // The sum, spelled out. "80" on its own looks like a
+                        // different animal; "100 − 20%" is the rule.
+                        working: '${_pointsIn(SightingContext.normal)} − 20%',
+                        total: _pointsIn(SightingContext.jam),
+                        accent: style.accent,
+                        selected: _context == SightingContext.jam,
+                        onTap: () => setState(
+                          () => _context = _context == SightingContext.jam
+                              ? SightingContext.normal
+                              : SightingContext.jam,
                         ),
                       ),
                     ],
@@ -296,6 +317,115 @@ class _Question extends StatelessWidget {
         Space.md,
       ),
       child: Text(label, style: AppText.label),
+    );
+  }
+}
+
+/// One of the two crowd answers, full width, carrying its own score.
+///
+/// Deliberately not a [_Choice]. The other questions are chips where the label
+/// is short and the effect is a suffix; this one is a row that has to hold a
+/// phrase, a line of explanation and a number big enough to read at arm's
+/// length in a moving car.
+class _CrowdChoice extends StatelessWidget {
+  const _CrowdChoice({
+    required this.label,
+    required this.note,
+    required this.total,
+    required this.accent,
+    required this.selected,
+    required this.onTap,
+    this.working,
+  });
+
+  final String label;
+
+  /// One short line under the label. Says which of the two this is without
+  /// making anybody parse "lone".
+  final String note;
+
+  /// The sum, where there is one: "100 − 20%". Null on the plain answer, which
+  /// has no arithmetic to show.
+  final String? working;
+
+  final int total;
+  final Color accent;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: selected ? AppColors.accentWash : AppColors.surface,
+      borderRadius: BorderRadius.circular(Radii.chip),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(Radii.chip),
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: Space.md,
+            vertical: Space.md,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(Radii.chip),
+            border: Border.all(
+              color: selected ? AppColors.accent : AppColors.outlineStrong,
+              width: selected ? 1.6 : 1,
+            ),
+          ),
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      label,
+                      style: AppText.bodyStrong.copyWith(
+                        fontSize: 15,
+                        color: selected
+                            ? AppColors.accent
+                            : AppColors.textPrimary,
+                        fontVariations: AppFonts.weight(selected ? 700 : 600),
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      note,
+                      style: AppText.caption.copyWith(
+                        color: AppColors.textMuted,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: Space.sm),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  if (working case final String w)
+                    Text(
+                      w,
+                      style: AppText.caption.copyWith(
+                        color: AppColors.textMuted,
+                        fontFeatures: AppText.tabular,
+                      ),
+                    ),
+                  Text(
+                    '$total',
+                    style: AppText.title2.copyWith(
+                      fontSize: 22,
+                      color: selected ? accent : AppColors.textPrimary,
+                      fontFeatures: AppText.tabular,
+                      fontVariations: AppFonts.weight(800),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

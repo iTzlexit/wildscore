@@ -92,3 +92,49 @@ download, downscale and attribution update all run from there.
 ## prepare_species_photos.dart
 
 See `app/tool/`. Downscales sourced photographs into `assets/species/`.
+
+## photo-picker.html
+
+**Choose the photograph for every species yourself.**
+
+Regenerate it whenever the catalogue changes — the candidates are baked in, so
+it goes stale the moment a species is added:
+
+```bash
+cd app && dart run tool/source_species_photos.dart --picker
+```
+
+That fetches eight CC0/CC-BY options per species from iNaturalist and writes
+both `photo-candidates.json` and `photo-picker.html`. **Metadata only** — no
+images are downloaded, the page loads them from iNaturalist, so the whole
+catalogue takes about three minutes.
+
+Open it over HTTP rather than `file://`, so the "in the app" thumbnails resolve:
+
+```bash
+cd app && dart run tool/serve_web.dart --root .. 8099
+```
+
+Then <http://localhost:8099/tools/photo-picker.html>.
+
+Each species shows what is **in the app now** first, then the alternatives.
+Click one to change it; click it again to go back to leaving it alone. Picks
+save to `localStorage`, so you can close the tab. **Export** gives a JSON blob
+of only what you changed.
+
+To apply it:
+
+```bash
+cd app && dart run tool/apply_photo_picks.dart picks.json --dry-run
+cd app && dart run tool/apply_photo_picks.dart picks.json
+```
+
+It downloads each chosen photograph, downscales it to the same 800px/q72 as the
+rest, and rewrites that species' credit. Species you did not pick are untouched.
+It refuses the whole batch — writing nothing — if any pick carries a licence
+that may not ship, names no photographer, or points at a species that is not in
+the catalogue.
+
+**Ant Lion has no candidates.** Its "scientific name" is a family
+(Myrmeleontidae) rather than a species, so the search returns nothing. It keeps
+the photograph that was picked by hand for the Small Five.

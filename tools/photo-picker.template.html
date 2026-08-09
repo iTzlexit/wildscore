@@ -1,0 +1,181 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wild Score — pick the photos</title>
+<style>
+ :root{--bg:#f6f6f3;--card:#fff;--ink:#151a17;--mute:#8a938c;--line:#e2e4de;--accent:#1b7a54}
+ *{box-sizing:border-box}
+ body{margin:0;background:var(--bg);color:var(--ink);
+      font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+ header{position:sticky;top:0;z-index:20;background:#fffffff5;backdrop-filter:blur(8px);
+        border-bottom:1px solid var(--line);padding:12px 20px;
+        display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+ h1{font-size:16px;margin:0;font-weight:800}
+ .count{color:var(--mute);font-size:13px}
+ input[type=search]{font:inherit;padding:8px 12px;border:1px solid var(--line);
+        border-radius:10px;min-width:220px;margin-left:auto}
+ label.tog{font-size:13px;color:var(--mute);display:flex;gap:6px;align-items:center;cursor:pointer}
+ button{font:inherit;font-weight:700;border-radius:10px;padding:9px 14px;
+        border:1px solid var(--line);background:#fff;cursor:pointer;color:var(--ink)}
+ button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+ main{padding:20px;max-width:1280px;margin:0 auto}
+ .note{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;
+       margin-bottom:22px;line-height:1.6}
+ .note b{color:var(--accent)}
+ section{margin:26px 0}
+ .head{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+ h2{font-size:19px;margin:0}
+ .sci{color:var(--mute);font-size:13px;font-style:italic}
+ .done{color:var(--accent);font-size:12px;font-weight:800}
+ .hint{color:var(--mute);font-size:13px;margin:2px 0 12px}
+ .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+ .c{background:var(--card);border:2px solid var(--line);border-radius:14px;
+    overflow:hidden;cursor:pointer;transition:border-color .12s,transform .12s}
+ .c:hover{transform:translateY(-2px)}
+ .c.on{border-color:var(--accent);box-shadow:0 0 0 3px #1b7a5422}
+ .c.now{border-style:dashed}
+ .c img{width:100%;height:150px;object-fit:contain;display:block;background:#e9eae6}
+ .meta{padding:8px 10px;font-size:11px;color:var(--mute);line-height:1.35}
+ .meta .lic{font-weight:800;color:var(--ink)}
+ .on .meta .lic{color:var(--accent)}
+ .tag{display:inline-block;background:#eef1ea;border-radius:6px;padding:1px 5px;
+      font-weight:800;color:var(--ink);margin-bottom:3px}
+ #out{position:fixed;inset:auto 16px 16px auto;max-width:560px;background:#fff;
+      border:1px solid var(--line);border-radius:14px;padding:16px;display:none;
+      box-shadow:0 10px 40px #0003;z-index:30}
+ textarea{width:100%;height:150px;font:12px/1.4 ui-monospace,monospace;
+          border:1px solid var(--line);border-radius:10px;padding:10px}
+</style>
+<header>
+  <h1>Pick the photos</h1>
+  <span class="count" id="count"></span>
+  <input type="search" id="q" placeholder="Search 191 species…">
+  <label class="tog"><input type="checkbox" id="only"> Only ones I have not picked</label>
+  <button onclick="reset()">Clear picks</button>
+  <button class="primary" onclick="exp()">Export</button>
+</header>
+<main>
+  <div class="note">
+    Click the photo you want for each animal. The one marked
+    <b>IN THE APP</b> is what is there now — leave it alone if it is fine.
+    <br><br>
+    Everything here is <b>CC0 or CC-BY</b>, so all of it is legal in a paid app.
+    Broken thumbnails are iNaturalist being slow; reload the page.
+    <br><br>
+    Your picks are saved in this browser as you go, so you can close the tab and
+    come back. When you are done, press <b>Export</b> and paste the result into
+    the chat.
+  </div>
+  <div id="list"></div>
+</main>
+<div id="out">
+  <p style="margin:0 0 8px"><b>Paste this back into the chat.</b></p>
+  <textarea id="json" readonly></textarea>
+  <p style="margin:10px 0 0"><button onclick="cp()">Copy</button>
+  <button onclick="document.getElementById('out').style.display='none'">Close</button></p>
+</div>
+<script>
+const C = /*__CANDIDATES__*/[];
+const KEY = 'wildscore-photo-picks';
+let picks = JSON.parse(localStorage.getItem(KEY) || '{}');
+
+const ids = [...new Set(C.map(c => c.id))];
+const list = document.getElementById('list');
+
+ids.forEach(id => {
+  const rows = C.filter(c => c.id === id);
+  const s = document.createElement('section');
+  s.dataset.id = id;
+  s.dataset.name = (rows[0].name + ' ' + (rows[0].sci || '')).toLowerCase();
+
+  const head = document.createElement('div');
+  head.className = 'head';
+  head.innerHTML = `<h2>${rows[0].name}</h2>
+    <span class="sci">${rows[0].sci || ''}</span>
+    <span class="done" id="d-${id}"></span>`;
+  s.appendChild(head);
+
+  const hint = document.createElement('p');
+  hint.className = 'hint';
+  hint.textContent = rows[0].hint || '';
+  s.appendChild(hint);
+
+  const g = document.createElement('div');
+  g.className = 'grid';
+  g.id = 'g-' + id;
+  s.appendChild(g);
+
+  // What is in the app right now, first, so a pick is a comparison rather
+  // than a guess. Served straight off disk — this page is opened locally.
+  const cur = document.createElement('div');
+  cur.className = 'c now';
+  cur.innerHTML = `<img loading="lazy" src="../app/assets/species/${id}.jpg" alt="">
+    <div class="meta"><span class="tag">IN THE APP</span><br>Keep this one by
+    not picking anything.</div>`;
+  g.appendChild(cur);
+
+  rows.forEach(c => {
+    const el = document.createElement('div');
+    el.className = 'c';
+    el.dataset.photo = c.photo;
+    el.innerHTML = `<img loading="lazy" src="${c.photo}" alt="">
+      <div class="meta"><span class="lic">${c.license.toUpperCase()}</span> · ${c.author}
+      <br>${c.place ? c.place.slice(0, 44) : ''}</div>`;
+    el.onclick = () => {
+      // Clicking the chosen one again unpicks it, which is the only way back
+      // to "leave what is in the app alone".
+      if (picks[id] && picks[id].photo === c.photo) delete picks[id];
+      else picks[id] = c;
+      localStorage.setItem(KEY, JSON.stringify(picks));
+      paint(id);
+    };
+    g.appendChild(el);
+  });
+
+  list.appendChild(s);
+  paint(id);
+});
+
+function paint(id) {
+  const chosen = picks[id];
+  document.querySelectorAll('#g-' + CSS.escape(id) + ' .c').forEach(el => {
+    el.classList.toggle('on', !!chosen && el.dataset.photo === chosen.photo);
+  });
+  document.getElementById('d-' + id).textContent = chosen ? 'changed' : '';
+  const n = Object.keys(picks).length;
+  document.getElementById('count').textContent =
+    `${n} changed of ${ids.length}`;
+  filter();
+}
+
+function filter() {
+  const q = document.getElementById('q').value.trim().toLowerCase();
+  const only = document.getElementById('only').checked;
+  document.querySelectorAll('section').forEach(s => {
+    const hit = !q || s.dataset.name.includes(q);
+    const show = hit && (!only || !picks[s.dataset.id]);
+    s.style.display = show ? '' : 'none';
+  });
+}
+
+document.getElementById('q').oninput = filter;
+document.getElementById('only').onchange = filter;
+
+function reset() {
+  if (!confirm('Throw away every pick?')) return;
+  picks = {};
+  localStorage.removeItem(KEY);
+  ids.forEach(paint);
+}
+
+function exp() {
+  document.getElementById('json').value = JSON.stringify(picks, null, 1);
+  document.getElementById('out').style.display = 'block';
+}
+
+function cp() {
+  const t = document.getElementById('json');
+  t.select();
+  document.execCommand('copy');
+}
+</script>

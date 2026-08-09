@@ -56,7 +56,20 @@ Future<void> main(List<String> args) async {
   // too distant to identify. iNaturalist is a biodiversity record, not a photo
   // library, and a dead animal by the road is a perfectly good record.
   final bool candidates = args.contains('--candidates');
+
+  // Builds the page the owner picks from, rather than picking for him.
+  //
+  // Same search, same licence whitelist, no downloads: the picker loads the
+  // photographs straight off iNaturalist by URL, so this writes metadata only
+  // and finishes in minutes for the whole catalogue. Nothing is fetched until
+  // he has chosen — see tool/apply_photo_picks.dart.
+  final bool picker = args.contains('--picker');
   final Set<String> only = args.where((String a) => !a.startsWith('-')).toSet();
+
+  if (picker) {
+    await _buildPicker(only, all);
+    return;
+  }
 
   final Map<String, dynamic> catalogue =
       json.decode(File('assets/data/species.json').readAsStringSync())
@@ -195,6 +208,102 @@ Future<void> main(List<String> args) async {
 /// Asks twice: South Africa first, then anywhere. A Kruger photograph is worth
 /// more than a better-lit one from a zoo in Europe, because the whole job of
 /// the picture is to match what is standing in the road.
+/// Writes `tools/photo-candidates.json` and regenerates `tools/photo-picker.html`.
+///
+/// The picker existed once, for four species, as a hand-written page with the
+/// candidates pasted into it. That is why it went away: it was a one-off, so
+/// the next hundred species were chosen by a machine instead, and the machine
+/// picked a dead hornbill. This makes the page reproducible for any set of
+/// species, which is the only version of it worth having.
+Future<void> _buildPicker(Set<String> only, bool all) async {
+  final Map<String, dynamic> catalogue =
+      json.decode(File('assets/data/species.json').readAsStringSync())
+          as Map<String, dynamic>;
+
+  final List<Map<String, dynamic>> wanted = <Map<String, dynamic>>[
+    for (final dynamic s in catalogue['species'] as List<dynamic>)
+      if (only.isEmpty || only.contains((s as Map<String, dynamic>)['id']))
+        s as Map<String, dynamic>,
+  ];
+
+  final File template = File('../tools/photo-picker.template.html');
+  if (!template.existsSync()) {
+    stderr.writeln('missing ${template.path} — run this from app/');
+    exitCode = 66;
+    return;
+  }
+
+  final HttpClient http = HttpClient()..userAgent = userAgent;
+  final List<Map<String, dynamic>> rows = <Map<String, dynamic>>[];
+  int done = 0;
+
+  stdout.writeln('Fetching options for ${wanted.length} species…\n');
+
+  for (final Map<String, dynamic> species in wanted) {
+    final String id = species['id'] as String;
+    final List<_Candidate> options = await _ranked(
+      http,
+      species['scientificName'] as String,
+    );
+
+    for (int i = 0; i < options.length && i < candidateCount; i++) {
+      rows.add(<String, dynamic>{
+        'id': id,
+        'name': species['commonName'],
+        'sci': species['scientificName'],
+        'photo': options[i].photoUrl,
+        'license': options[i].licence,
+        'author': options[i].author,
+        'obs': options[i].observationUrl,
+        'place': options[i].place,
+      });
+    }
+
+    done++;
+    if (done % 10 == 0 || done == wanted.length) {
+      stdout.writeln('  $done / ${wanted.length}');
+    }
+    await Future<void>.delayed(politeDelay);
+  }
+  http.close();
+
+  // Belt and braces. The API is asked to filter and _Candidate filters again;
+  // this is the third check, on the exact bytes about to be published in a page
+  // somebody will pick from.
+  final Iterable<Map<String, dynamic>> illegal = rows.where(
+    (Map<String, dynamic> r) => !allowedLicences.contains(r['license']),
+  );
+  if (illegal.isNotEmpty) {
+    stderr.writeln(
+      'refusing to write: ${illegal.length} rows are not CC0/CC-BY',
+    );
+    exitCode = 65;
+    return;
+  }
+
+  File('../tools/photo-candidates.json').writeAsStringSync(json.encode(rows));
+  File('../tools/photo-picker.html').writeAsStringSync(
+    template
+        .readAsStringSync()
+        .replaceFirst('/*__CANDIDATES__*/[]', json.encode(rows))
+        .replaceFirst(
+          'Search 191 species…',
+          'Search ${wanted.length} species…',
+        ),
+  );
+
+  final int kb = (json.encode(rows).length / 1024).round();
+  stdout
+    ..writeln('')
+    ..writeln(
+      'tools/photo-picker.html — ${wanted.length} species, '
+      '${rows.length} options, $kb KB',
+    )
+    ..writeln('')
+    ..writeln('Open it, pick, press Export, and paste the JSON back. Then:')
+    ..writeln('  dart run tool/apply_photo_picks.dart <picks.json>');
+}
+
 Future<_Candidate?> _best(HttpClient http, String latin) async {
   final List<_Candidate> found = await _ranked(http, latin);
   return found.isEmpty ? null : found.first;

@@ -302,6 +302,53 @@ void main() {
     expect(find.text('Ietermagog'), findsOneWidget);
   });
 
+  testWidgets('the catalogue is split into animals then birds', (
+    WidgetTester tester,
+  ) async {
+    // One continuous grid was right at 127 species. At 191 — 124 of them birds
+    // — rarest-first buried every ordinary mammal below a hundred birds.
+    await _pumpCodex(tester);
+
+    // Animals open the catalogue, and nothing on the first screen is a bird.
+    expect(find.text('ANIMALS'), findsOneWidget);
+    for (final SpeciesGridCard card in tester.widgetList<SpeciesGridCard>(
+      find.byType(SpeciesGridCard),
+    )) {
+      expect(
+        card.species.category,
+        isNot(SpeciesCategory.bird),
+        reason: '${card.species.commonName} is on the first screen',
+      );
+    }
+
+    // Birds are down there, past sixty-odd animals. Scrolled to rather than
+    // asserted by position: the list is lazy, so a heading below the fold is
+    // not built at all.
+    // Named explicitly: the quick-filter row is a Scrollable too, so an
+    // unqualified scroll cannot tell which one is meant.
+    await tester.scrollUntilVisible(
+      find.text('BIRDS'),
+      600,
+      scrollable: find.descendant(
+        of: find.byType(CustomScrollView),
+        matching: find.byType(Scrollable),
+      ),
+    );
+    expect(find.text('BIRDS'), findsOneWidget);
+  });
+
+  testWidgets('one group on its own needs no heading', (
+    WidgetTester tester,
+  ) async {
+    // Filtering to Birds already says what you are looking at. A heading over
+    // the only group on screen is furniture.
+    await _pumpCodex(tester, width: 2000);
+    await _tapQuickFilter(tester, 'Birds');
+
+    expect(find.text('BIRDS'), findsNothing);
+    expect(find.text('ANIMALS'), findsNothing);
+  });
+
   testWidgets('a species with a real figure shows it, and says where from', (
     WidgetTester tester,
   ) async {

@@ -24,10 +24,21 @@ const Map<String, String> _types = <String, String>{
 };
 
 Future<void> main(List<String> args) async {
-  final int port = args.isEmpty ? 8080 : int.parse(args.first);
-  final Directory root = Directory('build/web');
+  // `--root` so the same server can put the content tools on localhost. The
+  // picker and the ranker are plain files, but a browser opened on file:// is
+  // a second-class citizen — no fetch, no reliable relative paths — and both
+  // pages want looking at before they go in front of anybody.
+  final int rootFlag = args.indexOf('--root');
+  final String rootPath = rootFlag == -1 ? 'build/web' : args[rootFlag + 1];
+  final List<String> rest = <String>[
+    for (int i = 0; i < args.length; i++)
+      if (i != rootFlag && i != rootFlag + 1) args[i],
+  ];
+
+  final int port = rest.isEmpty ? 8080 : int.parse(rest.first);
+  final Directory root = Directory(rootPath);
   if (!root.existsSync()) {
-    stderr.writeln('build/web not found — run `flutter build web` first.');
+    stderr.writeln('$rootPath not found.');
     exitCode = 66;
     return;
   }
@@ -50,6 +61,20 @@ Future<void> main(List<String> args) async {
       file = File('${root.path}/index.html');
     }
 
+    // Resolved *before* anything is written, because the recovery used to be
+    // to set a 404 inside a catch around `addStream` — by which point the
+    // headers are already on the wire, so the assignment threw
+    // "Header already sent", unhandled, and took the whole server down. Serving
+    // a directory with no index.html did it every time.
+    if (!file.existsSync()) {
+      request.response
+        ..statusCode = HttpStatus.notFound
+        ..headers.set('content-type', 'text/plain; charset=utf-8')
+        ..write('not found: $path');
+      await request.response.close();
+      continue;
+    }
+
     final String ext = file.path.contains('.')
         ? file.path.substring(file.path.lastIndexOf('.'))
         : '';
@@ -61,8 +86,10 @@ Future<void> main(List<String> args) async {
     request.response.headers.set('cache-control', 'no-store');
     try {
       await request.response.addStream(file.openRead());
-    } on Object {
-      request.response.statusCode = HttpStatus.notFound;
+    } on Object catch (err) {
+      // Nothing useful left to say to the client at this point — the status is
+      // already sent. Log it and keep serving rather than exiting.
+      stderr.writeln('  ! $path — $err');
     }
     await request.response.close();
   }

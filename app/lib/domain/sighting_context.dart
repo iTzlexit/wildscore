@@ -9,11 +9,21 @@
 ///
 /// This is that instinct in the scoring instead. A jam still counts, because
 /// pretending you did not see the leopard is silly and refusing the points
-/// invites people to lie. It just counts for half.
+/// invites people to lie. It just counts for less.
+///
+/// **Spotting it yourself is the baseline, not a bonus.** It used to double,
+/// and the owner changed it: the points printed on the animal card are what a
+/// sighting is worth, and arriving at a jam takes 20% off. That makes the card
+/// tell the truth — a leopard says 100 and pays 100 — at the cost of narrowing
+/// the gap between the two, which used to be 2.67× and is now 1.25×. Less of a
+/// reason to be at the gate at five, more of a number anybody can predict.
 enum SightingContext {
-  /// Nobody else there. The purest version of the thing, and the one worth
-  /// getting out of bed for.
-  alone(label: 'Lone sighting', short: 'LONE', multiplier: 2),
+  /// You found it. Worth exactly what the animal card says.
+  ///
+  /// Still worth marking even though it no longer changes the score: the LONE
+  /// tag is what the haul and the sightings feed show, and "we had it to
+  /// ourselves" is the part people retell.
+  alone(label: 'Lone sighting', short: 'LONE', multiplier: 1),
 
   /// The ordinary case, and the reason this is two options rather than three.
   ///
@@ -25,12 +35,14 @@ enum SightingContext {
 
   /// Cars already stopped and looking when you arrived.
   ///
-  /// A quarter off rather than half. It used to halve, which reads as a
-  /// punishment for being honest — you did see the leopard, you were there.
-  /// A quarter is a nudge that still leaves a jam sighting well worth logging,
-  /// and it keeps the gap to a lone sighting large enough to be the thing
-  /// people chase.
-  jam(label: 'Part of a jam', short: 'JAM', multiplier: 0.75);
+  /// A fifth off. It has come down twice — half, then a quarter, now 20% —
+  /// each time for the same reason: you *did* see the leopard, and a penalty
+  /// heavy enough to sting is a penalty people lie to avoid. A fifth is a nudge
+  /// that leaves a jam sighting well worth logging.
+  ///
+  /// Twenty rather than twenty-five also because it is the number a person can
+  /// do in their head at a gate. 100 becomes 80.
+  jam(label: 'Part of a jam', short: 'JAM', multiplier: 0.8);
 
   const SightingContext({
     required this.label,

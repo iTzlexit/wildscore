@@ -216,15 +216,7 @@ class _CodexScreenState extends State<CodexScreen> {
                           ? const _EmptyState()
                           : CustomScrollView(
                               slivers: <Widget>[
-                                SliverPadding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                    16,
-                                    4,
-                                    16,
-                                    Space.xl,
-                                  ),
-                                  sliver: _grid(visible),
-                                ),
+                                ..._groupedSlivers(visible),
                                 // The park boundary, stated once, at the point
                                 // where someone has just scrolled the whole
                                 // catalogue and might reasonably wonder where
@@ -244,6 +236,49 @@ class _CodexScreenState extends State<CodexScreen> {
         ),
       ),
     );
+  }
+
+  /// Animals, then birds, each under its own heading.
+  ///
+  /// The catalogue used to be one continuous grid, which was right at 127
+  /// species and stopped being right at 191. Birds are now 124 of them, so a
+  /// single list interleaved by rarity buries every mammal that is not
+  /// Legendary somewhere below a hundred birds — and "where is the kudu" became
+  /// a scroll rather than a glance.
+  ///
+  /// Two groups rather than five. Reptiles, the two insects and the baobab go
+  /// in with the animals because nobody browsing a game park thinks of a
+  /// leopard tortoise as a separate department, and three tiny sections would
+  /// be more furniture than help. The chosen sort still applies *inside* each
+  /// group, so rarest-first works exactly as before.
+  List<Widget> _groupedSlivers(List<Species> visible) {
+    final List<Species> birds = <Species>[
+      for (final Species s in visible)
+        if (s.category == SpeciesCategory.bird) s,
+    ];
+    final List<Species> animals = <Species>[
+      for (final Species s in visible)
+        if (s.category != SpeciesCategory.bird) s,
+    ];
+
+    // A heading over a single group is noise — filtering to Birds already says
+    // what you are looking at.
+    final bool labelled = birds.isNotEmpty && animals.isNotEmpty;
+
+    return <Widget>[
+      for (final (String label, List<Species> group)
+          in <(String, List<Species>)>[('Animals', animals), ('Birds', birds)])
+        if (group.isNotEmpty) ...<Widget>[
+          if (labelled)
+            SliverToBoxAdapter(
+              child: _GroupHeading(label: label, count: group.length),
+            ),
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(16, 4, 16, Space.xl),
+            sliver: _grid(group),
+          ),
+        ],
+    ];
   }
 
   Widget _grid(List<Species> visible) {
@@ -744,6 +779,36 @@ class _ResultBar extends StatelessWidget {
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+/// "ANIMALS · 67" over each half of the catalogue.
+///
+/// Carries the count because the number is the reassurance: it tells you the
+/// list below is finite before you start scrolling it.
+class _GroupHeading extends StatelessWidget {
+  const _GroupHeading({required this.label, required this.count});
+
+  final String label;
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, Space.md, 16, 2),
+      child: Row(
+        children: <Widget>[
+          Text(label.toUpperCase(), style: AppText.overline),
+          const SizedBox(width: Space.sm),
+          Text(
+            '$count',
+            style: AppText.overline.copyWith(color: AppColors.textMuted),
+          ),
+          const SizedBox(width: Space.md),
+          const Expanded(child: Divider(height: 1, color: AppColors.outline)),
         ],
       ),
     );

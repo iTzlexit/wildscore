@@ -17,19 +17,27 @@ void main() {
   });
 
   group('who else was there', () {
-    test('finding it alone is worth double', () {
-      expect(SightingContext.alone.applyTo(300), 600);
+    test('spotting it yourself pays what the card says, and no more', () {
+      // It doubled once. The card is now the truth: a leopard says 100 and a
+      // leopard pays 100. Marking it lone is a label on the sighting, not a
+      // multiplier.
+      expect(SightingContext.alone.applyTo(300), 300);
+      expect(
+        SightingContext.alone.applyTo(300),
+        SightingContext.normal.applyTo(300),
+      );
     });
 
     test('an ordinary sighting is worth what it says on the tin', () {
       expect(SightingContext.normal.applyTo(300), 300);
     });
 
-    test('arriving at a jam costs a quarter, not a half', () {
-      // It halved once, which reads as a punishment for being honest — you
-      // did see the leopard, you were there. A quarter is a nudge that leaves
-      // a jam sighting well worth logging.
-      expect(SightingContext.jam.applyTo(300), 225);
+    test('arriving at a jam costs a fifth', () {
+      // Down from a half, then a quarter. Each cut for the same reason: you
+      // did see the leopard, and a penalty heavy enough to sting is one people
+      // lie to avoid. A fifth is also the sum anybody can do at a gate.
+      expect(SightingContext.jam.applyTo(300), 240);
+      expect(SightingContext.jam.applyTo(100), 80);
     });
 
     test('the tax never reaches zero', () {
@@ -72,21 +80,23 @@ void main() {
 
   group('the modifiers stack', () {
     test('a male lion found on an empty road', () {
-      // (40 + 60) x 2. The best possible lion, and worth shouting about.
+      // 40 + 60. The lone mark no longer multiplies, so this is simply what a
+      // male lion is worth.
       expect(
         _byId(
           'lion',
         ).scoreFor(variantApplied: true, context: SightingContext.alone),
-        200,
+        100,
       );
     });
 
     test('the same lion at a jam of eleven cars', () {
+      // 100 − 20%, which is the sum the claim sheet now prints on the button.
       expect(
         _byId(
           'lion',
         ).scoreFor(variantApplied: true, context: SightingContext.jam),
-        75,
+        80,
       );
     });
 
@@ -196,18 +206,23 @@ void main() {
       );
     });
 
-    test('they stack with each other and with the crowd', () {
-      // A leopard on a kill with a cub, on an empty road. The best sighting
-      // most people will ever have, and the score should say so.
+    test('they stack with each other, and a jam still taxes the lot', () {
+      // A leopard on a kill with a cub. The best sighting most people will
+      // ever have, and the score should say so.
+      final Species leopard = _byId('leopard');
+      const Set<SightingExtra> both = <SightingExtra>{
+        SightingExtra.onAKill,
+        SightingExtra.withYoung,
+      };
+
       expect(
-        _byId('leopard').scoreFor(
-          extras: <SightingExtra>{
-            SightingExtra.onAKill,
-            SightingExtra.withYoung,
-          },
-          context: SightingContext.alone,
-        ),
-        (_byId('leopard').points * 1.5 * 1.5 * 2).round(),
+        leopard.scoreFor(extras: both, context: SightingContext.alone),
+        (leopard.points * 1.5 * 1.5).round(),
+      );
+      // The crowd multiplier applies last, to everything above it.
+      expect(
+        leopard.scoreFor(extras: both, context: SightingContext.jam),
+        ((leopard.points * 1.5 * 1.5).round() * 0.8).ceil(),
       );
     });
 

@@ -13,8 +13,12 @@ late final List<Species> _catalogue;
 
 Species _byId(String id) => _catalogue.firstWhere((Species s) => s.id == id);
 
-Future<ClaimDetails?> _open(WidgetTester tester, Species species) async {
-  await tester.binding.setSurfaceSize(const Size(430, 950));
+Future<ClaimDetails?> _open(
+  WidgetTester tester,
+  Species species, {
+  Size size = const Size(430, 950),
+}) async {
+  await tester.binding.setSurfaceSize(size);
   addTearDown(() => tester.binding.setSurfaceSize(null));
 
   ClaimDetails? result;
@@ -80,25 +84,71 @@ void main() {
     expect(find.text('Who else was there?'), findsOneWidget);
   });
 
+  /// The running total in the header, told apart from the numbers the crowd
+  /// buttons now carry.
+  Finder total() => find.descendant(
+    of: find.byType(AnimatedSwitcher),
+    matching: find.byType(Text),
+  );
+
   testWidgets('the total moves as the answers change', (
     WidgetTester tester,
   ) async {
     // Watching the number move is what teaches the rule — nobody reads a rules
     // screen, and this is the moment the rule is relevant.
     await _open(tester, _byId('lion'));
-    expect(find.text('40'), findsOneWidget);
+    expect(tester.widget<Text>(total()).data, '40');
 
     await tester.tap(find.text('Yes — male'));
     await tester.pumpAndSettle();
-    expect(find.text('100'), findsOneWidget);
+    expect(tester.widget<Text>(total()).data, '100');
 
+    // Lone is a mark, not a multiplier: the total holds at what the card says.
     await tester.tap(find.text('Lone sighting'));
     await tester.pumpAndSettle();
-    expect(find.text('200'), findsOneWidget);
+    expect(tester.widget<Text>(total()).data, '100');
 
     await tester.tap(find.text('Part of a jam'));
     await tester.pumpAndSettle();
-    expect(find.text('75'), findsOneWidget);
+    expect(tester.widget<Text>(total()).data, '80');
+  });
+
+  testWidgets('each crowd button shows what it would pay', (
+    WidgetTester tester,
+  ) async {
+    // The buttons used to read "Lone sighting … Double" side by side at half
+    // the sheet's width, which ellipsed the label — the owner could not read
+    // his own buttons. They are full width now and carry the arithmetic, so
+    // the choice is made against real numbers rather than a total that moves
+    // after you commit.
+    await _open(tester, _byId('lion'));
+    await tester.tap(find.text('Yes — male'));
+    await tester.pumpAndSettle();
+
+    // 100 on the lone button, and the jam button showing its working.
+    expect(find.text('100 − 20%'), findsOneWidget);
+    expect(find.text('80'), findsOneWidget);
+    expect(find.text('You spotted it yourself'), findsOneWidget);
+    expect(find.text('Cars were already there'), findsOneWidget);
+  });
+
+  testWidgets('neither crowd label is truncated on a small phone', (
+    WidgetTester tester,
+  ) async {
+    // The bug this replaces was invisible to every existing test: the widget
+    // was present and findable, it just rendered as "Lone sig…".
+    await _open(tester, _byId('leopard'), size: const Size(360, 780));
+
+    for (final String label in <String>['Lone sighting', 'Part of a jam']) {
+      final Text text = tester.widget<Text>(find.text(label));
+      expect(text.overflow, isNot(TextOverflow.ellipsis), reason: label);
+      expect(text.maxLines, isNull, reason: label);
+      expect(
+        tester.getSize(find.text(label)).width,
+        lessThan(tester.getSize(find.byType(Scaffold)).width),
+        reason: label,
+      );
+    }
   });
 
   testWidgets('the answers come back to the caller', (

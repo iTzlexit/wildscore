@@ -97,7 +97,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.textContaining('first player to say the animal out loud'),
+      find.textContaining('first player to call the animal'),
       findsOneWidget,
     );
   });

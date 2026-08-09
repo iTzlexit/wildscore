@@ -41,7 +41,8 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
   with the live rarity table, the Ultimate Spotter), then a name. No account.
   Replayable from How to play.
 - **Animal Dex** — 191 species (56 mammals, 124 birds, 8 reptiles, 2
-  invertebrates, and the baobab), search, filters, rarity sort, detail cards.
+  invertebrates, and the baobab), **grouped into Animals then Birds**, search,
+  filters, rarity sort, detail cards.
   Around 30 of the mammals carry a **park population figure** on the card —
   aerial-survey ranges where SANParks flies them, published estimates where
   nobody does, and "Not published" for rhino and pangolin. Sources are on the
@@ -63,7 +64,7 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 - **Backup** — a pasteable code. No server; see `docs/RISKS.md` for why it
   matters more than it looks.
 
-272 tests. `flutter analyze` is clean and must stay clean.
+281 tests. `flutter analyze` is clean and must stay clean.
 
 ## Decisions already made — do not relitigate
 
@@ -74,7 +75,7 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 | Ship free first, price later | `docs/MONETISATION.md` |
 | Points ≠ collection: points to the caller, collection to everyone in the car | `docs/SCORECARD.md` |
 | Banked once, at end of day — never per claim | `docs/SCORECARD.md` |
-| Crowd: lone x2, jam x0.75, asked only for Rare+ and Big Five | `docs/HOW-TO-PLAY.md` |
+| Crowd: spotting it yourself pays the card value, a jam pays 20% less | `docs/HOW-TO-PLAY.md` |
 | Daily caps: common and frequent 4, notable 3, impala 2, rare+ unlimited | `docs/HOW-TO-PLAY.md` |
 | Rhino and pangolin never get a location, ever | `docs/MAPS.md`, `docs/SIGHTINGS-FEED.md` |
 | Rhino and pangolin never get a population number either | `test/population_test.dart` |
@@ -94,6 +95,7 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 | `docs/ACCOUNTS.md` | Sign-in, if it ever happens |
 | `docs/IMAGE-ASSETS.md` | Photo sourcing and the non-commercial licence trap |
 | `docs/DESIGN-DIRECTION.md` | Palette, type, rarity treatments |
+| **`docs/WRITING-STYLE.md`** | **How every word that ships is written.** Read before touching any copy |
 | `MASTER-VISION.md` | The original brief. Partly superseded — check `docs/DIVERGENCES.md` |
 | **`CHECKLIST.md`** | Done / blocking launch / to decide. The plan, as opposed to the code |
 | `docs/PROMOTION.md` | The YouTube approach, and what a creator deal should look like |
@@ -106,9 +108,10 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 | `tools/ranker.html` | Pairwise rarity survey, **Notable and up only** (80 species). Publish to Netlify once the catalogue is complete |
 | `app/tool/build_ranker.dart` | Regenerates the ranker from species.json |
 | `app/tool/merge_rankings.dart` | Bradley-Terry fit over everybody submitted answers |
-| `tools/photo-picker.html` | Pick species photographs from CC candidates |
+| `tools/photo-picker.html` | **Pick species photographs yourself.** Regenerate with `source_species_photos --picker` |
 | `app/tool/generate_icon.dart` | Launcher icons at every density |
-| `app/tool/serve_web.dart` | Static server for the web build |
+| `app/tool/serve_web.dart` | Static server. `--root ..` to serve the content tools |
+| `app/tool/apply_photo_picks.dart` | Apply the picker's export: downloads, downscales, rewrites credits |
 | `app/tool/source_species_photos.dart` | **Fetch CC0/CC-BY photos from iNaturalist.** `--candidates` for options |
 | `app/tool/contact_sheet.dart` | Grid of photos to eyeball. **Never merge a sourced photo unseen** |
 | `app/tool/prepare_species_photos.dart` | Downscale sourced photos into assets |
@@ -127,9 +130,9 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 
 **Wanted, not blocking**
 
-- **The bird tab is now 124 long and needs grouping, not a longer scroll.**
-  Raptors, water birds, LBJs. Search and the category filter carry it for now,
-  but browsing is the weak point of the dex as it stands.
+- **The bird half of the dex could still use sub-grouping** — raptors, water
+  birds, LBJs. Splitting Animals from Birds fixed the worst of it; 124 birds in
+  one run is still a long scroll.
 - **The official population figures are unverified by us.** SANParks serves its
   wildlife-trends PDF behind Cloudflare and it could not be fetched, so the
   2023/2024 survey ranges came from the owner's own research. They have the

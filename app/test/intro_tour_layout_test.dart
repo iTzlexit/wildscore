@@ -81,6 +81,63 @@ void main() {
     expect(find.text('How it works'), findsOneWidget);
   });
 
+  group('the opening scene', () {
+    testWidgets('nothing is held up over anybody’s face', (
+      WidgetTester tester,
+    ) async {
+      // Each passenger was a face with a telescope emoji stacked over its
+      // lower half — a picture of equipment rather than of people enjoying
+      // themselves, on the one slide that has to sell the game.
+      await _pump(tester, size: const Size(390, 844));
+
+      expect(find.textContaining('🔭'), findsNothing);
+      expect(find.textContaining('🔍'), findsNothing);
+    });
+
+    testWidgets('the people are smiling', (WidgetTester tester) async {
+      await _pump(tester, size: const Size(390, 844));
+
+      const List<String> smiles = <String>['😀', '😄', '🙂', '😁'];
+      for (final String face in smiles) {
+        expect(find.text(face), findsOneWidget, reason: face);
+      }
+    });
+
+    testWidgets('every animal stands lower than the people in the vehicle', (
+      WidgetTester tester,
+    ) async {
+      // The rhino used to sit above the roof line, which drew a two-tonne
+      // animal balancing on the canopy. Asserted against the passengers rather
+      // than against a hard coordinate: what matters is that the animals are
+      // out on the ground and the people are up in the car, whatever the
+      // scene's proportions become later.
+      await _pump(tester, size: const Size(390, 844));
+
+      final double lowestPassenger = <String>['😀', '😄', '🙂', '😁']
+          .map((String f) => tester.getTopLeft(find.text(f)).dy)
+          .reduce((double a, double b) => a > b ? a : b);
+
+      for (final String animal in <String>['🐆', '🦏', '🦌']) {
+        expect(
+          tester.getTopLeft(find.text(animal)).dy,
+          greaterThan(lowestPassenger),
+          reason: '$animal is level with or above the vehicle',
+        );
+      }
+    });
+
+    testWidgets('the points are still on the animals', (
+      WidgetTester tester,
+    ) async {
+      // The half of this picture that explains the game without any copy.
+      await _pump(tester, size: const Size(390, 844));
+
+      for (final String points in <String>['300', '2000', '5']) {
+        expect(find.text(points), findsWidgets, reason: points);
+      }
+    });
+  });
+
   testWidgets('the standalone tour closes on Done', (
     WidgetTester tester,
   ) async {

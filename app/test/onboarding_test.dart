@@ -33,7 +33,13 @@ void main() {
   testWidgets('opens on the tour, not on a form', (WidgetTester tester) async {
     await pumpOnboarding(tester);
 
-    expect(find.textContaining('nothing to show for it'), findsOneWidget);
+    // The opening line asks a question rather than diagnosing a problem. It
+    // used to lead with "six hours of driving, and nothing to show for it",
+    // which greets somebody at a gate at six in the morning by telling them
+    // their last holiday was a disappointment.
+    // Twice on the slide — the heading asks it, the body answers it. That is
+    // the owner's copy and the repetition is the callback.
+    expect(find.textContaining('Ultimate Kruger Spotter'), findsWidgets);
     expect(find.text('Skip'), findsOneWidget);
     expect(find.text('Next'), findsOneWidget);
     // Nobody is asked for anything before they know what this is.

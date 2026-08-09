@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../domain/rarity_tier.dart';
+import '../../shared/emphasis.dart';
 import '../../shared/theme.dart';
 import '../../shared/widgets/avatar_badge.dart';
 
@@ -209,11 +210,15 @@ class _Slide extends StatelessWidget {
                   child: art,
                 ),
                 const SizedBox(height: Space.xl),
-                Text(
-                  eyebrow,
-                  style: AppText.label.copyWith(color: AppColors.accent),
-                ),
-                const SizedBox(height: Space.sm),
+                // An empty eyebrow costs its own line and its margin, which on
+                // a 360-wide phone is a slide's worth of breathing room.
+                if (eyebrow.isNotEmpty) ...<Widget>[
+                  Text(
+                    eyebrow,
+                    style: AppText.label.copyWith(color: AppColors.accent),
+                  ),
+                  const SizedBox(height: Space.sm),
+                ],
                 Text(
                   title,
                   style: AppText.title1.copyWith(fontSize: 27, height: 1.15),
@@ -223,11 +228,15 @@ class _Slide extends StatelessWidget {
                 // margins.
                 if (body.isNotEmpty) ...<Widget>[
                   const SizedBox(height: Space.md),
-                  Text(
-                    body,
-                    style: AppText.body.copyWith(
-                      color: AppColors.textSecondary,
-                      height: 1.5,
+                  Text.rich(
+                    TextSpan(
+                      children: emphasisSpans(
+                        body,
+                        AppText.body.copyWith(
+                          color: AppColors.textSecondary,
+                          height: 1.5,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -254,15 +263,20 @@ class _SlideOne extends StatelessWidget {
     return const _Slide(
       art: _CarScene(),
       eyebrow: 'WILD SCORE: KRUGER EDITION',
-      // The problem before the product. "The best game in Kruger" was a claim
-      // about us; this is a description of the reader's own last trip, and
-      // somebody who recognises themselves in the first line reads the second.
-      title: 'Six hours of driving, and nothing to show for it',
+      // Opened on the problem — "six hours of driving, and nothing to show for
+      // it" — which is a real technique and was the wrong one here. Somebody
+      // reads this at a gate at six in the morning, already excited, and being
+      // told their last holiday was a disappointment is a strange greeting.
+      // The owner's version asks a question instead, and the question is the
+      // whole game.
+      title:
+          'Do you have what it takes to be crowned the Ultimate '
+          'Kruger Spotter?',
       body:
-          'You spend days looking for animals and end up with a camera roll and '
-          'an argument about who saw the leopard first.\n\n'
-          'So keep score. Everyone in the car competes, the rare stuff pays '
-          'more, and every animal you find is yours for good.',
+          'Every animal has a score based on how rare it is to spot, so every '
+          'drive counts from start to finish.\n\n'
+          'Compete with everyone in your vehicle and see who ends the day as '
+          'the Ultimate Kruger Spotter.',
       extra: _Promises(),
     );
   }
@@ -334,19 +348,34 @@ class _Promises extends StatelessWidget {
 class _CarScene extends StatelessWidget {
   const _CarScene();
 
-  /// The people, with binoculars. Emoji rather than drawn faces, for the same
-  /// reason the avatars are: colour emoji ship with every platform, cost no
-  /// bytes and no licence, and read at 30pt.
-  static const List<String> _passengers = <String>['🧑', '👦', '👩', '🧒'];
+  /// The people. Emoji rather than drawn faces, for the same reason the
+  /// avatars are: colour emoji ship with every platform, cost no bytes and no
+  /// licence, and read at 30pt.
+  ///
+  /// **Smiling faces, and nothing held up to them.** They used to be neutral
+  /// figures behind a telescope emoji, which covered the one part of a
+  /// passenger that carries any feeling. A car of faces with binoculars over
+  /// them is a picture of equipment; a car of grinning faces is a picture of
+  /// the holiday.
+  static const List<String> _passengers = <String>['😀', '😄', '🙂', '😁'];
 
   /// What they are looking at, and what it pays. The points are the joke and
   /// the explanation at once — a first-time viewer reads "🐆 300" and has
   /// understood the entire game before reading a word of the copy.
+  ///
+  /// **All three stand on the ground, off the road, clear of the vehicle.**
+  /// The rhino used to float at 0.20 of the height, which is above the roof
+  /// line: it read as a two-tonne animal standing on the canopy. Wrong in a
+  /// game park and wrong in a game — the whole idea is that the animals are
+  /// out there and you are in here.
+  ///
+  /// The vehicle occupies x 0.20–0.80 and y 0.42–0.72, and the road runs from
+  /// y 0.72 down. These sit outside both.
   static const List<(String, String, double, double)> _quarry =
       <(String, String, double, double)>[
-        ('🐆', '300', 0.085, 0.30),
-        ('🦏', '2000', 0.70, 0.20),
-        ('🦌', '5', 0.88, 0.52),
+        ('🐆', '300', 0.085, 0.72),
+        ('🦏', '2000', 0.905, 0.60),
+        ('🦌', '5', 0.86, 0.86),
       ];
 
   @override
@@ -373,9 +402,9 @@ class _CarScene extends StatelessWidget {
                 child: _Quarry(emoji: emoji, points: points, size: beast),
               ),
 
-            // People in the seats, each holding a pair of binoculars. The
-            // vehicle used to be full of animals, which was a nice picture of
-            // the wrong thing: the animals are what you are looking *for*.
+            // People in the seats, looking out. The vehicle used to be full of
+            // animals, which was a nice picture of the wrong thing: the
+            // animals are what you are looking *for*.
             for (int i = 0; i < _passengers.length; i++)
               Positioned(
                 left: w * (0.245 + i * 0.125) - face / 2,
@@ -389,7 +418,11 @@ class _CarScene extends StatelessWidget {
   }
 }
 
-/// A head and shoulders with binoculars up.
+/// One passenger, face uncovered.
+///
+/// This was a face with a telescope emoji stacked over its lower half. It read
+/// as a prop rather than a person and it hid the expression, which on a slide
+/// selling a family game is the only thing the figure is there to do.
 class _Passenger extends StatelessWidget {
   const _Passenger({required this.emoji, required this.size});
 
@@ -401,15 +434,9 @@ class _Passenger extends StatelessWidget {
     return SizedBox(
       width: size,
       height: size * 1.15,
-      child: Stack(
+      child: Align(
         alignment: Alignment.topCenter,
-        children: <Widget>[
-          Text(emoji, style: TextStyle(fontSize: size * 0.86)),
-          Positioned(
-            top: size * 0.42,
-            child: Text('🔭', style: TextStyle(fontSize: size * 0.46)),
-          ),
-        ],
+        child: Text(emoji, style: TextStyle(fontSize: size * 0.86)),
       ),
     );
   }
@@ -627,7 +654,9 @@ class _SlideTwo extends StatelessWidget {
   Widget build(BuildContext context) {
     return const _Slide(
       art: _ScoringScene(),
-      eyebrow: 'THEN PLAY WILD SCORE',
+      // No eyebrow. It read "THEN PLAY WILD SCORE", which is the third time in
+      // three screens the app has said its own name.
+      eyebrow: '',
       title: 'How it works',
       body: '',
       extra: _HowItWorks(),
@@ -912,10 +941,11 @@ class _SlideThree extends StatelessWidget {
     return const _Slide(
       art: _VictoryScene(),
       eyebrow: 'BACK AT CAMP',
-      title: 'End the day. Crown the Ultimate Spotter.',
+      title: 'Crown today’s Ultimate Spotter',
       body:
-          'Tap End drive and the points are totalled up, everyone is ranked, '
-          'and the day is kept. In the morning you start a new one.',
+          'Tap **End Day** to total the scores, crown the winner, and save '
+          'your adventure to your history.\n\n'
+          'Tomorrow is a brand-new game.',
       extra: _AfterwardsList(),
     );
   }
