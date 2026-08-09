@@ -171,6 +171,26 @@ textarea{width:100%;height:110px;font:12px/1.45 ui-monospace,SFMono-Regular,mono
 // species.json changes so this never drifts from the app.
 const SPECIES = /*__CATALOGUE__*/[];
 
+// You have opened the template. It is a shell with no animals in it, and it
+// used to render as a silent blank page — which has now cost the owner two
+// sessions of "why is nothing showing".
+//
+// The built file is ranker.html, next to this one.
+if (!SPECIES.length) {
+  document.body.innerHTML =
+    '<div style="max-width:560px;margin:14vh auto;padding:28px;'
+    + 'font:16px/1.6 -apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,sans-serif;'
+    + 'background:#fff;border:1px solid #e2e4de;border-radius:16px">'
+    + '<h1 style="margin:0 0 12px;font-size:20px">This is the template, not the survey</h1>'
+    + '<p style="margin:0 0 12px">There are no animals in this file. It is the '
+    + 'empty shell the real page is built from.</p>'
+    + '<p style="margin:0 0 12px"><b>Open <code>ranker.html</code> instead</b> — '
+    + 'same folder.</p>'
+    + '<p style="margin:0;color:#5c665f">Rebuild it any time with '
+    + '<code>cd app &amp;&amp; dart run tool/build_ranker.dart</code>.</p></div>';
+  throw new Error('template opened directly');
+}
+
 // Where the "send by email" button goes. Empty hides the button rather than
 // opening a blank mail window. Passed at build time rather than hard-coded,
 // because this file gets posted in public Facebook groups and an email address
