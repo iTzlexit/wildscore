@@ -25,16 +25,16 @@ void main() {
       expect(SightingContext.normal.applyTo(300), 300);
     });
 
-    test('arriving at a jam still counts, for half', () {
-      // Still counts on purpose. Refusing the points for an animal somebody
-      // genuinely saw invites them to lie about it, and pretending you did not
-      // see the leopard is silly.
-      expect(SightingContext.jam.applyTo(300), 150);
+    test('arriving at a jam costs a quarter, not a half', () {
+      // It halved once, which reads as a punishment for being honest — you
+      // did see the leopard, you were there. A quarter is a nudge that leaves
+      // a jam sighting well worth logging.
+      expect(SightingContext.jam.applyTo(300), 225);
     });
 
-    test('halving never reaches zero', () {
+    test('the tax never reaches zero', () {
       // A rule that can zero a real sighting is a rule people argue with.
-      expect(SightingContext.jam.applyTo(5), 3);
+      expect(SightingContext.jam.applyTo(5), 4);
       expect(SightingContext.jam.applyTo(1), 1);
     });
 
@@ -86,7 +86,7 @@ void main() {
         _byId(
           'lion',
         ).scoreFor(variantApplied: true, context: SightingContext.jam),
-        50,
+        75,
       );
     });
 
@@ -95,7 +95,7 @@ void main() {
       final Species zebra = _byId('plains-zebra');
 
       expect(zebra.scoreFor(), 5);
-      expect(zebra.scoreFor(wildCardBonusEarned: true), 50);
+      expect(zebra.scoreFor(wildCardBonusEarned: true), 40);
     });
   });
 

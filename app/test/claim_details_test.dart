@@ -64,8 +64,11 @@ void main() {
     await _open(tester, _byId('leopard'));
 
     expect(find.text('Who else was there?'), findsOneWidget);
-    expect(find.text('Just us'), findsOneWidget);
-    expect(find.text('Cars were already there'), findsOneWidget);
+    expect(find.text('Lone sighting'), findsOneWidget);
+    expect(find.text('Part of a jam'), findsOneWidget);
+    // Two marks, not a three-way choice: the ordinary sighting is the absence
+    // of both and needs no answer.
+    expect(find.text('We spotted it'), findsNothing);
     // No variant on a leopard, so no second question.
     expect(find.textContaining('Was it a male'), findsNothing);
   });
@@ -89,13 +92,13 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('100'), findsOneWidget);
 
-    await tester.tap(find.text('Just us'));
+    await tester.tap(find.text('Lone sighting'));
     await tester.pumpAndSettle();
     expect(find.text('200'), findsOneWidget);
 
-    await tester.tap(find.text('Cars were already there'));
+    await tester.tap(find.text('Part of a jam'));
     await tester.pumpAndSettle();
-    expect(find.text('50'), findsOneWidget);
+    expect(find.text('75'), findsOneWidget);
   });
 
   testWidgets('the answers come back to the caller', (
@@ -125,7 +128,7 @@ void main() {
 
     await tester.tap(find.text('Yes — male'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Just us'));
+    await tester.tap(find.text('Lone sighting'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Claim it'));
     await tester.pumpAndSettle();

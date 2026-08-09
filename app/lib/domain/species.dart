@@ -232,10 +232,10 @@ class Species {
   /// What the *first* sighting of a wild-card species pays.
   ///
   /// A bonus, not a replacement, and not a lock. The first zebra of the morning
-  /// is worth 50; the second is worth 5 like any other zebra, until the day's
+  /// is worth 40; the second is worth 5 like any other zebra, until the day's
   /// chances run out. Enough to matter on the first sighting and nowhere near
-  /// enough to decide a trip — half a Notable, a twentieth of a leopard.
-  static const int wildCardBonus = 50;
+  /// enough to decide a trip.
+  static const int wildCardBonus = 40;
 
   bool get isWildCard => tags.contains(SpeciesTag.wildCard);
 
@@ -246,9 +246,19 @@ class Species {
   /// common animal in the park and three impala a day is three shouts about
   /// impala. Its bonus is trip-scoped anyway, so day two's single impala is
   /// already an ordinary five-point impala.
-  int? get chancesPerDay => isWildCard && wildCardScope == WildCardScope.day
-      ? 3
-      : rarityTier.chancesPerDay;
+  int? get chancesPerDay {
+    // Impala is its own case and always has been. It is the commonest animal in
+    // the park by a distance, so the tier's four would mean four shouts about
+    // impala — two is the point being made: the first one is the arrival
+    // moment and pays a bonus, the second is an ordinary impala, and then it is
+    // done for the day.
+    if (id == 'impala') {
+      return 2;
+    }
+    return isWildCard && wildCardScope == WildCardScope.day
+        ? 4
+        : rarityTier.chancesPerDay;
+  }
 
   /// Whether the bonus resets daily or only once a trip.
   ///

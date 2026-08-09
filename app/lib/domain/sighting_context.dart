@@ -13,13 +13,24 @@
 enum SightingContext {
   /// Nobody else there. The purest version of the thing, and the one worth
   /// getting out of bed for.
-  alone(label: 'Just us', short: 'ALONE', multiplier: 2),
+  alone(label: 'Lone sighting', short: 'LONE', multiplier: 2),
 
-  /// Other cars about, but you saw it first.
-  normal(label: 'We spotted it', short: '', multiplier: 1),
+  /// The ordinary case, and the reason this is two options rather than three.
+  ///
+  /// It was a three-way choice — alone, we spotted it, a jam — which made every
+  /// claim a decision even when the honest answer was "nothing special". Two
+  /// optional marks with an unremarkable default is the same information and no
+  /// question to answer.
+  normal(label: '', short: '', multiplier: 1),
 
   /// Cars already stopped and looking when you arrived.
-  jam(label: 'Cars were already there', short: 'JAM', multiplier: 0.5);
+  ///
+  /// A quarter off rather than half. It used to halve, which reads as a
+  /// punishment for being honest — you did see the leopard, you were there.
+  /// A quarter is a nudge that still leaves a jam sighting well worth logging,
+  /// and it keeps the gap to a lone sighting large enough to be the thing
+  /// people chase.
+  jam(label: 'Part of a jam', short: 'JAM', multiplier: 0.75);
 
   const SightingContext({
     required this.label,

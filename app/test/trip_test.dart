@@ -157,7 +157,7 @@ void main() {
       );
 
       expect(impala.isWildCard, isTrue);
-      expect(Species.wildCardBonus, 50);
+      expect(Species.wildCardBonus, 40);
       expect(
         impala.points,
         5,
@@ -165,15 +165,15 @@ void main() {
       );
     });
 
-    test('wild cards get three chances so there is a second one to have', () {
+    test('a wild card has more than one chance, or the rule says nothing', () {
       final Species zebra = _catalogue.firstWhere(
         (Species s) => s.id == 'plains-zebra',
       );
 
-      expect(zebra.chancesPerDay, 3);
+      expect(zebra.chancesPerDay, 4);
       expect(
-        zebra.rarityTier.chancesPerDay,
-        1,
+        zebra.chancesPerDay,
+        greaterThan(1),
         reason: '"the first is worth more" says nothing if there is only one',
       );
     });

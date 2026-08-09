@@ -26,7 +26,7 @@ serve the web build: `dart run tool/serve_web.dart 8080` from `app/`.
 
 ## What the app is
 
-A field guide to 96 Kruger species, a lifetime collection, and **a scorecard
+A field guide to 97 Kruger species, a lifetime collection, and **a scorecard
 game played by a car full of people on a game drive**. The game is the
 differentiator; the collection is the reason anyone still has it in March.
 
@@ -59,7 +59,7 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 - **Backup** — a pasteable code. No server; see `docs/RISKS.md` for why it
   matters more than it looks.
 
-245 tests. `flutter analyze` is clean and must stay clean.
+256 tests. `flutter analyze` is clean and must stay clean.
 
 ## Decisions already made — do not relitigate
 
@@ -70,7 +70,8 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 | Ship free first, price later | `docs/MONETISATION.md` |
 | Points ≠ collection: points to the caller, collection to everyone in the car | `docs/SCORECARD.md` |
 | Banked once, at end of day — never per claim | `docs/SCORECARD.md` |
-| Crowd multiplier: alone x2, jam x0.5, asked only for Rare+ and Big Five | `docs/HOW-TO-PLAY.md` |
+| Crowd: lone x2, jam x0.75, asked only for Rare+ and Big Five | `docs/HOW-TO-PLAY.md` |
+| Daily caps: common and frequent 4, notable 3, impala 2, rare+ unlimited | `docs/HOW-TO-PLAY.md` |
 | Rhino and pangolin never get a location, ever | `docs/MAPS.md`, `docs/SIGHTINGS-FEED.md` |
 | Light theme, single typeface, colour reserved for rarity | `docs/DESIGN-DIRECTION.md` |
 | No leaderboard — the rivalry is with people in your own car | `docs/MONETISATION.md` |
@@ -97,7 +98,9 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 
 | | |
 |---|---|
-| `tools/ranker.html` | Head-to-head comparisons to settle rarity tiers. **Outstanding** |
+| `tools/ranker.html` | Pairwise rarity survey. Built; publish to Netlify once the catalogue is complete |
+| `app/tool/build_ranker.dart` | Regenerates the ranker from species.json |
+| `app/tool/merge_rankings.dart` | Bradley-Terry fit over everybody submitted answers |
 | `tools/photo-picker.html` | Pick species photographs from CC candidates |
 | `app/tool/generate_icon.dart` | Launcher icons at every density |
 | `app/tool/serve_web.dart` | Static server for the web build |

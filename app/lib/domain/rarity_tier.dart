@@ -30,10 +30,20 @@ enum RarityTier {
 
   /// How many times this species can be claimed in a day before the tile locks.
   /// `null` is unlimited. Without this, forty impala means forty shouts.
+  ///
+  /// **More chances the commoner the animal**, which sounds backwards until you
+  /// say it out loud: the cap exists so nobody taps every impala from Malelane
+  /// to Satara, not to ration the good stuff. Four is enough that a real
+  /// morning's zebra sightings all count, and few enough that it stops being a
+  /// chore.
+  ///
+  /// Common and Frequent were **one each**, which was far too tight — one
+  /// elephant sighting a day, in Kruger, is not a rule anybody would accept.
   int? get chancesPerDay => switch (this) {
-    RarityTier.common => 1,
-    RarityTier.frequent => 1,
+    RarityTier.common => 4,
+    RarityTier.frequent => 4,
     RarityTier.uncommon => 3,
+    // Nothing rare is capped. Find six leopards and all six count.
     _ => null,
   };
 }

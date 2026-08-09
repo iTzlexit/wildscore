@@ -335,30 +335,44 @@ function finish(){
 // It fails silently anywhere else, including from a local file, and the code
 // stays on screen either way. A failed automatic send must never leave somebody
 // with no way to hand over three minutes of work.
-function send(code){
+// Retries a few times before ever asking the person for anything.
+//
+// The point of this whole screen is that they do nothing. A patchy signal at a
+// camp gate should cost a few seconds, not turn a favour into a chore — so the
+// manual fallback only appears after three genuine failures, which in practice
+// means the file was opened locally rather than from the hosted page.
+async function send(code, attempt = 0){
   const title = document.getElementById("doneTitle");
   const state = document.getElementById("sendState");
 
-  const failed = () => {
-    title.textContent = "Almost — one tap left";
-    state.textContent = "I couldn't send that automatically. Tap below and it " +
-      "goes straight to me.";
-    document.getElementById("code").value = code;
-    document.getElementById("manual").classList.remove("hide");
-    if (!EMAIL) document.getElementById("mailBtn").classList.add("hide");
-  };
-
-  fetch("/", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
-      "form-name": "rankings", "who": who, "payload": code,
-    }).toString(),
-  }).then(r => {
-    if (!r.ok) return failed();
+  try {
+    const r = await fetch("/", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        "form-name": "rankings", "who": who, "payload": code,
+      }).toString(),
+    });
+    if (!r.ok) throw new Error(r.status);
     title.textContent = "Done — thank you";
     state.textContent = "Your answers are in. Nothing else needed.";
-  }).catch(failed);
+    return;
+  } catch (e) {
+    if (attempt < 2) {
+      state.textContent = "Still sending…";
+      await new Promise(r => setTimeout(r, 1200 * (attempt + 1)));
+      return send(code, attempt + 1);
+    }
+  }
+
+  title.textContent = "Almost — one tap left";
+  state.textContent = EMAIL
+    ? "I couldn't send that automatically. Tap below and it goes straight to me."
+    : "I couldn't send that automatically. Copy this and send it to whoever " +
+      "gave you the link.";
+  document.getElementById("code").value = code;
+  document.getElementById("manual").classList.remove("hide");
+  if (!EMAIL) document.getElementById("mailBtn").classList.add("hide");
 }
 
 function copyCode(){

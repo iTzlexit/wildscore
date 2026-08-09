@@ -194,6 +194,9 @@ class _ClaimDetailsSheetState extends State<ClaimDetailsSheet> {
                 ),
               ],
 
+              // Two marks, not three choices. Neither selected is the ordinary
+              // sighting and needs no answer — most of them are ordinary, and a
+              // three-way radio made every claim a decision.
               if (species.crowdMatters) ...<Widget>[
                 const Divider(height: 1, color: AppColors.outline),
                 const _Question(label: 'Who else was there?'),
@@ -204,23 +207,33 @@ class _ClaimDetailsSheetState extends State<ClaimDetailsSheet> {
                     Space.lg,
                     Space.lg,
                   ),
-                  child: Column(
+                  child: Row(
                     children: <Widget>[
-                      for (final SightingContext c in SightingContext.values)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: Space.sm),
-                          child: _Choice(
-                            label: c.label,
-                            detail: switch (c) {
-                              SightingContext.alone => 'Double',
-                              SightingContext.normal => null,
-                              SightingContext.jam => 'Half',
-                            },
-                            selected: _context == c,
-                            wide: true,
-                            onTap: () => setState(() => _context = c),
+                      Expanded(
+                        child: _Choice(
+                          label: SightingContext.alone.label,
+                          detail: 'Double',
+                          selected: _context == SightingContext.alone,
+                          onTap: () => setState(
+                            () => _context = _context == SightingContext.alone
+                                ? SightingContext.normal
+                                : SightingContext.alone,
                           ),
                         ),
+                      ),
+                      const SizedBox(width: Space.sm),
+                      Expanded(
+                        child: _Choice(
+                          label: SightingContext.jam.label,
+                          detail: '−25%',
+                          selected: _context == SightingContext.jam,
+                          onTap: () => setState(
+                            () => _context = _context == SightingContext.jam
+                                ? SightingContext.normal
+                                : SightingContext.jam,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -293,7 +306,6 @@ class _Choice extends StatelessWidget {
     required this.selected,
     required this.onTap,
     this.detail,
-    this.wide = false,
   });
 
   final String label;
@@ -303,7 +315,6 @@ class _Choice extends StatelessWidget {
   final String? detail;
 
   final bool selected;
-  final bool wide;
   final VoidCallback onTap;
 
   @override
@@ -327,16 +338,14 @@ class _Choice extends StatelessWidget {
             ),
           ),
           child: Row(
-            mainAxisAlignment: wide
-                ? MainAxisAlignment.start
-                : MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Flexible(
                 child: Text(
                   label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  textAlign: wide ? TextAlign.start : TextAlign.center,
+                  textAlign: TextAlign.center,
                   style: AppText.body.copyWith(
                     fontSize: 14,
                     color: selected ? AppColors.accent : AppColors.textPrimary,
@@ -345,7 +354,7 @@ class _Choice extends StatelessWidget {
                 ),
               ),
               if (detail case final String d) ...<Widget>[
-                if (wide) const Spacer() else const SizedBox(width: 6),
+                const SizedBox(width: 6),
                 Text(
                   d,
                   style: AppText.caption.copyWith(

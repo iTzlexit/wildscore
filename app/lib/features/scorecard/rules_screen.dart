@@ -150,7 +150,7 @@ class RulesScreen extends StatelessWidget {
           ),
           const _Rule(
             icon: Icons.traffic_rounded,
-            title: 'A traffic jam gets taxed — half points',
+            title: 'A traffic jam gets taxed — a quarter off',
             body:
                 'Rolling up to eleven parked cars still counts. You did see it. '
                 'But somebody else found it.',
@@ -160,19 +160,20 @@ class RulesScreen extends StatelessWidget {
             title: 'Wild cards',
             body:
                 'A male lion pays more than a lioness.\n'
-                'A mother with a calf pays more.\n'
-                'An animal on a kill pays more.\n'
-                'The first impala of the trip pays 50 instead of 5.',
+                'A mother with young pays half again.\n'
+                'An animal on a kill pays half again.\n'
+                'The first impala of the trip pays 40 instead of 5.',
           ),
           const _Rule(
             icon: Icons.lock_clock_rounded,
             title: 'The common ones run out for the day',
             body:
                 'Nobody wants to tap every impala from Malelane to Satara, so '
-                'the everyday animals are capped. One impala is enough, and it '
-                'pays a bonus. Four separate zebra sightings is plenty for a '
-                'morning.\n\n'
-                'Nothing rare is capped. Find six leopards and all six count.',
+                'the everyday animals are capped at four a day.\n\n'
+                'Impala gets two: the first is the arrival moment and pays the '
+                'bonus, the second is an ordinary impala, and then it is done.'
+                '\n\nNothing rare is capped. Find six leopards and all six '
+                'count.',
           ),
           const SizedBox(height: Space.lg),
 

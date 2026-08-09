@@ -130,9 +130,9 @@
     },
     {
       "id": "brown-snake-eagle",
-      "author": "Public domain (CC0)",
-      "license": "cc0",
-      "source": "https://www.inaturalist.org/observations/307706753"
+      "author": "Rich Agar",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/239988978"
     },
     {
       "id": "bushbuck",
@@ -223,6 +223,12 @@
       "author": "Tom Field",
       "license": "cc-by",
       "source": "https://www.inaturalist.org/observations/293739013"
+    },
+    {
+      "id": "european-roller",
+      "author": "Henry de Lange",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/342734357"
     },
     {
       "id": "giant-kingfisher",
@@ -388,9 +394,9 @@
     },
     {
       "id": "puff-adder",
-      "author": "Nick Schaller",
+      "author": "Mahomed Desai",
       "license": "cc-by",
-      "source": "https://www.inaturalist.org/observations/11037606"
+      "source": "https://www.inaturalist.org/observations/84551638"
     },
     {
       "id": "red-billed-buffalo-weaver",

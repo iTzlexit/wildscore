@@ -172,9 +172,12 @@ void main() {
   });
 
   group('chances', () {
-    test('common and frequent get one claim a day', () {
-      expect(RarityTier.common.chancesPerDay, 1);
-      expect(RarityTier.frequent.chancesPerDay, 1);
+    test('the everyday animals get four claims a day', () {
+      // One each was far too tight. One elephant sighting a day, in Kruger, is
+      // not a rule anybody would accept — and the cap exists to stop the game
+      // becoming a data-entry job, not to ration the animals.
+      expect(RarityTier.common.chancesPerDay, 4);
+      expect(RarityTier.frequent.chancesPerDay, 4);
     });
 
     test('notable gets three', () {

@@ -144,13 +144,13 @@ there**:
 
 | | |
 |---|---|
-| **Just us** — an empty road | **Double** |
-| We spotted it — other cars about | Normal |
-| **Cars were already there** — a jam | **Half** |
+| **Lone sighting** — an empty road | **Double** |
+| Anything else | Normal |
+| **Part of a jam** | **A quarter off** |
 
 A jam still counts. Refusing the points for an animal somebody genuinely saw
 just invites them to lie about it, and pretending you did not see the leopard
-is silly. It counts for half, because somebody else found it.
+is silly. It costs a quarter, because somebody else found it — a nudge, not a punishment for being honest.
 
 This is the "no asking at a jam" rule with teeth. That one relied on honesty
 about a thing nobody could check; this one puts the difference in the score,
