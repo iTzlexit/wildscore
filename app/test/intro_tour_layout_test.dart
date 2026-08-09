@@ -78,7 +78,7 @@ void main() {
     await tester.drag(find.byType(PageView), const Offset(-400, 0));
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('take the points'), findsOneWidget);
+    expect(find.text('How it works'), findsOneWidget);
   });
 
   testWidgets('the standalone tour closes on Done', (

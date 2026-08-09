@@ -335,10 +335,12 @@ class _HomeShellState extends State<HomeShell> {
             wildCardBonusEarned: earnsBonus,
             variantApplied: details.variant,
             context: details.context,
+            extras: details.extras,
           ),
           road: road,
           context: details.context,
           variant: details.variant,
+          extras: details.extras,
         ),
       ),
     );
@@ -373,6 +375,7 @@ class _HomeShellState extends State<HomeShell> {
                 onOpenGame: () => setState(() => _tab = 1),
                 onDeleteVisit: _deleteVisit,
                 onRestored: _reload,
+                onToggleSpotted: _toggleSpotted,
               ),
               WildScoreScreen(
                 species: species,

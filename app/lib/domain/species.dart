@@ -197,12 +197,27 @@ class Species {
     bool wildCardBonusEarned = false,
     bool variantApplied = false,
     SightingContext context = SightingContext.normal,
+    Set<SightingExtra> extras = const <SightingExtra>{},
   }) {
     final int base = wildCardBonusEarned ? wildCardBonus : points;
-    final int withVariant =
-        base + (variantApplied && variant != null ? variant!.bonus : 0);
-    return context.applyTo(withVariant);
+    double total =
+        (base + (variantApplied && variant != null ? variant!.bonus : 0))
+            .toDouble();
+    for (final SightingExtra e in extras) {
+      total *= e.multiplier;
+    }
+    return context.applyTo(total.round());
   }
+
+  /// Which "what was it doing" questions make sense for this animal.
+  ///
+  /// A baby is only asked about for mammals, and a kill only for predators.
+  /// Asking whether a puff adder was on a kill is the kind of question that
+  /// makes people stop trusting the rest of them.
+  Set<SightingExtra> get possibleExtras => <SightingExtra>{
+    if (category == SpeciesCategory.mammal) SightingExtra.withYoung,
+    if (tags.contains(SpeciesTag.predator)) SightingExtra.onAKill,
+  };
 
   /// Whether to ask who else was there.
   ///

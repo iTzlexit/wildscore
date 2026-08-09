@@ -6,7 +6,11 @@ import '../../shared/theme.dart';
 
 /// What the claim was worth, decided by the two questions worth asking.
 class ClaimDetails {
-  const ClaimDetails({required this.context, required this.variant});
+  const ClaimDetails({
+    required this.context,
+    required this.variant,
+    this.extras = const <SightingExtra>{},
+  });
 
   static const ClaimDetails ordinary = ClaimDetails(
     context: SightingContext.normal,
@@ -15,6 +19,7 @@ class ClaimDetails {
 
   final SightingContext context;
   final bool variant;
+  final Set<SightingExtra> extras;
 }
 
 /// Asked immediately after the animal is picked, and only when the answer
@@ -36,6 +41,10 @@ class ClaimDetailsSheet extends StatefulWidget {
   /// True when this species has anything worth asking about. Checked by the
   /// caller so that the common claim — an impala, a zebra — never sees a sheet
   /// at all.
+  /// Deliberately does **not** include [Species.possibleExtras]. Every mammal
+  /// can have young, so testing that here would put a sheet in front of every
+  /// impala — the exact friction the bar exists to avoid. The extras are asked
+  /// about only for animals that already clear it.
   static bool needed(Species species) =>
       species.crowdMatters || species.variant != null;
 
@@ -58,6 +67,7 @@ class ClaimDetailsSheet extends StatefulWidget {
 class _ClaimDetailsSheetState extends State<ClaimDetailsSheet> {
   SightingContext _context = SightingContext.normal;
   bool _variant = false;
+  final Set<SightingExtra> _extras = <SightingExtra>{};
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +76,7 @@ class _ClaimDetailsSheetState extends State<ClaimDetailsSheet> {
     final int points = species.scoreFor(
       variantApplied: _variant,
       context: _context,
+      extras: _extras,
     );
 
     return SafeArea(
@@ -151,6 +162,38 @@ class _ClaimDetailsSheetState extends State<ClaimDetailsSheet> {
                 ),
               ],
 
+              // What it was doing. Only the questions that make sense for this
+              // animal — a puff adder is never asked whether it was on a kill.
+              if (species.possibleExtras.isNotEmpty) ...<Widget>[
+                const Divider(height: 1, color: AppColors.outline),
+                const _Question(label: 'Anything special about it?'),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    Space.lg,
+                    0,
+                    Space.lg,
+                    Space.lg,
+                  ),
+                  child: Wrap(
+                    spacing: Space.sm,
+                    runSpacing: Space.sm,
+                    children: <Widget>[
+                      for (final SightingExtra e in species.possibleExtras)
+                        _Choice(
+                          label: e.label,
+                          detail: '×1.5',
+                          selected: _extras.contains(e),
+                          onTap: () => setState(() {
+                            if (!_extras.remove(e)) {
+                              _extras.add(e);
+                            }
+                          }),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+
               if (species.crowdMatters) ...<Widget>[
                 const Divider(height: 1, color: AppColors.outline),
                 const _Question(label: 'Who else was there?'),
@@ -193,9 +236,13 @@ class _ClaimDetailsSheetState extends State<ClaimDetailsSheet> {
                 child: SizedBox(
                   height: 50,
                   child: FilledButton(
-                    onPressed: () => Navigator.of(
-                      context,
-                    ).pop(ClaimDetails(context: _context, variant: _variant)),
+                    onPressed: () => Navigator.of(context).pop(
+                      ClaimDetails(
+                        context: _context,
+                        variant: _variant,
+                        extras: <SightingExtra>{..._extras},
+                      ),
+                    ),
                     style: FilledButton.styleFrom(
                       backgroundColor: AppColors.accent,
                       foregroundColor: AppColors.accentInk,

@@ -16,12 +16,13 @@ import 'widgets/species_grid_card.dart';
 ///
 /// This is the lifetime record specifically — it never shows the day's
 /// scorecard. A trophy shelf does not empty itself at sunset.
-class CollectionScreen extends StatelessWidget {
+class CollectionScreen extends StatefulWidget {
   const CollectionScreen({
     required this.species,
     required this.caughtIds,
     this.mode,
     this.group,
+    this.onToggleSpotted,
     super.key,
   }) : assert(
          mode != null || group != null,
@@ -39,12 +40,22 @@ class CollectionScreen extends StatelessWidget {
   /// with the missing ones removed cannot answer it.
   final SpeciesCollection? group;
 
+  /// Adds or removes a species. Null makes the list read-only.
+  ///
+  /// It used to be absent entirely, which had two consequences and both were
+  /// bugs: opening an animal from a collection always claimed you had not seen
+  /// it, because the flag defaulted to false; and there was no way to take
+  /// something out of a collection from the one screen dedicated to that
+  /// collection.
+  final ValueChanged<String>? onToggleSpotted;
+
   static Future<void> open(
     BuildContext context, {
     required List<Species> species,
     required Set<String> caughtIds,
     CollectionMode? mode,
     SpeciesCollection? group,
+    ValueChanged<String>? onToggleSpotted,
   }) {
     return Navigator.of(context).push<void>(
       MaterialPageRoute<void>(
@@ -53,14 +64,38 @@ class CollectionScreen extends StatelessWidget {
           caughtIds: caughtIds,
           mode: mode,
           group: group,
+          onToggleSpotted: onToggleSpotted,
         ),
       ),
     );
   }
 
   @override
+  State<CollectionScreen> createState() => _CollectionScreenState();
+}
+
+class _CollectionScreenState extends State<CollectionScreen> {
+  /// A local copy, because this screen sits on its own route and will not be
+  /// rebuilt by whoever owns the real set. Without it, taking something out of
+  /// a collection saves correctly and then leaves the tile sitting there still
+  /// ticked, which reads as the app having ignored you.
+  late final Set<String> _caught = <String>{...widget.caughtIds};
+
+  void _toggle(String id) {
+    setState(() {
+      if (!_caught.remove(id)) {
+        _caught.add(id);
+      }
+    });
+    widget.onToggleSpotted!(id);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final SpeciesCollection? group = this.group;
+    final SpeciesCollection? group = widget.group;
+    final List<Species> species = widget.species;
+    final CollectionMode? mode = widget.mode;
+    final Set<String> caughtIds = _caught;
     final List<Species> visible =
         <Species>[
             if (group != null)
@@ -137,7 +172,14 @@ class CollectionScreen extends StatelessWidget {
                           onTap: () => Navigator.of(context).push<void>(
                             MaterialPageRoute<void>(
                               builder: (BuildContext context) =>
-                                  SpeciesDetailScreen(species: s),
+                                  SpeciesDetailScreen(
+                                    species: s,
+                                    spotted: caughtIds.contains(s.id),
+                                    onToggleSpotted:
+                                        widget.onToggleSpotted == null
+                                        ? null
+                                        : () => _toggle(s.id),
+                                  ),
                             ),
                           ),
                         );

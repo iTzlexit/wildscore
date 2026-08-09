@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../domain/scorecard.dart';
+import '../../domain/sighting_context.dart';
 import '../../domain/species.dart';
 import '../../shared/theme.dart';
 import '../../shared/widgets/avatar_badge.dart';
@@ -118,6 +119,9 @@ class _StandingsBoardState extends State<StandingsBoard> {
           if (_lookup(c.speciesId)?.variant case final SpeciesVariant v) {
             (marks[c.speciesId] ??= <String>{}).add(v.label.toUpperCase());
           }
+        }
+        for (final SightingExtra e in c.extras) {
+          (marks[c.speciesId] ??= <String>{}).add(e.short);
         }
       }
     }

@@ -129,15 +129,12 @@ class _CodexScreenState extends State<CodexScreen> {
           species: species,
           photoCredit: _credits[species.id],
           spotted: widget.caughtIds.contains(species.id),
+          // No pop. The detail screen tracks its own state now, so the button
+          // simply changes — which is what a toggle should do, and what makes
+          // changing your mind twice in a row possible.
           onToggleSpotted: widget.onToggleSpotted == null
               ? null
-              : () {
-                  widget.onToggleSpotted!(species.id);
-                  // The detail screen is stateless and sits above this route,
-                  // so it has to be rebuilt with the new value rather than
-                  // left showing the old one.
-                  Navigator.of(context).pop();
-                },
+              : () => widget.onToggleSpotted!(species.id),
         ),
       ),
     );

@@ -218,16 +218,21 @@ class _Slide extends StatelessWidget {
                   title,
                   style: AppText.title1.copyWith(fontSize: 27, height: 1.15),
                 ),
-                const SizedBox(height: Space.md),
-                Text(
-                  body,
-                  style: AppText.body.copyWith(
-                    color: AppColors.textSecondary,
-                    height: 1.5,
+                // A slide whose content *is* the numbered steps has nothing to
+                // say in prose first, and an empty paragraph still costs its
+                // margins.
+                if (body.isNotEmpty) ...<Widget>[
+                  const SizedBox(height: Space.md),
+                  Text(
+                    body,
+                    style: AppText.body.copyWith(
+                      color: AppColors.textSecondary,
+                      height: 1.5,
+                    ),
                   ),
-                ),
+                ],
                 if (extra != null) ...<Widget>[
-                  const SizedBox(height: Space.xl),
+                  SizedBox(height: body.isEmpty ? Space.lg : Space.xl),
                   extra!,
                 ],
               ],
@@ -248,12 +253,16 @@ class _SlideOne extends StatelessWidget {
   Widget build(BuildContext context) {
     return const _Slide(
       art: _CarScene(),
-      eyebrow: 'KRUGER NATIONAL PARK',
-      title: 'The best game in Kruger is played from the back seat',
+      eyebrow: 'WILD SCORE: KRUGER EDITION',
+      // The problem before the product. "The best game in Kruger" was a claim
+      // about us; this is a description of the reader's own last trip, and
+      // somebody who recognises themselves in the first line reads the second.
+      title: 'Six hours of driving, and nothing to show for it',
       body:
-          'Wild Score turns a long drive into a competition. The whole car '
-          'plays — kids who have asked "are we there yet" four times included. '
-          'Suddenly everyone is looking out of the window.',
+          'You spend days looking for animals and end up with a camera roll and '
+          'an argument about who saw the leopard first.\n\n'
+          'So keep score. Everyone in the car competes, the rare stuff pays '
+          'more, and every animal you find is yours for good.',
       extra: _Promises(),
     );
   }
@@ -314,13 +323,31 @@ class _Promises extends StatelessWidget {
   }
 }
 
-/// A game-drive vehicle on a dirt road, with the car full of faces.
+/// A game-drive vehicle on a dirt road: people inside looking out, animals
+/// outside with their points floating over them.
 ///
-/// The faces are [AvatarBadge]s, the same ones a player is given a minute
-/// later. That continuity is the point: the picture is of the thing you are
-/// about to do, not a stock illustration of somebody else's holiday.
+/// The vehicle used to be full of animal faces, which was a charming picture of
+/// the wrong thing — the animals are what you are looking *for*. Putting people
+/// with binoculars in the seats and the quarry in the bush says what the app is
+/// in one image, and the point badges say what the game is without a word of
+/// copy: somebody who reads "🐆 300" and "🦌 5" has already understood it.
 class _CarScene extends StatelessWidget {
   const _CarScene();
+
+  /// The people, with binoculars. Emoji rather than drawn faces, for the same
+  /// reason the avatars are: colour emoji ship with every platform, cost no
+  /// bytes and no licence, and read at 30pt.
+  static const List<String> _passengers = <String>['🧑', '👦', '👩', '🧒'];
+
+  /// What they are looking at, and what it pays. The points are the joke and
+  /// the explanation at once — a first-time viewer reads "🐆 300" and has
+  /// understood the entire game before reading a word of the copy.
+  static const List<(String, String, double, double)> _quarry =
+      <(String, String, double, double)>[
+        ('🐆', '300', 0.085, 0.30),
+        ('🦏', '2000', 0.70, 0.20),
+        ('🦌', '5', 0.88, 0.52),
+      ];
 
   @override
   Widget build(BuildContext context) {
@@ -328,23 +355,111 @@ class _CarScene extends StatelessWidget {
       builder: (BuildContext context, BoxConstraints constraints) {
         final double w = constraints.maxWidth;
         final double h = constraints.maxHeight;
-        // The passenger heads sit on the vehicle roofline, which the painter
-        // places at a fixed fraction of its box.
-        final double face = (w * 0.115).clamp(26.0, 44.0);
+        final double face = (w * 0.10).clamp(24.0, 38.0);
+        final double beast = (w * 0.11).clamp(26.0, 44.0);
 
         return Stack(
           alignment: Alignment.center,
           children: <Widget>[
             CustomPaint(size: Size(w, h), painter: _CarPainter()),
-            for (int i = 0; i < 4; i++)
+
+            // Animals first, so the vehicle paints over anything that strays
+            // behind it.
+            for (final (String emoji, String points, double x, double y)
+                in _quarry)
               Positioned(
-                left: w * (0.245 + i * 0.135) - face / 2,
-                top: h * 0.575 - face / 2,
-                child: AvatarBadge(avatar: i * 4 + 1, size: face),
+                left: w * x - beast / 2,
+                top: h * y - beast / 2,
+                child: _Quarry(emoji: emoji, points: points, size: beast),
+              ),
+
+            // People in the seats, each holding a pair of binoculars. The
+            // vehicle used to be full of animals, which was a nice picture of
+            // the wrong thing: the animals are what you are looking *for*.
+            for (int i = 0; i < _passengers.length; i++)
+              Positioned(
+                left: w * (0.245 + i * 0.125) - face / 2,
+                top: h * 0.565 - face / 2,
+                child: _Passenger(emoji: _passengers[i], size: face),
               ),
           ],
         );
       },
+    );
+  }
+}
+
+/// A head and shoulders with binoculars up.
+class _Passenger extends StatelessWidget {
+  const _Passenger({required this.emoji, required this.size});
+
+  final String emoji;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: size,
+      height: size * 1.15,
+      child: Stack(
+        alignment: Alignment.topCenter,
+        children: <Widget>[
+          Text(emoji, style: TextStyle(fontSize: size * 0.86)),
+          Positioned(
+            top: size * 0.42,
+            child: Text('🔭', style: TextStyle(fontSize: size * 0.46)),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// An animal out in the bush with its points floating over it.
+class _Quarry extends StatelessWidget {
+  const _Quarry({
+    required this.emoji,
+    required this.points,
+    required this.size,
+  });
+
+  final String emoji;
+  final String points;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: size * 0.16,
+            vertical: size * 0.05,
+          ),
+          decoration: BoxDecoration(
+            color: AppColors.accent,
+            borderRadius: BorderRadius.circular(size),
+            boxShadow: const <BoxShadow>[
+              BoxShadow(
+                color: Color(0x33000000),
+                blurRadius: 6,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Text(
+            points,
+            style: AppText.label.copyWith(
+              color: AppColors.accentInk,
+              fontSize: size * 0.26,
+              fontFeatures: AppText.tabular,
+            ),
+          ),
+        ),
+        SizedBox(height: size * 0.08),
+        Text(emoji, style: TextStyle(fontSize: size * 0.82)),
+      ],
     );
   }
 }
@@ -512,13 +627,10 @@ class _SlideTwo extends StatelessWidget {
   Widget build(BuildContext context) {
     return const _Slide(
       art: _ScoringScene(),
-      eyebrow: 'HOW IT WORKS',
-      title: 'Spot it, tap it, take the points',
-      body:
-          'Put everyone in the car on the scorecard. When somebody calls an '
-          'animal, tap the eye beside their name and pick it — the points land '
-          'on them. The rarer the animal, the bigger the prize.',
-      extra: _RarityTable(),
+      eyebrow: 'THEN PLAY WILD SCORE',
+      title: 'How it works',
+      body: '',
+      extra: _HowItWorks(),
     );
   }
 }
@@ -640,6 +752,77 @@ class _MockRow extends StatelessWidget {
   }
 }
 
+/// The three things that happen, then what the animals are worth.
+class _HowItWorks extends StatelessWidget {
+  const _HowItWorks();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        _NumberedStep(n: '1', text: 'Start the drive.'),
+        _NumberedStep(n: '2', text: 'Enter everyone playing.'),
+        _NumberedStep(
+          n: '3',
+          text:
+              'Somebody spots an animal first — tap the eye beside their '
+              'name and choose it. The points land on them.',
+          last: true,
+        ),
+        SizedBox(height: Space.md),
+        _RarityTable(),
+      ],
+    );
+  }
+}
+
+class _NumberedStep extends StatelessWidget {
+  const _NumberedStep({required this.n, required this.text, this.last = false});
+
+  final String n;
+  final String text;
+  final bool last;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: last ? 0 : Space.md),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            width: 24,
+            height: 24,
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(
+              color: AppColors.accent,
+              shape: BoxShape.circle,
+            ),
+            child: Text(
+              n,
+              style: AppText.label.copyWith(
+                color: AppColors.accentInk,
+                fontSize: 12,
+              ),
+            ),
+          ),
+          const SizedBox(width: Space.md),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Text(
+                text,
+                style: AppText.body.copyWith(fontSize: 14.5, height: 1.45),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 /// Every tier and what it pays, straight from the enum.
 class _RarityTable extends StatelessWidget {
   const _RarityTable();
@@ -728,11 +911,11 @@ class _SlideThree extends StatelessWidget {
   Widget build(BuildContext context) {
     return const _Slide(
       art: _VictoryScene(),
-      eyebrow: 'AND THEN TOMORROW',
+      eyebrow: 'BACK AT CAMP',
       title: 'End the day. Crown the Ultimate Spotter.',
       body:
-          'Whoever is top when you get back to camp wins the day. Then it '
-          'starts again in the morning, with everything you found kept for good.',
+          'Tap End drive and the points are totalled up, everyone is ranked, '
+          'and the day is kept. In the morning you start a new one.',
       extra: _AfterwardsList(),
     );
   }

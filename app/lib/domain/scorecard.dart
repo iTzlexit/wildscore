@@ -56,6 +56,7 @@ class Claim {
     this.road,
     this.context = SightingContext.normal,
     this.variant = false,
+    this.extras = const <SightingExtra>{},
   });
 
   factory Claim.fromJson(Map<String, dynamic> json) => Claim(
@@ -72,6 +73,11 @@ class Claim {
         ? SightingContext.normal
         : SightingContext.byName(json['context']! as String),
     variant: json['variant'] as bool? ?? false,
+    extras: <SightingExtra>{
+      for (final dynamic e in (json['extras'] as List<dynamic>?) ?? const [])
+        if (SightingExtra.byName(e as String) case final SightingExtra found)
+          found,
+    },
   );
 
   final String speciesId;
@@ -91,6 +97,9 @@ class Claim {
 
   /// The species' own variant applied — in practice, that the lion was a male.
   final bool variant;
+
+  /// What it was doing: with young, on a kill. Empty for almost everything.
+  final Set<SightingExtra> extras;
 
   /// Which road it was called on — `S100`, `H1-3 · Napi Road`.
   ///
@@ -121,6 +130,8 @@ class Claim {
     // backup code does not grow for saying nothing.
     if (context != SightingContext.normal) 'context': context.name,
     if (variant) 'variant': true,
+    if (extras.isNotEmpty)
+      'extras': <String>[for (final SightingExtra e in extras) e.name],
   };
 }
 

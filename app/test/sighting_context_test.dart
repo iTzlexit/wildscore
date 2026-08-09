@@ -163,4 +163,85 @@ void main() {
       expect(old.points, 300);
     });
   });
+
+  group('what it was doing', () {
+    test('a baby is only asked about for mammals', () {
+      expect(_byId('lion').possibleExtras, contains(SightingExtra.withYoung));
+      expect(_byId('impala').possibleExtras, contains(SightingExtra.withYoung));
+      // Asking whether a puff adder had a baby with it is the kind of question
+      // that makes people stop trusting the rest of them.
+      expect(
+        _byId('puff-adder').possibleExtras,
+        isNot(contains(SightingExtra.withYoung)),
+      );
+    });
+
+    test('a kill is only asked about for predators', () {
+      expect(_byId('leopard').possibleExtras, contains(SightingExtra.onAKill));
+      expect(
+        _byId('giraffe').possibleExtras,
+        isNot(contains(SightingExtra.onAKill)),
+      );
+    });
+
+    test('each one is worth half again', () {
+      // Derived from the tier rather than typed, because the whole point of
+      // the ranking exercise is that these numbers are going to move.
+      final Species leopard = _byId('leopard');
+      final int base = leopard.points;
+
+      expect(
+        leopard.scoreFor(extras: <SightingExtra>{SightingExtra.onAKill}),
+        (base * 1.5).round(),
+      );
+    });
+
+    test('they stack with each other and with the crowd', () {
+      // A leopard on a kill with a cub, on an empty road. The best sighting
+      // most people will ever have, and the score should say so.
+      expect(
+        _byId('leopard').scoreFor(
+          extras: <SightingExtra>{
+            SightingExtra.onAKill,
+            SightingExtra.withYoung,
+          },
+          context: SightingContext.alone,
+        ),
+        (_byId('leopard').points * 1.5 * 1.5 * 2).round(),
+      );
+    });
+
+    test('they survive a round trip and are absent when empty', () {
+      final Claim plain = Claim(
+        speciesId: 'impala',
+        playerId: 'p1',
+        at: DateTime(2026, 8, 9),
+        points: 5,
+      );
+      expect(plain.toJson().containsKey('extras'), isFalse);
+
+      final Claim rich = Claim(
+        speciesId: 'leopard',
+        playerId: 'p1',
+        at: DateTime(2026, 8, 9),
+        points: 450,
+        extras: <SightingExtra>{SightingExtra.onAKill},
+      );
+      expect(Claim.fromJson(rich.toJson()).extras, <SightingExtra>{
+        SightingExtra.onAKill,
+      });
+    });
+
+    test('an unknown extra from a newer version is dropped, not fatal', () {
+      final Claim old = Claim.fromJson(<String, dynamic>{
+        'speciesId': 'leopard',
+        'playerId': 'p1',
+        'at': '2026-08-09T08:00:00.000',
+        'points': 300,
+        'extras': <String>['inATree'],
+      });
+
+      expect(old.extras, isEmpty);
+    });
+  });
 }

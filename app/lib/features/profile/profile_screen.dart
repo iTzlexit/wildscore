@@ -33,6 +33,7 @@ class ProfileScreen extends StatefulWidget {
     this.onOpenGame,
     this.onDeleteVisit,
     this.onRestored,
+    this.onToggleSpotted,
     super.key,
   });
 
@@ -56,6 +57,10 @@ class ProfileScreen extends StatefulWidget {
   /// Reloads the shell after a restore. Every screen reads from the stores this
   /// writes to, so they all have to be told.
   final VoidCallback? onRestored;
+
+  /// Adds or removes a species, for the collection screens this opens. Without
+  /// it a collection is a display case with the lid glued shut.
+  final ValueChanged<String>? onToggleSpotted;
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -88,6 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       species: widget.species,
       caughtIds: widget.caughtIds,
       mode: mode,
+      onToggleSpotted: widget.onToggleSpotted,
     );
   }
 
@@ -147,6 +153,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       species: widget.species,
                       caughtIds: widget.caughtIds,
                       group: group,
+                      onToggleSpotted: widget.onToggleSpotted,
                     ),
                   ),
                   const SizedBox(height: Space.section),
@@ -330,7 +337,30 @@ class _LifetimeCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: Space.xs),
-          Text('MY LIFETIME POINTS', style: AppText.overline),
+          Row(
+            children: <Widget>[
+              Text('MY LIFETIME POINTS', style: AppText.overline),
+              const SizedBox(width: 6),
+              // Points and the collection are two different things and the
+              // difference confuses people, reasonably: a player who found
+              // nothing all day still gains species, because everything the car
+              // saw joins the collection while the points stay with whoever
+              // called it. Better said on request than as permanent small print.
+              const _Explainer(
+                title: 'Where these come from',
+                body:
+                    'Points you have banked at the end of each drive, added up '
+                    'across every drive you have played.\n\n'
+                    'They are not the same as your collection. Points go to '
+                    'whoever called the animal first. The collection takes '
+                    'everything the whole car saw — you were there, so you have '
+                    'seen it — plus anything you tick off yourself in the '
+                    'Animal Dex.\n\n'
+                    'So a quiet day in the back seat can add species without '
+                    'adding points.',
+              ),
+            ],
+          ),
           const SizedBox(height: Space.screen),
           Row(
             children: <Widget>[
@@ -733,5 +763,55 @@ class _SectionLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(text, style: AppText.overline);
+  }
+}
+
+/// A small "i" that opens an explanation.
+///
+/// Not a tooltip. A Material tooltip needs a long-press to appear on a phone,
+/// which nobody discovers, and it vanishes while you are still reading it. A
+/// tap that opens something you dismiss yourself is the version that works on a
+/// touch screen.
+class _Explainer extends StatelessWidget {
+  const _Explainer({required this.title, required this.body});
+
+  final String title;
+  final String body;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      label: title,
+      child: InkWell(
+        onTap: () => showDialog<void>(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            backgroundColor: AppColors.surface,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(Radii.card),
+            ),
+            title: Text(title, style: AppText.title3),
+            content: Text(body, style: AppText.body.copyWith(height: 1.55)),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                style: TextButton.styleFrom(foregroundColor: AppColors.accent),
+                child: const Text('Got it'),
+              ),
+            ],
+          ),
+        ),
+        borderRadius: BorderRadius.circular(20),
+        child: const Padding(
+          padding: EdgeInsets.all(3),
+          child: Icon(
+            Icons.info_outline_rounded,
+            size: 15,
+            color: AppColors.textMuted,
+          ),
+        ),
+      ),
+    );
   }
 }

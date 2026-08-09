@@ -82,22 +82,27 @@ class RulesScreen extends StatelessWidget {
           ),
           const SizedBox(height: Space.xl),
 
-          const _Section('PLAYING A DRIVE'),
+          const _Section('HOW TO PLAY'),
           const _Step(
             number: 1,
+            title: 'Start a drive',
+            body: 'Green button on the Wild Score tab. Do it at the gate.',
+          ),
+          const _Step(
+            number: 2,
             title: 'Add everyone in the car',
             body: 'First names. No accounts, no sign-ups. On your own is fine.',
           ),
           const _Step(
-            number: 2,
-            title: 'Somebody shouts — tap their name',
+            number: 3,
+            title: 'Whoever shouts first gets it',
             body:
-                'Tap the eye beside them, then pick the animal. The points '
-                'land on them.',
+                'Tap the eye beside their name, then pick the animal. The '
+                'rarer it is, the more it pays.',
             icon: Icons.visibility_rounded,
           ),
           const _Step(
-            number: 3,
+            number: 4,
             title: 'End the day back at camp',
             body:
                 'Top score wins. Everything the car saw joins your collection '
@@ -106,29 +111,25 @@ class RulesScreen extends StatelessWidget {
           ),
           const SizedBox(height: Space.xl),
 
-          // Split from the scoring rules on purpose. These four answer "does
-          // that count", which is what a car argues about; the next four answer
-          // "what is it worth", which is what a car is *pleased* about. They
-          // used to be one list of eight and read as a wall.
-          const _Section('DOES IT COUNT?'),
-          const _Rule(
-            icon: Icons.fence_rounded,
-            title: 'Inside the park only',
-            body:
-                'The gate is the line. That kudu on the way in was lovely, and '
-                'it does not count.',
-          ),
+          // Split from the scoring on purpose. These answer "does that count",
+          // which is what a car argues about; the next lot answer "what is it
+          // worth", which is what a car is *pleased* about. One list of eight
+          // read as a wall.
+          const _Section('THE RULES'),
           const _Rule(
             icon: Icons.u_turn_left_rounded,
-            title: 'One sighting, one claim',
+            title: 'The same animal only counts once',
             body:
-                'Reverse back for another look by all means. It is still the '
-                'same leopard.',
+                'Not the same sighting twice, and not the same animal later in '
+                'the day. Coming back past that pride after lunch is the same '
+                'pride — lovely, and worth nothing.',
           ),
           const _Rule(
             icon: Icons.groups_rounded,
             title: 'A pride is one lion',
-            body: 'Twelve lions at a kill is one claim, not twelve. Sorry.',
+            body:
+                'Twelve lions at a kill is one claim, not twelve. Same for a '
+                'breeding herd of elephant. Sorry.',
           ),
           const _Rule(
             icon: Icons.no_transfer_rounded,
@@ -139,35 +140,39 @@ class RulesScreen extends StatelessWidget {
           ),
           const SizedBox(height: Space.xl),
 
-          const _Section('WHAT PAYS MORE'),
+          const _Section('WILD CARDS AND BONUSES'),
           const _Rule(
             icon: Icons.groups_2_rounded,
-            title: 'Finding it yourself — double',
+            title: 'Spot it yourself — double points',
             body:
-                'For rare animals the app asks who else was there. An empty '
-                'road pays double. A jam pays half — you did see it, but '
-                'somebody else found it.',
+                'For the rare ones the app asks who else was there. An empty '
+                'road pays double.',
           ),
           const _Rule(
-            icon: Icons.workspace_premium_rounded,
-            title: 'A male lion — 100 instead of 40',
+            icon: Icons.traffic_rounded,
+            title: 'A traffic jam gets taxed — half points',
             body:
-                'A lioness is a lion. A black-maned male in the road is the '
-                'picture on the front of the brochure.',
+                'Rolling up to eleven parked cars still counts. You did see it. '
+                'But somebody else found it.',
           ),
           const _Rule(
-            icon: Icons.bolt_rounded,
-            title: 'The first one — 50 instead of 5',
+            icon: Icons.auto_awesome_rounded,
+            title: 'Wild cards',
             body:
-                'Impala, zebra, giraffe and wildebeest. Zebra, giraffe and '
-                'wildebeest reset every morning; the impala comes once a trip.',
+                'A male lion pays more than a lioness.\n'
+                'A mother with a calf pays more.\n'
+                'An animal on a kill pays more.\n'
+                'The first impala of the trip pays 50 instead of 5.',
           ),
           const _Rule(
             icon: Icons.lock_clock_rounded,
-            title: 'Common animals run out',
+            title: 'The common ones run out for the day',
             body:
-                'Impala and friends: once a day. Middling ones: three times. '
-                'Anything rare stays open all day — every leopard counts.',
+                'Nobody wants to tap every impala from Malelane to Satara, so '
+                'the everyday animals are capped. One impala is enough, and it '
+                'pays a bonus. Four separate zebra sightings is plenty for a '
+                'morning.\n\n'
+                'Nothing rare is capped. Find six leopards and all six count.',
           ),
           const SizedBox(height: Space.lg),
 

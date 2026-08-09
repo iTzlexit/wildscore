@@ -33,7 +33,7 @@ import 'widgets/region_strip.dart';
 ///
 /// This layout is also the skeleton of the Phase 2 reveal. When you photograph
 /// a pangolin, this is the card that turns over.
-class SpeciesDetailScreen extends StatelessWidget {
+class SpeciesDetailScreen extends StatefulWidget {
   const SpeciesDetailScreen({
     required this.species,
     this.photoCredit,
@@ -90,8 +90,36 @@ class SpeciesDetailScreen extends StatelessWidget {
   final VoidCallback? onToggleSpotted;
 
   @override
+  State<SpeciesDetailScreen> createState() => _SpeciesDetailScreenState();
+}
+
+class _SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
+  /// Tracked here as well as by the caller.
+  ///
+  /// The button used to tell its owner and then **close the screen**, because
+  /// this widget was stateless and had no way to show the new value. That made
+  /// adding something feel like an error — the card vanished — and it made
+  /// changing your mind impossible without reopening the animal. Holding the
+  /// state locally lets the button just change, which is what a toggle is
+  /// supposed to do.
+  late bool _spotted = widget.spotted;
+
+  @override
+  void didUpdateWidget(SpeciesDetailScreen old) {
+    super.didUpdateWidget(old);
+    if (old.spotted != widget.spotted) {
+      _spotted = widget.spotted;
+    }
+  }
+
+  void _toggle() {
+    setState(() => _spotted = !_spotted);
+    widget.onToggleSpotted!();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final RarityStyle style = species.rarityTier.style;
+    final RarityStyle style = widget.species.rarityTier.style;
 
     return Scaffold(
       backgroundColor: style.headerInk,
@@ -99,12 +127,14 @@ class SpeciesDetailScreen extends StatelessWidget {
         length: 3,
         child: Column(
           children: <Widget>[
-            _Header(species: species, credit: photoCredit),
+            _Header(species: widget.species, credit: widget.photoCredit),
             Expanded(
               child: _Sheet(
-                species: species,
-                spotted: spotted,
-                onToggleSpotted: onToggleSpotted,
+                species: widget.species,
+                spotted: _spotted,
+                onToggleSpotted: widget.onToggleSpotted == null
+                    ? null
+                    : _toggle,
               ),
             ),
           ],

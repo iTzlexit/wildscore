@@ -47,3 +47,54 @@ enum SightingContext {
     orElse: () => SightingContext.normal,
   );
 }
+
+/// Things about a particular sighting that make it better than the same animal
+/// standing on its own.
+///
+/// These are about the *moment*, not the species, which is why they are not
+/// [SpeciesVariant]s. A lioness with cubs and a leopard on a kill are the two
+/// sightings people talk about for years, and scoring them the same as a lion
+/// asleep under a tree is the thing the game gets most obviously wrong.
+///
+/// Multipliers rather than flat bonuses, so they scale honestly: half again on
+/// an impala is small and half again on a wild dog is a lot, which is the right
+/// shape.
+enum SightingExtra {
+  /// Only offered for mammals. A crocodile with young is a real thing and not
+  /// one anybody is going to argue about at dinner.
+  withYoung(
+    label: 'With young',
+    short: 'YOUNG',
+    question: 'Was there a baby with it?',
+    multiplier: 1.5,
+  ),
+
+  /// Only offered for predators. Everybody remembers the kill.
+  onAKill(
+    label: 'On a kill',
+    short: 'KILL',
+    question: 'Was it on a kill?',
+    multiplier: 1.5,
+  );
+
+  const SightingExtra({
+    required this.label,
+    required this.short,
+    required this.question,
+    required this.multiplier,
+  });
+
+  final String label;
+  final String short;
+  final String question;
+  final double multiplier;
+
+  static SightingExtra? byName(String name) {
+    for (final SightingExtra e in values) {
+      if (e.name == name) {
+        return e;
+      }
+    }
+    return null;
+  }
+}

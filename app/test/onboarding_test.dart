@@ -33,7 +33,7 @@ void main() {
   testWidgets('opens on the tour, not on a form', (WidgetTester tester) async {
     await pumpOnboarding(tester);
 
-    expect(find.textContaining('back seat'), findsOneWidget);
+    expect(find.textContaining('nothing to show for it'), findsOneWidget);
     expect(find.text('Skip'), findsOneWidget);
     expect(find.text('Next'), findsOneWidget);
     // Nobody is asked for anything before they know what this is.
@@ -47,7 +47,7 @@ void main() {
 
     await tester.tap(find.text('Next'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('take the points'), findsOneWidget);
+    expect(find.text('How it works'), findsOneWidget);
 
     await tester.tap(find.text('Next'));
     await tester.pumpAndSettle();
