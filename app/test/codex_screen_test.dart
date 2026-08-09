@@ -302,6 +302,23 @@ void main() {
     expect(find.text('Ietermagog'), findsOneWidget);
   });
 
+  testWidgets('a species with a real figure shows it, and says where from', (
+    WidgetTester tester,
+  ) async {
+    // The other half of the population card. The pangolin covers the withheld
+    // branch; without this one, the branch that draws an actual number could
+    // break and every test would still pass.
+    await _pumpCodex(tester);
+    await _search(tester, 'Alcelaphus');
+    await tester.tap(find.text("Lichtenstein's Hartebeest"));
+    await tester.pumpAndSettle();
+
+    expect(find.text('HOW MANY ARE IN THE PARK'), findsOneWidget);
+    expect(find.text('40 – 75'), findsOneWidget);
+    // Provenance is not decoration: a number this small is a claim without it.
+    expect(find.text('Aerial survey, 2023'), findsOneWidget);
+  });
+
   testWidgets('sensitive species show the protection notice', (
     WidgetTester tester,
   ) async {
