@@ -3,6 +3,8 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
 import '../../data/attribution_repository.dart';
+import '../../domain/population.dart';
+import '../../domain/rarity_tier.dart';
 import '../../domain/species.dart';
 import '../../domain/species_tag.dart';
 import '../../shared/theme.dart';
@@ -567,6 +569,13 @@ class _AboutTab extends StatelessWidget {
         ],
         const SizedBox(height: Space.screen),
         Text(species.description, style: AppText.body),
+        if (species.population != null) ...<Widget>[
+          const SizedBox(height: Space.screen),
+          _PopulationCard(
+            population: species.population!,
+            tier: species.rarityTier,
+          ),
+        ],
         const SizedBox(height: Space.xl),
         _Row(label: 'Afrikaans', value: species.afrikaansName),
         _Row(label: 'Category', value: species.category.singular),
@@ -698,7 +707,7 @@ class _PointsBanner extends StatelessWidget {
                 const SizedBox(width: Space.md),
                 Text(
                   '${species.points}',
-                  style: AppText.display.copyWith(
+                  style: AppText.title1.copyWith(
                     color: style.accent,
                     fontSize: 40,
                     fontFeatures: AppText.tabular,
@@ -716,6 +725,80 @@ class _PointsBanner extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// How many are left, under the description.
+///
+/// Placed here rather than in the Field notes list on purpose. Habitat and best
+/// time are reference — you read them once, when planning. This is the line
+/// somebody reads out to the rest of the car, and it belongs where the eye
+/// already is: directly under the paragraph about the animal, before the
+/// Afrikaans name and the tidy little label rows.
+///
+/// The number is the headline and the provenance is underneath it in small
+/// type, because "40 – 75" without "aerial survey, 2023" beside it is a claim
+/// rather than a fact.
+class _PopulationCard extends StatelessWidget {
+  const _PopulationCard({required this.population, required this.tier});
+
+  final Population population;
+  final RarityTier tier;
+
+  @override
+  Widget build(BuildContext context) {
+    final RarityStyle style = tier.style;
+    final bool known = population.isKnown;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(Space.screen),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(Radii.card),
+        border: Border.all(color: AppColors.outline),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Icon(
+                known ? Icons.groups_2_rounded : Icons.visibility_off_rounded,
+                size: 16,
+                color: AppColors.textMuted,
+              ),
+              const SizedBox(width: Space.sm),
+              Expanded(
+                child: Text(
+                  'HOW MANY ARE IN THE PARK',
+                  style: AppText.overline.copyWith(color: AppColors.textMuted),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: Space.sm),
+          Text(
+            population.display,
+            style: AppText.display.copyWith(
+              color: known ? style.accent : AppColors.textPrimary,
+              fontVariations: AppFonts.weight(800),
+            ),
+          ),
+          if (population.note != null) ...<Widget>[
+            const SizedBox(height: Space.sm),
+            Text(population.note!, style: AppText.body),
+          ],
+          if (known) ...<Widget>[
+            const SizedBox(height: Space.xs),
+            Text(
+              population.attribution,
+              style: AppText.caption.copyWith(color: AppColors.textMuted),
+            ),
+          ],
+        ],
       ),
     );
   }

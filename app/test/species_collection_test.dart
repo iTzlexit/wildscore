@@ -165,23 +165,27 @@ void main() {
       expect(birds, contains('Egyptian Goose'));
     });
 
-    test('stays small enough to be a game', () {
+    test('stays inside a quarter of the park list', () {
       final int birds = _all
           .where((Species s) => s.category == SpeciesCategory.bird)
           .length;
 
-      // The bound was 40 and the list has since roughly doubled, on the user's
-      // instruction and rightly — thirty-one birds for Kruger left out the
-      // herons, the storks, the bee-eaters and the go-away bird, which is most
-      // of what a car actually points at.
+      // This bound has moved twice — 40, then 100, now 130 — both times on the
+      // owner's instruction and both times for the same reason: the list he
+      // wanted is the list a car actually calls out, and a shorter one kept
+      // leaving out birds people shout about.
       //
-      // The principle has not changed, only the number: **curated, not
-      // exhaustive.** Kruger has around five hundred species and a scorecard
-      // carrying all of them is a checklist nobody scrolls. Every addition
-      // still has to be a bird somebody would shout about.
+      // At 124 the bird tab is no longer a shortlist, and pretending otherwise
+      // in a test would be theatre. What is worth holding is the real ceiling:
+      // Kruger has around 500 recorded species, and a guide that carries every
+      // one of them is a field list, not a scorecard. A quarter of the park is
+      // the line.
+      //
+      // The pressure this puts on the *dex* is real and is not solved here —
+      // browsing 124 birds needs grouping, not a longer scroll.
       expect(
         birds,
-        lessThan(100),
+        lessThan(130),
         reason: 'past this it stops being a scorecard and becomes a field list',
       );
     });

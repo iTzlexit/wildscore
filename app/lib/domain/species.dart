@@ -1,5 +1,6 @@
 import 'conservation_status.dart';
 import 'park_region.dart';
+import 'population.dart';
 import 'rarity_tier.dart';
 import 'species_category.dart';
 import 'sighting_context.dart';
@@ -74,6 +75,7 @@ class Species {
     this.photoVerified = true,
     this.discovered = true,
     this.variant,
+    this.population,
   });
 
   /// Parses one entry of `assets/data/species.json`.
@@ -130,6 +132,9 @@ class Species {
       variant: json['variant'] == null
           ? null
           : SpeciesVariant.fromJson(json['variant']! as Map<String, dynamic>),
+      population: json['population'] == null
+          ? null
+          : Population.fromJson(json['population']! as Map<String, dynamic>),
     );
   }
 
@@ -176,6 +181,10 @@ class Species {
   /// A version of this animal worth more than the animal — a male lion. Null
   /// for almost everything.
   final SpeciesVariant? variant;
+
+  /// Roughly how many are in the park. Null where no figure has been sourced,
+  /// which is most of the birds and everything smaller than a mongoose.
+  final Population? population;
 
   /// What a claim is normally worth. The wild-card bonus, the variant bonus and
   /// the crowd multiplier are all applied on top by whoever creates the claim —
@@ -301,6 +310,11 @@ class Species {
       parkRegions: parkRegions,
       conservationStatus: conservationStatus,
       discovered: discovered ?? this.discovered,
+      // Both were being dropped. Only a test calls this today, so nothing was
+      // visibly broken — but a copy of a lion that has lost its male-lion
+      // bonus is a scoring bug lying in wait for whoever uses it next.
+      variant: variant,
+      population: population,
     );
   }
 

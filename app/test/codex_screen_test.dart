@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wildscore/data/species_repository.dart';
 import 'package:wildscore/domain/species.dart';
+import 'package:wildscore/domain/species_category.dart';
 import 'package:wildscore/features/codex/codex_screen.dart';
 import 'package:wildscore/features/codex/species_detail_screen.dart';
 import 'package:wildscore/features/codex/widgets/species_grid_card.dart';
@@ -194,8 +195,24 @@ void main() {
 
     await _tapQuickFilter(tester, 'Birds');
 
-    // African Fish Eagle is the first bird alphabetically.
-    expect(find.text('African Fish Eagle'), findsOneWidget);
+    // Asserted as a property of everything on screen rather than by naming one
+    // bird. It used to expect the fish eagle, on the grounds that it was the
+    // first bird in the order — which stopped being true the moment the bird
+    // list went from thirty-one to a hundred and twenty-four, and failed as a
+    // *layout* accident rather than as a filtering bug. What the filter
+    // promises is that nothing else gets through.
+    final Iterable<SpeciesGridCard> shown = tester.widgetList<SpeciesGridCard>(
+      find.byType(SpeciesGridCard),
+    );
+
+    expect(shown, isNotEmpty);
+    for (final SpeciesGridCard card in shown) {
+      expect(
+        card.species.category,
+        SpeciesCategory.bird,
+        reason: card.species.commonName,
+      );
+    }
     expect(find.text('Aardvark'), findsNothing);
   });
 
@@ -265,13 +282,24 @@ void main() {
 
     expect(find.byType(SpeciesDetailScreen), findsOneWidget);
     expect(find.text('Smutsia temminckii'), findsWidgets);
-    expect(find.text('Ietermagog'), findsOneWidget);
+
     // Tier appears twice: as a header pill and in the points banner.
     expect(find.text('LEGENDARY'), findsOneWidget);
     expect(find.text('Legendary'), findsOneWidget);
     // Field notes and distribution are tabs now, not stacked sections.
     expect(find.text('Where to find'), findsOneWidget);
     expect(find.text('Field notes'), findsOneWidget);
+
+    // Pangolin is one of the four species with no published number, and the
+    // card says so rather than leaving a gap.
+    expect(find.text('Not published'), findsOneWidget);
+
+    // Scrolled last, because the About tab is a ListView: the population card
+    // pushes the Afrikaans name below the fold on a phone, and dragging takes
+    // the points banner off the top.
+    await tester.drag(find.byType(ListView).first, const Offset(0, -320));
+    await tester.pumpAndSettle();
+    expect(find.text('Ietermagog'), findsOneWidget);
   });
 
   testWidgets('sensitive species show the protection notice', (

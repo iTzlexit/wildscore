@@ -3,7 +3,7 @@
 > **Written for a fresh conversation with no history.** Read this file and you
 > should be able to pick up work without anyone re-explaining anything.
 >
-> Last updated: 5 August 2026.
+> Last updated: 9 August 2026.
 
 ## The machine
 
@@ -26,7 +26,7 @@ serve the web build: `dart run tool/serve_web.dart 8080` from `app/`.
 
 ## What the app is
 
-A field guide to 127 Kruger species, a lifetime collection, and **a scorecard
+A field guide to 191 Kruger species, a lifetime collection, and **a scorecard
 game played by a car full of people on a game drive**. The game is the
 differentiator; the collection is the reason anyone still has it in March.
 
@@ -40,8 +40,12 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 - **Onboarding** — a three-slide picture tour of the game (car scene, scoring
   with the live rarity table, the Ultimate Spotter), then a name. No account.
   Replayable from How to play.
-- **Animal Dex** — 127 species (55 mammals, 61 birds, 8 reptiles, 2 invertebrates,
-  and the baobab), search, filters, rarity sort, detail cards.
+- **Animal Dex** — 191 species (56 mammals, 124 birds, 8 reptiles, 2
+  invertebrates, and the baobab), search, filters, rarity sort, detail cards.
+  Around 30 of the mammals carry a **park population figure** on the card —
+  aerial-survey ranges where SANParks flies them, published estimates where
+  nobody does, and "Not published" for rhino and pangolin. Sources are on the
+  credits screen.
   Photos are CC0/CC-BY from iNaturalist; caracal and African wildcat fall back
   to silhouettes because the photos could not be trusted.
 - **Wild Score** — start a drive, add the car, tap the eye by a player's name to
@@ -59,7 +63,7 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 - **Backup** — a pasteable code. No server; see `docs/RISKS.md` for why it
   matters more than it looks.
 
-265 tests. `flutter analyze` is clean and must stay clean.
+272 tests. `flutter analyze` is clean and must stay clean.
 
 ## Decisions already made — do not relitigate
 
@@ -73,6 +77,7 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 | Crowd: lone x2, jam x0.75, asked only for Rare+ and Big Five | `docs/HOW-TO-PLAY.md` |
 | Daily caps: common and frequent 4, notable 3, impala 2, rare+ unlimited | `docs/HOW-TO-PLAY.md` |
 | Rhino and pangolin never get a location, ever | `docs/MAPS.md`, `docs/SIGHTINGS-FEED.md` |
+| Rhino and pangolin never get a population number either | `test/population_test.dart` |
 | Light theme, single typeface, colour reserved for rarity | `docs/DESIGN-DIRECTION.md` |
 | No leaderboard — the rivalry is with people in your own car | `docs/MONETISATION.md` |
 | A community sightings map is a different product, not the next commit | `docs/MAPS.md` |
@@ -98,7 +103,7 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 
 | | |
 |---|---|
-| `tools/ranker.html` | Pairwise rarity survey. Built; publish to Netlify once the catalogue is complete |
+| `tools/ranker.html` | Pairwise rarity survey, **Notable and up only** (80 species). Publish to Netlify once the catalogue is complete |
 | `app/tool/build_ranker.dart` | Regenerates the ranker from species.json |
 | `app/tool/merge_rankings.dart` | Bradley-Terry fit over everybody submitted answers |
 | `tools/photo-picker.html` | Pick species photographs from CC candidates |
@@ -121,6 +126,16 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
    compressed. Start as early as possible.
 
 **Wanted, not blocking**
+
+- **The bird tab is now 124 long and needs grouping, not a longer scroll.**
+  Raptors, water birds, LBJs. Search and the category filter carry it for now,
+  but browsing is the weak point of the dex as it stands.
+- **The official population figures are unverified by us.** SANParks serves its
+  wildlife-trends PDF behind Cloudflare and it could not be fetched, so the
+  2023/2024 survey ranges came from the owner's own research. They have the
+  shape of real confidence intervals and match the direction of every secondary
+  source, but nobody here has opened the primary document. Worth doing before
+  launch.
 
 - Big Five / Big Six bonuses, First Call double (designed in `docs/SCORECARD.md`)
 - House rules screen

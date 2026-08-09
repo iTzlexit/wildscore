@@ -6,6 +6,19 @@
 //
 // Run from the app/ directory:
 //   dart run tool/prepare_species_photos.dart <source-dir>
+//   dart run tool/prepare_species_photos.dart <source-dir> --overwrite
+//
+// **By default an existing asset is never replaced**, and that default was
+// bought the hard way. `build/sourced-photos/` accumulates — a run that sources
+// thirty birds leaves those thirty files sitting there — so the next run over
+// the same directory silently reprocesses all of them. Doing exactly that
+// reverted seven photographs that had been re-picked by hand the session
+// before, putting back a dead hornbill, a hadada reduced to a skeleton and a
+// lapwing chick. Nothing failed; the tool reported success and the app shipped
+// a bird's bones in a field guide.
+//
+// So replacing something already in assets/ has to be asked for. `--overwrite`
+// is the intentional path, and the skipped list is printed either way.
 //
 // Not part of the app build. This is a one-off content pipeline that lives in
 // the repo so it can be re-run when artwork changes.
@@ -31,6 +44,7 @@ Future<void> main(List<String> args) async {
     return;
   }
 
+  final bool overwrite = args.contains('--overwrite');
   final Directory source = Directory(args.first);
   if (!source.existsSync()) {
     stderr.writeln('source directory not found: ${source.path}');
@@ -52,9 +66,16 @@ Future<void> main(List<String> args) async {
   int totalBefore = 0;
   int totalAfter = 0;
   int converted = 0;
+  final List<String> kept = <String>[];
 
   for (final File file in files) {
     final String name = file.uri.pathSegments.last;
+
+    if (!overwrite && File('${target.path}/$name').existsSync()) {
+      kept.add(name);
+      continue;
+    }
+
     final Uint8List bytes = file.readAsBytesSync();
     // Format-agnostic: iNaturalist serves PNG for some observations, and a
     // `.jpg` filename says nothing about the actual encoding. decodeJpg throws
@@ -97,6 +118,15 @@ Future<void> main(List<String> args) async {
     ..writeln('$converted images')
     ..writeln('before: ${_mb(totalBefore)}')
     ..writeln('after:  ${_mb(totalAfter)}');
+
+  if (kept.isNotEmpty) {
+    stdout
+      ..writeln('')
+      ..writeln('${kept.length} left alone — already in assets/species:')
+      ..writeln('  ${kept.join(', ')}')
+      ..writeln('')
+      ..writeln('Pass --overwrite if you mean to replace them.');
+  }
 }
 
 String _kb(int bytes) => '${(bytes / 1024).round()} KB';

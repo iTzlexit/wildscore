@@ -43,13 +43,31 @@ void main(List<String> args) {
   // not trustworthy. No description either — the audience is people who know
   // Kruger, who read "Serval" and are already deciding, and sixty descriptions
   // is sixty things to skip.
+  // Common and Frequent are left out of the survey entirely.
+  //
+  // Not to save the respondent time — to spend their time where it is worth
+  // something. Every question a person answers is one comparison, and a
+  // comparison between a laughing dove and an impala tells us nothing we did
+  // not already know. The tiers that are genuinely uncertain are Notable and
+  // up, which is where a caracal, a serval and a cheetah all sit together
+  // without anybody being sure of the order.
+  //
+  // The arithmetic matters as much as the principle. Each respondent ranks a
+  // random subset, so the chance a given species appears is subset ÷ pool. At
+  // 191 species that is 13%, and the number of respondents needed to fit a
+  // decent model roughly doubles. Cutting the pool to the 80 that need it puts
+  // it back to 30% — better than the 96-species pool this was tuned against.
   final List<Map<String, String>> lean = <Map<String, String>>[
     for (final dynamic s in data['species'] as List<dynamic>)
-      <String, String>{
-        'id': (s as Map<String, dynamic>)['id'] as String,
-        'name': s['commonName'] as String,
-        'afr': s['afrikaansName'] as String,
-      },
+      if (!<String>{
+        'common',
+        'frequent',
+      }.contains((s as Map<String, dynamic>)['rarityTier'] as String))
+        <String, String>{
+          'id': s['id'] as String,
+          'name': s['commonName'] as String,
+          'afr': s['afrikaansName'] as String,
+        },
   ];
 
   final String out = template

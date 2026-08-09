@@ -153,6 +153,37 @@ class _LicencesScreenState extends State<LicencesScreen> {
 
                 const SizedBox(height: Space.xl),
                 const _Source(
+                  title: 'Population figures',
+                  subtitle: 'SANParks, and the published estimates',
+                  body:
+                      'Numbers marked "aerial survey" come from the SANParks '
+                      'Scientific Services counts of 2023 and 2024, and the '
+                      'range shown is the survey’s own — that is how an '
+                      'aerial count reports, not us hedging.\n\n'
+                      'Numbers marked "best published estimate" are for animals '
+                      'nobody counts from an aircraft. Those ranges span what '
+                      'the sources actually claim, and the sources disagree: '
+                      'published leopard figures for Kruger run from a thousand '
+                      'to two thousand.\n\n'
+                      'Rhino numbers are withheld by SANParks so that poachers '
+                      'cannot use them, and this app does not print them '
+                      'either. Pangolin and aardvark have never been surveyed '
+                      'at all.\n\n'
+                      'Sources: SANParks Scientific Services, "Most recent '
+                      'counts of Kruger’s wildlife and trends over time" '
+                      'and "Understanding Wildlife in Kruger National Park", '
+                      'sanparks.org · Stories of the Kruger, '
+                      'storiesofthekruger.com · African Travel Concept, '
+                      'africantravelconcept.com · IUCN Red List, '
+                      'iucnredlist.org.\n\n'
+                      'A population figure is an estimate of a wild animal in a '
+                      'park the size of Wales. Treat it as an order of '
+                      'magnitude, not a headcount.',
+                  count: null,
+                ),
+
+                const SizedBox(height: Space.xl),
+                const _Source(
                   title: 'Species information',
                   subtitle: 'Compiled for this app',
                   body:
