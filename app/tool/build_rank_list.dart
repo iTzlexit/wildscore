@@ -101,8 +101,19 @@ Future<void> main(List<String> args) async {
   }
 
   final String json_ = json.encode(out);
+  // Stamped so a "this does not work" can be answered with "which copy have
+  // you got". Downloading the same filename twice leaves the browser holding
+  // rank-list.html and rank-list (1).html, and the older one opens first.
+  final DateTime now = DateTime.now();
+  final String stamp =
+      '${now.year}-${_two(now.month)}-${_two(now.day)} '
+      '${_two(now.hour)}:${_two(now.minute)}';
+
   File('../tools/rank-list.html').writeAsStringSync(
-    template.readAsStringSync().replaceFirst('/*__TIERS__*/[]', json_),
+    template
+        .readAsStringSync()
+        .replaceFirst('/*__TIERS__*/[]', json_)
+        .replaceFirst('/*__BUILT__*/', 'built $stamp'),
   );
 
   final int total = out.fold(
@@ -127,3 +138,5 @@ Future<void> main(List<String> args) async {
     ..writeln('')
     ..writeln('Open it, order them, press Export, and paste the JSON back.');
 }
+
+String _two(int n) => n.toString().padLeft(2, '0');
