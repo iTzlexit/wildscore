@@ -15,6 +15,12 @@
       "source": "https://www.inaturalist.org/observations/51448972"
     },
     {
+      "id": "african-barred-owlet",
+      "author": "Public domain (CC0)",
+      "license": "cc0",
+      "source": "https://www.inaturalist.org/observations/30351826"
+    },
+    {
       "id": "african-civet",
       "author": "Peter Archdale",
       "license": "cc-by",
@@ -691,6 +697,12 @@
       "author": "Darío De la Fuente",
       "license": "cc-by",
       "source": "https://www.inaturalist.org/observations/297815541"
+    },
+    {
+      "id": "marsh-terrapin",
+      "author": "Ryan van Huyssteen",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/189944887"
     },
     {
       "id": "martial-eagle",

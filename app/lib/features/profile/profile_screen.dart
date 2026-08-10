@@ -76,10 +76,14 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  /// Derived, never stored. A running total drifts — every undo and restart is
-  /// another chance for it to be wrong, with nothing to check it against.
-  int get _lifetimePoints =>
-      widget.visits.fold(0, (int sum, Visit v) => sum + v.ownerPoints);
+  // A lifetime points total used to headline this screen. It is gone, on
+  // Alex's call on 10 August 2026, and he is right: every car prices its own
+  // animals now, so one player's 40,000 and another's 12,000 are measurements
+  // in different units. A number nobody can compare is not a record, it is
+  // decoration — and it was the *first* thing on a personal profile.
+  //
+  // Spots survive the same test unharmed. A pangolin is a pangolin whatever a
+  // car decided it was worth.
 
   /// The hardest thing in the collection. A single species is a better trophy
   /// than a count — nobody brags about owning 13 animals.
@@ -132,23 +136,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   // share a screen meant neither had room.
                   _Identity(profile: widget.profile),
                   const SizedBox(height: Space.xl),
-                  _LifetimeCard(
-                    points: _lifetimePoints,
+                  // One panel, three numbers, no points. Lifetime spots is the
+                  // headline; All and Remaining sit under it because they are
+                  // the same fact from the other two directions, and splitting
+                  // them across two cards made the second card look like a
+                  // different subject.
+                  _SpotsCard(
                     spotted: spotted,
                     total: total,
+                    onAll: () => _openCollection(CollectionMode.all),
+                    onRemaining: () => _openCollection(CollectionMode.toFind),
+                    onSpotted: () => _openCollection(CollectionMode.spotted),
                   ),
                   if (widget.card != null) ...<Widget>[
                     const SizedBox(height: Space.md),
                     _DriveInPlayLink(onTap: widget.onOpenGame),
                   ],
-                  const SizedBox(height: Space.lg),
-                  _Numbers(
-                    spotted: spotted,
-                    toFind: total - spotted,
-                    rarest: _rarest,
-                    onSpotted: () => _openCollection(CollectionMode.spotted),
-                    onToFind: () => _openCollection(CollectionMode.toFind),
-                  ),
+                  if (_rarest != null) ...<Widget>[
+                    const SizedBox(height: Space.md),
+                    _RarestTile(species: _rarest!),
+                  ],
                   const SizedBox(height: Space.section),
                   // The per-category bars used to live below this. They are
                   // gone: "13 of 54 mammals" is a statistic, and every set here
@@ -330,16 +337,29 @@ class _DriveInPlayLink extends StatelessWidget {
 /// history, which was wrong twice over: a lifetime total is not a list of
 /// days, and the game's history belongs on the game's tab. It also printed the
 /// spotted count immediately above a tile that printed the same count again.
-class _LifetimeCard extends StatelessWidget {
-  const _LifetimeCard({
-    required this.points,
+/// Lifetime spots, and the two ways of looking at what is left.
+///
+/// Points used to headline this card and they are gone. Every car prices its
+/// own animals now, so one player's lifetime total and another's are numbers in
+/// different currencies — and a personal record whose headline cannot be
+/// compared with anybody's, including your own from last season, is decoration.
+///
+/// A spot is not like that. A pangolin is a pangolin whatever the car decided
+/// it was worth, which is exactly why this is what survived.
+class _SpotsCard extends StatelessWidget {
+  const _SpotsCard({
     required this.spotted,
     required this.total,
+    required this.onAll,
+    required this.onRemaining,
+    required this.onSpotted,
   });
 
-  final int points;
   final int spotted;
   final int total;
+  final VoidCallback onAll;
+  final VoidCallback onRemaining;
+  final VoidCallback onSpotted;
 
   @override
   Widget build(BuildContext context) {
@@ -356,43 +376,45 @@ class _LifetimeCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            '$points',
-            style: AppText.display.copyWith(
-              color: AppColors.accent,
-              fontFeatures: AppText.tabular,
+          // The headline number opens your collection. It reads as a link, so
+          // it had better be one.
+          InkWell(
+            onTap: onSpotted,
+            borderRadius: BorderRadius.circular(Radii.chip),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  '$spotted',
+                  style: AppText.display.copyWith(
+                    color: AppColors.accent,
+                    fontFeatures: AppText.tabular,
+                  ),
+                ),
+                const SizedBox(height: Space.xs),
+                Row(
+                  children: <Widget>[
+                    Text('LIFETIME SPOTS', style: AppText.overline),
+                    const SizedBox(width: 6),
+                    const _Explainer(
+                      title: 'What counts as a spot',
+                      body:
+                          'Every animal you have ever spotted, counted once — '
+                          'not once per sighting.\n\n'
+                          'It takes everything the whole car saw on a drive, '
+                          'because you were there and you saw it, plus '
+                          'anything you tick off yourself in Animals.',
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ),
-          const SizedBox(height: Space.xs),
-          Row(
-            children: <Widget>[
-              Text('MY LIFETIME POINTS', style: AppText.overline),
-              const SizedBox(width: 6),
-              // Points and the collection are two different things and the
-              // difference confuses people, reasonably: a player who found
-              // nothing all day still gains species, because everything the car
-              // saw joins the collection while the points stay with whoever
-              // called it. Better said on request than as permanent small print.
-              const _Explainer(
-                title: 'Where these come from',
-                body:
-                    'Points you have banked at the end of each drive, added up '
-                    'across every drive you have played.\n\n'
-                    'They are not the same as your collection. Points go to '
-                    'whoever called the animal first. The collection takes '
-                    'everything the whole car saw — you were there, so you have '
-                    'seen it — plus anything you tick off yourself in the '
-                    'Animal Dex.\n\n'
-                    'So a quiet day in the back seat can add species without '
-                    'adding points.',
-              ),
-            ],
           ),
           const SizedBox(height: Space.screen),
           Row(
             children: <Widget>[
               Text(
-                '$percent% of the park found',
+                '$percent% of the park spotted',
                 style: AppText.label.copyWith(color: AppColors.textPrimary),
               ),
               const Spacer(),
@@ -415,6 +437,30 @@ class _LifetimeCard extends StatelessWidget {
               backgroundColor: AppColors.surfaceAlt,
               valueColor: const AlwaysStoppedAnimation<Color>(AppColors.accent),
             ),
+          ),
+          const SizedBox(height: Space.lg),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: _NumberTile(
+                  icon: Icons.visibility_outlined,
+                  value: '${total - spotted}',
+                  label: 'REMAINING',
+                  tint: AppColors.textSecondary,
+                  onTap: onRemaining,
+                ),
+              ),
+              const SizedBox(width: Space.md),
+              Expanded(
+                child: _NumberTile(
+                  icon: Icons.grid_view_rounded,
+                  value: '$total',
+                  label: 'ALL',
+                  tint: AppColors.accent,
+                  onTap: onAll,
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -464,63 +510,6 @@ class _Identity extends StatelessWidget {
 /// SPOTTED and TO FIND were previously dead text, which is a small betrayal —
 /// a number on a dashboard reads as a link, and a player who taps it and gets
 /// nothing learns that this screen's numbers are decoration.
-class _Numbers extends StatelessWidget {
-  const _Numbers({
-    required this.spotted,
-    required this.toFind,
-    required this.rarest,
-    required this.onSpotted,
-    required this.onToFind,
-  });
-
-  final int spotted;
-  final int toFind;
-  final Species? rarest;
-  final VoidCallback onSpotted;
-  final VoidCallback onToFind;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Row(
-          children: <Widget>[
-            Expanded(
-              child: _NumberTile(
-                icon: Icons.check_circle_rounded,
-                value: '$spotted',
-                label: 'ALL SPOTS',
-                hint:
-                    'Every animal you have ever spotted — from drives, and '
-                    'anything you have ticked off yourself. One per animal, '
-                    'not one per sighting.',
-                tint: AppColors.verified,
-                onTap: onSpotted,
-              ),
-            ),
-            const SizedBox(width: Space.md),
-            Expanded(
-              child: _NumberTile(
-                icon: Icons.visibility_outlined,
-                value: '$toFind',
-                label: 'REMAINING SPOTS',
-                tint: AppColors.textSecondary,
-                onTap: onToFind,
-              ),
-            ),
-          ],
-        ),
-        // A single species is a better trophy than a count. "13 animals" is a
-        // statistic; "Ground Pangolin" is a story somebody tells at dinner.
-        if (rarest != null) ...<Widget>[
-          const SizedBox(height: Space.md),
-          _RarestTile(species: rarest!),
-        ],
-      ],
-    );
-  }
-}
-
 class _RarestTile extends StatelessWidget {
   const _RarestTile({required this.species});
 
@@ -576,7 +565,6 @@ class _NumberTile extends StatelessWidget {
     required this.value,
     required this.label,
     required this.tint,
-    this.hint,
     this.onTap,
   });
 
@@ -585,10 +573,6 @@ class _NumberTile extends StatelessWidget {
   final String label;
   final Color tint;
 
-  /// Behind a small **i**, because "all spots" is two words and the honest
-  /// answer to what it counts is three lines. Nobody needs those three lines
-  /// twice, and most people never need them at all.
-  final String? hint;
   final VoidCallback? onTap;
 
   @override
@@ -627,27 +611,6 @@ class _NumberTile extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (hint != null)
-                    Tooltip(
-                      message: hint!,
-                      triggerMode: TooltipTriggerMode.tap,
-                      showDuration: const Duration(seconds: 6),
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: Space.screen,
-                      ),
-                      textStyle: AppText.caption.copyWith(
-                        color: AppColors.surface,
-                        height: 1.45,
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 3),
-                        child: Icon(
-                          Icons.info_outline_rounded,
-                          size: 12,
-                          color: AppColors.textMuted,
-                        ),
-                      ),
-                    ),
                   if (onTap != null)
                     const Icon(
                       Icons.chevron_right_rounded,

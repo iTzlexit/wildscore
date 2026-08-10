@@ -63,12 +63,12 @@ Every score in the game, and every value the editor offers:
 
 | Tier | Rungs |
 |---|---|
-| Common | 5, 10, 15 |
-| Frequent | 20, 30, 40, 55 |
-| Notable | 60, 80, 100, 120, 140 |
-| Rare | 150, 200, 250, 320 |
-| Very rare | 350, 425, 500, 550 |
-| Legendary | 600, 750, 875, 1000 |
+| Bush Staples | 5, 10, 15 |
+| Bush Icons | 20, 30, 40, 55 |
+| Prize | 60, 80, 100, 120, 140 |
+| Cryptic | 150, 200, 250, 320 |
+| Mirage | 350, 425, 500, 550 |
+| Ghost | 600, 750, 875, 1000 |
 
 **Ties are the feature.** Ranking 190 animals by hand produced 190 distinct
 numbers, which claims we can tell the seventeenth-hardest Notable from the
@@ -76,7 +76,7 @@ eighteenth. Nobody can. Snapping to a coarse ladder says the true thing — thes
 six are about as hard as each other, and that lot are harder — and collapses
 190 animals to 24 scores.
 
-The bands never overlap, so the worst Legendary still beats the best Very rare.
+The bands never overlap, so the worst Ghost still beats the best Mirage.
 
 ## The three things a car can change
 

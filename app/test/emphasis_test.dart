@@ -85,7 +85,7 @@ void main() {
     expect(withMarkers, isEmpty, reason: 'markers leaked to the screen');
   });
 
-  testWidgets('the first-voice rule is actually emphasised', (
+  testWidgets('the jam penalty is actually emphasised', (
     WidgetTester tester,
   ) async {
     await tester.binding.setSurfaceSize(const Size(390, 5200));
@@ -96,9 +96,6 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(
-      find.textContaining('first player to call the animal'),
-      findsOneWidget,
-    );
+    expect(find.textContaining('20% fewer points'), findsOneWidget);
   });
 }

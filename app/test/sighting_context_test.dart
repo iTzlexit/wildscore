@@ -111,21 +111,21 @@ void main() {
     });
 
     test('the wild card replaces the card value rather than adding to it', () {
-      // The first warthog of the morning is worth 250, not 255.
+      // The first warthog of the morning is worth 100, not 105.
       final Species warthog = _byId('warthog');
 
       expect(warthog.scoreFor(), 5);
-      expect(warthog.scoreFor(wildCardBonusEarned: true), 250);
+      expect(warthog.scoreFor(wildCardBonusEarned: true), 100);
     });
 
-    test('a 1st timer is worth fifty warthogs, exactly once', () {
+    test('a 1st timer is worth twenty warthogs, exactly once', () {
       // The joke, stated as an assertion. A warthog is five points and there
       // are several thousand of them; the *first* one is the first shout of
-      // the trip and pays like a leopard.
+      // the trip and pays just under a lion.
       final Species warthog = _byId('warthog');
 
-      expect(warthog.wildCard!.bonus, 250);
-      expect(warthog.wildCard!.bonus ~/ warthog.points, 50);
+      expect(warthog.wildCard!.bonus, 100);
+      expect(warthog.wildCard!.bonus ~/ warthog.points, 20);
     });
 
     test('the first lion of the day is the point of the whole mechanic', () {

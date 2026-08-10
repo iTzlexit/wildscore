@@ -7,7 +7,7 @@ import '../../shared/emphasis.dart';
 import '../../shared/theme.dart';
 import '../../shared/widgets/avatar_badge.dart';
 
-/// Three slides that explain the game before anyone is asked for anything.
+/// Four slides that explain the game before anyone is asked for anything.
 ///
 /// The app used to open on a wall of prose. It was accurate and nobody read it,
 /// which is the worst outcome a first screen can have: a family at Numbi gate
@@ -62,7 +62,7 @@ class _IntroTourState extends State<IntroTour> {
   final PageController _controller = PageController();
   int _page = 0;
 
-  static const int _count = 3;
+  static const int _count = 4;
 
   @override
   void dispose() {
@@ -117,7 +117,12 @@ class _IntroTourState extends State<IntroTour> {
           child: PageView(
             controller: _controller,
             onPageChanged: (int i) => setState(() => _page = i),
-            children: const <Widget>[_SlideOne(), _SlideTwo(), _SlideThree()],
+            children: const <Widget>[
+              _SlideOne(),
+              _SlideTwo(),
+              _SlideQuiz(),
+              _SlideThree(),
+            ],
           ),
         ),
         Padding(
@@ -790,13 +795,26 @@ class _HowItWorks extends StatelessWidget {
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
+        // The four steps the rules page used to carry. They live here now and
+        // only here: teaching happens once, at the gate, and a rule book you
+        // land on mid-argument should not open with a tutorial.
         _NumberedStep(n: '1', text: 'Start the drive.'),
-        _NumberedStep(n: '2', text: 'Enter everyone playing.'),
+        _NumberedStep(n: '2', text: 'Add everyone in the car.'),
         _NumberedStep(
           n: '3',
           text:
+              'Check the prices — change any animal you disagree with, then '
+              'tap Agreed.',
+        ),
+        _NumberedStep(
+          n: '4',
+          text:
               'Somebody spots an animal first — tap the eye beside their '
               'name and choose it. The points land on them.',
+        ),
+        _NumberedStep(
+          n: '5',
+          text: 'End the day at the gate. Tomorrow is a fresh game.',
           last: true,
         ),
         SizedBox(height: Space.md),
@@ -931,7 +949,102 @@ class _RarityTable extends StatelessWidget {
   }
 }
 
-// -------------------------------------------------------------- slide three
+// ------------------------------------------------------------ slide three
+
+/// The quiz, taught here rather than discovered.
+///
+/// It is the one mechanic nobody expects: a badge appears on a name halfway
+/// through the morning and, without this slide, the first reaction is "what is
+/// that" rather than "go on then".
+class _SlideQuiz extends StatelessWidget {
+  const _SlideQuiz();
+
+  @override
+  Widget build(BuildContext context) {
+    return const _Slide(
+      art: _QuizScene(),
+      eyebrow: 'WHILE YOU DRIVE',
+      title: 'Score well, earn a question',
+      body:
+          'Every 400 points you score unlocks a question about Kruger and its '
+          'animals. A **?** appears beside your name — tap it.\n\n'
+          'Thirty points if you get it right. One guess, no going back.',
+    );
+  }
+}
+
+/// The badge, at the size it appears on a standings row.
+class _QuizScene extends StatelessWidget {
+  const _QuizScene();
+
+  @override
+  Widget build(BuildContext context) {
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: MediaQuery.withNoTextScaling(
+        child: Container(
+          padding: const EdgeInsets.all(Space.xl),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(Radii.card),
+            border: Border.all(color: AppColors.outline),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                width: 62,
+                height: 62,
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                  color: AppColors.accent,
+                  shape: BoxShape.circle,
+                ),
+                child: Text(
+                  '?',
+                  style: AppText.title1.copyWith(
+                    color: AppColors.accentInk,
+                    fontSize: 34,
+                  ),
+                ),
+              ),
+              const SizedBox(height: Space.lg),
+              Text(
+                'What is a group of giraffe called?',
+                style: AppText.bodyStrong,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: Space.md),
+              for (final String answer in const <String>[
+                'A tower',
+                'A journey',
+                'A stretch',
+              ])
+                Padding(
+                  padding: const EdgeInsets.only(bottom: Space.sm),
+                  child: Container(
+                    width: 210,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: Space.sm,
+                      horizontal: Space.md,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.surfaceAlt,
+                      borderRadius: BorderRadius.circular(Radii.chip),
+                      border: Border.all(color: AppColors.outline),
+                    ),
+                    child: Text(answer, style: AppText.caption),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// --------------------------------------------------------------- slide four
 
 class _SlideThree extends StatelessWidget {
   const _SlideThree();
@@ -1054,11 +1167,6 @@ class _AfterwardsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Column(
       children: <Widget>[
-        _Afterward(
-          icon: Icons.place_rounded,
-          title: 'Latest sightings',
-          body: 'Every good find, and the road it happened on.',
-        ),
         _Afterward(
           icon: Icons.history_rounded,
           title: 'Every drive you have done',

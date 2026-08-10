@@ -139,7 +139,9 @@ class _SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
     return Scaffold(
       backgroundColor: style.headerInk,
       body: DefaultTabController(
-        length: 3,
+        // Two tabs for rhino and pangolin. Where to find is not a tab they get
+        // — see _Sheet.
+        length: widget.species.isSensitive ? 2 : 3,
         child: Column(
           children: <Widget>[
             _Header(species: widget.species, credit: widget.photoCredit),
@@ -482,10 +484,18 @@ class _Sheet extends StatelessWidget {
               ),
               unselectedLabelStyle: AppText.label,
               padding: const EdgeInsets.symmetric(horizontal: Space.md),
-              tabs: const <Widget>[
-                Tab(text: 'About'),
-                Tab(text: 'Field notes'),
-                Tab(text: 'Where to find'),
+              tabs: <Widget>[
+                const Tab(text: 'About'),
+                const Tab(text: 'Field notes'),
+                // No "Where to find" for rhino or pangolin.
+                //
+                // The tab held a region strip — northern, central, southern —
+                // which is coarse, and coarse is still an answer to "where do I
+                // go to find a rhino". Poaching pressure in Kruger is not
+                // hypothetical and this app has no business narrowing anyone's
+                // search, at any resolution. Alex's call, 10 August 2026, and
+                // the same instinct as the road being withheld from a sighting.
+                if (!species.isSensitive) const Tab(text: 'Where to find'),
               ],
             ),
           ),
@@ -500,7 +510,7 @@ class _Sheet extends StatelessWidget {
                   onSetCap: onSetCap,
                 ),
                 _FieldNotesTab(species: species),
-                _WhereTab(species: species),
+                if (!species.isSensitive) _WhereTab(species: species),
               ],
             ),
           ),
@@ -511,6 +521,11 @@ class _Sheet extends StatelessWidget {
 }
 
 /// Add to, or remove from, the collection.
+///
+/// **Says "Spot it" and "Spotted".** It used to read "I have seen this one" /
+/// "In your collection", which is two different voices for one button — the
+/// player speaking, then the app speaking about them — and neither is the word
+/// the rest of the app uses. Spot and spotted, everywhere, per the style doc.
 class _CollectionButton extends StatelessWidget {
   const _CollectionButton({required this.spotted, required this.onTap});
 
@@ -527,7 +542,7 @@ class _CollectionButton extends StatelessWidget {
               onPressed: onTap,
               icon: const Icon(Icons.check_circle_rounded, size: 19),
               label: Text(
-                'In your collection',
+                'Spotted',
                 style: AppText.bodyStrong.copyWith(color: AppColors.verified),
               ),
               style: OutlinedButton.styleFrom(
@@ -544,7 +559,7 @@ class _CollectionButton extends StatelessWidget {
               onPressed: onTap,
               icon: const Icon(Icons.add_rounded, size: 20),
               label: Text(
-                'I have seen this one',
+                'Spot it',
                 style: AppText.bodyStrong.copyWith(color: AppColors.accentInk),
               ),
               style: FilledButton.styleFrom(
@@ -674,13 +689,10 @@ class _WhereTab extends StatelessWidget {
         Space.screen,
         Space.xxl,
       ),
-      children: <Widget>[
-        RegionStrip(regions: species.parkRegions),
-        if (species.isSensitive) ...<Widget>[
-          const SizedBox(height: Space.screen),
-          const _SensitiveNotice(),
-        ],
-      ],
+      // Sensitive species never reach this tab — they do not get one. The
+      // notice that used to sit here has moved to About, where they now say
+      // why there is nothing to open.
+      children: <Widget>[RegionStrip(regions: species.parkRegions)],
     );
   }
 }
@@ -1002,7 +1014,7 @@ class _HouseRuleEditorState extends State<_HouseRuleEditor> {
   String _describe(int value) {
     for (final RarityTier t in RarityTier.values) {
       if (value <= t.high) {
-        return 'About as hard to find as a ${t.label.toLowerCase()} animal.';
+        return '${t.label} — the ${t.low} to ${t.high} band.';
       }
     }
     return '';

@@ -154,7 +154,15 @@ class _CodexScreenState extends State<CodexScreen> {
         if (species.matchesQuery(_query) &&
             (_category == null || species.category == _category) &&
             (_tier == null || species.rarityTier == _tier) &&
-            (_region == null || species.parkRegions.contains(_region)) &&
+            // Rhino and pangolin match every region, which is the same thing
+            // as matching none: filtering to the south and finding a white
+            // rhino there is a coarse answer to "where do I go", and the Where
+            // to find tab was removed for exactly that reason. Excluding them
+            // instead would leak it the other way — filter each region in turn,
+            // note where they are missing.
+            (_region == null ||
+                species.isSensitive ||
+                species.parkRegions.contains(_region)) &&
             (_tag == null || species.tags.contains(_tag)) &&
             _spotted.matches(widget.caughtIds.contains(species.id)))
           species,

@@ -136,7 +136,7 @@ void main() {
     expect(find.text('1000'), findsOneWidget);
     // The tier name is the most explicit rarity channel — the other five
     // require the player to have learned the system first.
-    expect(find.text('LEGENDARY'), findsOneWidget);
+    expect(find.text('GHOST'), findsOneWidget);
   });
 
   testWidgets('filters by collection group', (WidgetTester tester) async {
@@ -266,12 +266,30 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Northern'));
     await tester.pumpAndSettle();
+    await _search(tester, 'oribi');
+
+    // Oribi is a southern animal. This is the app's core promise: telling you
+    // where to actually drive.
+    expect(find.text('Oribi'), findsNothing);
+  });
+
+  testWidgets('but rhino and pangolin show under every region', (
+    WidgetTester tester,
+  ) async {
+    // They used to drop out of the northern filter, which is a coarse answer
+    // to "where do I go to find a rhino" — the same answer the Where to find
+    // tab was removed for. Excluding them instead would leak it the other way
+    // round: filter each region in turn and note where they go missing.
+    await _pumpCodex(tester);
+
+    await tester.tap(find.byIcon(Icons.tune_rounded));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Northern'));
+    await tester.pumpAndSettle();
     await _search(tester, 'rhino');
 
-    // Both rhino concentrate in the south and centre. This is the app's core
-    // promise: telling you where to actually drive.
-    expect(find.text('White Rhinoceros'), findsNothing);
-    expect(find.text('Black Rhinoceros'), findsNothing);
+    expect(find.text('White Rhinoceros'), findsOneWidget);
+    expect(find.text('Black Rhinoceros'), findsOneWidget);
   });
 
   testWidgets('tapping a species opens its detail screen', (
@@ -286,10 +304,10 @@ void main() {
     expect(find.text('Smutsia temminckii'), findsWidgets);
 
     // Tier appears twice: as a header pill and in the points banner.
-    expect(find.text('LEGENDARY'), findsOneWidget);
-    expect(find.text('Legendary'), findsOneWidget);
-    // Field notes and distribution are tabs now, not stacked sections.
-    expect(find.text('Where to find'), findsOneWidget);
+    expect(find.text('GHOST'), findsOneWidget);
+    expect(find.text('Ghost'), findsOneWidget);
+    // Field notes is a tab now. Where to find is not offered for a pangolin.
+    expect(find.text('Where to find'), findsNothing);
     expect(find.text('Field notes'), findsOneWidget);
 
     // Pangolin is one of the four species with no published number, and the

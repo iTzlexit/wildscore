@@ -158,7 +158,7 @@ void main() {
       );
 
       expect(impala.isWildCard, isTrue);
-      expect(impala.wildCard!.bonus, 250);
+      expect(impala.wildCard!.bonus, 100);
       expect(
         impala.points,
         10,
@@ -187,8 +187,8 @@ void main() {
       // Two kinds of animal, sharing the mechanic for opposite reasons.
       //
       // The 1st timers are the ones you have stopped seeing by lunchtime on
-      // day one — Alex's set — and the first one pays 250 to make it the first
-      // shout of the trip. Lion, leopard and white rhino are the opposite: seen
+      // day one — Alex's set — and the first one pays 100, just under a lion,
+      // to make it the first shout of the trip. Lion, leopard and white rhino are the opposite: seen
       // on most trips and thrilling every time, which is a fact rarity cannot
       // price. Elephant and buffalo are deliberately absent.
       expect(wild, <String>[
@@ -210,8 +210,9 @@ void main() {
     });
 
     test('a 1st timer cannot outrank the genuinely rare', () {
-      // 250 is deliberately absurd for a warthog — that is the joke, and it is
-      // over after one sighting. It still must not beat the animals nobody
+      // 100 is still absurd for a warthog — that is the joke, and it is over
+      // after one sighting. It was 250, which turned out to be most of a
+      // leopard for an animal there are several thousand of. It still must not beat the animals nobody
       // gets: a first tree squirrel worth more than a serval would stop being
       // funny about four minutes into the drive.
       final Species serval = _catalogue.firstWhere(

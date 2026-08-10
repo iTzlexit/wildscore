@@ -67,7 +67,7 @@ class WildScoreScreen extends StatelessWidget {
                     onPressed: () => RulesScreen.open(context),
                     icon: const Icon(Icons.help_outline_rounded),
                     color: AppColors.textSecondary,
-                    tooltip: 'How to play',
+                    tooltip: 'Rules',
                   ),
                 ],
               ),
@@ -172,7 +172,7 @@ class _Invitation extends StatelessWidget {
             onPressed: () => RulesScreen.open(context),
             icon: const Icon(Icons.menu_book_rounded, size: 18),
             label: Text(
-              'How to play',
+              'Rules',
               style: AppText.label.copyWith(
                 color: AppColors.accent,
                 fontVariations: AppFonts.weight(700),

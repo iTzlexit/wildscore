@@ -776,7 +776,7 @@
       "points": 10,
       "chancesPerDay": 2,
       "wildCard": {
-        "bonus": 250,
+        "bonus": 100,
         "scope": "trip"
       }
     },
@@ -1306,7 +1306,7 @@
       "conservationStatus": "leastConcern",
       "points": 5,
       "wildCard": {
-        "bonus": 250,
+        "bonus": 100,
         "scope": "day"
       }
     },
@@ -1387,7 +1387,7 @@
       },
       "points": 5,
       "wildCard": {
-        "bonus": 250,
+        "bonus": 100,
         "scope": "day"
       }
     },
@@ -2198,7 +2198,7 @@
       "conservationStatus": "leastConcern",
       "points": 10,
       "wildCard": {
-        "bonus": 250,
+        "bonus": 100,
         "scope": "day"
       },
       "chancesPerDay": 1
@@ -2614,7 +2614,7 @@
       "conservationStatus": "leastConcern",
       "points": 5,
       "wildCard": {
-        "bonus": 250,
+        "bonus": 100,
         "scope": "day"
       },
       "chancesPerDay": 1
@@ -4630,6 +4630,51 @@
         "southern"
       ],
       "conservationStatus": "leastConcern",
+      "chancesPerDay": 1
+    },
+    {
+      "id": "marsh-terrapin",
+      "dexNumber": 196,
+      "commonName": "Marsh Terrapin",
+      "scientificName": "Pelomedusa galeata",
+      "afrikaansName": "Moeraswaterskilpad",
+      "category": "reptile",
+      "rarityTier": "frequent",
+      "tags": [],
+      "isSensitive": false,
+      "description": "A flat, mud-coloured water tortoise that folds its neck sideways under the shell. Buries itself when the pan dries and waits, sometimes for years, for the next rain.",
+      "habitat": "Seasonal pans, dams and slow water",
+      "bestTimeToSpot": "After summer rain, walking between pans",
+      "parkRegions": [
+        "southern",
+        "central",
+        "northern"
+      ],
+      "conservationStatus": "leastConcern",
+      "points": 30
+    },
+    {
+      "id": "african-barred-owlet",
+      "dexNumber": 197,
+      "commonName": "African Barred Owlet",
+      "scientificName": "Glaucidium capense",
+      "afrikaansName": "Gebande Uil",
+      "category": "bird",
+      "rarityTier": "uncommon",
+      "tags": [
+        "nocturnal",
+        "predator"
+      ],
+      "isSensitive": false,
+      "description": "A small owl barred across the head and chest, where its pearl-spotted cousin is spotted. Hunts at dusk from a low perch and will call in broad daylight.",
+      "habitat": "Riverine forest and dense woodland",
+      "bestTimeToSpot": "Dusk, along the Luvuvhu and Sabie rivers",
+      "parkRegions": [
+        "northern",
+        "southern"
+      ],
+      "conservationStatus": "leastConcern",
+      "points": 100,
       "chancesPerDay": 1
     }
   ]

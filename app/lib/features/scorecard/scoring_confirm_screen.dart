@@ -455,7 +455,7 @@ class _PriceSheetState extends State<_PriceSheet> {
   String _describe(int value) {
     for (final RarityTier t in RarityTier.values) {
       if (value <= t.high) {
-        return 'About as hard to find as a ${t.label.toLowerCase()} animal.';
+        return '${t.label} — the ${t.low} to ${t.high} band.';
       }
     }
     return '';

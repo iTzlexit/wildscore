@@ -100,6 +100,8 @@ class _CollectionScreenState extends State<CollectionScreen> {
         <Species>[
             if (group != null)
               ...group.membersOf(species)
+            else if (mode == CollectionMode.all)
+              ...species
             else
               for (final Species s in species)
                 if (caughtIds.contains(s.id) ==
@@ -219,6 +221,18 @@ enum CollectionMode {
     subtitle: 'species you have never spotted',
     icon: Icons.visibility_outlined,
     tint: AppColors.textSecondary,
+  ),
+
+  /// Everything, spotted or not.
+  ///
+  /// The profile's **All** tile. Spotted-only and to-find-only are each half a
+  /// picture, and the question behind that tile is "what is in this park",
+  /// which neither of them answers.
+  all(
+    title: 'Every animal',
+    subtitle: 'species in the park, rarest first',
+    icon: Icons.grid_view_rounded,
+    tint: AppColors.accent,
   );
 
   const CollectionMode({

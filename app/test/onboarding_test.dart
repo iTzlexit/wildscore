@@ -46,7 +46,7 @@ void main() {
     expect(find.byType(TextField), findsNothing);
   });
 
-  testWidgets('the tour walks all three slides to the name step', (
+  testWidgets('the tour walks all four slides to the name step', (
     WidgetTester tester,
   ) async {
     await pumpOnboarding(tester);
@@ -54,6 +54,12 @@ void main() {
     await tester.tap(find.text('Next'));
     await tester.pumpAndSettle();
     expect(find.text('How it works'), findsOneWidget);
+
+    await tester.tap(find.text('Next'));
+    await tester.pumpAndSettle();
+    // The quiz, taught rather than discovered: without this slide the first
+    // reaction to a badge appearing on a name is "what is that".
+    expect(find.text('Score well, earn a question'), findsOneWidget);
 
     await tester.tap(find.text('Next'));
     await tester.pumpAndSettle();

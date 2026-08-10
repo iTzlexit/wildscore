@@ -74,7 +74,7 @@ void main() {
 
     // Sorted by what they are worth, so the top of the list is the argument
     // worth having. Alphabetical would open on the aardvark.
-    expect(find.text('Legendary'.toUpperCase()), findsOneWidget);
+    expect(find.text('Ghost'.toUpperCase()), findsOneWidget);
     expect(
       find.text('${_byId(_catalogue, 'ground-pangolin').points}'),
       findsWidgets,

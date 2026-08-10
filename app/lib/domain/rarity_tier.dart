@@ -23,14 +23,31 @@
 /// at 5 to 3,500, which Alex found too spread out. 5 to 1,000 keeps the shape
 /// and stops anything but the ten Legendaries reaching four figures.
 ///
+/// **The names are Alex's, set on 10 August 2026, and they are better than
+/// ours were.** "Common / Frequent / Notable / Rare / Very rare / Legendary" is
+/// the vocabulary of a spreadsheet: six words for the same idea, three of which
+/// mean "rare", and nobody can tell you which of Rare and Very rare is worse
+/// without looking. These say what the animal *does*:
+///
+/// - **Ghost** — you can go a whole career without seeing one. Pangolin, Pel's.
+/// - **Mirage** — you think you see it and it is gone. Bushpig, roan.
+/// - **Cryptic** — hiding in plain sight. Caracal, Narina trogon, python.
+/// - **Prize** — what everybody is hoping for. Leopard, cheetah, wild dog.
+/// - **Bush Icons** — why Kruger is famous, and seen most trips. Lion, elephant.
+/// - **Bush Staples** — the reliable everyday ones. Impala, zebra, baboon.
+///
+/// The enum's own names are unchanged, deliberately. They are written into
+/// every scorecard and every backup on every phone, and a display label is not
+/// worth a migration.
+///
 /// See docs/SCORECARD.md.
 enum RarityTier {
-  common(label: 'Common', low: 5, high: 15),
-  frequent(label: 'Frequent', low: 20, high: 55),
-  uncommon(label: 'Notable', low: 60, high: 140),
-  scarce(label: 'Rare', low: 150, high: 320),
-  rare(label: 'Very rare', low: 350, high: 550),
-  legendary(label: 'Legendary', low: 600, high: 1000);
+  common(label: 'Bush Staples', low: 5, high: 15),
+  frequent(label: 'Bush Icons', low: 20, high: 55),
+  uncommon(label: 'Prize', low: 60, high: 140),
+  scarce(label: 'Cryptic', low: 150, high: 320),
+  rare(label: 'Mirage', low: 350, high: 550),
+  legendary(label: 'Ghost', low: 600, high: 1000);
 
   const RarityTier({
     required this.label,

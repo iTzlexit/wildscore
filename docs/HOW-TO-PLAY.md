@@ -1,6 +1,16 @@
 # How to play
 
-> This is the source for the in-app **How to play** screen. Written as player-
+> **Split in two on 10 August 2026, on Alex's instruction.** The in-app screen
+> is called **Rules** and is only rules — what somebody lands on mid-argument at
+> 40km/h. Teaching the game belongs to the intro tour, which is where the four
+> steps went. This document is the source for both.
+>
+> The rules copy below is **Alex's own wording**, near enough verbatim. Two
+> numbers differ from his draft because the app does something it did not when
+> he wrote it: every bird is capped at one a day, and the first impala pays 100
+> rather than 60. Both were confirmed before the page was written.
+
+> This was the source for the in-app **How to play** screen. Written as player-
 > facing copy, not developer notes — what is here should be readable straight
 > off the phone. Add to it as rules are settled.
 

@@ -26,7 +26,7 @@ serve the web build: `dart run tool/serve_web.dart 8080` from `app/`.
 
 ## What the app is
 
-A field guide to 194 Kruger species, a lifetime collection, and **a scorecard
+A field guide to 197 Kruger species, a lifetime collection, and **a scorecard
 game played by a car full of people on a game drive**. The game is the
 differentiator; the collection is the reason anyone still has it in March.
 
@@ -40,7 +40,7 @@ Three tabs — **Profile, Wild Score, Animals**. The Sightings feed is gone: it 
 - **Onboarding** — a three-slide picture tour of the game (car scene, scoring
   with the live rarity table, the Ultimate Spotter), then a name. No account.
   Replayable from How to play.
-- **Animal Dex** — 194 species (59 mammals, 124 birds, 8 reptiles, 2
+- **Animals** — 197 species (60 mammals, 125 birds, 9 reptiles, 2
   invertebrates, and the baobab), **grouped into Animals then Birds**, search,
   filters, rarity sort, detail cards.
   Around 30 of the mammals carry a **park population figure** on the card —
@@ -65,7 +65,7 @@ Three tabs — **Profile, Wild Score, Animals**. The Sightings feed is gone: it 
 - **Backup** — a pasteable code. No server; see `docs/RISKS.md` for why it
   matters more than it looks.
 
-361 tests. `flutter analyze` is clean and must stay clean.
+367 tests. `flutter analyze` is clean and must stay clean.
 
 ## Decisions already made — do not relitigate
 

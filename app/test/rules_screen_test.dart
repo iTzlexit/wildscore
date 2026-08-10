@@ -4,8 +4,11 @@ import 'package:wildscore/domain/rarity_tier.dart';
 import 'package:wildscore/features/scorecard/rules_screen.dart';
 import 'package:wildscore/shared/theme.dart';
 
-/// The screen somebody skims at a gate with the engine running. It is the one
-/// that has been rewritten most, and the one where length is the failure mode.
+/// The rule book, which is now **only** a rule book.
+///
+/// Teaching moved to the tour on 10 August 2026. This page is what somebody
+/// lands on mid-argument at 40km/h, so the tests are about the rules being
+/// findable and correct rather than about a walkthrough being complete.
 Future<void> _pump(
   WidgetTester tester, {
   Size size = const Size(390, 844),
@@ -30,75 +33,72 @@ Future<void> _pump(
 }
 
 void main() {
-  testWidgets('the sections say what is in them', (WidgetTester tester) async {
+  testWidgets('it is called Rules, and teaches nothing', (
+    WidgetTester tester,
+  ) async {
     // Tall surface: the list is lazy, and a section below the fold is simply
     // not built rather than being absent from the screen.
-    await _pump(tester, size: const Size(390, 5200));
-
-    // Split from one list of eight rules, which read as a wall. These two
-    // answer different questions — "does that count" and "what is it worth" —
-    // and a car asks them at different moments.
-    expect(find.text('HOW TO PLAY'), findsOneWidget);
-    expect(find.text('THE RULES'), findsOneWidget);
-    // Split in two. Wild cards are about *how* you spotted it and change with
-    // the crowd; bonuses are about what the animal was doing. One heading over
-    // both made them look like the same mechanic.
-    expect(find.text('WILD CARDS'), findsOneWidget);
-    expect(find.text('BONUS CARDS'), findsOneWidget);
-    expect(find.text('WHAT EVERYTHING IS WORTH'), findsOneWidget);
-  });
-
-  testWidgets('the points table is generated from the tiers', (
-    WidgetTester tester,
-  ) async {
-    await _pump(tester, size: const Size(390, 5200));
-
-    for (final RarityTier tier in RarityTier.values) {
-      expect(find.text(tier.label), findsWidgets, reason: tier.name);
-    }
-  });
-
-  testWidgets('nothing overflows on a small screen at 1.5x text', (
-    WidgetTester tester,
-  ) async {
-    await _pump(tester, size: const Size(360, 640), textScale: 1.5);
-    await tester.drag(find.byType(ListView), const Offset(0, -4000));
-    await tester.pumpAndSettle();
-
-    expect(tester.takeException(), isNull);
-  });
-
-  testWidgets('the walkthrough is four numbered steps and no more', (
-    WidgetTester tester,
-  ) async {
-    // Four things actually happen: start, add the car, claim, end the day. An
-    // earlier version had "every animal has a scarcity level" as a step, which
-    // is not a step — it is a fact about scoring, and it is already the table
-    // at the bottom of this screen.
-    await _pump(tester, size: const Size(390, 5200));
-
-    // By title, not by digit — the points table further down the same screen
-    // contains a bare "5" for the Common tier, which an earlier version of this
-    // test mistook for a fifth step.
-    for (final String title in <String>[
-      'Start a Drive',
-      'Add Players',
-      'Claim a Spot',
-      'End the Day',
-    ]) {
-      expect(find.text(title), findsOneWidget, reason: title);
-    }
-  });
-
-  testWidgets('the caps are stated as the exception they now are', (
-    WidgetTester tester,
-  ) async {
-    // Caps used to be tier-wide, and the card had to explain a system. Two
-    // species are capped now, so the card names them and stops.
     await _pump(tester, size: const Size(390, 6000));
 
-    expect(find.text('Almost nothing runs out'), findsOneWidget);
-    expect(find.textContaining('vervet monkey'), findsOneWidget);
+    expect(find.text('Rules'), findsOneWidget);
+    // The four-step walkthrough is the tour's job now. Somebody who wants it
+    // gets a button, not a third copy of it.
+    expect(find.text('HOW TO PLAY'), findsNothing);
+    expect(find.text('Start a Drive'), findsNothing);
+    expect(find.textContaining('quick tour'), findsOneWidget);
+  });
+
+  testWidgets('the sections say what is in them', (WidgetTester tester) async {
+    await _pump(tester, size: const Size(390, 6000));
+
+    for (final String section in <String>[
+      'THE RULES',
+      'SPECIAL RULES',
+      'BONUS SIGHTS',
+      'POINTS',
+      "CHANGE AN ANIMAL'S VALUE",
+    ]) {
+      expect(find.text(section), findsOneWidget, reason: section);
+    }
+  });
+
+  testWidgets('a group counts once, and so does the same group later', (
+    WidgetTester tester,
+  ) async {
+    await _pump(tester, size: const Size(390, 6000));
+
+    expect(find.text('A group counts as one sighting'), findsOneWidget);
+    expect(find.textContaining('Herd of elephants = 1 sighting'), findsOne);
+    expect(find.text('The same sighting counts once'), findsOneWidget);
+    expect(
+      find.textContaining('does not create a new sighting'),
+      findsOneWidget,
+    );
+    // Jargon. Everybody in the car knows what a herd is.
+    expect(find.textContaining('breeding'), findsNothing);
+  });
+
+  testWidgets('the jam costs a fifth and says so plainly', (
+    WidgetTester tester,
+  ) async {
+    await _pump(tester, size: const Size(390, 6000));
+
+    expect(find.text('Traffic jam'), findsOneWidget);
+    expect(find.textContaining('20% fewer points'), findsOneWidget);
+  });
+
+  testWidgets('the daily limits match what the catalogue actually does', (
+    WidgetTester tester,
+  ) async {
+    // The page said "only two animals have a daily limit" while 124 birds were
+    // capped at one a day. A rule book that is wrong in the car is worse than
+    // no rule book — somebody hits the limit and stops trusting the rest.
+    await _pump(tester, size: const Size(390, 6000));
+
+    expect(find.text('Daily limits'), findsOneWidget);
+    expect(find.textContaining('Impala: 2 per day'), findsOneWidget);
+    expect(find.textContaining('Vervet monkey: 4 per day'), findsOneWidget);
+    expect(find.textContaining('Every bird: once a day'), findsOneWidget);
     expect(find.textContaining('unlimited'), findsOneWidget);
   });
 
@@ -113,55 +113,58 @@ void main() {
     expect(find.textContaining('third of the day'), findsOneWidget);
   });
 
+  testWidgets('the first impala is 100, not 250 and not 60', (
+    WidgetTester tester,
+  ) async {
+    // 250 was most of a leopard for an animal there are several thousand of.
+    // Alex's call: just under a lion.
+    await _pump(tester, size: const Size(390, 6000));
+
+    expect(find.text('First impala'), findsOneWidget);
+    expect(find.textContaining('worth 100 points'), findsOneWidget);
+    expect(find.textContaining('250'), findsNothing);
+  });
+
+  testWidgets('the quiz is explained here too', (WidgetTester tester) async {
+    await _pump(tester, size: const Size(390, 6000));
+
+    expect(find.text('Trivia questions'), findsOneWidget);
+  });
+
+  testWidgets('the points table is generated from the tiers', (
+    WidgetTester tester,
+  ) async {
+    await _pump(tester, size: const Size(390, 6000));
+
+    for (final RarityTier tier in RarityTier.values) {
+      expect(find.text(tier.label), findsWidgets, reason: tier.name);
+    }
+    // The new names, which are the point of them: they say what the animal
+    // does rather than restating "rare" six ways.
+    expect(find.text('Ghost'), findsOneWidget);
+    expect(find.text('Bush Staples'), findsOneWidget);
+  });
+
   testWidgets('the player is told they can change the scores', (
     WidgetTester tester,
   ) async {
-    // The feature is worthless if nobody knows it is there, and the reason for
-    // it — that Kruger is not one place — is the interesting part.
+    // The feature is worthless if nobody knows it is there.
     await _pump(tester, size: const Size(390, 6000));
 
-    expect(find.text('YOUR GAME, YOUR RULES'), findsOneWidget);
-    expect(find.textContaining('Animal Dex'), findsOneWidget);
-    // All three, because a setting nobody knows about is a setting nobody uses.
-    expect(find.text('Decide what runs out'), findsOneWidget);
-    expect(find.text('Set your own jam tax'), findsOneWidget);
+    expect(find.text("Don't agree with a score? Change it"), findsOneWidget);
+    expect(find.textContaining('the prices'), findsOneWidget);
+    // And that it sticks, which is the half people do not assume.
+    expect(find.textContaining('We remember it'), findsOneWidget);
     expect(find.textContaining('House rules'), findsOneWidget);
   });
 
-  testWidgets(
-    'the jam is one rule, and it does not pretend to be enforceable',
-    (WidgetTester tester) async {
-      // "No asking at a jam" and "arriving costs 20%" were two cards saying two
-      // halves of one thing, and the first was a rule nobody can check phrased
-      // as though somebody could. Together they describe what actually happens.
-      await _pump(tester, size: const Size(390, 6000));
-
-      expect(find.text('Spot it yourself'), findsOneWidget);
-      expect(find.text('No asking at a jam'), findsNothing);
-      expect(find.textContaining('Try not to ask'), findsOneWidget);
-      expect(find.textContaining('race to call it first'), findsOneWidget);
-      expect(find.textContaining('20% fewer points'), findsOneWidget);
-    },
-  );
-
-  testWidgets('the 1st timers get their own section, impala included', (
+  testWidgets('nothing overflows on a small screen at 1.5x text', (
     WidgetTester tester,
   ) async {
-    await _pump(tester, size: const Size(390, 6000));
+    await _pump(tester, size: const Size(360, 640), textScale: 1.5);
+    await tester.drag(find.byType(ListView), const Offset(0, -6000));
+    await tester.pumpAndSettle();
 
-    expect(find.text('WILD CARDS'), findsOneWidget);
-    expect(find.text('The 1st timers'), findsOneWidget);
-    expect(find.text('Especially the impala'), findsOneWidget);
-    expect(find.textContaining('250'), findsWidgets);
-  });
-
-  testWidgets('a herd of elephants is not a breeding herd', (
-    WidgetTester tester,
-  ) async {
-    // Jargon. Everybody in the car knows what a herd is.
-    await _pump(tester, size: const Size(390, 6000));
-
-    expect(find.textContaining('breeding'), findsNothing);
-    expect(find.textContaining('A herd of elephants'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 }

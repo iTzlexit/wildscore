@@ -65,6 +65,32 @@ what the button does. It is not a synonym for spotting.
 > order to record which animal was seen, at which point points will be
 > allocated accordingly.
 
+## The tier names
+
+Set by Alex on 10 August 2026. Use them exactly, capitalised as written, and
+never the old ones — the words are the whole point.
+
+| Tier | Band | It means |
+|---|---|---|
+| **Ghost** | 600–1000 | You can go a whole career without seeing one. |
+| **Mirage** | 350–550 | You think you see it, and it vanishes. |
+| **Cryptic** | 150–320 | Hiding in plain sight. |
+| **Prize** | 60–140 | What everybody is hoping for. |
+| **Bush Icons** | 20–55 | Why Kruger is famous, and seen most trips. |
+| **Bush Staples** | 5–15 | The reliable everyday ones. |
+
+They replaced Legendary, Very rare, Rare, Notable, Frequent and Common — six
+words for one idea, three of which mean "rare", and no reader could say which
+of Rare and Very rare was worse. Never write "the Legendary tier" again.
+
+## The two pages, and which is which
+
+**Rules** is a reference. Somebody lands on it mid-argument at 40km/h and
+needs to scan. No walkthrough, no welcome, no teaching.
+
+**The tour** teaches. It happens once, at the gate, and it is the only place
+the four steps live.
+
 ## Things that always get said the same way
 
 - **Points measure how difficult an animal is to find, nothing more. Every

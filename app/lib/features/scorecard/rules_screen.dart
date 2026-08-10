@@ -5,18 +5,21 @@ import '../../shared/emphasis.dart';
 import '../../shared/theme.dart';
 import '../onboarding/intro_tour.dart';
 
-/// What this is, and how to play it.
+/// The rule book. **Not** a tutorial.
+///
+/// Called "Rules" now, and it is only rules — Alex's instruction on 10 August
+/// 2026, and the right split. Teaching somebody the game and settling an
+/// argument about whether a second pride counts are different jobs for
+/// different moments: the first happens once, at the gate, and belongs in the
+/// tour; the second happens at 40km/h with somebody insisting, and needs a page
+/// you can land on and scan.
+///
+/// **The wording is Alex's, near enough verbatim.** Two numbers move because
+/// the app does something his draft did not: birds are capped at one a day, and
+/// the first impala pays 100 rather than 60. Both were confirmed before this
+/// was written. The rest is his, including the wink.
 ///
 /// Source of truth is docs/HOW-TO-PLAY.md — keep them in step.
-///
-/// Four questions in the order a newcomer asks them: **what is this, which way
-/// do I want to use it, how do I play, what are the rules.** The points table
-/// is reference and sits last.
-///
-/// The previous version had a "handy to know" section, which was a junk drawer:
-/// a rule that changes how you play sat next to help for a button, in identical
-/// cards. Everything in it has been folded into the step or the rule it belongs
-/// to. **One card style means one kind of thing** — here, a rule.
 class RulesScreen extends StatelessWidget {
   const RulesScreen({super.key});
 
@@ -32,7 +35,7 @@ class RulesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('How to play', style: AppText.title2),
+        title: Text('Rules', style: AppText.title2),
         backgroundColor: AppColors.background,
       ),
       body: ListView(
@@ -43,13 +46,9 @@ class RulesScreen extends StatelessWidget {
           Space.xxl,
         ),
         children: <Widget>[
-          // No standing paragraph here. It said "everyone in the car competes
-          // to spot animals first", which is what the heading and the four
-          // steps below already say — the owner's note on the whole of this
-          // copy was that every screen should answer one question once.
-          //
-          // For everybody who skipped the tour at the gate, and for the person
-          // handing the phone to somebody who has never seen the app.
+          // The four steps that used to sit here are in the tour now, which is
+          // the only place they belong. This button is how somebody who wants
+          // teaching gets to it from the page they landed on by mistake.
           OutlinedButton.icon(
             onPressed: () => IntroTour.open(context),
             icon: const Icon(Icons.slideshow_rounded, size: 17),
@@ -64,140 +63,49 @@ class RulesScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(Radii.chip),
               ),
             ),
-            label: const Text('Show me the quick tour'),
+            label: const Text('New to this? Take the quick tour'),
           ),
           const SizedBox(height: Space.xl),
 
-          const _Section('HOW TO PLAY'),
-          const _Step(
-            number: 1,
-            title: 'Start a Drive',
-            body:
-                'Press **Start Drive** and the game begins.\n\n'
-                'Now start spotting wildlife.',
-          ),
-          const _Step(
-            number: 2,
-            title: 'Add Players',
-            body:
-                'Add everyone in the vehicle who wants to play.\n\n'
-                'When everyone has joined, tap **Start Day**.',
-          ),
-          const _Step(
-            number: 3,
-            title: 'Claim a Spot',
-            body:
-                'The **first player to call the animal** claims the sighting.\n\n'
-                'Tap the **eye** icon, choose the animal, and the points go to '
-                'that player.',
-            icon: Icons.visibility_rounded,
-          ),
-          const _Step(
-            number: 4,
-            title: 'End the Day',
-            body:
-                'Finish when you leave the gates — or keep going if you are '
-                'off on a night drive. Entirely your choice.\n\n'
-                'Your sightings and scores are saved to your history, and '
-                'tomorrow is a brand-new game.',
-            last: true,
-          ),
-          const SizedBox(height: Space.xl),
-
-          // Split from the scoring on purpose. These answer "does that count",
-          // which is what a car argues about; the next lot answer "what is it
-          // worth", which is what a car is *pleased* about. One list of eight
-          // read as a wall.
           const _Section('THE RULES'),
           const _Rule(
             icon: Icons.groups_rounded,
-            title: 'Count one sighting, not every animal',
+            title: 'A group counts as one sighting',
             body:
-                'A herd of elephants is **one elephant sighting**.\n'
-                'A pod of hippos is **one hippo sighting**.\n'
-                'A dam full of crocodiles is **one crocodile sighting**.',
+                'A herd of elephants, pod of hippos, or pride of lions counts '
+                'as one sighting, no matter how many animals are in it.\n\n'
+                'Herd of elephants = **1 sighting**\n'
+                'Pod of hippos = **1 sighting**\n'
+                'Pride of lions = **1 sighting**',
           ),
           const _Rule(
             icon: Icons.u_turn_left_rounded,
-            title: 'The same sighting only counts once',
+            title: 'The same sighting counts once',
             body:
-                'Driving back past that pride after lunch is the **same '
-                'pride** — lovely, and worth nothing.',
+                'The same group of animals can only be scored once.\n\n'
+                'Seeing them again later does not create a new sighting.',
           ),
-          // One rule, not two.
-          //
-          // "No asking at a jam" and "arriving at a jam costs 20%" were
-          // separate cards saying two halves of the same thing, and the first
-          // was a rule nobody can enforce phrased as though somebody could.
-          // Together they are what actually happens: try not to ask, and if
-          // you get told anyway, race to call it.
+          const SizedBox(height: Space.xl),
+
+          const _Section('SPECIAL RULES'),
           const _Rule(
             icon: Icons.traffic_rounded,
-            title: 'Spot it yourself',
+            title: 'Traffic jam',
             body:
-                'Score the **full points** on the animal card.\n\n'
-                'Cars already stopped? **Try not to ask what it is** — but if '
-                'somebody tells you anyway, race to call it first. You still '
-                'claim it, for **20% fewer points**.',
-          ),
-          const SizedBox(height: Space.xl),
-
-          const _Section('WILD CARDS'),
-          const _Rule(
-            icon: Icons.bolt_rounded,
-            title: 'The 1st timers',
-            body:
-                'A handful of animals pay **250 for the first one** and their '
-                'normal points ever after.\n\n'
-                'Look them up in Animals — they carry a **WILD CARD** tag.',
-          ),
-          const _Rule(
-            icon: Icons.favorite_rounded,
-            title: 'Especially the impala',
-            body:
-                'Nobody has looked properly at an impala since 1994.\n\n'
-                'So the **first impala of the trip is worth 250** — more love '
-                'than an impala has had in thirty years. The second one is '
-                'back to being an impala.',
-          ),
-          const _Rule(
-            icon: Icons.pets_rounded,
-            title: 'And the big ones you always see',
-            body:
-                'A **lion**, **leopard** or **white rhino** is the moment of '
-                'the day every time, however often you get one.\n\n'
-                'First of the day pays big. After that they score normally.',
-          ),
-          const SizedBox(height: Space.xl),
-
-          const _Section('BONUS CARDS'),
-          const _Rule(
-            icon: Icons.auto_awesome_rounded,
-            title: 'Worth more than the animal',
-            body:
-                'First impala of the trip\n'
-                'Male lion\n'
-                'Mother with young\n'
-                'Predator with a kill',
-          ),
-          const _Rule(
-            icon: Icons.wb_sunny_rounded,
-            title: 'A night animal, in daylight',
-            body:
-                'A bushpig at eleven in the morning is a different sighting '
-                'from a bushpig in a spotlight.\n\n'
-                'Porcupine, genet, civet, bushpig and the rest of the night '
-                'shift pay **two and a half times** if you see them in the '
-                'day.',
+                'A traffic jam usually means something exciting has been '
+                'spotted.\n\n'
+                'If you arrive and correctly identify the animal, the sighting '
+                'still counts — but you score **20% fewer points**.',
           ),
           const _Rule(
             icon: Icons.lock_clock_rounded,
-            title: 'Almost nothing runs out',
+            title: 'Daily limits',
             body:
-                'Only **impala** and **vervet monkey** have a daily limit — '
-                'two and four. Everything else is unlimited.\n\n'
-                'Count a hundred giraffe if you want to. It is your '
-                'afternoon — and you can change any of this.',
+                'Only a few animals have a daily limit:\n\n'
+                'Impala: **2 per day**\n'
+                'Vervet monkey: **4 per day**\n'
+                'Every bird: **once a day**\n\n'
+                'All other animals are unlimited.',
           ),
           const _Rule(
             icon: Icons.trending_down_rounded,
@@ -210,42 +118,61 @@ class RulesScreen extends StatelessWidget {
           ),
           const SizedBox(height: Space.xl),
 
-          const _Section('YOUR GAME, YOUR RULES'),
+          const _Section('BONUS SIGHTS'),
           const _Rule(
-            icon: Icons.tune_rounded,
-            title: 'Every score is an opinion',
+            icon: Icons.favorite_rounded,
+            title: 'First impala',
             body:
-                '"How is *that* worth less than *that*?" Fair question. Ours '
-                'is one opinion, and Kruger is not one place — sable is the '
-                'find of the trip down south and a Tuesday up north.\n\n'
-                'So set your own price on anything. Every game opens on **the '
-                'prices** before you drive off, and any animal in the **Animal '
-                'Dex** can be changed any time.\n\n'
-                'We remember what you set. Do it once, not every morning.',
+                'The first impala you spot is worth **100 points**.\n\n'
+                'Keep your eyes open as you enter the park. 😉\n\n'
+                'Warthog, tree squirrel, lilac-breasted roller and southern '
+                'yellow-billed hornbill do the same.',
           ),
           const _Rule(
-            icon: Icons.lock_outline_rounded,
-            title: 'Decide what runs out',
+            icon: Icons.pets_rounded,
+            title: 'First lion, leopard or white rhino of the day',
             body:
-                'On the same page: **twice a day**, **four a day**, **once '
-                'this trip**, or no limit at all.\n\n'
-                'Lock everything to once a trip and the game becomes a '
-                'checklist — most different animals wins.',
+                'The moment of the day, every time, however often you get '
+                'one.\n\n'
+                'The first of each pays **300**. After that they score '
+                'normally.',
           ),
           const _Rule(
-            icon: Icons.traffic_rounded,
-            title: 'Set your own jam tax',
+            icon: Icons.auto_awesome_rounded,
+            title: 'Worth more',
             body:
-                'Think 20% is harsh? Or that a sighting is a sighting?\n\n'
-                'Change it in **House rules** on your profile — anything from '
-                'nothing to half.',
+                'Some sightings are worth more than their normal points:\n\n'
+                'Male lion\n'
+                'Mother with young\n'
+                'Predator with a kill',
           ),
-          const SizedBox(height: Space.lg),
-
-          const SpiritOfTheGame(),
+          const _Rule(
+            icon: Icons.wb_sunny_rounded,
+            title: 'Night animals in daylight',
+            body:
+                'See a normally nocturnal animal during the day and earn '
+                '**2.5× its normal points**.\n\n'
+                'Includes porcupine, genet, civet and bushpig.',
+          ),
+          const _Rule(
+            icon: Icons.quiz_rounded,
+            title: 'Trivia questions',
+            body:
+                'Earn additional points by answering trivia questions about '
+                'Kruger and its animals during your game.',
+          ),
           const SizedBox(height: Space.xl),
 
-          const _Section('WHAT EVERYTHING IS WORTH'),
+          const _Section('POINTS'),
+          const _Rule(
+            icon: Icons.leaderboard_rounded,
+            title: 'How points work',
+            body:
+                'Each animal has a base score based on how difficult it is to '
+                'find.\n\n'
+                'Special rules and bonuses can increase or reduce the final '
+                'score.',
+          ),
           Container(
             padding: const EdgeInsets.all(Space.lg),
             decoration: BoxDecoration(
@@ -262,131 +189,38 @@ class RulesScreen extends StatelessWidget {
           ),
           const SizedBox(height: Space.md),
           Text(
-            'Sweep up every common animal in the park in one day and a single '
+            'Sweep up every Bush Staple in the park in one day and a single '
             'pangolin still beats the lot of you.',
             style: AppText.caption.copyWith(height: 1.5),
           ),
+          const SizedBox(height: Space.xl),
+
+          const _Section("CHANGE AN ANIMAL'S VALUE"),
+          const _Rule(
+            icon: Icons.tune_rounded,
+            title: "Don't agree with a score? Change it",
+            body:
+                'Every game opens on **the prices**. Tap any animal and set '
+                'what it is worth in your game.\n\n'
+                'We remember it, so you do it once — not every morning. '
+                'Changed your mind? **Back to ours** puts our number back.',
+          ),
+          const _Rule(
+            icon: Icons.traffic_rounded,
+            title: 'And the jam tax, if you think it is harsh',
+            body:
+                'Anything from nothing to half, in **House rules** on your '
+                'profile.',
+          ),
+          const SizedBox(height: Space.lg),
+
+          const SpiritOfTheGame(),
         ],
       ),
     );
   }
 }
 
-/// One numbered step of the walkthrough.
-///
-/// A connecting line runs between the numbers so the five read as a sequence
-/// rather than as five unrelated cards. Somebody skimming this at a gate at
-/// 05:30 needs to see the shape of it before they read a word.
-class _Step extends StatelessWidget {
-  const _Step({
-    required this.number,
-    required this.title,
-    required this.body,
-    this.icon,
-    this.last = false,
-  });
-
-  final int number;
-  final String title;
-  final String body;
-
-  /// Shown beside the title when the step names a control, so the thing being
-  /// described is recognisable before you go looking for it.
-  final IconData? icon;
-
-  final bool last;
-
-  @override
-  Widget build(BuildContext context) {
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              Container(
-                width: 30,
-                height: 30,
-                alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                  color: AppColors.accent,
-                  shape: BoxShape.circle,
-                ),
-                child: Text(
-                  '$number',
-                  style: TextStyle(
-                    color: AppColors.accentInk,
-                    fontSize: 14,
-                    fontFamily: AppFonts.ui,
-                    fontVariations: AppFonts.weight(800),
-                  ),
-                ),
-              ),
-              if (!last)
-                const Expanded(
-                  child: SizedBox(
-                    width: 2,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(color: AppColors.outline),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-          const SizedBox(width: Space.md),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(bottom: last ? 0 : Space.xl, top: 4),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Flexible(child: Text(title, style: AppText.title3)),
-                      if (icon != null) ...<Widget>[
-                        const SizedBox(width: Space.sm),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 7,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.accentWash,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: AppColors.accent.withValues(alpha: 0.35),
-                            ),
-                          ),
-                          child: Icon(icon, size: 15, color: AppColors.accent),
-                        ),
-                      ],
-                    ],
-                  ),
-                  const SizedBox(height: 3),
-                  emphasised(
-                    body,
-                    style: AppText.caption.copyWith(height: 1.5),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// What the points are, and what they are not.
-///
-/// Shown on this screen and again during onboarding. It matters that this is
-/// said plainly and early: a scoreboard that ranks living animals invites
-/// exactly one misreading, and leaving it unaddressed would let the app imply
-/// something nobody involved believes.
-///
-/// It is also a better explanation of the scoring than any table. Rarity is a
-/// measure of *difficulty*, which is why a pangolin beats an elephant — the
-/// elephant is not worth less, it is standing in the road.
 class SpiritOfTheGame extends StatelessWidget {
   const SpiritOfTheGame({super.key});
 
@@ -528,8 +362,8 @@ class _PointRow extends StatelessWidget {
           ),
           SizedBox(
             // A range, because every animal in a tier no longer scores the
-            // same — a leopard and a wild dog are both Rare and nobody thinks
-            // they are equally hard to find.
+            // same — a leopard and a wild dog are both Prize animals and
+            // nobody thinks they are equally hard to find.
             width: 84,
             child: Text(
               '${tier.low}–${tier.high}',

@@ -41,17 +41,17 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('I have seen this one'), findsOneWidget);
+    expect(find.text('Spot it'), findsOneWidget);
 
-    await tester.tap(find.text('I have seen this one'));
+    await tester.tap(find.text('Spot it'));
     await tester.pumpAndSettle();
-    expect(find.text('In your collection'), findsOneWidget);
+    expect(find.text('Spotted'), findsOneWidget);
     expect(calls, 1);
 
     // And straight back again, without leaving the screen.
-    await tester.tap(find.text('In your collection'));
+    await tester.tap(find.text('Spotted'));
     await tester.pumpAndSettle();
-    expect(find.text('I have seen this one'), findsOneWidget);
+    expect(find.text('Spot it'), findsOneWidget);
     expect(calls, 2);
   });
 
@@ -81,8 +81,8 @@ void main() {
     await tester.tap(find.text('Leopard').first);
     await tester.pumpAndSettle();
 
-    expect(find.text('In your collection'), findsOneWidget);
-    expect(find.text('I have seen this one'), findsNothing);
+    expect(find.text('Spotted'), findsOneWidget);
+    expect(find.text('Spot it'), findsNothing);
   });
 
   testWidgets('taking one out of a collection is possible and is reported', (
@@ -107,7 +107,7 @@ void main() {
 
     await tester.tap(find.text('Leopard').first);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('In your collection'));
+    await tester.tap(find.text('Spotted'));
     await tester.pumpAndSettle();
 
     expect(removed, <String>['leopard']);
@@ -134,7 +134,7 @@ void main() {
     await tester.tap(find.text('Leopard').first);
     await tester.pumpAndSettle();
 
-    expect(find.text('In your collection'), findsNothing);
-    expect(find.text('I have seen this one'), findsNothing);
+    expect(find.text('Spotted'), findsNothing);
+    expect(find.text('Spot it'), findsNothing);
   });
 }

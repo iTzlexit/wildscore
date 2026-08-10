@@ -172,4 +172,31 @@ void main() {
 
     expect(find.textContaining('never record a location'), findsOneWidget);
   });
+
+  group('where to find', () {
+    testWidgets('is a tab for an ordinary animal', (WidgetTester tester) async {
+      await _pump(tester, _byId('impala'));
+
+      expect(find.text('Where to find'), findsOneWidget);
+    });
+
+    testWidgets('is not offered for either rhino or the pangolin', (
+      WidgetTester tester,
+    ) async {
+      // Alex's instruction, 10 August 2026. The tab held a region strip, which
+      // is coarse — and coarse is still an answer to "where do I go to find a
+      // rhino". Poaching pressure in Kruger is not hypothetical.
+      for (final String id in <String>[
+        'white-rhinoceros',
+        'black-rhinoceros',
+        'ground-pangolin',
+      ]) {
+        await _pump(tester, _byId(id));
+
+        expect(find.text('Where to find'), findsNothing, reason: id);
+        expect(find.text('About'), findsOneWidget, reason: id);
+        expect(find.text('Field notes'), findsOneWidget, reason: id);
+      }
+    });
+  });
 }

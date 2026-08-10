@@ -254,6 +254,27 @@ A clean geometric progression, each tier ~2.5–3× the one below:
 | Very rare | 300 | 3× |
 | **Legendary** | **2,000** | 6.7× |
 
+## What the tiers are called
+
+Renamed on **10 August 2026**, on Alex's wording, and the new names are
+better than the old ones. "Common / Frequent / Notable / Rare / Very rare /
+Legendary" is spreadsheet vocabulary: six words for one idea, three of which
+mean rare, and nobody can say which of Rare and Very rare is worse without
+checking. These say what the animal does.
+
+| Tier | Was | Band | Why the name |
+|---|---|---|---|
+| **Ghost** | Legendary | 600–1000 | You can go a whole career without one. Pangolin, Pel’s. |
+| **Mirage** | Very rare | 350–550 | You think you see it and it is gone. Bushpig, roan. |
+| **Cryptic** | Rare | 150–320 | Hiding in plain sight. Caracal, Narina trogon, python. |
+| **Prize** | Notable | 60–140 | What everybody is hoping for. Leopard, cheetah, wild dog. |
+| **Bush Icons** | Frequent | 20–55 | Why Kruger is famous, and seen most trips. Lion, elephant. |
+| **Bush Staples** | Common | 5–15 | The reliable everyday ones. Impala, zebra, baboon. |
+
+**The enum names did not change.** `common`, `frequent`, `uncommon`, `scarce`,
+`rare` and `legendary` are written into every scorecard and every backup on
+every phone. A display label is not worth a migration.
+
 **Six tiers, not seven.** Exceptional and Legendary were separate at 750 and
 2,500, and the distinction was one nobody could hold in their head — an aardvark
 and a pangolin are both "the sighting of the trip", and asking a car to rank

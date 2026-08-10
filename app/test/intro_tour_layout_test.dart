@@ -32,7 +32,7 @@ Future<void> _pump(
 }
 
 Future<void> _walkAllSlides(WidgetTester tester) async {
-  for (int i = 0; i < 2; i++) {
+  for (int i = 0; i < 3; i++) {
     await tester.tap(find.text('Next'));
     await tester.pumpAndSettle();
   }
