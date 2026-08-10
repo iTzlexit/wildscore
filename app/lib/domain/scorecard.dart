@@ -55,7 +55,7 @@ class Claim {
     required this.points,
     this.road,
     this.context = SightingContext.normal,
-    this.variant = false,
+    this.variants = const <String>{},
     this.extras = const <SightingExtra>{},
   });
 
@@ -72,7 +72,15 @@ class Claim {
     context: json['context'] == null
         ? SightingContext.normal
         : SightingContext.byName(json['context']! as String),
-    variant: json['variant'] as bool? ?? false,
+    // 'variant: true' is how a male lion was stored before an animal could be
+    // several things at once. Read as the label it meant, so old drives keep
+    // their marks.
+    variants: <String>{
+      if (json['variant'] == true) 'Male',
+      for (final dynamic v
+          in (json['variants'] as List<dynamic>?) ?? const <dynamic>[])
+        v as String,
+    },
     extras: <SightingExtra>{
       for (final dynamic e in (json['extras'] as List<dynamic>?) ?? const [])
         if (SightingExtra.byName(e as String) case final SightingExtra found)
@@ -95,8 +103,9 @@ class Claim {
   /// see [Species.crowdMatters].
   final SightingContext context;
 
-  /// The species' own variant applied — in practice, that the lion was a male.
-  final bool variant;
+  /// Which of the species' own variants applied — a male lion, a big tusker
+  /// that was also in musth. Empty for almost every claim.
+  final Set<String> variants;
 
   /// What it was doing: with young, on a kill. Empty for almost everything.
   final Set<SightingExtra> extras;
@@ -129,7 +138,7 @@ class Claim {
     // Omitted when ordinary, so the common claim stays the size it was and a
     // backup code does not grow for saying nothing.
     if (context != SightingContext.normal) 'context': context.name,
-    if (variant) 'variant': true,
+    if (variants.isNotEmpty) 'variants': variants.toList(),
     if (extras.isNotEmpty)
       'extras': <String>[for (final SightingExtra e in extras) e.name],
   };

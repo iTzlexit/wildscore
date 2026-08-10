@@ -6,6 +6,7 @@ import '../../domain/species.dart';
 import '../../domain/species_category.dart';
 import '../../shared/theme.dart';
 import '../../shared/widgets/avatar_badge.dart';
+import '../codex/species_detail_screen.dart';
 import '../codex/widgets/species_grid_card.dart';
 
 /// "What did Sam spot?" — the claim screen, opened from a player's row.
@@ -161,7 +162,9 @@ class _SpotPickerScreenState extends State<SpotPickerScreen> {
                   color: AppColors.textPrimary,
                   fontSize: 15,
                 ),
-                decoration: searchFieldDecoration('Search — impala, rooibok…'),
+                decoration: searchFieldDecoration(
+                  'Search — impala, rooibok…',
+                ).copyWith(helperText: 'Tap to claim · hold to look it up'),
               ),
             ),
             SizedBox(
@@ -215,6 +218,15 @@ class _SpotPickerScreenState extends State<SpotPickerScreen> {
                           onTap: left == 0
                               ? () {}
                               : () => Navigator.of(context).pop(s),
+                          // Long-press to look it up without claiming it.
+                          //
+                          // The one place in the app where you had the animal
+                          // in front of you and no way to check what it was —
+                          // which is exactly when somebody in the back seat
+                          // says "are you sure that's a steenbok". A tap still
+                          // claims, because that is what this screen is for.
+                          onLongPress: () =>
+                              SpeciesDetailScreen.open(context, s),
                         );
                       },
                     ),

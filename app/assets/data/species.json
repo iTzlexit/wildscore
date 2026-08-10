@@ -107,7 +107,24 @@
       "decay": {
         "after": 2,
         "multiplier": 0.4
-      }
+      },
+      "variants": [
+        {
+          "label": "Big tusker",
+          "question": "Was it a big tusker?",
+          "multiplier": 5
+        },
+        {
+          "label": "Lone bull",
+          "question": "Was it a lone bull?",
+          "multiplier": 1.5
+        },
+        {
+          "label": "In musth",
+          "question": "Was it in musth?",
+          "multiplier": 2
+        }
+      ]
     },
     {
       "id": "african-wild-dog",
@@ -388,7 +405,14 @@
       "decay": {
         "after": 2,
         "multiplier": 0.4
-      }
+      },
+      "variants": [
+        {
+          "label": "Dagga boy",
+          "question": "Was it a dagga boy?",
+          "multiplier": 2
+        }
+      ]
     },
     {
       "id": "cape-porcupine",
@@ -484,7 +508,14 @@
         "high": 200,
         "basis": "estimate"
       },
-      "points": 320
+      "points": 320,
+      "variants": [
+        {
+          "label": "King cheetah",
+          "question": "Was it a king cheetah?",
+          "multiplier": 5
+        }
+      ]
     },
     {
       "id": "common-duiker",
@@ -832,7 +863,14 @@
       "wildCard": {
         "bonus": 550,
         "scope": "day"
-      }
+      },
+      "variants": [
+        {
+          "label": "In a tree",
+          "question": "Was it up a tree?",
+          "multiplier": 1.5
+        }
+      ]
     },
     {
       "id": "lesser-bushbaby",
@@ -880,11 +918,6 @@
         "northern"
       ],
       "conservationStatus": "vulnerable",
-      "variant": {
-        "label": "Male",
-        "question": "Was it a male?",
-        "multiplier": 1.5
-      },
       "population": {
         "low": 1500,
         "high": 1700,
@@ -894,7 +927,19 @@
       "wildCard": {
         "bonus": 400,
         "scope": "day"
-      }
+      },
+      "variants": [
+        {
+          "label": "Male",
+          "question": "Was it a male?",
+          "multiplier": 1.5
+        },
+        {
+          "label": "White lion",
+          "question": "Was it a white lion?",
+          "multiplier": 5
+        }
+      ]
     },
     {
       "id": "mountain-reedbuck",

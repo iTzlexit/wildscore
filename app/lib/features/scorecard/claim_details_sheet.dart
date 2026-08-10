@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../domain/rarity_tier.dart';
 import '../../domain/sighting_context.dart';
 import '../../domain/species.dart';
 import '../../shared/theme.dart';
@@ -8,17 +9,17 @@ import '../../shared/theme.dart';
 class ClaimDetails {
   const ClaimDetails({
     required this.context,
-    required this.variant,
+    required this.variants,
     this.extras = const <SightingExtra>{},
   });
 
   static const ClaimDetails ordinary = ClaimDetails(
     context: SightingContext.normal,
-    variant: false,
+    variants: <String>{},
   );
 
   final SightingContext context;
-  final bool variant;
+  final Set<String> variants;
   final Set<SightingExtra> extras;
 }
 
@@ -53,7 +54,15 @@ class ClaimDetailsSheet extends StatefulWidget {
   /// impala — the exact friction the bar exists to avoid. The extras are asked
   /// about only for animals that already clear it.
   static bool needed(Species species) =>
-      species.crowdMatters || species.variant != null;
+      species.crowdMatters ||
+      species.variants.isNotEmpty ||
+      // Anything worth a modifier at all, once it is past the everyday end of
+      // the scale. It used to be crowd-or-variant only, which meant a kudu
+      // could never be marked as having a calf with it — the sheet simply
+      // never appeared. Common stays one tap, because a sheet in front of
+      // every zebra is the friction this bar exists to prevent.
+      (species.possibleExtras.isNotEmpty &&
+          species.points >= RarityTier.frequent.low);
 
   static Future<ClaimDetails?> ask(
     BuildContext context,
@@ -78,7 +87,7 @@ class ClaimDetailsSheet extends StatefulWidget {
 
 class _ClaimDetailsSheetState extends State<ClaimDetailsSheet> {
   SightingContext _context = SightingContext.normal;
-  bool _variant = false;
+  final Set<String> _variants = <String>{};
   final Set<SightingExtra> _extras = <SightingExtra>{};
 
   /// What the claim would be worth answered one way, everything else held.
@@ -90,7 +99,7 @@ class _ClaimDetailsSheetState extends State<ClaimDetailsSheet> {
       1 - (widget.jamMultiplier ?? SightingContext.jam.multiplier);
 
   int _pointsIn(SightingContext crowd) => widget.species.scoreFor(
-    variantApplied: _variant,
+    variantsApplied: _variants,
     context: crowd,
     extras: _extras,
     jamMultiplier: widget.jamMultiplier,
@@ -101,7 +110,7 @@ class _ClaimDetailsSheetState extends State<ClaimDetailsSheet> {
     final Species species = widget.species;
     final RarityStyle style = species.rarityTier.style;
     final int points = species.scoreFor(
-      variantApplied: _variant,
+      variantsApplied: _variants,
       context: _context,
       extras: _extras,
       jamMultiplier: widget.jamMultiplier,
@@ -156,10 +165,16 @@ class _ClaimDetailsSheetState extends State<ClaimDetailsSheet> {
                 ),
               ),
 
-              if (species.variant
-                  case final SpeciesVariant variant) ...<Widget>[
+              // Which one of these it was, and it can be several.
+              //
+              // A yes/no pair per variant would be four questions on an
+              // elephant. Chips you tap are one question — "which of these was
+              // it" — and they let a big tusker also be a lone bull in musth,
+              // which is a real morning and not one anybody should have to
+              // pick between.
+              if (species.variants.isNotEmpty) ...<Widget>[
                 const Divider(height: 1, color: AppColors.outline),
-                _Question(label: variant.question),
+                const _Question(label: 'Which one was it?'),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(
                     Space.lg,
@@ -167,24 +182,21 @@ class _ClaimDetailsSheetState extends State<ClaimDetailsSheet> {
                     Space.lg,
                     Space.lg,
                   ),
-                  child: Row(
+                  child: Wrap(
+                    spacing: Space.sm,
+                    runSpacing: Space.sm,
                     children: <Widget>[
-                      Expanded(
-                        child: _Choice(
-                          label: 'Yes — ${variant.label.toLowerCase()}',
-                          detail: '×${variant.multiplier}',
-                          selected: _variant,
-                          onTap: () => setState(() => _variant = true),
+                      for (final SpeciesVariant v in species.variants)
+                        _Choice(
+                          label: v.label,
+                          detail: '×${v.multiplier}',
+                          selected: _variants.contains(v.label),
+                          onTap: () => setState(() {
+                            if (!_variants.remove(v.label)) {
+                              _variants.add(v.label);
+                            }
+                          }),
                         ),
-                      ),
-                      const SizedBox(width: Space.sm),
-                      Expanded(
-                        child: _Choice(
-                          label: 'No',
-                          selected: !_variant,
-                          onTap: () => setState(() => _variant = false),
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -295,7 +307,7 @@ class _ClaimDetailsSheetState extends State<ClaimDetailsSheet> {
                     onPressed: () => Navigator.of(context).pop(
                       ClaimDetails(
                         context: _context,
-                        variant: _variant,
+                        variants: <String>{..._variants},
                         extras: <SightingExtra>{..._extras},
                       ),
                     ),

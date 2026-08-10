@@ -115,10 +115,8 @@ class _StandingsBoardState extends State<StandingsBoard> {
         if (c.context.short.isNotEmpty) {
           (marks[c.speciesId] ??= <String>{}).add(c.context.short);
         }
-        if (c.variant) {
-          if (_lookup(c.speciesId)?.variant case final SpeciesVariant v) {
-            (marks[c.speciesId] ??= <String>{}).add(v.label.toUpperCase());
-          }
+        for (final String v in c.variants) {
+          (marks[c.speciesId] ??= <String>{}).add(v.toUpperCase());
         }
         for (final SightingExtra e in c.extras) {
           (marks[c.speciesId] ??= <String>{}).add(e.short);

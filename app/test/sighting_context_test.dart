@@ -56,13 +56,17 @@ void main() {
 
   group('the male lion', () {
     test('lion carries a variant and almost nothing else does', () {
-      expect(_byId('lion').variant, isNotNull);
-      expect(_byId('impala').variant, isNull);
+      expect(_byId('lion').variants, isNotEmpty);
+      expect(_byId('impala').variants, isEmpty);
 
       final int withVariants = _catalogue
-          .where((Species s) => s.variant != null)
+          .where((Species s) => s.variants.isNotEmpty)
           .length;
-      expect(withVariants, 1, reason: 'only the lion, for now');
+      expect(
+        withVariants,
+        5,
+        reason: 'lion, cheetah, elephant, buffalo, leopard',
+      );
     });
 
     test('a male is worth more than a lion', () {
@@ -70,12 +74,15 @@ void main() {
 
       // Half again rather than a flat sixty. 120 becomes 180.
       expect(lion.scoreFor(), 120);
-      expect(lion.scoreFor(variantApplied: true), 180);
+      expect(lion.scoreFor(variantsApplied: const <String>{'Male'}), 180);
     });
 
     test('the bonus is ignored for a species with no variant', () {
       // Nothing should be able to hand an impala a lion's bonus.
-      expect(_byId('impala').scoreFor(variantApplied: true), 10);
+      expect(
+        _byId('impala').scoreFor(variantsApplied: const <String>{'Male'}),
+        10,
+      );
     });
   });
 
@@ -84,9 +91,10 @@ void main() {
       // 120 × 1.5. The lone mark does not multiply, so this is simply what a
       // male lion is worth.
       expect(
-        _byId(
-          'lion',
-        ).scoreFor(variantApplied: true, context: SightingContext.alone),
+        _byId('lion').scoreFor(
+          variantsApplied: const <String>{'Male'},
+          context: SightingContext.alone,
+        ),
         180,
       );
     });
@@ -94,9 +102,10 @@ void main() {
     test('the same lion at a jam of eleven cars', () {
       // 180 − 20%.
       expect(
-        _byId(
-          'lion',
-        ).scoreFor(variantApplied: true, context: SightingContext.jam),
+        _byId('lion').scoreFor(
+          variantsApplied: const <String>{'Male'},
+          context: SightingContext.jam,
+        ),
         144,
       );
     });
@@ -128,7 +137,10 @@ void main() {
       expect(lion.scoreFor(wildCardBonusEarned: true), 400);
       // And a male one, first thing, on an empty road.
       expect(
-        lion.scoreFor(wildCardBonusEarned: true, variantApplied: true),
+        lion.scoreFor(
+          wildCardBonusEarned: true,
+          variantsApplied: const <String>{'Male'},
+        ),
         600,
       );
     });
@@ -228,13 +240,13 @@ void main() {
         at: DateTime(2026, 8, 8),
         points: 200,
         context: SightingContext.alone,
-        variant: true,
+        variants: <String>{'Male'},
       );
 
       final Claim back = Claim.fromJson(claim.toJson());
 
       expect(back.context, SightingContext.alone);
-      expect(back.variant, isTrue);
+      expect(back.variants, <String>{'Male'});
       expect(back.points, 200);
     });
 
@@ -249,7 +261,7 @@ void main() {
       });
 
       expect(old.context, SightingContext.normal);
-      expect(old.variant, isFalse);
+      expect(old.variants, isEmpty);
       expect(old.points, 300);
     });
   });

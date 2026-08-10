@@ -142,7 +142,7 @@ class Species {
     required this.conservationStatus,
     this.photoVerified = true,
     this.discovered = true,
-    this.variant,
+    this.variants = const <SpeciesVariant>[],
     this.population,
     this.wildCard,
     this.chancesPerDay,
@@ -204,9 +204,11 @@ class Species {
       // Absent means trusted. Only the handful we know to be wrong carry the
       // flag, so a new species is not silently hidden by a forgotten field.
       photoVerified: json['photoVerified'] as bool? ?? true,
-      variant: json['variant'] == null
-          ? null
-          : SpeciesVariant.fromJson(json['variant']! as Map<String, dynamic>),
+      variants: <SpeciesVariant>[
+        for (final dynamic v
+            in (json['variants'] as List<dynamic>? ?? const <dynamic>[]))
+          SpeciesVariant.fromJson(v as Map<String, dynamic>),
+      ],
       population: json['population'] == null
           ? null
           : Population.fromJson(json['population']! as Map<String, dynamic>),
@@ -263,7 +265,7 @@ class Species {
 
   /// A version of this animal worth more than the animal — a male lion. Null
   /// for almost everything.
-  final SpeciesVariant? variant;
+  final List<SpeciesVariant> variants;
 
   /// Roughly how many are in the park. Null where no figure has been sourced,
   /// which is most of the birds and everything smaller than a mongoose.
@@ -344,7 +346,7 @@ class Species {
   /// 480.
   int scoreFor({
     bool wildCardBonusEarned = false,
-    bool variantApplied = false,
+    Set<String> variantsApplied = const <String>{},
     SightingContext context = SightingContext.normal,
     Set<SightingExtra> extras = const <SightingExtra>{},
     int sightingsToday = 1,
@@ -358,8 +360,10 @@ class Species {
     if (decay != null && !wildCardBonusEarned) {
       total = decay!.applyTo(total.round(), sightingsToday).toDouble();
     }
-    if (variantApplied && variant != null) {
-      total *= variant!.multiplier;
+    for (final SpeciesVariant v in variants) {
+      if (variantsApplied.contains(v.label)) {
+        total *= v.multiplier;
+      }
     }
     for (final SightingExtra e in extras) {
       total *= e.multiplier;
@@ -387,7 +391,14 @@ class Species {
   /// them.
   Set<SightingExtra> get possibleExtras => <SightingExtra>{
     if (category == SpeciesCategory.mammal) SightingExtra.withYoung,
-    if (tags.contains(SpeciesTag.predator)) SightingExtra.onAKill,
+    if (tags.contains(SpeciesTag.predator)) ...<SightingExtra>[
+      SightingExtra.onAKill,
+      SightingExtra.killInATree,
+    ],
+    // Mammals and birds. A mating pair of crocodiles is a thing nobody is
+    // going to identify from a car, and a puff adder even less so.
+    if (category == SpeciesCategory.mammal || category == SpeciesCategory.bird)
+      SightingExtra.matingPair,
     if (isNocturnal && !_dayActiveAnyway.contains(id)) SightingExtra.inDaylight,
   };
 
@@ -474,7 +485,7 @@ class Species {
       // Both were being dropped. Only a test calls this today, so nothing was
       // visibly broken — but a copy of a lion that has lost its male-lion
       // bonus is a scoring bug lying in wait for whoever uses it next.
-      variant: variant,
+      variants: variants,
       population: population,
       wildCard: wildCard,
       points: _points,

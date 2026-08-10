@@ -110,6 +110,29 @@ enum SightingExtra {
     multiplier: 1.5,
   ),
 
+  /// A kill hauled into a tree.
+  ///
+  /// The leopard sighting everybody wants and most people never get — and
+  /// worth marking separately from a kill on the ground, which is a lion
+  /// thing and far more common.
+  killInATree(
+    label: 'Kill in a tree',
+    short: 'TREE KILL',
+    question: 'Was the kill up a tree?',
+    multiplier: 2,
+  ),
+
+  /// Two of them, at it.
+  ///
+  /// Rare enough to be a story for almost everything and genuinely
+  /// unmistakable, which is what makes it a fair thing to score.
+  matingPair(
+    label: 'Mating pair',
+    short: 'MATING',
+    question: 'Were they mating?',
+    multiplier: 1.5,
+  ),
+
   /// A night animal, out in daylight.
   ///
   /// **Rarity is not a property of the animal, it is a property of the

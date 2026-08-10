@@ -393,7 +393,7 @@ class _HomeShellState extends State<HomeShell> {
           at: DateTime.now(),
           points: chosen.scoreFor(
             wildCardBonusEarned: earnsBonus,
-            variantApplied: details.variant,
+            variantsApplied: details.variants,
             context: details.context,
             extras: details.extras,
             // Which one of the day this is, counting from one. Only elephant
@@ -404,7 +404,7 @@ class _HomeShellState extends State<HomeShell> {
           ),
           road: road,
           context: details.context,
-          variant: details.variant,
+          variants: details.variants,
           extras: details.extras,
         ),
       ),

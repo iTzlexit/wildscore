@@ -59,10 +59,10 @@ void main() {
 
     expect(find.text('Claim it'), findsNothing);
     expect(result?.context, SightingContext.normal);
-    expect(result?.variant, isFalse);
+    expect(result?.variants, isEmpty);
   });
 
-  testWidgets('a leopard is asked who else was there, and nothing else', (
+  testWidgets('a leopard is asked who else was there', (
     WidgetTester tester,
   ) async {
     await _open(tester, _byId('leopard'));
@@ -73,14 +73,67 @@ void main() {
     // Two marks, not a three-way choice: the ordinary sighting is the absence
     // of both and needs no answer.
     expect(find.text('We spotted it'), findsNothing);
-    // No variant on a leopard, so no second question.
-    expect(find.textContaining('Was it a male'), findsNothing);
+  });
+
+  testWidgets('a leopard can be up a tree, with its kill', (
+    WidgetTester tester,
+  ) async {
+    // The sighting everybody wants and most people never get. Both halves are
+    // offered because they are separately true — a leopard in a tree without a
+    // kill is common enough, and a kill hauled up there without the leopard
+    // still in it is the other half of the same story.
+    await _open(tester, _byId('leopard'));
+
+    expect(find.text('Which one was it?'), findsOneWidget);
+    expect(find.text('In a tree'), findsOneWidget);
+    expect(find.text('Kill in a tree'), findsOneWidget);
+    expect(find.text('On a kill'), findsOneWidget);
+  });
+
+  testWidgets('an elephant can be several things at once', (
+    WidgetTester tester,
+  ) async {
+    // A yes/no pair per variant would be three questions. Chips are one, and
+    // they let a big tusker also be a lone bull in musth — which is a real
+    // morning and not one anybody should have to pick between.
+    await _open(tester, _byId('african-elephant'));
+
+    for (final String label in <String>[
+      'Big tusker',
+      'Lone bull',
+      'In musth',
+    ]) {
+      await tester.tap(find.text(label));
+      await tester.pumpAndSettle();
+    }
+
+    // 55 × 5 × 1.5 × 2 = 825.
+    expect(find.text('825'), findsWidgets);
+  });
+
+  testWidgets('a kudu is asked about its calf, which it never used to be', (
+    WidgetTester tester,
+  ) async {
+    // The sheet only appeared for animals a jam forms around or that carried a
+    // variant, so most mammals could never be marked as having young at all.
+    final Species bushbuck = _byId('bushbuck');
+
+    expect(ClaimDetailsSheet.needed(bushbuck), isTrue);
+    await _open(tester, bushbuck);
+    expect(find.text('With young'), findsOneWidget);
+  });
+
+  testWidgets('an impala still claims in one tap', (WidgetTester tester) async {
+    // The line has to hold somewhere. Common animals stay instant, because a
+    // sheet in front of every zebra is the friction the bar exists to prevent.
+    expect(ClaimDetailsSheet.needed(_byId('impala')), isFalse);
+    expect(ClaimDetailsSheet.needed(_byId('plains-zebra')), isFalse);
   });
 
   testWidgets('a lion is asked both questions', (WidgetTester tester) async {
     await _open(tester, _byId('lion'));
 
-    expect(find.text('Was it a male?'), findsOneWidget);
+    expect(find.text('Which one was it?'), findsOneWidget);
     expect(find.text('Who else was there?'), findsOneWidget);
   });
 
@@ -99,7 +152,7 @@ void main() {
     await _open(tester, _byId('lion'));
     expect(tester.widget<Text>(total()).data, '120');
 
-    await tester.tap(find.text('Yes — male'));
+    await tester.tap(find.text('Male'));
     await tester.pumpAndSettle();
     expect(tester.widget<Text>(total()).data, '180');
 
@@ -122,7 +175,7 @@ void main() {
     // the choice is made against real numbers rather than a total that moves
     // after you commit.
     await _open(tester, _byId('lion'));
-    await tester.tap(find.text('Yes — male'));
+    await tester.tap(find.text('Male'));
     await tester.pumpAndSettle();
 
     // 180 on the lone button, and the jam button showing its working.
@@ -176,14 +229,14 @@ void main() {
     await tester.tap(find.text('go'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Yes — male'));
+    await tester.tap(find.text('Male'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Lone sighting'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Claim it'));
     await tester.pumpAndSettle();
 
-    expect(result?.variant, isTrue);
+    expect(result?.variants, <String>{'Male'});
     expect(result?.context, SightingContext.alone);
   });
 

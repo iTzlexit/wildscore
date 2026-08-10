@@ -140,7 +140,7 @@ void main() {
 
       // Half again of 500, not of the catalogue's 120. Every modifier is a
       // proportion for exactly this reason.
-      expect(lion.scoreFor(variantApplied: true), 750);
+      expect(lion.scoreFor(variantsApplied: const <String>{'Male'}), 750);
     });
   });
 
