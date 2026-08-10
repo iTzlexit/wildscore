@@ -77,3 +77,59 @@ six are about as hard as each other, and that lot are harder — and collapses
 190 animals to 24 scores.
 
 The bands never overlap, so the worst Legendary still beats the best Very rare.
+
+## The three things a car can change
+
+Added 10 August 2026, on Alex's suggestion. All of them hold **only what
+differs from the default**, so the common case is an empty object and an update
+that changes our minds still reaches everybody who never had an opinion.
+
+### 1. What an animal is worth
+
+On the animal's own page in the Dex. Slider, fixed rungs, described above.
+
+### 2. How often it can be claimed
+
+Same page, under the score: **twice a day**, **4 a day**, **once this trip**, or
+**no limit**.
+
+Once-a-trip is the interesting one. Set it on everything and the scorecard stops
+being a scoreboard and becomes a checklist — find each animal once, and the
+winner is whoever found the most different things. Some cars will want exactly
+that, and it costs us nothing to allow it.
+
+Three states, not two: a cap, **no cap**, and no opinion. A car that wants
+unlimited impala has to be able to say so, and that is not the same as never
+having asked — our default can still move under the second and must not move
+under the first. Stored as a present key holding null.
+
+### 3. What a traffic jam costs
+
+**Profile → House rules.** Anything from nothing to half, in tenths.
+
+Zero is a real choice, not a token one: some cars will decide a sighting is a
+sighting and the tax is us being clever at them. The claim sheet's button reads
+the car's own number, so a car on 40% never sees a button saying 20%.
+
+Choosing our own value **clears the setting** rather than storing a copy of it.
+Otherwise a car that agreed with us in August would be pinned to that number
+when we changed our minds in September.
+
+## Two views of the catalogue
+
+The Dex toggles between them from the row above the list.
+
+- **Grid** — big photographs, grouped Animals then Birds. For browsing.
+- **Ranking** — one line each, numbered, rarest at the top, straight through
+  from the pangolin to the impala. For comparing.
+
+The ranking ignores the Animals/Birds split, because a ranking with two number
+ones is not a ranking, and it ignores the chosen sort, because rarest-first is
+the only order in which it means anything.
+
+**A bug this shook out:** "Rarest first" sorted by *tier* and then
+alphabetically, which was identical to sorting by points back when every animal
+in a tier scored the same. It is not identical now — it put the aardvark above
+the pangolin, on a list whose whole promise is that the top is the hardest thing
+in the park. It sorts by points now, and the tier ordering falls out of that
+because the bands do not overlap.

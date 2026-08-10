@@ -6,6 +6,7 @@ import '../data/scorecard_repository.dart';
 import '../data/species_repository.dart';
 import '../data/spotted_repository.dart';
 import '../data/visit_repository.dart';
+import '../domain/house_rules.dart';
 import '../domain/scorecard.dart';
 import '../domain/species.dart';
 import '../domain/tracker_profile.dart';
@@ -63,11 +64,13 @@ class _HomeShellState extends State<HomeShell> {
   /// The day's game, or null when none is running.
   Scorecard? _card;
 
-  /// What this car has decided animals are worth, overriding the catalogue.
+  /// Everything this car has decided to do differently — its own point values,
+  /// its own limits, its own jam tax.
   ///
-  /// Held here because it has to be folded into the catalogue at load, and the
-  /// catalogue is loaded here. Empty for almost everybody.
-  Map<String, int> _housePoints = const <String, int>{};
+  /// Held here because the points and the caps have to be folded into the
+  /// catalogue at load, and the catalogue is loaded here. Default for almost
+  /// everybody.
+  HouseRules _rules = HouseRules.none;
 
   @override
   void initState() {
@@ -91,30 +94,49 @@ class _HomeShellState extends State<HomeShell> {
   }
 
   Future<List<Species>> _loadSpecies() async {
-    _housePoints = await const HouseRulesRepository().load();
-    return widget.repository.loadAll(housePoints: _housePoints);
+    _rules = await const HouseRulesRepository().load();
+    return widget.repository.loadAll(rules: _rules);
   }
 
-  /// One species revalued, or put back to the catalogue's figure.
+  /// Saves a change to the car's rules and rebuilds the catalogue under it.
   ///
-  /// Reloads the whole catalogue rather than patching the one entry, because
-  /// the list is handed to four tabs and a dozen widgets — rebuilding it once
-  /// is cheaper than making every one of them aware that a number can change.
-  Future<void> _setHousePoints(String id, int? points) async {
-    final Map<String, int> next = <String, int>{..._housePoints};
-    if (points == null) {
-      next.remove(id);
-    } else {
-      next[id] = points;
-    }
+  /// Reloads the whole catalogue rather than patching one entry, because the
+  /// list is handed to four tabs and a dozen widgets — rebuilding it once is
+  /// cheaper than making every one of them aware that a number can change.
+  Future<void> _saveRules(HouseRules next) async {
     await const HouseRulesRepository().save(next);
     if (!mounted) {
       return;
     }
     setState(() {
-      _housePoints = next;
-      _speciesFuture = widget.repository.loadAll(housePoints: next);
+      _rules = next;
+      _speciesFuture = widget.repository.loadAll(rules: next);
     });
+  }
+
+  Future<void> _setHousePoints(String id, int? points) {
+    final Map<String, int> next = <String, int>{..._rules.points};
+    if (points == null) {
+      next.remove(id);
+    } else {
+      next[id] = points;
+    }
+    return _saveRules(_rules.copyWith(points: next));
+  }
+
+  /// A limit on one species, or `reset` to hand it back to the catalogue.
+  ///
+  /// Three states, not two: a cap, no cap, and no opinion. A car that wants
+  /// unlimited impala has to be able to say so, and that is not the same as
+  /// never having asked — the default can still move under the second.
+  Future<void> _setHouseCap(String id, SpeciesCap? cap, {bool reset = false}) {
+    final Map<String, SpeciesCap?> next = <String, SpeciesCap?>{..._rules.caps};
+    if (reset) {
+      next.remove(id);
+    } else {
+      next[id] = cap;
+    }
+    return _saveRules(_rules.copyWith(caps: next));
   }
 
   /// Re-reads everything from disk. Called after a restore, which rewrites the
@@ -343,7 +365,11 @@ class _HomeShellState extends State<HomeShell> {
     // where the answer changes something, so an impala never sees this.
     // Dismissing it cancels the claim rather than scoring an ordinary one —
     // backing out of a half-finished claim must not quietly bank points.
-    final ClaimDetails? details = await ClaimDetailsSheet.ask(context, chosen);
+    final ClaimDetails? details = await ClaimDetailsSheet.ask(
+      context,
+      chosen,
+      jamMultiplier: _rules.jamMultiplier,
+    );
     if (details == null || !mounted) {
       return;
     }
@@ -374,6 +400,7 @@ class _HomeShellState extends State<HomeShell> {
             // and buffalo care: neither can be capped, being Big Five, but the
             // fourteenth elephant is not the event the second one was.
             sightingsToday: latest.timesClaimed(chosen.id) + 1,
+            jamMultiplier: _rules.jamMultiplier,
           ),
           road: road,
           context: details.context,
@@ -414,6 +441,8 @@ class _HomeShellState extends State<HomeShell> {
                 onDeleteVisit: _deleteVisit,
                 onRestored: _reload,
                 onToggleSpotted: _toggleSpotted,
+                rules: _rules,
+                onRulesChanged: _saveRules,
               ),
               WildScoreScreen(
                 species: species,
@@ -438,8 +467,9 @@ class _HomeShellState extends State<HomeShell> {
                 repository: widget.repository,
                 caughtIds: _spotted,
                 onToggleSpotted: _toggleSpotted,
-                housePoints: _housePoints,
+                rules: _rules,
                 onSetPoints: _setHousePoints,
+                onSetCap: _setHouseCap,
               ),
               SightingsScreen(visits: _visits, species: species, live: _card),
             ],

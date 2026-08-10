@@ -34,9 +34,16 @@ class ClaimDetails {
 /// rather than as an ordinary sighting. Backing out of a half-finished claim
 /// should not silently score one.
 class ClaimDetailsSheet extends StatefulWidget {
-  const ClaimDetailsSheet({required this.species, super.key});
+  const ClaimDetailsSheet({
+    required this.species,
+    this.jamMultiplier,
+    super.key,
+  });
 
   final Species species;
+
+  /// What a jam sighting keeps, if the car has changed it. Null is our 0.8.
+  final double? jamMultiplier;
 
   /// True when this species has anything worth asking about. Checked by the
   /// caller so that the common claim — an impala, a zebra — never sees a sheet
@@ -48,7 +55,11 @@ class ClaimDetailsSheet extends StatefulWidget {
   static bool needed(Species species) =>
       species.crowdMatters || species.variant != null;
 
-  static Future<ClaimDetails?> ask(BuildContext context, Species species) {
+  static Future<ClaimDetails?> ask(
+    BuildContext context,
+    Species species, {
+    double? jamMultiplier,
+  }) {
     if (!needed(species)) {
       return Future<ClaimDetails?>.value(ClaimDetails.ordinary);
     }
@@ -56,7 +67,8 @@ class ClaimDetailsSheet extends StatefulWidget {
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (BuildContext context) => ClaimDetailsSheet(species: species),
+      builder: (BuildContext context) =>
+          ClaimDetailsSheet(species: species, jamMultiplier: jamMultiplier),
     );
   }
 
@@ -74,10 +86,14 @@ class _ClaimDetailsSheetState extends State<ClaimDetailsSheet> {
   /// So the buttons can show their own consequence rather than only moving the
   /// total at the top, and so the two numbers stay honest when a male lion or a
   /// kill is already ticked.
+  double get _jamPenalty =>
+      1 - (widget.jamMultiplier ?? SightingContext.jam.multiplier);
+
   int _pointsIn(SightingContext crowd) => widget.species.scoreFor(
     variantApplied: _variant,
     context: crowd,
     extras: _extras,
+    jamMultiplier: widget.jamMultiplier,
   );
 
   @override
@@ -88,6 +104,7 @@ class _ClaimDetailsSheetState extends State<ClaimDetailsSheet> {
       variantApplied: _variant,
       context: _context,
       extras: _extras,
+      jamMultiplier: widget.jamMultiplier,
     );
 
     return SafeArea(
@@ -245,7 +262,12 @@ class _ClaimDetailsSheetState extends State<ClaimDetailsSheet> {
                         note: 'Cars were already there',
                         // The sum, spelled out. "80" on its own looks like a
                         // different animal; "100 − 20%" is the rule.
-                        working: '${_pointsIn(SightingContext.normal)} − 20%',
+                        // The percentage comes from the car's own rules, not a
+                        // literal — a car that set the tax to 40% must not be
+                        // shown a button that still says 20%.
+                        working:
+                            '${_pointsIn(SightingContext.normal)} '
+                            '− ${(_jamPenalty * 100).round()}%',
                         total: _pointsIn(SightingContext.jam),
                         accent: style.accent,
                         selected: _context == SightingContext.jam,

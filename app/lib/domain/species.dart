@@ -1,4 +1,5 @@
 import 'conservation_status.dart';
+import 'house_rules.dart';
 import 'park_region.dart';
 import 'population.dart';
 import 'rarity_tier.dart';
@@ -147,6 +148,8 @@ class Species {
     this.chancesPerDay,
     this.decay,
     this.housePoints,
+    this.houseCap,
+    this.houseCapSet = false,
     int? points,
   }) : _points = points;
 
@@ -285,7 +288,40 @@ class Species {
   /// back — an edit you cannot see or undo is a trap.
   final int? housePoints;
 
-  bool get isHouseRule => housePoints != null;
+  /// This car's own limit on how often it can be claimed.
+  ///
+  /// Distinguished from "no limit" by [houseCapSet], because *removing* a cap
+  /// is itself an opinion — a car that wants unlimited impala has to be able
+  /// to say so, and a null here would be indistinguishable from never having
+  /// asked.
+  final SpeciesCap? houseCap;
+  final bool houseCapSet;
+
+  bool get isHouseRule => housePoints != null || houseCapSet;
+
+  /// One species with a car's own rules folded in.
+  Species underHouseRules({
+    int? points,
+    SpeciesCap? cap,
+    bool capChanged = false,
+  }) {
+    if (points == null && !capChanged) {
+      return this;
+    }
+    return copyWith(
+      housePoints: points,
+      houseCap: cap,
+      houseCapSet: capChanged,
+    );
+  }
+
+  /// The catalogue's own limit, whatever the car has since decided.
+  SpeciesCap? get catalogueCap => chancesPerDay == null
+      ? null
+      : SpeciesCap(times: chancesPerDay!, scope: CapScope.day);
+
+  /// The limit actually in force.
+  SpeciesCap? get cap => houseCapSet ? houseCap : catalogueCap;
 
   /// The catalogue's own figure, whatever the player has since decided.
   int get cataloguePoints => _points ?? rarityTier.points;
@@ -312,6 +348,7 @@ class Species {
     SightingContext context = SightingContext.normal,
     Set<SightingExtra> extras = const <SightingExtra>{},
     int sightingsToday = 1,
+    double? jamMultiplier,
   }) {
     double total =
         (wildCardBonusEarned && wildCard != null ? wildCard!.bonus : points)
@@ -327,7 +364,7 @@ class Species {
     for (final SightingExtra e in extras) {
       total *= e.multiplier;
     }
-    return context.applyTo(total.round());
+    return context.applyTo(total.round(), jamMultiplier: jamMultiplier);
   }
 
   /// Tagged nocturnal, but out in daylight often enough that a bonus for it
@@ -411,7 +448,12 @@ class Species {
   /// [points] is how a player's own scoring reaches the rest of the app: the
   /// repository applies overrides at load, so every screen, the claim sheet and
   /// the feed all see the edited number without knowing anything about it.
-  Species copyWith({bool? discovered, int? housePoints}) {
+  Species copyWith({
+    bool? discovered,
+    int? housePoints,
+    SpeciesCap? houseCap,
+    bool? houseCapSet,
+  }) {
     return Species(
       id: id,
       dexNumber: dexNumber,
@@ -439,6 +481,8 @@ class Species {
       chancesPerDay: chancesPerDay,
       decay: decay,
       housePoints: housePoints ?? this.housePoints,
+      houseCap: houseCap ?? this.houseCap,
+      houseCapSet: houseCapSet ?? this.houseCapSet,
     );
   }
 

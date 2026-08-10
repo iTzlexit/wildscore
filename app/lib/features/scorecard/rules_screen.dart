@@ -190,7 +190,8 @@ class RulesScreen extends StatelessWidget {
             body:
                 'Only **impala** and **vervet monkey** have a daily limit — '
                 'two and four. Everything else is unlimited.\n\n'
-                'Count a hundred giraffe if you want to. It is your afternoon.',
+                'Count a hundred giraffe if you want to. It is your '
+                'afternoon — and you can change any of this.',
           ),
           const _Rule(
             icon: Icons.trending_down_rounded,
@@ -212,7 +213,24 @@ class RulesScreen extends StatelessWidget {
                 'sable is the find of the trip down south and a Tuesday up '
                 'north.\n\n'
                 'Open any animal in the **Animal Dex** and set what it is '
-                'worth in your game. Everything else adjusts around it.',
+                'worth in your game.',
+          ),
+          const _Rule(
+            icon: Icons.lock_outline_rounded,
+            title: 'Decide what runs out',
+            body:
+                'On the same page: **twice a day**, **four a day**, **once '
+                'this trip**, or no limit at all.\n\n'
+                'Lock everything to once a trip and the game becomes a '
+                'checklist — most different animals wins.',
+          ),
+          const _Rule(
+            icon: Icons.traffic_rounded,
+            title: 'Set your own jam tax',
+            body:
+                'Think 20% is harsh? Or that a sighting is a sighting?\n\n'
+                'Change it in **House rules** on your profile — anything from '
+                'nothing to half.',
           ),
           const SizedBox(height: Space.lg),
 

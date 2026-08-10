@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wildscore/data/house_rules_repository.dart';
 import 'package:wildscore/data/species_repository.dart';
+import 'package:wildscore/domain/house_rules.dart';
 import 'package:wildscore/domain/rarity_tier.dart';
 import 'package:wildscore/domain/sighting_context.dart';
 import 'package:wildscore/domain/species.dart';
@@ -55,39 +56,43 @@ void main() {
 
   group('storage', () {
     test('nothing saved means nothing overridden', () async {
-      expect(await const HouseRulesRepository().load(), isEmpty);
+      expect((await const HouseRulesRepository().load()).isDefault, isTrue);
     });
 
     test('survives a round trip', () async {
       const HouseRulesRepository repo = HouseRulesRepository();
-      await repo.save(<String, int>{'sable-antelope': 150});
+      await repo.save(
+        const HouseRules(points: <String, int>{'sable-antelope': 150}),
+      );
 
-      expect(await repo.load(), <String, int>{'sable-antelope': 150});
+      expect((await repo.load()).points, <String, int>{'sable-antelope': 150});
     });
 
     test('an empty table is removed rather than stored', () async {
       const HouseRulesRepository repo = HouseRulesRepository();
-      await repo.save(<String, int>{'sable-antelope': 150});
-      await repo.save(<String, int>{});
+      await repo.save(
+        const HouseRules(points: <String, int>{'sable-antelope': 150}),
+      );
+      await repo.save(HouseRules.none);
 
-      expect(await repo.load(), isEmpty);
+      expect((await repo.load()).isDefault, isTrue);
     });
 
     test('corrupt preferences fall back to the catalogue', () async {
       SharedPreferences.setMockInitialValues(<String, Object>{
-        'wildscore.house_rules.points': 'not json',
+        'wildscore.house_rules': 'not json',
       });
 
       // The catalogue's own numbers are a perfectly good game, and crashing on
       // launch over a preference is not a trade anybody would make.
-      expect(await const HouseRulesRepository().load(), isEmpty);
+      expect((await const HouseRulesRepository().load()).isDefault, isTrue);
     });
   });
 
   group('applied to the catalogue', () {
     test('replaces the score and says it was changed', () async {
       final List<Species> all = await const SpeciesRepository().loadAll(
-        housePoints: <String, int>{'sable-antelope': 150},
+        rules: const HouseRules(points: <String, int>{'sable-antelope': 150}),
       );
       final Species sable = all.firstWhere(
         (Species s) => s.id == 'sable-antelope',
@@ -102,7 +107,7 @@ void main() {
 
     test('leaves everything else alone', () async {
       final List<Species> all = await const SpeciesRepository().loadAll(
-        housePoints: <String, int>{'sable-antelope': 150},
+        rules: const HouseRules(points: <String, int>{'sable-antelope': 150}),
       );
 
       for (final Species s in all.where(
@@ -117,7 +122,7 @@ void main() {
       // claim sheet, the standings and the feed all get it without knowing the
       // feature exists.
       final List<Species> all = await const SpeciesRepository().loadAll(
-        housePoints: <String, int>{'sable-antelope': 150},
+        rules: const HouseRules(points: <String, int>{'sable-antelope': 150}),
       );
       final Species sable = all.firstWhere(
         (Species s) => s.id == 'sable-antelope',
@@ -129,7 +134,7 @@ void main() {
 
     test('the multipliers still ride on top of an edited score', () async {
       final List<Species> all = await const SpeciesRepository().loadAll(
-        housePoints: <String, int>{'lion': 500},
+        rules: const HouseRules(points: <String, int>{'lion': 500}),
       );
       final Species lion = all.firstWhere((Species s) => s.id == 'lion');
 
@@ -165,7 +170,7 @@ void main() {
 
     test('follows an edited score rather than a fixed number', () async {
       final List<Species> all = await const SpeciesRepository().loadAll(
-        housePoints: <String, int>{'african-elephant': 200},
+        rules: const HouseRules(points: <String, int>{'african-elephant': 200}),
       );
       final Species elephant = all.firstWhere(
         (Species s) => s.id == 'african-elephant',

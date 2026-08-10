@@ -122,6 +122,10 @@ void main() {
 
     expect(find.text('YOUR GAME, YOUR RULES'), findsOneWidget);
     expect(find.textContaining('Animal Dex'), findsOneWidget);
+    // All three, because a setting nobody knows about is a setting nobody uses.
+    expect(find.text('Decide what runs out'), findsOneWidget);
+    expect(find.text('Set your own jam tax'), findsOneWidget);
+    expect(find.textContaining('House rules'), findsOneWidget);
   });
 
   testWidgets('the two crowd outcomes are stated as scoring, not as advice', (

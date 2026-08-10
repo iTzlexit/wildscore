@@ -60,10 +60,20 @@ enum SightingContext {
 
   /// What a find is worth in this company.
   ///
-  /// Rounded up, so halving never takes anything to zero: even a jam sighting
-  /// of a 5-point impala is worth 3. A rule that can zero a real sighting is a
+  /// [jamMultiplier] is what a car has decided a jam sighting keeps — 0.8 by
+  /// default, 1.0 for a car that has switched the tax off entirely. Passed in
+  /// rather than read from a global, because scoring is pure here and the whole
+  /// test suite depends on it staying that way.
+  ///
+  /// Rounded up, so the tax never takes anything to zero: even a jam sighting
+  /// of a 5-point impala is worth 4. A rule that can zero a real sighting is a
   /// rule people argue with.
-  int applyTo(int points) => (points * multiplier).ceil();
+  int applyTo(int points, {double? jamMultiplier}) {
+    final double m = this == SightingContext.jam
+        ? (jamMultiplier ?? multiplier)
+        : multiplier;
+    return (points * m).ceil();
+  }
 
   static SightingContext byName(String name) => values.firstWhere(
     (SightingContext c) => c.name == name,

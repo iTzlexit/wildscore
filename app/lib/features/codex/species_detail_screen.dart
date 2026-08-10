@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
 import '../../data/attribution_repository.dart';
+import '../../domain/house_rules.dart';
 import '../../domain/population.dart';
 import '../../domain/rarity_tier.dart';
 import '../../domain/species.dart';
@@ -42,6 +43,7 @@ class SpeciesDetailScreen extends StatefulWidget {
     this.spotted = false,
     this.onToggleSpotted,
     this.onSetPoints,
+    this.onSetCap,
     super.key,
   });
 
@@ -99,6 +101,9 @@ class SpeciesDetailScreen extends StatefulWidget {
   /// rules mid-drive.
   final ValueChanged<int?>? onSetPoints;
 
+  /// Limit how often it can be claimed, or reset it to the catalogue.
+  final void Function(SpeciesCap? cap, {bool reset})? onSetCap;
+
   @override
   State<SpeciesDetailScreen> createState() => _SpeciesDetailScreenState();
 }
@@ -143,6 +148,7 @@ class _SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
                 species: widget.species,
                 spotted: _spotted,
                 onSetPoints: widget.onSetPoints,
+                onSetCap: widget.onSetCap,
                 onToggleSpotted: widget.onToggleSpotted == null
                     ? null
                     : _toggle,
@@ -438,12 +444,14 @@ class _Sheet extends StatelessWidget {
     required this.spotted,
     this.onToggleSpotted,
     this.onSetPoints,
+    this.onSetCap,
   });
 
   final Species species;
   final bool spotted;
   final VoidCallback? onToggleSpotted;
   final ValueChanged<int?>? onSetPoints;
+  final void Function(SpeciesCap? cap, {bool reset})? onSetCap;
 
   @override
   Widget build(BuildContext context) {
@@ -489,6 +497,7 @@ class _Sheet extends StatelessWidget {
                   spotted: spotted,
                   onToggleSpotted: onToggleSpotted,
                   onSetPoints: onSetPoints,
+                  onSetCap: onSetCap,
                 ),
                 _FieldNotesTab(species: species),
                 _WhereTab(species: species),
@@ -555,12 +564,14 @@ class _AboutTab extends StatelessWidget {
     required this.spotted,
     this.onToggleSpotted,
     this.onSetPoints,
+    this.onSetCap,
   });
 
   final Species species;
   final bool spotted;
   final VoidCallback? onToggleSpotted;
   final ValueChanged<int?>? onSetPoints;
+  final void Function(SpeciesCap? cap, {bool reset})? onSetCap;
 
   @override
   Widget build(BuildContext context) {
@@ -579,7 +590,11 @@ class _AboutTab extends StatelessWidget {
         _PointsBanner(species: species),
         if (onSetPoints != null) ...<Widget>[
           const SizedBox(height: Space.sm),
-          _HouseRuleEditor(species: species, onSetPoints: onSetPoints!),
+          _HouseRuleEditor(
+            species: species,
+            onSetPoints: onSetPoints!,
+            onSetCap: onSetCap,
+          ),
         ],
         if (species.isSensitive) ...<Widget>[
           const SizedBox(height: Space.lg),
@@ -762,10 +777,15 @@ class _PointsBanner extends StatelessWidget {
 /// somebody put an impala on 999 and quietly wreck their own game — the rungs
 /// are the same ones every animal in the catalogue already sits on.
 class _HouseRuleEditor extends StatefulWidget {
-  const _HouseRuleEditor({required this.species, required this.onSetPoints});
+  const _HouseRuleEditor({
+    required this.species,
+    required this.onSetPoints,
+    this.onSetCap,
+  });
 
   final Species species;
   final ValueChanged<int?> onSetPoints;
+  final void Function(SpeciesCap? cap, {bool reset})? onSetCap;
 
   @override
   State<_HouseRuleEditor> createState() => _HouseRuleEditorState();
@@ -871,6 +891,48 @@ class _HouseRuleEditorState extends State<_HouseRuleEditor> {
             _describe(_value),
             style: AppText.caption,
           ),
+
+          // How often it can be claimed, in the same place as what it is worth.
+          //
+          // Both are "how does this animal behave in our game", and a car that
+          // is already here changing a number is the car that wants to say
+          // "and once a trip is enough".
+          if (widget.onSetCap != null) ...<Widget>[
+            const SizedBox(height: Space.md),
+            Text(
+              'HOW OFTEN IT CAN BE CLAIMED',
+              style: AppText.overline.copyWith(color: AppColors.textMuted),
+            ),
+            const SizedBox(height: Space.sm),
+            Wrap(
+              spacing: Space.sm,
+              runSpacing: Space.xs,
+              children: <Widget>[
+                for (final (String label, SpeciesCap? cap) in _capChoices)
+                  ChoiceChip(
+                    label: Text(label),
+                    selected: _sameCap(cap, s.cap),
+                    onSelected: (_) => widget.onSetCap!(cap),
+                    labelStyle: AppText.caption,
+                    selectedColor: AppColors.accentWash,
+                    side: BorderSide(
+                      color: _sameCap(cap, s.cap)
+                          ? AppColors.accent
+                          : AppColors.outline,
+                    ),
+                  ),
+              ],
+            ),
+            if (s.houseCapSet)
+              TextButton(
+                onPressed: () => widget.onSetCap!(null, reset: true),
+                child: Text(
+                  'Back to the default',
+                  style: AppText.caption.copyWith(color: AppColors.accent),
+                ),
+              ),
+          ],
+
           const SizedBox(height: Space.sm),
           // Wrapped, not a Row. "Use this" beside "Reset to 425" overflows a
           // 430pt card by 45 pixels before anybody touches the text scale.
@@ -920,6 +982,22 @@ class _HouseRuleEditorState extends State<_HouseRuleEditor> {
       ),
     );
   }
+
+  /// The four answers worth offering.
+  ///
+  /// Not a free number. "How many times a day" is not a question anybody has a
+  /// considered answer to beyond *unlimited*, *a couple*, *a few*, or *once* —
+  /// and once-a-trip is the interesting one, because a car that sets it on
+  /// everything has turned the scorecard into a checklist.
+  static const List<(String, SpeciesCap?)> _capChoices =
+      <(String, SpeciesCap?)>[
+        ('No limit', null),
+        ('Twice a day', SpeciesCap(times: 2, scope: CapScope.day)),
+        ('4 a day', SpeciesCap(times: 4, scope: CapScope.day)),
+        ('Once this trip', SpeciesCap(times: 1, scope: CapScope.trip)),
+      ];
+
+  bool _sameCap(SpeciesCap? a, SpeciesCap? b) => a == null ? b == null : a == b;
 
   String _describe(int value) {
     for (final RarityTier t in RarityTier.values) {

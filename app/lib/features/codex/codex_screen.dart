@@ -1,8 +1,8 @@
-import 'package:flutter/foundation.dart' show mapEquals;
 import 'package:flutter/material.dart';
 
 import '../../data/attribution_repository.dart';
 import '../../data/species_repository.dart';
+import '../../domain/house_rules.dart';
 import '../../domain/park_region.dart';
 import '../../domain/rarity_tier.dart';
 import '../../domain/species.dart';
@@ -11,6 +11,7 @@ import '../../domain/species_tag.dart';
 import '../../domain/tracker_profile.dart';
 import '../../shared/theme.dart';
 import '../../shared/widgets/app_header.dart';
+import '../../shared/widgets/species_image.dart';
 import 'species_detail_screen.dart';
 import 'widgets/species_grid_card.dart';
 
@@ -26,8 +27,9 @@ class CodexScreen extends StatefulWidget {
     this.profile,
     this.caughtIds = const <String>{},
     this.onToggleSpotted,
-    this.housePoints = const <String, int>{},
+    this.rules = HouseRules.none,
     this.onSetPoints,
+    this.onSetCap,
     super.key,
   });
 
@@ -55,15 +57,18 @@ class CodexScreen extends StatefulWidget {
   /// same fix you would reach for in ASP.NET Core, for the same reason.
   final SpeciesRepository repository;
 
-  /// What this car has decided animals are worth, keyed by species id.
+  /// Everything this car has decided to do differently.
   ///
   /// Folded into the catalogue at load, so nothing below here has to know it
-  /// exists. Empty for almost everybody.
-  final Map<String, int> housePoints;
+  /// exists. Default for almost everybody.
+  final HouseRules rules;
 
   /// Revalue a species, or pass null to put it back to the catalogue's figure.
   /// Null in tests and wherever the table is read-only.
   final void Function(String id, int? points)? onSetPoints;
+
+  /// Limit an animal, or pass reset to hand it back to the catalogue.
+  final void Function(String id, SpeciesCap? cap, {bool reset})? onSetCap;
 
   @override
   State<CodexScreen> createState() => _CodexScreenState();
@@ -83,6 +88,14 @@ class _CodexScreenState extends State<CodexScreen> {
   SpottedFilter _spotted = SpottedFilter.all;
   SpeciesSort _sort = SpeciesSort.rarest;
   bool _filtersExpanded = false;
+
+  /// Two ways to look at the same catalogue.
+  ///
+  /// The grid is for browsing — big photographs, grouped animals then birds.
+  /// The list is a **ranking**: one line each, rarest at the top, straight
+  /// through from the pangolin to the impala. Different questions, and a grid
+  /// answers the second one badly.
+  bool _listView = false;
   Map<String, String> _credits = const <String, String>{};
 
   int get _activeFilterCount =>
@@ -97,7 +110,7 @@ class _CodexScreenState extends State<CodexScreen> {
     // Kicked off once, here — not in build(), which Flutter may call many
     // times per second. This trips up almost everyone coming from the server
     // side, where a request handler runs exactly once.
-    _speciesFuture = widget.repository.loadAll(housePoints: widget.housePoints);
+    _speciesFuture = widget.repository.loadAll(rules: widget.rules);
 
     // Credits are decorative to the list and only needed when a photo is
     // opened, so this is deliberately not awaited — the Codex renders without
@@ -112,10 +125,11 @@ class _CodexScreenState extends State<CodexScreen> {
   @override
   void didUpdateWidget(CodexScreen old) {
     super.didUpdateWidget(old);
-    if (!mapEquals(old.housePoints, widget.housePoints)) {
-      _speciesFuture = widget.repository.loadAll(
-        housePoints: widget.housePoints,
-      );
+    // Identity, not deep equality: the shell rebuilds this object only when it
+    // has actually saved a change, and comparing two maps of maps on every
+    // frame to learn what the caller already knows is work for nothing.
+    if (!identical(old.rules, widget.rules)) {
+      _speciesFuture = widget.repository.loadAll(rules: widget.rules);
     }
   }
 
@@ -163,6 +177,10 @@ class _CodexScreenState extends State<CodexScreen> {
           onSetPoints: widget.onSetPoints == null
               ? null
               : (int? points) => widget.onSetPoints!(species.id, points),
+          onSetCap: widget.onSetCap == null
+              ? null
+              : (SpeciesCap? cap, {bool reset = false}) =>
+                    widget.onSetCap!(species.id, cap, reset: reset),
         ),
       ),
     );
@@ -238,13 +256,19 @@ class _CodexScreenState extends State<CodexScreen> {
                       sort: _sort,
                       onSort: () => setState(() => _sort = _sort.next),
                       onClear: _clearFilters,
+                      listView: _listView,
+                      onToggleView: () =>
+                          setState(() => _listView = !_listView),
                     ),
                     Expanded(
                       child: visible.isEmpty
                           ? const _EmptyState()
                           : CustomScrollView(
                               slivers: <Widget>[
-                                ..._groupedSlivers(visible),
+                                if (_listView)
+                                  _rankedSliver(visible)
+                                else
+                                  ..._groupedSlivers(visible),
                                 // The park boundary, stated once, at the point
                                 // where someone has just scrolled the whole
                                 // catalogue and might reasonably wonder where
@@ -307,6 +331,28 @@ class _CodexScreenState extends State<CodexScreen> {
           ),
         ],
     ];
+  }
+
+  /// One line each, rarest first, numbered.
+  ///
+  /// **Not the grid with smaller pictures.** The grid answers "what is in the
+  /// park"; this answers "what is worth the most", which is the question a car
+  /// asks at breakfast. So it ignores the Animals/Birds split — a ranking with
+  /// two separate number ones is not a ranking — and it ignores the sort,
+  /// because rarest-first is the only order in which it means anything.
+  Widget _rankedSliver(List<Species> visible) {
+    final List<Species> ranked = <Species>[...visible]
+      ..sort(SpeciesSort.rarest.compare);
+
+    return SliverList.builder(
+      itemCount: ranked.length,
+      itemBuilder: (BuildContext context, int i) => _RankedRow(
+        species: ranked[i],
+        rank: i + 1,
+        spotted: widget.caughtIds.contains(ranked[i].id),
+        onTap: () => _openDetail(ranked[i]),
+      ),
+    );
   }
 
   Widget _grid(List<Species> visible) {
@@ -552,11 +598,19 @@ enum SpeciesSort {
     SpeciesSort.alphabetical => a.commonName.compareTo(b.commonName),
   };
 
+  /// By what it is worth, then by name.
+  ///
+  /// It used to sort by *tier* and then alphabetically, which was the same
+  /// thing back when every animal in a tier scored identically. It is not the
+  /// same thing now: that put the aardvark above the pangolin because A comes
+  /// before G, on a list whose whole promise is that the top is the hardest
+  /// thing in the park.
+  ///
+  /// Points already imply the tier — the bands do not overlap — so this is the
+  /// stronger sort and the tier ordering falls out of it.
   static int _byTier(Species a, Species b) {
-    final int tier = RarityTier.values
-        .indexOf(b.rarityTier)
-        .compareTo(RarityTier.values.indexOf(a.rarityTier));
-    return tier != 0 ? tier : a.commonName.compareTo(b.commonName);
+    final int points = b.points.compareTo(a.points);
+    return points != 0 ? points : a.commonName.compareTo(b.commonName);
   }
 
   SpeciesSort get next =>
@@ -746,6 +800,8 @@ class _ResultBar extends StatelessWidget {
     required this.sort,
     required this.onSort,
     required this.onClear,
+    required this.listView,
+    required this.onToggleView,
   });
 
   final int count;
@@ -754,11 +810,13 @@ class _ResultBar extends StatelessWidget {
   final SpeciesSort sort;
   final VoidCallback onSort;
   final VoidCallback onClear;
+  final bool listView;
+  final VoidCallback onToggleView;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 12, 16, 8),
+      padding: const EdgeInsets.fromLTRB(16, 12, 10, 8),
       child: Row(
         children: <Widget>[
           // Flexible rather than followed by a Spacer: with a filter active
@@ -782,7 +840,7 @@ class _ResultBar extends StatelessWidget {
               onPressed: onClear,
               style: TextButton.styleFrom(
                 foregroundColor: AppColors.accent,
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 4),
                 minimumSize: Size.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
@@ -791,6 +849,22 @@ class _ResultBar extends StatelessWidget {
                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
               ),
             ),
+          // Stripped of its default 48pt tap target and 8pt padding. This row
+          // already carries a count, a clear button and a sort cycle, and the
+          // stock IconButton pushed it 8.5 pixels over the edge the moment a
+          // filter was active.
+          IconButton(
+            onPressed: onToggleView,
+            tooltip: listView ? 'Show the grid' : 'Show the ranking',
+            visualDensity: VisualDensity.compact,
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
+            icon: Icon(
+              listView ? Icons.grid_view_rounded : Icons.format_list_numbered,
+              size: 18,
+              color: AppColors.textSecondary,
+            ),
+          ),
           // Cycles rather than opening a menu. Three options is under the
           // threshold where a menu earns its extra tap.
           TextButton.icon(
@@ -802,12 +876,103 @@ class _ResultBar extends StatelessWidget {
             ),
             style: TextButton.styleFrom(
               foregroundColor: AppColors.textSecondary,
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 4),
               minimumSize: Size.zero,
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// One animal in the ranked list.
+///
+/// Deliberately thin — number, thumbnail, name, points. At 190 rows the value
+/// is being able to run your eye down the right-hand column, and anything else
+/// on the line is in the way of that.
+class _RankedRow extends StatelessWidget {
+  const _RankedRow({
+    required this.species,
+    required this.rank,
+    required this.spotted,
+    required this.onTap,
+  });
+
+  final Species species;
+  final int rank;
+  final bool spotted;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final RarityStyle style = species.rarityTier.style;
+
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+        child: Row(
+          children: <Widget>[
+            SizedBox(
+              width: 30,
+              child: Text(
+                '$rank',
+                textAlign: TextAlign.right,
+                style: AppText.caption.copyWith(
+                  color: AppColors.textMuted,
+                  fontFeatures: AppText.tabular,
+                ),
+              ),
+            ),
+            const SizedBox(width: Space.md),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: SizedBox(
+                width: 40,
+                height: 40,
+                child: SpeciesImage(species: species, fit: BoxFit.cover),
+              ),
+            ),
+            const SizedBox(width: Space.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    species.commonName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppText.bodyStrong.copyWith(fontSize: 14.5),
+                  ),
+                  Text(
+                    species.rarityTier.label,
+                    style: AppText.caption.copyWith(color: style.accent),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: Space.sm),
+            if (spotted)
+              const Padding(
+                padding: EdgeInsets.only(right: Space.sm),
+                child: Icon(
+                  Icons.check_circle_rounded,
+                  size: 15,
+                  color: AppColors.verified,
+                ),
+              ),
+            Text(
+              '${species.points}',
+              style: AppText.bodyStrong.copyWith(
+                color: style.accent,
+                fontFeatures: AppText.tabular,
+                fontVariations: AppFonts.weight(800),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

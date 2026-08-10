@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart' show rootBundle;
 
+import '../domain/house_rules.dart';
 import '../domain/species.dart';
 
 /// Loads the species catalogue from the bundled JSON asset.
@@ -25,9 +26,7 @@ class SpeciesRepository {
   ///
   /// Past drives are unaffected: a claim stores the points it scored at the
   /// time, so a table edited in March cannot rewrite February.
-  Future<List<Species>> loadAll({
-    Map<String, int> housePoints = const <String, int>{},
-  }) async {
+  Future<List<Species>> loadAll({HouseRules rules = HouseRules.none}) async {
     final String raw = await rootBundle.loadString(_assetPath);
     final Map<String, dynamic> decoded =
         json.decode(raw) as Map<String, dynamic>;
@@ -36,9 +35,11 @@ class SpeciesRepository {
     final List<Species> species = entries
         .map((dynamic entry) => Species.fromJson(entry as Map<String, dynamic>))
         .map(
-          (Species s) => housePoints.containsKey(s.id)
-              ? s.copyWith(housePoints: housePoints[s.id])
-              : s,
+          (Species s) => s.underHouseRules(
+            points: rules.points[s.id],
+            cap: rules.caps[s.id],
+            capChanged: rules.caps.containsKey(s.id),
+          ),
         )
         .toList();
 

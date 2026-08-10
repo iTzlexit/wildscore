@@ -64,7 +64,7 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 - **Backup** — a pasteable code. No server; see `docs/RISKS.md` for why it
   matters more than it looks.
 
-311 tests. `flutter analyze` is clean and must stay clean.
+329 tests. `flutter analyze` is clean and must stay clean.
 
 ## Decisions already made — do not relitigate
 
@@ -79,6 +79,8 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 | **Points are per species, not per tier** — a tier is a band. 5–1000 | `tools/rank-list.html`, Alex 10 Aug 2026 |
 | Every score is a rung on one shared ladder — 190 species, 24 scores, ties on purpose | `RarityTier.rungs` |
 | **Players can revalue any animal** in the Dex, on the same rungs | `docs/HOUSE-RULES.md` |
+| Players set their own caps, and their own jam tax (0–50%) | `docs/HOUSE-RULES.md` |
+| The Dex has two views: grid to browse, ranked list to compare | `docs/HOUSE-RULES.md` |
 | Caps only on impala and vervet monkey; elephant and buffalo taper instead | Alex, 10 Aug 2026 |
 | Lion, leopard, white rhino are wild cards: first of the day pays big | Alex, 10 Aug 2026 |
 | A night animal seen in daylight pays 2.5x | Alex, 10 Aug 2026 |

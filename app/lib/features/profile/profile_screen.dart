@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../domain/house_rules.dart';
 import '../../domain/scorecard.dart';
 import '../../domain/species.dart';
 import '../../domain/species_collection.dart';
@@ -10,6 +11,7 @@ import '../../shared/widgets/app_header.dart';
 import '../../shared/widgets/avatar_badge.dart';
 import '../codex/collection_screen.dart';
 import 'backup_screen.dart';
+import 'house_rules_screen.dart';
 import 'licences_screen.dart';
 
 /// One person's record. Not the day's game — that has its own tab.
@@ -34,8 +36,15 @@ class ProfileScreen extends StatefulWidget {
     this.onDeleteVisit,
     this.onRestored,
     this.onToggleSpotted,
+    this.rules = HouseRules.none,
+    this.onRulesChanged,
     super.key,
   });
+
+  /// The car's own rules, and the way to change the one that is not attached
+  /// to a single animal.
+  final HouseRules rules;
+  final ValueChanged<HouseRules>? onRulesChanged;
 
   final TrackerProfile profile;
   final List<Species> species;
@@ -157,6 +166,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                   const SizedBox(height: Space.section),
+                  if (widget.onRulesChanged != null) ...<Widget>[
+                    _FooterRow(
+                      icon: Icons.tune_rounded,
+                      title: 'House rules',
+                      body:
+                          'Set what an animal is worth and how often it '
+                          'counts. Ours are only a suggestion.',
+                      onTap: () => HouseRulesScreen.open(
+                        context,
+                        rules: widget.rules,
+                        onChanged: (HouseRules next) {
+                          widget.onRulesChanged!(next);
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: Space.sm),
+                  ],
                   _FooterRow(
                     icon: Icons.cloud_off_rounded,
                     title: 'Back up my collection',

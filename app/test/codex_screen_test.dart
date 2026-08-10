@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wildscore/data/species_repository.dart';
+import 'package:wildscore/domain/house_rules.dart';
 import 'package:wildscore/domain/species.dart';
 import 'package:wildscore/domain/species_category.dart';
 import 'package:wildscore/features/codex/codex_screen.dart';
@@ -27,9 +28,8 @@ class _InMemoryRepository implements SpeciesRepository {
   final List<Species> species;
 
   @override
-  Future<List<Species>> loadAll({
-    Map<String, int> housePoints = const <String, int>{},
-  }) async => species;
+  Future<List<Species>> loadAll({HouseRules rules = HouseRules.none}) async =>
+      species;
 }
 
 late final List<Species> _catalogue;
@@ -349,6 +349,69 @@ void main() {
 
     expect(find.text('BIRDS'), findsNothing);
     expect(find.text('ANIMALS'), findsNothing);
+  });
+
+  group('the ranked list', () {
+    testWidgets('is behind a toggle, and the grid is what opens', (
+      WidgetTester tester,
+    ) async {
+      await _pumpCodex(tester);
+
+      expect(find.byType(SpeciesGridCard), findsWidgets);
+      expect(find.byIcon(Icons.format_list_numbered), findsOneWidget);
+    });
+
+    testWidgets('swaps the grid for a numbered ranking', (
+      WidgetTester tester,
+    ) async {
+      await _pumpCodex(tester);
+      await tester.tap(find.byIcon(Icons.format_list_numbered));
+      await tester.pumpAndSettle();
+
+      // The grid is gone, and the toggle now offers the way back.
+      expect(find.byType(SpeciesGridCard), findsNothing);
+      expect(find.byIcon(Icons.grid_view_rounded), findsOneWidget);
+
+      // Numbered from one, rarest at the top.
+      expect(find.text('1'), findsOneWidget);
+      expect(find.text('Ground Pangolin'), findsOneWidget);
+    });
+
+    testWidgets('ignores the Animals and Birds split', (
+      WidgetTester tester,
+    ) async {
+      // A ranking with two number ones is not a ranking. The grid groups
+      // because it is for browsing; this is for comparing.
+      await _pumpCodex(tester);
+      await tester.tap(find.byIcon(Icons.format_list_numbered));
+      await tester.pumpAndSettle();
+
+      expect(find.text('ANIMALS'), findsNothing);
+      expect(find.text('BIRDS'), findsNothing);
+    });
+
+    testWidgets('stays rarest-first even when the grid is sorted otherwise', (
+      WidgetTester tester,
+    ) async {
+      // Rarest-first is the only order in which a ranking means anything, so
+      // the list ignores the sort rather than quietly renumbering by name.
+      await _pumpCodex(tester);
+      await tester.tap(find.text('Rarest first'));
+      await tester.pumpAndSettle();
+      expect(find.text('Dex order'), findsOneWidget);
+
+      await tester.tap(find.byIcon(Icons.format_list_numbered));
+      await tester.pumpAndSettle();
+
+      // Compared by position rather than by presence: the aardvark is
+      // Legendary, so it is near the top of the ranking too and an
+      // absence check would pass for the wrong reason. In dex order it would
+      // be number one.
+      expect(
+        tester.getTopLeft(find.text('Ground Pangolin')).dy,
+        lessThan(tester.getTopLeft(find.text('Aardvark')).dy),
+      );
+    });
   });
 
   testWidgets('a species with a real figure shows it, and says where from', (
