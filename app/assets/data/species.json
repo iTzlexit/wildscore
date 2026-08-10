@@ -4401,6 +4401,89 @@
       ],
       "conservationStatus": "leastConcern",
       "points": 40
+    },
+    {
+      "id": "oribi",
+      "dexNumber": 191,
+      "commonName": "Oribi",
+      "scientificName": "Ourebia ourebi",
+      "afrikaansName": "Oorbietjie",
+      "category": "mammal",
+      "rarityTier": "legendary",
+      "points": 875,
+      "tags": [
+        "antelope"
+      ],
+      "isSensitive": false,
+      "description": "Barely holding on. A handful survive on the grassy plains of the far south-west, and most guides go a whole career without one. Stands on its hind legs in long grass and gives a sharp whistle as it goes.",
+      "habitat": "Open short grassland, far south-west",
+      "bestTimeToSpot": "Early morning on the Pretoriuskop grasslands, and mostly luck",
+      "parkRegions": [
+        "southern"
+      ],
+      "conservationStatus": "leastConcern"
+    },
+    {
+      "id": "african-clawless-otter",
+      "dexNumber": 192,
+      "commonName": "African Clawless Otter",
+      "scientificName": "Aonyx capensis",
+      "afrikaansName": "Groototter",
+      "category": "mammal",
+      "rarityTier": "rare",
+      "points": 500,
+      "tags": [
+        "predator"
+      ],
+      "isSensitive": false,
+      "description": "A metre and a half of otter, hunting crabs in the shallows. Present in every big river in the park and seen by almost nobody — they work at dawn and dusk and are gone the moment a car door shuts.",
+      "habitat": "Rivers, dams and rocky pools",
+      "bestTimeToSpot": "First light at a low-water crossing, sitting very still",
+      "parkRegions": [
+        "northern",
+        "central",
+        "southern"
+      ],
+      "conservationStatus": "nearThreatened"
+    },
+    {
+      "id": "narina-trogon",
+      "dexNumber": 193,
+      "commonName": "Narina Trogon",
+      "scientificName": "Apaloderma narina",
+      "afrikaansName": "Bosloerie",
+      "category": "bird",
+      "rarityTier": "rare",
+      "points": 350,
+      "tags": [],
+      "isSensitive": false,
+      "description": "Emerald green and scarlet, and completely invisible — it sits dead still with its green back to you and a call so soft you assume it is further away than it is. The best bird sighting in the park.",
+      "habitat": "Dense riverine forest, especially Pafuri",
+      "bestTimeToSpot": "Summer mornings in the Luvuvhu forest, listening for a low hoot",
+      "parkRegions": [
+        "northern",
+        "southern"
+      ],
+      "conservationStatus": "leastConcern"
+    },
+    {
+      "id": "samango-monkey",
+      "dexNumber": 194,
+      "commonName": "Samango Monkey",
+      "scientificName": "Cercopithecus albogularis",
+      "afrikaansName": "Samango-aap",
+      "category": "mammal",
+      "rarityTier": "scarce",
+      "points": 320,
+      "tags": [],
+      "isSensitive": false,
+      "description": "Darker, shyer and far scarcer than a vervet, and it stays in the canopy rather than raiding your breakfast. Confined to the tall riverine forest in the far north.",
+      "habitat": "Tall riverine forest, Pafuri and the Luvuvhu",
+      "bestTimeToSpot": "Morning, high in the trees — listen for the branches",
+      "parkRegions": [
+        "northern"
+      ],
+      "conservationStatus": "leastConcern"
     }
   ]
 }

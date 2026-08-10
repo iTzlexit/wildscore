@@ -155,13 +155,21 @@ Future<void> main(List<String> args) async {
         json.decode(file.readAsStringSync()) as Map<String, dynamic>;
     final List<dynamic> photos = credits['photos'] as List<dynamic>;
 
-    for (int i = 0; i < photos.length; i++) {
-      final Map<String, dynamic> row = photos[i] as Map<String, dynamic>;
-      final Map<String, dynamic>? replacement = newCredits[row['id']];
-      if (replacement != null) {
-        photos[i] = replacement;
-      }
-    }
+    // Replace *and append*. This only replaced, which meant a species that had
+    // no credit yet — a brand new one, which is exactly when you use this tool
+    // — got its photograph and no attribution at all. Silent, and a licence
+    // breach rather than a cosmetic one.
+    final Map<String, Map<String, dynamic>> merged =
+        <String, Map<String, dynamic>>{
+          for (final dynamic row in photos)
+            (row as Map<String, dynamic>)['id'] as String: row,
+          ...newCredits,
+        };
+    final List<String> ids = merged.keys.toList()..sort();
+    credits['photos'] = <Map<String, dynamic>>[
+      for (final String id in ids) merged[id]!,
+    ];
+
     file.writeAsStringSync(
       '${const JsonEncoder.withIndent('  ').convert(credits)}\n',
     );

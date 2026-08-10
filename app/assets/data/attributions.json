@@ -21,6 +21,12 @@
       "source": "https://www.inaturalist.org/observations/121559159"
     },
     {
+      "id": "african-clawless-otter",
+      "author": "Timothy Whitehead",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/57134665"
+    },
+    {
       "id": "african-darter",
       "author": "Paul Hoekman",
       "license": "cc-by",
@@ -699,6 +705,12 @@
       "source": "https://www.inaturalist.org/observations/1467373"
     },
     {
+      "id": "narina-trogon",
+      "author": "Christiaan Viljoen",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/222176837"
+    },
+    {
       "id": "natal-spurfowl",
       "author": "Justin Ponder",
       "license": "cc-by",
@@ -715,6 +727,12 @@
       "author": "Mark Bolnik",
       "license": "cc-by",
       "source": "https://www.inaturalist.org/observations/6846568"
+    },
+    {
+      "id": "oribi",
+      "author": "Henry de Lange",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/10675738"
     },
     {
       "id": "pearl-spotted-owlet",
@@ -823,6 +841,12 @@
       "author": "Wynand Uys",
       "license": "cc-by",
       "source": "https://www.inaturalist.org/observations/10002585"
+    },
+    {
+      "id": "samango-monkey",
+      "author": "Thomas Galewski",
+      "license": "cc-by",
+      "source": "https://www.inaturalist.org/observations/169999321"
     },
     {
       "id": "scarlet-chested-sunbird",
