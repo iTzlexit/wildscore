@@ -3,7 +3,7 @@
 > **Written for a fresh conversation with no history.** Read this file and you
 > should be able to pick up work without anyone re-explaining anything.
 >
-> Last updated: 9 August 2026.
+> Last updated: 10 August 2026.
 
 ## The machine
 
@@ -49,22 +49,23 @@ Three tabs — **Profile, Wild Score, Animals**. The Sightings feed is gone: it 
   credits screen.
   Photos are CC0/CC-BY from iNaturalist; caracal and African wildcat fall back
   to silhouettes because the photos could not be trusted.
-- **Wild Score** — start a drive, add the car, tap the eye by a player's name to
-  claim an animal for them, standings with per-player hauls, restart, end day.
-  Claims on notable animals ask who else was there (alone doubles, a jam halves)
-  and whether a lion was male (+60).
-- **Latest Sightings** — every find from Rare upwards, plus the Big Five,
-  newest first, grouped by trip, with the road it happened on. Very rare and
-  Legendary are marked "on your word" until photo verification exists. Replaced
-  the Records tab (best day / rarest / head-to-head), which the user found
-  weak; it is in git history if any of it is wanted back.
+- **Wild Score** — add the car, agree the prices, then tap the eye by a
+  player's name to claim an animal for them. Standings with per-player hauls,
+  restart, end day. Claims on notable animals ask who else was there (a jam
+  costs a fifth) and whether a lion was male (×1.5).
+- **The prices** — every game opens on the whole catalogue, rarest first, and
+  the car confirms it. Anything can be repriced on the spot; what they set is
+  saved, so the second morning is one tap.
+- **Trivia** — 76 questions, bundled. Unlocked by scoring 400 points of
+  sightings rather than by a timer; thirty points for a right answer, no second
+  guess.
 - **Profile** — lifetime points, collections (Big Five, Small Five, Under
   threat, Antelope, Predators, Snakes, Night shift), drive history with
   year/month filters and delete, backup/restore, credits.
 - **Backup** — a pasteable code. No server; see `docs/RISKS.md` for why it
   matters more than it looks.
 
-355 tests. `flutter analyze` is clean and must stay clean.
+361 tests. `flutter analyze` is clean and must stay clean.
 
 ## Decisions already made — do not relitigate
 

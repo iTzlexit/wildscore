@@ -213,13 +213,15 @@ class RulesScreen extends StatelessWidget {
           const _Section('YOUR GAME, YOUR RULES'),
           const _Rule(
             icon: Icons.tune_rounded,
-            title: 'Disagree with a score? Change it',
+            title: 'Every score is an opinion',
             body:
-                'Our points are one opinion, and Kruger is not one place — '
-                'sable is the find of the trip down south and a Tuesday up '
-                'north.\n\n'
-                'Open any animal in the **Animal Dex** and set what it is '
-                'worth in your game.',
+                '"How is *that* worth less than *that*?" Fair question. Ours '
+                'is one opinion, and Kruger is not one place — sable is the '
+                'find of the trip down south and a Tuesday up north.\n\n'
+                'So set your own price on anything. Every game opens on **the '
+                'prices** before you drive off, and any animal in the **Animal '
+                'Dex** can be changed any time.\n\n'
+                'We remember what you set. Do it once, not every morning.',
           ),
           const _Rule(
             icon: Icons.lock_outline_rounded,

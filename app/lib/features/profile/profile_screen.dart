@@ -489,7 +489,11 @@ class _Numbers extends StatelessWidget {
               child: _NumberTile(
                 icon: Icons.check_circle_rounded,
                 value: '$spotted',
-                label: 'FOUND',
+                label: 'ALL SPOTS',
+                hint:
+                    'Every animal you have ever spotted — from drives, and '
+                    'anything you have ticked off yourself. One per animal, '
+                    'not one per sighting.',
                 tint: AppColors.verified,
                 onTap: onSpotted,
               ),
@@ -499,7 +503,7 @@ class _Numbers extends StatelessWidget {
               child: _NumberTile(
                 icon: Icons.visibility_outlined,
                 value: '$toFind',
-                label: 'STILL OUT THERE',
+                label: 'REMAINING SPOTS',
                 tint: AppColors.textSecondary,
                 onTap: onToFind,
               ),
@@ -572,6 +576,7 @@ class _NumberTile extends StatelessWidget {
     required this.value,
     required this.label,
     required this.tint,
+    this.hint,
     this.onTap,
   });
 
@@ -579,6 +584,11 @@ class _NumberTile extends StatelessWidget {
   final String value;
   final String label;
   final Color tint;
+
+  /// Behind a small **i**, because "all spots" is two words and the honest
+  /// answer to what it counts is three lines. Nobody needs those three lines
+  /// twice, and most people never need them at all.
+  final String? hint;
   final VoidCallback? onTap;
 
   @override
@@ -617,6 +627,27 @@ class _NumberTile extends StatelessWidget {
                       ),
                     ),
                   ),
+                  if (hint != null)
+                    Tooltip(
+                      message: hint!,
+                      triggerMode: TooltipTriggerMode.tap,
+                      showDuration: const Duration(seconds: 6),
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: Space.screen,
+                      ),
+                      textStyle: AppText.caption.copyWith(
+                        color: AppColors.surface,
+                        height: 1.45,
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 3),
+                        child: Icon(
+                          Icons.info_outline_rounded,
+                          size: 12,
+                          color: AppColors.textMuted,
+                        ),
+                      ),
+                    ),
                   if (onTap != null)
                     const Icon(
                       Icons.chevron_right_rounded,

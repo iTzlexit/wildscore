@@ -250,32 +250,10 @@ class _LiveGame extends StatelessWidget {
             ],
           ),
         ],
-        const SizedBox(height: Space.sm),
-        if (card.claims.isEmpty)
-          Container(
-            padding: const EdgeInsets.all(Space.lg),
-            decoration: BoxDecoration(
-              color: AppColors.surfaceAlt,
-              borderRadius: BorderRadius.circular(Radii.card),
-            ),
-            child: Row(
-              children: <Widget>[
-                const Icon(
-                  Icons.menu_book_rounded,
-                  size: 18,
-                  color: AppColors.textMuted,
-                ),
-                const SizedBox(width: Space.md),
-                Expanded(
-                  child: Text(
-                    'Nothing yet. First one to shout gets the first points — '
-                    'tap the eye beside their name.',
-                    style: AppText.caption.copyWith(height: 1.45),
-                  ),
-                ),
-              ],
-            ),
-          ),
+        // No empty state under the standings. There used to be a card saying
+        // "nothing yet, tap the eye" — which is a whole panel telling a car
+        // that has been playing for four minutes that it has not scored yet.
+        // The line above the board already says what the eye does.
         const SizedBox(height: Space.xl),
         Row(
           children: <Widget>[
@@ -323,16 +301,9 @@ class _LiveGame extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: Space.md),
-        Text(
-          // Says what the button does before it is pressed. Ending a day is the
-          // only moment points become permanent, and nobody should discover
-          // that afterwards.
-          'Ending saves the day to your history and adds your points to your '
-          'lifetime total.',
-          textAlign: TextAlign.center,
-          style: AppText.caption.copyWith(height: 1.45),
-        ),
+        // What ending a day does is said in the dialog that ending a day
+        // opens, which is where somebody is actually deciding. A paragraph
+        // under the button explained it to everybody else all day long.
       ],
     );
   }

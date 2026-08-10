@@ -86,7 +86,18 @@ that changes our minds still reaches everybody who never had an opinion.
 
 ### 1. What an animal is worth
 
-On the animal's own page in the Dex. Slider, fixed rungs, described above.
+Two places, one number. On the animal's own page in the Dex — slider, fixed rungs,
+described above — and on **the prices screen**, which every game now opens on.
+
+The prices screen is Alex's rule: *the car confirms the table before the game
+starts.* An argument about what a sable is worth is funny at the gate and sour
+at four in the afternoon when somebody has already scored one. It costs a car
+that agrees with us a single tap, and prices are saved, so the second morning is
+one tap as well.
+
+It lists the whole catalogue by value, rarest first, with a search field. It
+never re-sorts while it is open: somebody moving the sable up two bands does
+not want the row to leap out from under their thumb.
 
 ### 2. How often it can be claimed
 

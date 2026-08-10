@@ -19,6 +19,7 @@ import 'codex/codex_screen.dart';
 import 'profile/profile_screen.dart';
 import 'profile/visit_history_screen.dart';
 import 'scorecard/claim_details_sheet.dart';
+import 'scorecard/scoring_confirm_screen.dart';
 import 'scorecard/spot_picker_screen.dart';
 import 'scorecard/start_scorecard_sheet.dart';
 import 'scorecard/trivia_sheet.dart';
@@ -195,12 +196,28 @@ class _HomeShellState extends State<HomeShell> {
     await _updateCard(latest.withTrivia(latest.trivia.withCorrect(player.id)));
   }
 
-  Future<void> _startScorecard() async {
+  /// Who is in the car, then what everything is worth, then go.
+  ///
+  /// The prices screen is Alex's rule and it is a good one: an argument about
+  /// what a sable is worth is funny at the gate and sour at four in the
+  /// afternoon when somebody has already scored one. It is one tap for a car
+  /// that agrees with us, and prices are saved, so the second morning is one
+  /// tap as well.
+  Future<void> _startScorecard(List<Species> species) async {
     final List<String>? names = await StartScorecardSheet.show(
       context,
       owner: widget.profile.name,
     );
     if (names == null || names.isEmpty || !mounted) {
+      return;
+    }
+    final bool go = await ScoringConfirmScreen.show(
+      context,
+      species: species,
+      players: names,
+      onSetPoints: _setHousePoints,
+    );
+    if (!go || !mounted) {
       return;
     }
     final Scorecard card = Scorecard.start(names, owner: widget.profile.name);
@@ -483,7 +500,7 @@ class _HomeShellState extends State<HomeShell> {
               WildScoreScreen(
                 species: species,
                 card: _card,
-                onStart: _startScorecard,
+                onStart: () => _startScorecard(species),
                 onEnd: _endScorecard,
                 onRestart: _restartScorecard,
                 onRemoveClaim: _removeClaim,
