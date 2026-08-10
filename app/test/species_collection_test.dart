@@ -129,7 +129,13 @@ void main() {
           if (!s.photoVerified) s.id,
       ]..sort();
 
-      expect(unverified, <String>['african-wildcat', 'caracal']);
+      // Plus the kill in a tree, which is not an animal and has no photograph
+      // of its own yet — it borrows the leopard's until one is drawn.
+      expect(unverified, <String>[
+        'african-wildcat',
+        'caracal',
+        'kill-in-a-tree',
+      ]);
     });
 
     test('everything else is trusted by default', () {
@@ -137,7 +143,7 @@ void main() {
       // hidden by one somebody forgot to add.
       expect(
         _all.where((Species s) => s.photoVerified).length,
-        _all.length - 2,
+        _all.length - 3,
       );
     });
 

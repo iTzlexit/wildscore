@@ -4,6 +4,7 @@ import 'package:wildscore/domain/conservation_status.dart';
 import 'package:wildscore/domain/park_region.dart';
 import 'package:wildscore/domain/rarity_tier.dart';
 import 'package:wildscore/domain/species.dart';
+import 'package:wildscore/domain/species_category.dart';
 import 'package:wildscore/domain/species_tag.dart';
 
 /// Guards the species catalogue.
@@ -120,27 +121,34 @@ void main() {
     }
   });
 
-  test('daily wild cards get more chances than their tier allows', () {
-    // Otherwise "the first one is worth more" says nothing, because there is
-    // only ever one.
-    for (final Species s in species.where(
-      (Species s) => s.isWildCard && s.wildCardScope == WildCardScope.day,
-    )) {
-      // Null is unlimited, which is more chances than any number — the
-      // uncapped tiers are covered by the test above.
-      expect(
-        s.chancesPerDay,
-        anyOf(isNull, greaterThanOrEqualTo(4)),
-        reason: s.commonName,
-      );
-    }
+  test(
+    'a daily wild card is claimable more than once, unless it is a bird',
+    () {
+      // Otherwise "the first one is worth more" says nothing, because there is
+      // only ever one. Birds are the deliberate exception: capped at one a day,
+      // so a bird wild card pays its bonus and that is the whole of it.
+      for (final Species s in species.where(
+        (Species s) =>
+            s.isWildCard &&
+            s.wildCardScope == WildCardScope.day &&
+            s.category != SpeciesCategory.bird,
+      )) {
+        expect(
+          s.chancesPerDay,
+          anyOf(isNull, greaterThanOrEqualTo(4)),
+          reason: s.commonName,
+        );
+      }
 
-    // Impala is its own case. The commonest animal in the park by a distance,
-    // so it gets two: the first is the arrival moment and pays the bonus, the
-    // second is an ordinary impala, and then it is done for the day.
-    final Species impala = species.firstWhere((Species s) => s.id == 'impala');
-    expect(impala.chancesPerDay, 2);
-  });
+      // Impala is its own case. The commonest animal in the park by a distance,
+      // so it gets two: the first is the arrival moment and pays the bonus, the
+      // second is an ordinary impala, and then it is done for the day.
+      final Species impala = species.firstWhere(
+        (Species s) => s.id == 'impala',
+      );
+      expect(impala.chancesPerDay, 2);
+    },
+  );
 
   test('every species occurs in at least one park region', () {
     for (final Species s in species) {

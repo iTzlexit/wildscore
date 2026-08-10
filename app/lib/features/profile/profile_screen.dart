@@ -304,7 +304,7 @@ class _DriveInPlayLink extends StatelessWidget {
               const SizedBox(width: Space.md),
               Expanded(
                 child: Text(
-                  'A drive is in play',
+                  'A Wild Score game is in play',
                   style: AppText.label.copyWith(
                     color: AppColors.accent,
                     fontVariations: AppFonts.weight(700),

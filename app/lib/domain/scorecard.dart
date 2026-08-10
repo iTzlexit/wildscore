@@ -1,5 +1,6 @@
 import 'avatar_seed.dart';
 import 'sighting_context.dart';
+import 'trivia.dart';
 
 /// One person in the car, for one day. Not an account — just a name.
 ///
@@ -150,6 +151,7 @@ class Scorecard {
     required this.startedAt,
     required this.players,
     required this.claims,
+    this.trivia = TriviaState.empty,
   });
 
   factory Scorecard.fromJson(Map<String, dynamic> json) => Scorecard(
@@ -162,6 +164,9 @@ class Scorecard {
       for (final dynamic c in json['claims'] as List<dynamic>)
         Claim.fromJson(c as Map<String, dynamic>),
     ],
+    trivia: json['trivia'] == null
+        ? TriviaState.empty
+        : TriviaState.fromJson(json['trivia']! as Map<String, dynamic>),
   );
 
   /// Starts a day.
@@ -205,9 +210,22 @@ class Scorecard {
   final List<Player> players;
   final List<Claim> claims;
 
-  int pointsFor(String playerId) => claims
+  /// The car's quiz: who has been asked what, and who got it right.
+  ///
+  /// Lives on the scorecard rather than in its own store because it is
+  /// per-drive and dies with the drive — the day ends, the card is cleared,
+  /// and nobody carries yesterday's questions into this morning.
+  final TriviaState trivia;
+
+  /// Sightings only. What the trivia has added is deliberately separate —
+  /// see [scoreFor], and the note on why questions unlock off this number.
+  int sightingPointsFor(String playerId) => claims
       .where((Claim c) => c.playerId == playerId)
       .fold(0, (int sum, Claim c) => sum + c.points);
+
+  /// What a player has, all in.
+  int pointsFor(String playerId) =>
+      sightingPointsFor(playerId) + trivia.scoreFor(playerId);
 
   int get totalPoints => claims.fold(0, (int s, Claim c) => s + c.points);
 
@@ -250,6 +268,15 @@ class Scorecard {
     startedAt: startedAt,
     players: players,
     claims: <Claim>[...claims, claim],
+    trivia: trivia,
+  );
+
+  /// The quiz moved on: a question asked, or one answered correctly.
+  Scorecard withTrivia(TriviaState next) => Scorecard(
+    startedAt: startedAt,
+    players: players,
+    claims: claims,
+    trivia: next,
   );
 
   /// Removes the most recent claim for a species. Used by the undo affordance —
@@ -265,6 +292,7 @@ class Scorecard {
       startedAt: startedAt,
       players: players,
       claims: <Claim>[...claims]..removeAt(index),
+      trivia: trivia,
     );
   }
 
@@ -288,6 +316,7 @@ class Scorecard {
       startedAt: startedAt,
       players: players,
       claims: <Claim>[...claims]..removeAt(index),
+      trivia: trivia,
     );
   }
 
@@ -309,5 +338,6 @@ class Scorecard {
       for (final Player p in players) p.toJson(),
     ],
     'claims': <Map<String, dynamic>>[for (final Claim c in claims) c.toJson()],
+    if (trivia.toJson().isNotEmpty) 'trivia': trivia.toJson(),
   };
 }

@@ -35,7 +35,7 @@ the app. One runtime dependency: `shared_preferences`.
 
 ## What is built
 
-Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
+Three tabs — **Profile, Wild Score, Animals**. The Sightings feed is gone: it was the first half of a community map, and that is a different product.
 
 - **Onboarding** — a three-slide picture tour of the game (car scene, scoring
   with the live rarity table, the Ultimate Spotter), then a name. No account.
@@ -64,7 +64,7 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 - **Backup** — a pasteable code. No server; see `docs/RISKS.md` for why it
   matters more than it looks.
 
-339 tests. `flutter analyze` is clean and must stay clean.
+355 tests. `flutter analyze` is clean and must stay clean.
 
 ## Decisions already made — do not relitigate
 

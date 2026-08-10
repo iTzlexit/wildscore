@@ -134,14 +134,16 @@ void main() {
       final Species lion = _byId('lion');
 
       expect(lion.points, 120);
-      expect(lion.scoreFor(wildCardBonusEarned: true), 400);
+      // 300, down from 550. A first leopard was most of a Very rare animal for
+      // something a good trip produces anyway.
+      expect(lion.scoreFor(wildCardBonusEarned: true), 300);
       // And a male one, first thing, on an empty road.
       expect(
         lion.scoreFor(
           wildCardBonusEarned: true,
           variantsApplied: const <String>{'Male'},
         ),
-        600,
+        450,
       );
     });
 
@@ -269,7 +271,17 @@ void main() {
   group('what it was doing', () {
     test('a baby is only asked about for mammals', () {
       expect(_byId('lion').possibleExtras, contains(SightingExtra.withYoung));
-      expect(_byId('impala').possibleExtras, contains(SightingExtra.withYoung));
+      expect(
+        _byId('giraffe').possibleExtras,
+        contains(SightingExtra.withYoung),
+      );
+      // Eight animals, not every mammal. A steenbok lamb is a guess at fifty
+      // metres and used to score the same bonus as an elephant calf in the
+      // middle of a breeding herd.
+      expect(
+        _byId('impala').possibleExtras,
+        isNot(contains(SightingExtra.withYoung)),
+      );
       // Asking whether a puff adder had a baby with it is the kind of question
       // that makes people stop trusting the rest of them.
       expect(
@@ -307,14 +319,15 @@ void main() {
         SightingExtra.withYoung,
       };
 
+      // On a kill is half again; with young is a third more, down from half.
       expect(
         leopard.scoreFor(extras: both, context: SightingContext.alone),
-        (leopard.points * 1.5 * 1.5).round(),
+        (leopard.points * 1.5 * 1.3).round(),
       );
       // The crowd multiplier applies last, to everything above it.
       expect(
         leopard.scoreFor(extras: both, context: SightingContext.jam),
-        ((leopard.points * 1.5 * 1.5).round() * 0.8).ceil(),
+        ((leopard.points * 1.5 * 1.3).round() * 0.8).ceil(),
       );
     });
 

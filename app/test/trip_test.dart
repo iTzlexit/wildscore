@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wildscore/data/species_repository.dart';
 import 'package:wildscore/domain/scorecard.dart';
 import 'package:wildscore/domain/species.dart';
+import 'package:wildscore/domain/species_category.dart';
 import 'package:wildscore/domain/trip.dart';
 import 'package:wildscore/domain/visit.dart';
 
@@ -165,11 +166,14 @@ void main() {
       );
     });
 
-    test('a wild card has more than one chance, or the rule says nothing', () {
-      // Zebra is uncapped now, like almost everything. "The first is worth
-      // more" needs a second one to be possible, and unlimited is the most
-      // permissive answer there is.
-      for (final Species s in _catalogue.where((Species s) => s.isWildCard)) {
+    test('a mammal wild card has more than one chance', () {
+      // "The first is worth more" needs a second one to be possible — for a
+      // mammal. Birds are capped at one a day now, so a bird wild card pays
+      // its bonus and that is the whole of it: the same rule read from the
+      // other end rather than a contradiction of it.
+      for (final Species s in _catalogue.where(
+        (Species s) => s.isWildCard && s.category != SpeciesCategory.bird,
+      )) {
         expect(s.chancesPerDay, anyOf(isNull, greaterThan(1)), reason: s.id);
       }
     });

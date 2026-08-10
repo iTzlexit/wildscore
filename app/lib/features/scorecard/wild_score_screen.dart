@@ -24,6 +24,7 @@ class WildScoreScreen extends StatelessWidget {
     this.onRestart,
     this.onRemoveClaim,
     this.onSpotFor,
+    this.onQuizFor,
     this.onOpenHistory,
     super.key,
   });
@@ -35,6 +36,7 @@ class WildScoreScreen extends StatelessWidget {
   final VoidCallback? onRestart;
   final void Function(Player player, Species species)? onRemoveClaim;
   final ValueChanged<Player>? onSpotFor;
+  final ValueChanged<Player>? onQuizFor;
 
   /// Past drives. They live on this tab because they are the game's history,
   /// not the player's — the profile is one person's record and a list of days
@@ -80,6 +82,7 @@ class WildScoreScreen extends StatelessWidget {
                       onRestart: onRestart,
                       onRemoveClaim: onRemoveClaim,
                       onSpotFor: onSpotFor,
+                      onQuizFor: onQuizFor,
                     ),
             ),
           ],
@@ -194,6 +197,7 @@ class _LiveGame extends StatelessWidget {
     this.onRestart,
     this.onRemoveClaim,
     this.onSpotFor,
+    this.onQuizFor,
   });
 
   final Scorecard card;
@@ -202,6 +206,7 @@ class _LiveGame extends StatelessWidget {
   final VoidCallback? onRestart;
   final void Function(Player player, Species species)? onRemoveClaim;
   final ValueChanged<Player>? onSpotFor;
+  final ValueChanged<Player>? onQuizFor;
 
   @override
   Widget build(BuildContext context) {
@@ -223,6 +228,7 @@ class _LiveGame extends StatelessWidget {
           expanded: true,
           onRemoveClaim: onRemoveClaim,
           onSpotFor: onSpotFor,
+          onQuizFor: onQuizFor,
         ),
         if (card.claims.isNotEmpty) ...<Widget>[
           const SizedBox(height: Space.xs),

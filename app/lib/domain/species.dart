@@ -383,6 +383,39 @@ class Species {
     'scrub-hare',
   };
 
+  /// Whose calves are unmistakable from a car, and whose herds you stop for.
+  ///
+  /// The question used to be asked of every mammal, which meant a steenbok
+  /// lamb — a guess at fifty metres — scored the same bonus as an elephant
+  /// calf in the middle of a breeding herd.
+  static const Set<String> _youngWorthAsking = <String>{
+    'african-elephant',
+    'cape-buffalo',
+    'lion',
+    'leopard',
+    'giraffe',
+    'plains-zebra',
+    'vervet-monkey',
+    'samango-monkey',
+    'chacma-baboon',
+  };
+
+  /// The camp animals: scarce out in the park, and living off the bins at
+  /// Skukuza. One number cannot be both, so the sighting says which.
+  static const Set<String> _campDwellers = <String>{
+    'african-wildcat',
+    'honey-badger',
+    'lesser-bushbaby',
+    'thick-tailed-bushbaby',
+    'large-spotted-genet',
+    'african-civet',
+    'cape-porcupine',
+    'scrub-hare',
+    'chacma-baboon',
+    'vervet-monkey',
+    'tree-squirrel',
+  };
+
   /// Which "what was it doing" questions make sense for this animal.
   ///
   /// A baby is only asked about for mammals, a kill only for predators, and
@@ -390,11 +423,9 @@ class Species {
   /// kill is the kind of question that makes people stop trusting the rest of
   /// them.
   Set<SightingExtra> get possibleExtras => <SightingExtra>{
-    if (category == SpeciesCategory.mammal) SightingExtra.withYoung,
-    if (tags.contains(SpeciesTag.predator)) ...<SightingExtra>[
-      SightingExtra.onAKill,
-      SightingExtra.killInATree,
-    ],
+    if (_youngWorthAsking.contains(id)) SightingExtra.withYoung,
+    if (_campDwellers.contains(id)) SightingExtra.inCamp,
+    if (tags.contains(SpeciesTag.predator)) SightingExtra.onAKill,
     // Mammals and birds. A mating pair of crocodiles is a thing nobody is
     // going to identify from a car, and a puff adder even less so.
     if (category == SpeciesCategory.mammal || category == SpeciesCategory.bird)

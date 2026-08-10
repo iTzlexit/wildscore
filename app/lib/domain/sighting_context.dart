@@ -95,11 +95,31 @@ enum SightingContext {
 enum SightingExtra {
   /// Only offered for mammals. A crocodile with young is a real thing and not
   /// one anybody is going to argue about at dinner.
+  /// Only the animals whose young are unmistakable and whose herds you sit
+  /// and watch — see [Species.possibleExtras].
+  ///
+  /// It was half again, on every mammal. Both halves were wrong: a steenbok
+  /// lamb is a guess from a car, and half again for a calf on an animal you
+  /// were scoring anyway is a lot. A third more, on eight animals.
   withYoung(
     label: 'With young',
     short: 'YOUNG',
     question: 'Was there a baby with it?',
-    multiplier: 1.5,
+    multiplier: 1.3,
+  ),
+
+  /// Seen inside a rest camp, where half of these live off the bins.
+  ///
+  /// **The only modifier that takes points away**, and it exists because the
+  /// alternative was worse. A genet is genuinely scarce *out there* and
+  /// genuinely tame at Skukuza, and one number cannot be both — nerfing the
+  /// species would rob the person who found one on a night drive, and leaving
+  /// it alone pays 200 points for a restaurant raider.
+  inCamp(
+    label: 'In camp',
+    short: 'CAMP',
+    question: 'Was it inside a camp?',
+    multiplier: 0.35,
   ),
 
   /// Only offered for predators. Everybody remembers the kill.

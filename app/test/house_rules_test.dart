@@ -201,7 +201,25 @@ void main() {
 
       // It used to be every Common and Frequent animal at four a day, which
       // meant a real morning's zebra ran out — and so did elephant, in Kruger.
-      expect(capped, <String, int>{'impala': 2, 'vervet-monkey': 4});
+      // Plus every bird at one a day, which is Alex's rule: 124 birds with no
+      // limit is a car tapping the same starling every twenty minutes.
+      expect(capped['impala'], 2);
+      expect(capped['vervet-monkey'], 4);
+      final List<String> notBirds =
+          capped.keys
+              .where(
+                (String id) => !all
+                    .firstWhere((Species s) => s.id == id)
+                    .category
+                    .name
+                    .startsWith('bird'),
+              )
+              .toList()
+            ..sort();
+
+      // The kill in a tree is once a day too — it is one leopard's larder, not
+      // a species you keep bumping into.
+      expect(notBirds, <String>['impala', 'kill-in-a-tree', 'vervet-monkey']);
     });
   });
 }

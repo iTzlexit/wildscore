@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../data/house_rules_repository.dart';
 import '../data/location_service.dart';
+import '../data/trivia_repository.dart';
 import '../data/scorecard_repository.dart';
 import '../data/species_repository.dart';
 import '../data/spotted_repository.dart';
@@ -11,6 +12,7 @@ import '../domain/scorecard.dart';
 import '../domain/species.dart';
 import '../domain/tracker_profile.dart';
 import '../domain/trip.dart';
+import '../domain/trivia.dart';
 import '../domain/visit.dart';
 import '../shared/theme.dart';
 import 'codex/codex_screen.dart';
@@ -19,8 +21,8 @@ import 'profile/visit_history_screen.dart';
 import 'scorecard/claim_details_sheet.dart';
 import 'scorecard/spot_picker_screen.dart';
 import 'scorecard/start_scorecard_sheet.dart';
+import 'scorecard/trivia_sheet.dart';
 import 'scorecard/wild_score_screen.dart';
-import 'sightings/sightings_screen.dart';
 
 /// The four tabs.
 ///
@@ -157,6 +159,40 @@ class _HomeShellState extends State<HomeShell> {
     if (mounted) {
       setState(() => _spotted = next);
     }
+  }
+
+  /// Opens the question this player has unlocked.
+  ///
+  /// The question is chosen from what they have not seen and recorded as asked
+  /// **before** the sheet opens, so closing it and coming back cannot shop for
+  /// an easier one. A wrong answer costs the question, which is the only thing
+  /// that makes a right one worth thirty points.
+  Future<void> _askQuestion(Player player) async {
+    final Scorecard? card = _card;
+    if (card == null) {
+      return;
+    }
+    const TriviaRepository repo = TriviaRepository();
+    final List<TriviaQuestion> bank = await repo.loadAll();
+    final TriviaQuestion? q = repo.next(bank, card.trivia, player.id);
+    if (q == null || !mounted) {
+      return;
+    }
+
+    await _updateCard(card.withTrivia(card.trivia.withAsked(player.id, q.id)));
+    if (!mounted) {
+      return;
+    }
+    final bool right = await TriviaSheet.ask(
+      context,
+      player: player,
+      question: q,
+    );
+    final Scorecard? latest = _card;
+    if (!right || latest == null) {
+      return;
+    }
+    await _updateCard(latest.withTrivia(latest.trivia.withCorrect(player.id)));
   }
 
   Future<void> _startScorecard() async {
@@ -452,6 +488,7 @@ class _HomeShellState extends State<HomeShell> {
                 onRestart: _restartScorecard,
                 onRemoveClaim: _removeClaim,
                 onSpotFor: (Player p) => _spotFor(p, species),
+                onQuizFor: _askQuestion,
                 onOpenHistory: () => VisitHistoryScreen.open(
                   context,
                   visits: _visits,
@@ -471,7 +508,6 @@ class _HomeShellState extends State<HomeShell> {
                 onSetPoints: _setHousePoints,
                 onSetCap: _setHouseCap,
               ),
-              SightingsScreen(visits: _visits, species: species, live: _card),
             ],
           ),
           // No camera button. It sat over the content on every tab and did
@@ -533,15 +569,9 @@ class _BottomBar extends StatelessWidget {
               ),
               _Tab(
                 icon: Icons.menu_book_rounded,
-                label: 'Animal Dex',
+                label: 'Animals',
                 selected: index == 2,
                 onTap: () => onChanged(2),
-              ),
-              _Tab(
-                icon: Icons.place_rounded,
-                label: 'Sightings',
-                selected: index == 3,
-                onTap: () => onChanged(3),
               ),
             ],
           ),

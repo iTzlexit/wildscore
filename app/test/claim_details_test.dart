@@ -86,7 +86,6 @@ void main() {
 
     expect(find.text('Which one was it?'), findsOneWidget);
     expect(find.text('In a tree'), findsOneWidget);
-    expect(find.text('Kill in a tree'), findsOneWidget);
     expect(find.text('On a kill'), findsOneWidget);
   });
 
@@ -107,8 +106,8 @@ void main() {
       await tester.pumpAndSettle();
     }
 
-    // 55 × 5 × 1.5 × 2 = 825.
-    expect(find.text('825'), findsWidgets);
+    // 55 × 1.8 × 1.5 × 2 = 297.
+    expect(find.text('297'), findsWidgets);
   });
 
   testWidgets('a kudu is asked about its calf, which it never used to be', (
@@ -116,10 +115,14 @@ void main() {
   ) async {
     // The sheet only appeared for animals a jam forms around or that carried a
     // variant, so most mammals could never be marked as having young at all.
-    final Species bushbuck = _byId('bushbuck');
+    final Species zebra = _byId('plains-zebra');
 
-    expect(ClaimDetailsSheet.needed(bushbuck), isTrue);
-    await _open(tester, bushbuck);
+    // Zebra is Common, so the sheet used to skip it entirely — and it is one
+    // of the eight animals whose foal is unmistakable from a car.
+    expect(zebra.possibleExtras, contains(SightingExtra.withYoung));
+    // Buffalo: on the with-young list and past the everyday end of the scale,
+    // which is what the sheet now needs to appear at all.
+    await _open(tester, _byId('cape-buffalo'));
     expect(find.text('With young'), findsOneWidget);
   });
 

@@ -19,6 +19,7 @@ class StandingsBoard extends StatefulWidget {
     this.expanded = false,
     this.onRemoveClaim,
     this.onSpotFor,
+    this.onQuizFor,
     super.key,
   });
 
@@ -46,6 +47,9 @@ class StandingsBoard extends StatefulWidget {
   /// it happens in a car — somebody shouts a name before anyone knows what they
   /// are looking at.
   final ValueChanged<Player>? onSpotFor;
+
+  /// Opens the question this player has unlocked.
+  final ValueChanged<Player>? onQuizFor;
 
   @override
   State<StandingsBoard> createState() => _StandingsBoardState();
@@ -87,6 +91,14 @@ class _StandingsBoardState extends State<StandingsBoard> {
             onSpot: widget.onSpotFor == null
                 ? null
                 : () => widget.onSpotFor!(ranked[i]),
+            onQuiz:
+                widget.onQuizFor == null ||
+                    !card.trivia.hasWaiting(
+                      ranked[i].id,
+                      card.sightingPointsFor(ranked[i].id),
+                    )
+                ? null
+                : () => widget.onQuizFor!(ranked[i]),
             onTap: () => setState(
               () => _open = _open == ranked[i].id ? null : ranked[i].id,
             ),
@@ -209,6 +221,7 @@ class _Row extends StatelessWidget {
     required this.onShowAll,
     required this.onRemove,
     required this.onSpot,
+    required this.onQuiz,
     required this.onTap,
   });
 
@@ -224,6 +237,9 @@ class _Row extends StatelessWidget {
   final VoidCallback onShowAll;
   final ValueChanged<Species>? onRemove;
   final VoidCallback? onSpot;
+
+  /// A question waiting for this player. Null when they have not earned one.
+  final VoidCallback? onQuiz;
   final VoidCallback onTap;
 
   /// Enough to show the day's best finds without becoming a wall. Rarest are
@@ -326,6 +342,10 @@ class _Row extends StatelessWidget {
                         fontFeatures: AppText.tabular,
                       ),
                     ),
+                    if (onQuiz != null) ...<Widget>[
+                      const SizedBox(width: Space.sm),
+                      _QuizButton(onTap: onQuiz!, name: player.name),
+                    ],
                     if (onSpot != null) ...<Widget>[
                       const SizedBox(width: Space.sm),
                       _SpotButton(onTap: onSpot!, name: player.name),
@@ -390,6 +410,46 @@ class _Row extends StatelessWidget {
 ///
 /// Outlined rather than filled. A filled accent block on every row competed
 /// with the score for attention, and the score is what people are reading.
+/// A question waiting on this player's row.
+///
+/// Only rendered when there is one, which is the whole design: the badge is
+/// the notification. A greyed-out quiz button on every row all morning would
+/// be four permanent advertisements for something nobody has earned yet.
+class _QuizButton extends StatelessWidget {
+  const _QuizButton({required this.onTap, required this.name});
+
+  final VoidCallback onTap;
+  final String name;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      label: 'Answer a question for $name',
+      child: Material(
+        color: AppColors.accent,
+        borderRadius: BorderRadius.circular(9),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(9),
+          child: Container(
+            width: 32,
+            height: 28,
+            alignment: Alignment.center,
+            child: Text(
+              '?',
+              style: AppText.bodyStrong.copyWith(
+                color: AppColors.accentInk,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _SpotButton extends StatelessWidget {
   const _SpotButton({required this.onTap, required this.name});
 
