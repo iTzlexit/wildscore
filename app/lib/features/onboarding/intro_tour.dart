@@ -859,11 +859,11 @@ class _RarityTable extends StatelessWidget {
   /// One animal everybody recognises per tier, so the numbers mean something.
   static const Map<RarityTier, String> _examples = <RarityTier, String>{
     RarityTier.common: 'Impala, zebra',
-    RarityTier.frequent: 'Elephant, giraffe',
-    RarityTier.uncommon: 'Lion, rhino',
-    RarityTier.scarce: 'Honey badger',
-    RarityTier.rare: 'Cheetah, wild dog',
-    RarityTier.legendary: 'Pangolin, caracal',
+    RarityTier.frequent: 'Elephant, buffalo',
+    RarityTier.uncommon: 'Lion, klipspringer',
+    RarityTier.scarce: 'Leopard, cheetah',
+    RarityTier.rare: 'Serval, sable',
+    RarityTier.legendary: 'Pangolin, aardvark',
   };
 
   @override
@@ -915,7 +915,7 @@ class _RarityTable extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '${tier.points}',
+                    '${tier.low}–${tier.high}',
                     style: AppText.caption.copyWith(
                       color: AppColors.textPrimary,
                       fontVariations: AppFonts.weight(800),

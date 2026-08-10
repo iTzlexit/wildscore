@@ -179,8 +179,9 @@ void main() {
         DateTime(2026, 3, 4),
         <String, List<(String, String?)>>{
           'Alex': <(String, String?)>[
-            ('cheetah', null),
+            ('roan-antelope', null),
             ('caracal', null),
+            ('cheetah', null),
             ('eland', null),
             ('lion', null),
           ],
@@ -192,10 +193,13 @@ void main() {
           s.species.id: s.needsVerifying,
       };
 
-      expect(flags['cheetah'], isTrue);
+      expect(flags['roan-antelope'], isTrue);
       expect(flags['caracal'], isTrue);
-      // 100 points and 40 points respectively — worth showing, not worth
-      // demanding evidence for.
+      // Worth showing in the feed, not worth demanding evidence for. Cheetah
+      // is on this side of the line now — Alex moved it down to Rare, on the
+      // grounds that a diurnal cat on an open plain is not a claim anybody
+      // would doubt.
+      expect(flags['cheetah'], isFalse);
       expect(flags['eland'], isFalse);
       expect(flags['lion'], isFalse);
     });

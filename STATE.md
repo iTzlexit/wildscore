@@ -64,7 +64,7 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 - **Backup** — a pasteable code. No server; see `docs/RISKS.md` for why it
   matters more than it looks.
 
-281 tests. `flutter analyze` is clean and must stay clean.
+290 tests. `flutter analyze` is clean and must stay clean.
 
 ## Decisions already made — do not relitigate
 
@@ -76,6 +76,9 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 | Points ≠ collection: points to the caller, collection to everyone in the car | `docs/SCORECARD.md` |
 | Banked once, at end of day — never per claim | `docs/SCORECARD.md` |
 | Crowd: spotting it yourself pays the card value, a jam pays 20% less | `docs/HOW-TO-PLAY.md` |
+| **Points are per species, not per tier** — a tier is a band. 5–1000 | `tools/rank-list.html`, Alex 10 Aug 2026 |
+| Lion, leopard, white rhino are wild cards: first of the day pays big | Alex, 10 Aug 2026 |
+| A night animal seen in daylight pays 2.5x | Alex, 10 Aug 2026 |
 | Daily caps: common and frequent 4, notable 3, impala 2, rare+ unlimited | `docs/HOW-TO-PLAY.md` |
 | Rhino and pangolin never get a location, ever | `docs/MAPS.md`, `docs/SIGHTINGS-FEED.md` |
 | Rhino and pangolin never get a population number either | `test/population_test.dart` |

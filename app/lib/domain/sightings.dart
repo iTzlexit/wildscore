@@ -1,3 +1,4 @@
+import 'rarity_tier.dart';
 import 'scorecard.dart';
 import 'species.dart';
 import 'species_tag.dart';
@@ -40,7 +41,7 @@ class Sighting {
   /// Nothing enforces this yet — verification is a later phase — but the line
   /// is drawn here so the feed and the future check cannot disagree about which
   /// sightings it applies to.
-  bool get needsVerifying => species.rarityTier.points >= 300;
+  bool get needsVerifying => species.points >= RarityTier.rare.low;
 }
 
 /// The feed of notable finds, newest first.
@@ -57,11 +58,16 @@ class Sighting {
 class Sightings {
   const Sightings._();
 
-  /// The bar for appearing here at all.
-  static const int minimumPoints = 100;
+  /// The bar for appearing here at all: the bottom of the Rare band.
+  ///
+  /// Expressed against the band rather than a typed 100, because a tier is a
+  /// range now and `rarityTier.points` is only a fallback. Left as a constant
+  /// it would have swept the whole Notable tier into the feed — including the
+  /// klipspringer, which is not what anybody means by a notable find.
+  static int get minimumPoints => RarityTier.scarce.low;
 
   static bool notable(Species species) =>
-      species.rarityTier.points >= minimumPoints ||
+      species.points >= minimumPoints ||
       species.tags.contains(SpeciesTag.bigFive);
 
   static List<Sighting> from(

@@ -98,6 +98,28 @@ enum SightingExtra {
     short: 'KILL',
     question: 'Was it on a kill?',
     multiplier: 1.5,
+  ),
+
+  /// A night animal, out in daylight.
+  ///
+  /// **Rarity is not a property of the animal, it is a property of the
+  /// sighting** — which is the thing a tier list cannot say. A bushpig is not
+  /// rare; a bushpig at eleven in the morning is. Same for a porcupine, a
+  /// genet, a civet. Guides talk about those sightings for years and the
+  /// scorecard had no way to tell them apart from the same animal caught in a
+  /// spotlight at nine at night, which is an ordinary Tuesday.
+  ///
+  /// Two and a half times, which is a whole tier's worth: a 305-point bushpig
+  /// becomes 760, up past the serval. That is the right size — it should feel
+  /// like catching a different animal.
+  ///
+  /// Only offered on species tagged nocturnal, and not on the two of those
+  /// that are routinely seen by day anyway (see [Species.possibleExtras]).
+  inDaylight(
+    label: 'Seen in daylight',
+    short: 'DAY',
+    question: 'Did you see it in daylight?',
+    multiplier: 2.5,
   );
 
   const SightingExtra({

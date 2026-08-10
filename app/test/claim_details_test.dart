@@ -97,20 +97,20 @@ void main() {
     // Watching the number move is what teaches the rule — nobody reads a rules
     // screen, and this is the moment the rule is relevant.
     await _open(tester, _byId('lion'));
-    expect(tester.widget<Text>(total()).data, '40');
+    expect(tester.widget<Text>(total()).data, '115');
 
     await tester.tap(find.text('Yes — male'));
     await tester.pumpAndSettle();
-    expect(tester.widget<Text>(total()).data, '100');
+    expect(tester.widget<Text>(total()).data, '173');
 
     // Lone is a mark, not a multiplier: the total holds at what the card says.
     await tester.tap(find.text('Lone sighting'));
     await tester.pumpAndSettle();
-    expect(tester.widget<Text>(total()).data, '100');
+    expect(tester.widget<Text>(total()).data, '173');
 
     await tester.tap(find.text('Part of a jam'));
     await tester.pumpAndSettle();
-    expect(tester.widget<Text>(total()).data, '80');
+    expect(tester.widget<Text>(total()).data, '139');
   });
 
   testWidgets('each crowd button shows what it would pay', (
@@ -125,9 +125,9 @@ void main() {
     await tester.tap(find.text('Yes — male'));
     await tester.pumpAndSettle();
 
-    // 100 on the lone button, and the jam button showing its working.
-    expect(find.text('100 − 20%'), findsOneWidget);
-    expect(find.text('80'), findsOneWidget);
+    // 173 on the lone button, and the jam button showing its working.
+    expect(find.text('173 − 20%'), findsOneWidget);
+    expect(find.text('139'), findsOneWidget);
     expect(find.text('You spotted it yourself'), findsOneWidget);
     expect(find.text('Cars were already there'), findsOneWidget);
   });

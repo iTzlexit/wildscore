@@ -78,7 +78,13 @@ void main() {
 
     for (final RarityTier tier in RarityTier.values) {
       expect(find.text(tier.label), findsOneWidget, reason: tier.name);
-      expect(find.text('${tier.points}'), findsWidgets, reason: tier.name);
+      // A band, not one number — every animal in a tier stopped scoring the
+      // same the moment the catalogue was ranked by hand.
+      expect(
+        find.text('${tier.low}–${tier.high}'),
+        findsWidgets,
+        reason: tier.name,
+      );
     }
   });
 

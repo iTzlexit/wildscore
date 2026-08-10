@@ -9,6 +9,38 @@ import 'species_tag.dart';
 /// How often a wild-card bonus comes back.
 enum WildCardScope { day, trip }
 
+/// What the *first* one is worth, and how often that comes back.
+///
+/// **The mechanic Alex asked for by name.** A lion is seen on most trips, so
+/// rarity scores it in the Notable band — and it is the most exciting thing
+/// that happens on a game drive, every single time. Those two facts cannot
+/// both live in one number. So the first lion of the day pays 400 and the
+/// third pays what the card says.
+///
+/// Per species, because a flat bonus cannot serve both a lion and an impala.
+/// It used to be one constant of 40 for everything, which was eight times an
+/// impala and a third of a leopard.
+///
+/// Deliberately **not** on buffalo or elephant. Nobody's day is made by the
+/// fourteenth elephant, and a bonus on something you pass every hour is just
+/// a bigger number for the same event.
+class WildCard {
+  const WildCard({required this.bonus, required this.scope});
+
+  factory WildCard.fromJson(Map<String, dynamic> json) => WildCard(
+    bonus: json['bonus'] as int,
+    scope: json['scope'] == 'trip' ? WildCardScope.trip : WildCardScope.day,
+  );
+
+  /// Replaces the card value on the first sighting. Never added to it — the
+  /// first zebra is worth 60, not 70.
+  final int bonus;
+
+  /// Impala is the trip one: it is *the* arrival animal, and paying out every
+  /// morning would make it a tax on whoever wakes up first.
+  final WildCardScope scope;
+}
+
 /// A version of an animal that is worth more than the animal.
 ///
 /// One species has one at the moment and it is the obvious one: **a male
@@ -23,13 +55,13 @@ class SpeciesVariant {
   const SpeciesVariant({
     required this.label,
     required this.question,
-    required this.bonus,
+    required this.multiplier,
   });
 
   factory SpeciesVariant.fromJson(Map<String, dynamic> json) => SpeciesVariant(
     label: json['label'] as String,
     question: json['question'] as String,
-    bonus: json['bonus'] as int,
+    multiplier: (json['multiplier'] as num).toDouble(),
   );
 
   /// Shown on the tag: "Lion · MALE".
@@ -40,14 +72,18 @@ class SpeciesVariant {
   /// somebody is shouting from the back seat.
   final String question;
 
-  /// Added to the claim. Sixty on a forty-point lion, so a male is worth 100 —
-  /// the same as a honey badger, and about right for how a car reacts to one.
-  final int bonus;
+  /// Half again, rather than a flat sixty.
+  ///
+  /// It **was** a flat sixty, which was +150% of a forty-point lion and would
+  /// have quietly become +27% the moment the scale moved. A bonus expressed as
+  /// a number has to be re-tuned every time anything else changes; one
+  /// expressed as a proportion never does. Same lesson as the extras.
+  final double multiplier;
 
   Map<String, dynamic> toJson() => <String, dynamic>{
     'label': label,
     'question': question,
-    'bonus': bonus,
+    'multiplier': multiplier,
   };
 }
 
@@ -76,7 +112,9 @@ class Species {
     this.discovered = true,
     this.variant,
     this.population,
-  });
+    this.wildCard,
+    int? points,
+  }) : _points = points;
 
   /// Parses one entry of `assets/data/species.json`.
   ///
@@ -135,6 +173,10 @@ class Species {
       population: json['population'] == null
           ? null
           : Population.fromJson(json['population']! as Map<String, dynamic>),
+      wildCard: json['wildCard'] == null
+          ? null
+          : WildCard.fromJson(json['wildCard']! as Map<String, dynamic>),
+      points: json['points'] as int?,
     );
   }
 
@@ -186,10 +228,18 @@ class Species {
   /// which is most of the birds and everything smaller than a mongoose.
   final Population? population;
 
-  /// What a claim is normally worth. The wild-card bonus, the variant bonus and
-  /// the crowd multiplier are all applied on top by whoever creates the claim —
-  /// see [wildCardBonus], [SpeciesVariant] and [SightingContext].
-  int get points => rarityTier.points;
+  /// What a claim is normally worth.
+  ///
+  /// **Per species, not per tier.** Every animal in a tier used to score the
+  /// same, which said a leopard and a wild dog are equally hard to find and
+  /// nobody believed it. The number comes from Alex ordering all 190 by hand;
+  /// the tier is now the *band* it sits in rather than the value itself.
+  ///
+  /// Falls back to the tier for anything unranked, so a species added tomorrow
+  /// scores something sensible instead of nothing.
+  final int? _points;
+
+  int get points => _points ?? rarityTier.points;
 
   /// What one sighting of this animal is worth, all in.
   ///
@@ -197,35 +247,54 @@ class Species {
   /// the call site, which was fine with one modifier and would not have stayed
   /// fine with three.
   ///
-  /// Order matters and is deliberate: the wild-card bonus *replaces* the tier
-  /// value rather than adding to it (the first zebra is worth 50, not 55), the
-  /// variant adds on top, and the crowd multiplier applies to the lot. So a
-  /// male lion found on an empty road is (40 + 60) × 2 = 200, and the same lion
-  /// at a jam of eleven cars is 50.
+  /// Order matters and is deliberate. The wild-card bonus **replaces** the card
+  /// value rather than adding to it — the first lion of the day is worth 400,
+  /// not 510 — and then everything else multiplies what is left.
+  ///
+  /// Every modifier is now a proportion. That is the whole point: the male lion
+  /// used to be a flat +60 and the scale moved out from under it twice. A first
+  /// male lion of the day, alone, is 400 × 1.5 = 600; the same lion at a jam is
+  /// 480.
   int scoreFor({
     bool wildCardBonusEarned = false,
     bool variantApplied = false,
     SightingContext context = SightingContext.normal,
     Set<SightingExtra> extras = const <SightingExtra>{},
   }) {
-    final int base = wildCardBonusEarned ? wildCardBonus : points;
     double total =
-        (base + (variantApplied && variant != null ? variant!.bonus : 0))
+        (wildCardBonusEarned && wildCard != null ? wildCard!.bonus : points)
             .toDouble();
+    if (variantApplied && variant != null) {
+      total *= variant!.multiplier;
+    }
     for (final SightingExtra e in extras) {
       total *= e.multiplier;
     }
     return context.applyTo(total.round());
   }
 
+  /// Tagged nocturnal, but out in daylight often enough that a bonus for it
+  /// would be free points rather than a story.
+  ///
+  /// A water thick-knee stands on a riverbank in full sun all afternoon; scrub
+  /// hare are up at dusk on every evening drive. Both are in the Night shift
+  /// collection because that is where a visitor looks for them, and neither is
+  /// a remarkable daytime sighting.
+  static const Set<String> _dayActiveAnyway = <String>{
+    'water-thick-knee',
+    'scrub-hare',
+  };
+
   /// Which "what was it doing" questions make sense for this animal.
   ///
-  /// A baby is only asked about for mammals, and a kill only for predators.
-  /// Asking whether a puff adder was on a kill is the kind of question that
-  /// makes people stop trusting the rest of them.
+  /// A baby is only asked about for mammals, a kill only for predators, and
+  /// daylight only for the night shift. Asking whether a puff adder was on a
+  /// kill is the kind of question that makes people stop trusting the rest of
+  /// them.
   Set<SightingExtra> get possibleExtras => <SightingExtra>{
     if (category == SpeciesCategory.mammal) SightingExtra.withYoung,
     if (tags.contains(SpeciesTag.predator)) SightingExtra.onAKill,
+    if (isNocturnal && !_dayActiveAnyway.contains(id)) SightingExtra.inDaylight,
   };
 
   /// Whether to ask who else was there.
@@ -235,26 +304,29 @@ class Species {
   /// about. Jams only form around animals worth stopping for, so the question
   /// is only asked about those — the same bar the sightings feed uses, which is
   /// Rare and up plus the Big Five.
+  ///
+  /// The bar is the bottom of the Rare band rather than a typed constant. It
+  /// used to be `rarityTier.points >= 100`, which quietly caught every Notable
+  /// the moment a tier stopped being one number — including the klipspringer,
+  /// which nobody has ever formed a jam around.
   bool get crowdMatters =>
-      rarityTier.points >= 100 || tags.contains(SpeciesTag.bigFive);
+      points >= RarityTier.scarce.low || tags.contains(SpeciesTag.bigFive);
 
-  /// What the *first* sighting of a wild-card species pays.
+  /// What the first sighting pays, on the seven species that have one.
+  final WildCard? wildCard;
+
+  bool get isWildCard => wildCard != null;
+
+  /// How many times this can be claimed in a day. `null` is unlimited.
   ///
-  /// A bonus, not a replacement, and not a lock. The first zebra of the morning
-  /// is worth 40; the second is worth 5 like any other zebra, until the day's
-  /// chances run out. Enough to matter on the first sighting and nowhere near
-  /// enough to decide a trip.
-  static const int wildCardBonus = 40;
-
-  bool get isWildCard => tags.contains(SpeciesTag.wildCard);
-
-  /// How many times this can be claimed in a day.
+  /// Daily wild cards get four, because "the first one is worth more" says
+  /// nothing at all if there is only ever one.
   ///
-  /// Daily wild cards get three, because "the first one is worth more" says
-  /// nothing at all if there is only ever one. Impala does not: it is the most
-  /// common animal in the park and three impala a day is three shouts about
-  /// impala. Its bonus is trip-scoped anyway, so day two's single impala is
-  /// already an ordinary five-point impala.
+  /// **A wild card can only ever raise the cap, never lower it.** Lion,
+  /// leopard and white rhino joined the wild cards and two of them sit in
+  /// uncapped tiers — so the override capped them at four, quietly making
+  /// "nothing rare is capped" a lie on the same screen that prints it. Six
+  /// leopards in a day is a story, not an exploit.
   int? get chancesPerDay {
     // Impala is its own case and always has been. It is the commonest animal in
     // the park by a distance, so the tier's four would mean four shouts about
@@ -264,18 +336,17 @@ class Species {
     if (id == 'impala') {
       return 2;
     }
+    final int? tierCap = rarityTier.chancesPerDay;
+    if (tierCap == null) {
+      return null;
+    }
     return isWildCard && wildCardScope == WildCardScope.day
-        ? 4
-        : rarityTier.chancesPerDay;
+        ? (tierCap > 4 ? tierCap : 4)
+        : tierCap;
   }
 
   /// Whether the bonus resets daily or only once a trip.
-  ///
-  /// Impala is the trip one: it is *the* arrival animal, and paying out every
-  /// morning would make it a tax on whoever wakes up first. Zebra, giraffe and
-  /// wildebeest reset daily — "there's one!" is a fresh moment each morning.
-  WildCardScope get wildCardScope =>
-      id == 'impala' ? WildCardScope.trip : WildCardScope.day;
+  WildCardScope get wildCardScope => wildCard?.scope ?? WildCardScope.day;
 
   /// Photographs live at `assets/species/<id>.jpg`. Missing files fall back to
   /// a generated placeholder, so the app runs before any art exists.
@@ -315,6 +386,8 @@ class Species {
       // bonus is a scoring bug lying in wait for whoever uses it next.
       variant: variant,
       population: population,
+      wildCard: wildCard,
+      points: _points,
     );
   }
 

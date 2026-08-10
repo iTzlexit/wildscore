@@ -153,6 +153,17 @@ class RulesScreen extends StatelessWidget {
           ),
           const SizedBox(height: Space.xl),
 
+          const _Rule(
+            icon: Icons.bolt_rounded,
+            title: 'First one of the day pays big',
+            body:
+                'A **lion**, **leopard** or **white rhino** is seen on most '
+                'trips — and it is the moment of the day every time.\n\n'
+                'So the **first one** pays far more than the card says. After '
+                'that they score normally.',
+          ),
+          const SizedBox(height: Space.xl),
+
           const _Section('BONUS CARDS'),
           const _Rule(
             icon: Icons.auto_awesome_rounded,
@@ -162,6 +173,16 @@ class RulesScreen extends StatelessWidget {
                 'Male lion\n'
                 'Mother with young\n'
                 'Predator with a kill',
+          ),
+          const _Rule(
+            icon: Icons.wb_sunny_rounded,
+            title: 'A night animal, in daylight',
+            body:
+                'A bushpig at eleven in the morning is a different sighting '
+                'from a bushpig in a spotlight.\n\n'
+                'Porcupine, genet, civet, bushpig and the rest of the night '
+                'shift pay **two and a half times** if you see them in the '
+                'day.',
           ),
           const _Rule(
             icon: Icons.lock_clock_rounded,
@@ -467,9 +488,12 @@ class _PointRow extends StatelessWidget {
           ),
           const SizedBox(width: Space.md),
           SizedBox(
-            width: 52,
+            // A range, because every animal in a tier no longer scores the
+            // same — a leopard and a wild dog are both Rare and nobody thinks
+            // they are equally hard to find.
+            width: 84,
             child: Text(
-              '${tier.points}',
+              '${tier.low}–${tier.high}',
               textAlign: TextAlign.right,
               style: AppText.label.copyWith(
                 color: style.accent,

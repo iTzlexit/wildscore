@@ -60,12 +60,63 @@ void main() {
     expect(numbers.toSet().length, species.length, reason: 'duplicate number');
   });
 
-  test('points always derive from the rarity tier', () {
-    // Including wild cards. Their bonus is added by whoever creates the claim,
-    // not baked into the species — which is what keeps the scale honest and
-    // stops it drifting one hand-tuned animal at a time.
+  test('every species is priced inside its own tier band', () {
+    // Points used to be *identical* to the tier's, which is what stopped the
+    // scale drifting one hand-tuned animal at a time. Now every species has
+    // its own number, so the guard has to be the band instead: hand-ranking
+    // 190 animals is exactly the sort of exercise that puts a leopard at 40.
     for (final Species s in species) {
-      expect(s.points, s.rarityTier.points, reason: s.commonName);
+      expect(
+        s.points,
+        inInclusiveRange(s.rarityTier.low, s.rarityTier.high),
+        reason: '${s.commonName} is outside ${s.rarityTier.label}',
+      );
+    }
+  });
+
+  test('the bands never overlap', () {
+    // The property that makes a tier mean anything: the worst Legendary has to
+    // outscore the best Very rare, or the categories are decoration.
+    final List<RarityTier> rarestFirst = RarityTier.values.reversed.toList();
+    for (int i = 0; i < rarestFirst.length - 1; i++) {
+      expect(
+        rarestFirst[i].low,
+        greaterThan(rarestFirst[i + 1].high),
+        reason: '${rarestFirst[i].label} dips into ${rarestFirst[i + 1].label}',
+      );
+    }
+  });
+
+  test('no two species in a tier are wildly out of order', () {
+    // A cheap sanity check on the hand ranking: within a tier the spread
+    // should use most of the band rather than bunching at one end, which is
+    // what a half-finished ordering looks like.
+    for (final RarityTier tier in RarityTier.values) {
+      final List<int> points = <int>[
+        for (final Species s in species)
+          if (s.rarityTier == tier) s.points,
+      ];
+      if (points.length < 5) {
+        continue;
+      }
+      points.sort();
+      final int spread = points.last - points.first;
+      expect(
+        spread,
+        greaterThan((tier.high - tier.low) ~/ 2),
+        reason: '${tier.label} is bunched up',
+      );
+    }
+  });
+
+  test('a wild card in an uncapped tier stays uncapped', () {
+    // Leopard and white rhino became wild cards, and the override used to cap
+    // them at four — making "nothing rare is capped" false on the same screen
+    // that prints it.
+    for (final String id in <String>['leopard', 'white-rhinoceros']) {
+      final Species s = species.firstWhere((Species x) => x.id == id);
+      expect(s.isWildCard, isTrue, reason: id);
+      expect(s.chancesPerDay, isNull, reason: id);
     }
   });
 
@@ -75,7 +126,13 @@ void main() {
     for (final Species s in species.where(
       (Species s) => s.isWildCard && s.wildCardScope == WildCardScope.day,
     )) {
-      expect(s.chancesPerDay, 4, reason: s.commonName);
+      // Null is unlimited, which is more chances than any number — the
+      // uncapped tiers are covered by the test above.
+      expect(
+        s.chancesPerDay,
+        anyOf(isNull, greaterThanOrEqualTo(4)),
+        reason: s.commonName,
+      );
     }
 
     // Impala is its own case. The commonest animal in the park by a distance,

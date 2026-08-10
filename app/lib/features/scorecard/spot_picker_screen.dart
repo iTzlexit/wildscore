@@ -204,7 +204,7 @@ class _SpotPickerScreenState extends State<SpotPickerScreen> {
                         return SpeciesGridCard(
                           species: s,
                           bonusPoints: _bonusAvailable(s)
-                              ? Species.wildCardBonus
+                              ? s.wildCard?.bonus
                               : null,
                           bonusSpent: s.isWildCard && !_bonusAvailable(s),
                           // Coloured by what the car has claimed today, not by

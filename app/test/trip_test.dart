@@ -157,10 +157,10 @@ void main() {
       );
 
       expect(impala.isWildCard, isTrue);
-      expect(Species.wildCardBonus, 40);
+      expect(impala.wildCard!.bonus, 100);
       expect(
         impala.points,
-        5,
+        10,
         reason: 'the second impala of the day is an ordinary impala',
       );
     });
@@ -184,20 +184,44 @@ void main() {
           if (s.isWildCard) s.id,
       ]..sort();
 
+      // Lion, leopard and white rhino joined the herd animals. They are the
+      // case Alex named: seen often enough that rarity scores them modestly,
+      // and exciting every single time. Buffalo and elephant are deliberately
+      // absent — nobody's day is made by the fourteenth elephant.
       expect(wild, <String>[
         'blue-wildebeest',
         'giraffe',
         'impala',
+        'leopard',
+        'lion',
         'plains-zebra',
+        'white-rhinoceros',
       ]);
     });
 
-    test('the bonus cannot outrank a real find', () {
+    test('a wild card always pays more first time than it does after', () {
+      for (final Species s in _catalogue.where((Species s) => s.isWildCard)) {
+        expect(s.wildCard!.bonus, greaterThan(s.points), reason: s.id);
+      }
+    });
+
+    test('a herd-animal bonus cannot outrank a real find', () {
+      // Scoped to the everyday wild cards. Lion, leopard and white rhino are
+      // wild cards *because* the first one is a real find — theirs are meant
+      // to be big, and are checked separately in sighting_context_test.
       final Species leopard = _catalogue.firstWhere(
         (Species s) => s.id == 'leopard',
       );
 
-      expect(Species.wildCardBonus, lessThan(leopard.points));
+      for (final String id in <String>[
+        'impala',
+        'plains-zebra',
+        'giraffe',
+        'blue-wildebeest',
+      ]) {
+        final Species s = _catalogue.firstWhere((Species x) => x.id == id);
+        expect(s.wildCard!.bonus, lessThan(leopard.points), reason: id);
+      }
     });
   });
 }

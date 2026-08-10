@@ -68,44 +68,114 @@ void main() {
     test('a male is worth more than a lion', () {
       final Species lion = _byId('lion');
 
-      expect(lion.scoreFor(), 40);
-      expect(lion.scoreFor(variantApplied: true), 100);
+      // Half again rather than a flat sixty. 115 becomes 173.
+      expect(lion.scoreFor(), 115);
+      expect(lion.scoreFor(variantApplied: true), 173);
     });
 
     test('the bonus is ignored for a species with no variant', () {
       // Nothing should be able to hand an impala a lion's bonus.
-      expect(_byId('impala').scoreFor(variantApplied: true), 5);
+      expect(_byId('impala').scoreFor(variantApplied: true), 10);
     });
   });
 
   group('the modifiers stack', () {
     test('a male lion found on an empty road', () {
-      // 40 + 60. The lone mark no longer multiplies, so this is simply what a
+      // 115 × 1.5. The lone mark does not multiply, so this is simply what a
       // male lion is worth.
       expect(
         _byId(
           'lion',
         ).scoreFor(variantApplied: true, context: SightingContext.alone),
-        100,
+        173,
       );
     });
 
     test('the same lion at a jam of eleven cars', () {
-      // 100 − 20%, which is the sum the claim sheet now prints on the button.
+      // 173 − 20%.
       expect(
         _byId(
           'lion',
         ).scoreFor(variantApplied: true, context: SightingContext.jam),
-        80,
+        139,
       );
     });
 
-    test('the wild card replaces the tier value rather than adding to it', () {
-      // The first zebra of the morning is worth 50, not 55.
+    test('the wild card replaces the card value rather than adding to it', () {
+      // The first zebra of the morning is worth 60, not 70.
       final Species zebra = _byId('plains-zebra');
 
-      expect(zebra.scoreFor(), 5);
-      expect(zebra.scoreFor(wildCardBonusEarned: true), 40);
+      expect(zebra.scoreFor(), 10);
+      expect(zebra.scoreFor(wildCardBonusEarned: true), 60);
+    });
+
+    test('the first lion of the day is the point of the whole mechanic', () {
+      // Alex's ask, in one assertion. Rarity puts a lion at 115 because most
+      // trips produce one; the first is still the moment everybody remembers.
+      final Species lion = _byId('lion');
+
+      expect(lion.points, 115);
+      expect(lion.scoreFor(wildCardBonusEarned: true), 400);
+      // And a male one, first thing, on an empty road.
+      expect(
+        lion.scoreFor(wildCardBonusEarned: true, variantApplied: true),
+        600,
+      );
+    });
+
+    test('elephant and buffalo get no first-sighting bonus', () {
+      // Deliberate. A bonus on something you pass every hour is a bigger
+      // number for the same event.
+      expect(_byId('african-elephant').isWildCard, isFalse);
+      expect(_byId('cape-buffalo').isWildCard, isFalse);
+    });
+  });
+
+  group('a night animal in daylight', () {
+    test('is offered only to the night shift', () {
+      expect(
+        _byId('bushpig').possibleExtras,
+        contains(SightingExtra.inDaylight),
+      );
+      expect(
+        _byId('large-spotted-genet').possibleExtras,
+        contains(SightingExtra.inDaylight),
+      );
+      expect(
+        _byId('impala').possibleExtras,
+        isNot(contains(SightingExtra.inDaylight)),
+      );
+    });
+
+    test('is not offered where daylight is unremarkable', () {
+      // A water thick-knee stands in the sun all afternoon and a scrub hare is
+      // up at dusk on every evening drive. Both are in the Night shift
+      // collection because that is where a visitor looks for them; neither is
+      // a story.
+      for (final String id in <String>['water-thick-knee', 'scrub-hare']) {
+        expect(_byId(id).isNocturnal, isTrue, reason: id);
+        expect(
+          _byId(id).possibleExtras,
+          isNot(contains(SightingExtra.inDaylight)),
+          reason: id,
+        );
+      }
+    });
+
+    test('turns a bushpig into a story', () {
+      // 305 becomes 763 — past the serval, and into the band above. That is
+      // the right size: it should feel like catching a different animal.
+      final Species bushpig = _byId('bushpig');
+
+      expect(bushpig.points, 305);
+      expect(
+        bushpig.scoreFor(extras: <SightingExtra>{SightingExtra.inDaylight}),
+        763,
+      );
+      expect(
+        bushpig.scoreFor(extras: <SightingExtra>{SightingExtra.inDaylight}),
+        greaterThan(_byId('serval').points),
+      );
     });
   });
 

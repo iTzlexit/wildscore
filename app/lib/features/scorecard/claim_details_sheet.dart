@@ -155,7 +155,7 @@ class _ClaimDetailsSheetState extends State<ClaimDetailsSheet> {
                       Expanded(
                         child: _Choice(
                           label: 'Yes — ${variant.label.toLowerCase()}',
-                          detail: '+${variant.bonus}',
+                          detail: '×${variant.multiplier}',
                           selected: _variant,
                           onTap: () => setState(() => _variant = true),
                         ),

@@ -38,7 +38,10 @@ void main() {
       expect(s.conservationStatus, ConservationStatus.leastConcern);
       expect(s.isNocturnal, isTrue);
       expect(s.isBigFive, isFalse);
-      expect(s.points, 2000);
+      // No explicit `points` in the fixture, so it falls back to the middle of
+      // the tier's band. That fallback is what stops a species added tomorrow
+      // scoring nothing before anybody has ranked it.
+      expect(s.points, RarityTier.legendary.points);
       expect(s.dexNumber, 999);
       expect(s.dexLabel, '999');
       expect(s.imageAsset, 'assets/species/test-beast.jpg');
@@ -94,22 +97,34 @@ void main() {
   });
 
   group('rarity tiers', () {
-    test('point values are the ones the spec promises', () {
-      // Geometric, each tier ~2.5–3x the one below. Sighting probability in
-      // Kruger spans roughly 1:1000, so a flat spread under-rewards the top.
-      expect(RarityTier.common.points, 5);
-      expect(RarityTier.frequent.points, 15);
-      expect(RarityTier.uncommon.points, 40);
-      expect(RarityTier.scarce.points, 100);
-      expect(RarityTier.rare.points, 300);
-      expect(RarityTier.legendary.points, 2000);
+    test('the bands are the ones the spec promises', () {
+      // A tier is a range now, not a value: every species carries its own
+      // number from the hand ranking and the tier says which band it lives in.
+      // Steep, because sighting probability in Kruger spans roughly 1:1000 and
+      // a flat spread under-rewards the top.
+      expect((RarityTier.common.low, RarityTier.common.high), (5, 15));
+      expect((RarityTier.frequent.low, RarityTier.frequent.high), (20, 55));
+      expect((RarityTier.uncommon.low, RarityTier.uncommon.high), (60, 140));
+      expect((RarityTier.scarce.low, RarityTier.scarce.high), (150, 320));
+      expect((RarityTier.rare.low, RarityTier.rare.high), (350, 550));
+      expect(
+        (RarityTier.legendary.low, RarityTier.legendary.high),
+        (600, 1000),
+      );
     });
 
-    test('are strictly ascending — scarcity has to mean something', () {
+    test('the bands ascend and never overlap', () {
+      // Scarcity has to mean something: the worst Legendary must outscore the
+      // best Very rare, or the categories are decoration.
       for (int i = 1; i < RarityTier.values.length; i++) {
         expect(
-          RarityTier.values[i].points,
-          greaterThan(RarityTier.values[i - 1].points),
+          RarityTier.values[i].low,
+          greaterThan(RarityTier.values[i - 1].high),
+          reason: RarityTier.values[i].label,
+        );
+        expect(
+          RarityTier.values[i].high,
+          greaterThan(RarityTier.values[i].low),
         );
       }
     });
