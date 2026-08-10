@@ -108,6 +108,8 @@ Four tabs — **Profile, Wild Score, Animal Dex, Sightings**.
 | `tools/ranker.html` | Pairwise rarity survey, **Notable and up only** (80 species). Publish to Netlify once the catalogue is complete |
 | `app/tool/build_ranker.dart` | Regenerates the ranker from species.json |
 | `app/tool/merge_rankings.dart` | Bradley-Terry fit over everybody submitted answers |
+| `tools/rank-list.html` | **Order the animals by hand inside each tier**, with points spread across a band |
+| `app/tool/build_rank_list.dart` | Regenerates rank-list.html from species.json |
 | `tools/photo-picker.html` | **Pick species photographs yourself.** Regenerate with `source_species_photos --picker` |
 | `app/tool/generate_icon.dart` | Launcher icons at every density |
 | `app/tool/serve_web.dart` | Static server. `--root ..` to serve the content tools |

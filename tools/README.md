@@ -156,3 +156,38 @@ cd app && dart run tool/source_species_photos.dart --picker --wide african-darte
 offers 20 options instead of 8. Naming species writes `photo-picker-redo.html`
 rather than replacing the full sheet, so redoing nine birds does not throw away
 the page for the other hundred and eighty.
+
+## rank-list.html
+
+**Put the animals in order yourself, inside our own categories.**
+
+The other ranker (`ranker.html`) asks strangers "which of these two is harder
+to find" hundreds of times and fits a model to the answers. This one asks one
+person who knows Kruger to just drag them into order. **Both stay** — the
+pairwise one is for the crowd, this one settles what the app ships now.
+
+```bash
+cd app && dart run tool/build_rank_list.dart
+```
+
+Every animal sits under its current tier. Top of each list is hardest to find;
+arrows move one place, **⤒** sends it to the top. Points are spread evenly
+across each category's band and update as you move things, and the two boxes on
+each heading set that band.
+
+Bands default to the scheme the owner brought and **never overlap** — the worst
+Legendary always outscores the best Very rare, or the tier means nothing:
+
+| Category | Band |
+|---|---|
+| Legendary | 1500–3500 |
+| Very rare | 800–1400 |
+| Rare | 300–700 |
+| Notable | 100–280 |
+| Frequent | 25–90 |
+| Common | 5–20 |
+
+Frequent and Common start collapsed. Putting a hundred and ten impala-grade
+animals in a strict order is work with no reward.
+
+Order saves as you go. **Export** gives every species with its computed points.
