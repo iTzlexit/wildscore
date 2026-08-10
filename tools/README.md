@@ -170,8 +170,10 @@ pairwise one is for the crowd, this one settles what the app ships now.
 cd app && dart run tool/build_rank_list.dart
 ```
 
-Every animal sits under its current tier. Top of each list is hardest to find;
-arrows move one place, **⤒** sends it to the top. Points are spread evenly
+Every animal starts under its current tier. Top of each list is hardest to find;
+arrows move one place, **⤒** sends it to the top, and the **dropdown on each row
+moves it to a different category** — landing at the bottom of the one you pick,
+since choosing the group is not the same as choosing the position in it. Points are spread evenly
 across each category's band and update as you move things, and the two boxes on
 each heading set that band.
 

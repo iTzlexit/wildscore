@@ -40,7 +40,11 @@
          text-align:right;color:var(--accent)}
  li .mv{display:flex;gap:4px}
  li .mv button{padding:6px 9px;font-size:13px;line-height:1}
+ li .cat{font:inherit;font-size:12px;padding:5px 6px;border:1px solid var(--line);
+         border-radius:8px;background:#fff;color:var(--mute);max-width:104px}
  li.moved{background:#1b7a5411}
+ @keyframes flash{from{background:#1b7a5433}to{background:transparent}}
+ li.moved{animation:flash 1.2s ease-out}
  #out{position:fixed;inset:auto 16px 16px auto;max-width:560px;background:#fff;
       border:1px solid var(--line);border-radius:14px;padding:16px;display:none;
       box-shadow:0 10px 40px #0003;z-index:30}
@@ -57,6 +61,10 @@
   <div class="note">
     <b>Top of each list = hardest to find.</b> Use the arrows to move an animal
     up or down; <b>⤒</b> sends it straight to the top.
+    <br><br>
+    <b>In the wrong category altogether?</b> Use the dropdown on the row. It
+    lands at the bottom of whichever category you pick, and you can walk it up
+    from there.
     <br><br>
     Points are worked out as you go — spread evenly between the two numbers on
     each category heading. <b>Change those two numbers</b> if a category should
@@ -113,20 +121,42 @@ function persist() {
   } catch (e) { storageWorks = false; }
 }
 
-// Restore a saved ordering, ignoring anything that is no longer in the
-// catalogue and appending anything that is new. A species added next week must
-// not wipe out an afternoon of ordering.
+// Restore a saved ordering.
+//
+// Rebuilt from **every** tier's pool rather than from the tier's own, because
+// an animal can be moved between categories and the saved order is the only
+// record that it was. Looking a saved id up inside its original tier — which
+// is what this did first — quietly dropped every category change on reload,
+// while the ordering it sat in survived. Half-restored state that looks
+// restored is worse than none.
+//
+// Anything the save does not mention goes back where the catalogue put it, so
+// a species added next week appears in its own tier instead of wiping out an
+// afternoon of ordering.
 const saved = load();
-TIERS.forEach(t => {
-  const s = saved[t.tier];
-  if (!s) return;
-  if (typeof s.low === 'number') t.low = s.low;
-  if (typeof s.high === 'number') t.high = s.high;
-  const by = new Map(t.species.map(x => [x.id, x]));
-  const ordered = (s.order || []).map(id => by.get(id)).filter(Boolean);
-  const seen = new Set(ordered.map(x => x.id));
-  t.species = [...ordered, ...t.species.filter(x => !seen.has(x.id))];
-});
+if (Object.keys(saved).length) {
+  const pool = new Map();
+  TIERS.forEach(t => t.species.forEach(s => pool.set(s.id, s)));
+
+  const claimed = new Set();
+  TIERS.forEach(t => {
+    const s = saved[t.tier];
+    if (!s) { t.species = []; return; }
+    if (typeof s.low === 'number') t.low = s.low;
+    if (typeof s.high === 'number') t.high = s.high;
+    t.species = (s.order || [])
+      .filter(id => pool.has(id) && !claimed.has(id))
+      .map(id => { claimed.add(id); return pool.get(id); });
+  });
+
+  // Whatever the save never mentioned — new species, or a save written before
+  // a rename — lands back in the tier the catalogue gave it.
+  const byTier = new Map(TIERS.map(t => [t.tier, t]));
+  pool.forEach((s, id) => {
+    if (claimed.has(id)) return;
+    (byTier.get(s.from) || TIERS[TIERS.length - 1]).species.push(s);
+  });
+}
 
 // Points fall linearly from the top of the band to the bottom. One species in
 // a category gets the top of its band rather than a division by zero.
@@ -141,6 +171,7 @@ const list = document.getElementById('list');
 
 TIERS.forEach(t => {
   const d = document.createElement('details');
+  d.dataset.t = t.tier;
   // Common and Frequent are open to nobody's benefit: forty impala-grade
   // animals in a strict order is work with no reward. Left closed, and the
   // order they already have is kept.
@@ -172,7 +203,12 @@ function paint(t, movedId) {
     const li = document.createElement('li');
     if (s.id === movedId) li.className = 'moved';
     li.innerHTML = `<span class="pos">${i + 1}</span>
-      <span class="nm"><b>${s.name}</b><span>${s.afr || ''}</span></span>
+      <span class="nm"><b>${s.name}</b><span>${s.afr || ''}${
+        s.from !== t.tier ? ' · moved from ' + labelOf(s.from) : ''}</span></span>
+      <select class="cat" title="Change category">${
+        TIERS.map(x => `<option value="${x.tier}"${
+          x.tier === t.tier ? ' selected' : ''}>${x.label}</option>`).join('')
+      }</select>
       <span class="pts">${pointsFor(t, i)}</span>
       <span class="mv">
         <button title="To the top" ${i === 0 ? 'disabled' : ''}>⤒</button>
@@ -183,10 +219,42 @@ function paint(t, movedId) {
     top.onclick = () => move(t, i, 0);
     up.onclick = () => move(t, i, i - 1);
     down.onclick = () => move(t, i, i + 1);
+    li.querySelector('.cat').onchange = (e) => recategorise(t, i, e.target.value);
     ol.appendChild(li);
   });
+  const badge = document.querySelector(`details[data-t="${t.tier}"] .n`);
+  if (badge) badge.textContent = t.species.length;
   const n = TIERS.reduce((a, x) => a + x.species.length, 0);
   document.getElementById('count').textContent = `${n} animals`;
+}
+
+function labelOf(tier) {
+  const t = TIERS.find(x => x.tier === tier);
+  return t ? t.label : tier;
+}
+
+/// Move a species into a different category.
+///
+/// It lands at the **bottom** of the one it arrives in, which is the least
+/// presumptuous place to put it: you have said it belongs in this group, not
+/// where it sits inside it. The row is highlighted and scrolled to so the next
+/// move is one click away.
+function recategorise(from, i, tierName) {
+  const to = TIERS.find(t => t.tier === tierName);
+  if (!to || to === from) return;
+
+  const [s] = from.species.splice(i, 1);
+  to.species.push(s);
+  persist();
+  paint(from);
+  paint(to, s.id);
+
+  const box = document.querySelector(`details[data-t="${to.tier}"]`);
+  if (box) {
+    box.open = true;
+    const li = document.getElementById('o-' + to.tier).lastElementChild;
+    if (li) li.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
 }
 
 function move(t, from, to) {
@@ -212,9 +280,13 @@ function exp() {
       label: t.label,
       low: t.low,
       high: t.high,
-      order: t.species.map((s, i) => ({
-        id: s.id, name: s.name, points: pointsFor(t, i),
-      })),
+      order: t.species.map((s, i) => {
+        const row = { id: s.id, name: s.name, points: pointsFor(t, i) };
+        // Only on the ones that changed, so a category move is visible at a
+        // glance in the pasted JSON rather than needing a diff.
+        if (s.from !== t.tier) row.movedFrom = s.from;
+        return row;
+      }),
     };
   });
   document.getElementById('json').value = JSON.stringify(out, null, 1);

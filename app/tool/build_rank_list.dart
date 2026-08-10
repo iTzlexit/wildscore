@@ -73,6 +73,10 @@ Future<void> main(List<String> args) async {
                 'id': s['id'] as String,
                 'name': s['commonName'] as String,
                 'afr': s['afrikaansName'] as String,
+                // Where it started, so the page can say what moved and the
+                // export can be applied without diffing it against the
+                // catalogue by hand.
+                'from': tier,
               },
         ]..sort(
           (Map<String, String> a, Map<String, String> b) =>
