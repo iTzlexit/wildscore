@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show mapEquals;
 import 'package:flutter/material.dart';
 
 import '../../data/attribution_repository.dart';
@@ -25,6 +26,8 @@ class CodexScreen extends StatefulWidget {
     this.profile,
     this.caughtIds = const <String>{},
     this.onToggleSpotted,
+    this.housePoints = const <String, int>{},
+    this.onSetPoints,
     super.key,
   });
 
@@ -52,12 +55,24 @@ class CodexScreen extends StatefulWidget {
   /// same fix you would reach for in ASP.NET Core, for the same reason.
   final SpeciesRepository repository;
 
+  /// What this car has decided animals are worth, keyed by species id.
+  ///
+  /// Folded into the catalogue at load, so nothing below here has to know it
+  /// exists. Empty for almost everybody.
+  final Map<String, int> housePoints;
+
+  /// Revalue a species, or pass null to put it back to the catalogue's figure.
+  /// Null in tests and wherever the table is read-only.
+  final void Function(String id, int? points)? onSetPoints;
+
   @override
   State<CodexScreen> createState() => _CodexScreenState();
 }
 
 class _CodexScreenState extends State<CodexScreen> {
-  late final Future<List<Species>> _speciesFuture;
+  /// Not `late final`: revaluing a species reloads the catalogue, and this
+  /// screen's state survives a tab switch, so `initState` will not run again.
+  late Future<List<Species>> _speciesFuture;
   final TextEditingController _searchController = TextEditingController();
 
   String _query = '';
@@ -82,7 +97,7 @@ class _CodexScreenState extends State<CodexScreen> {
     // Kicked off once, here — not in build(), which Flutter may call many
     // times per second. This trips up almost everyone coming from the server
     // side, where a request handler runs exactly once.
-    _speciesFuture = widget.repository.loadAll();
+    _speciesFuture = widget.repository.loadAll(housePoints: widget.housePoints);
 
     // Credits are decorative to the list and only needed when a photo is
     // opened, so this is deliberately not awaited — the Codex renders without
@@ -92,6 +107,16 @@ class _CodexScreenState extends State<CodexScreen> {
         setState(() => _credits = credits);
       }
     });
+  }
+
+  @override
+  void didUpdateWidget(CodexScreen old) {
+    super.didUpdateWidget(old);
+    if (!mapEquals(old.housePoints, widget.housePoints)) {
+      _speciesFuture = widget.repository.loadAll(
+        housePoints: widget.housePoints,
+      );
+    }
   }
 
   @override
@@ -135,6 +160,9 @@ class _CodexScreenState extends State<CodexScreen> {
           onToggleSpotted: widget.onToggleSpotted == null
               ? null
               : () => widget.onToggleSpotted!(species.id),
+          onSetPoints: widget.onSetPoints == null
+              ? null
+              : (int? points) => widget.onSetPoints!(species.id, points),
         ),
       ),
     );

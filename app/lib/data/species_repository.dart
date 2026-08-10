@@ -15,7 +15,19 @@ class SpeciesRepository {
 
   static const String _assetPath = 'assets/data/species.json';
 
-  Future<List<Species>> loadAll() async {
+  /// [housePoints] overrides the catalogue's values, keyed by species id.
+  ///
+  /// **Applied here rather than at every call site**, which is the whole
+  /// reason it is cheap. The catalogue is read once at startup, so folding a
+  /// player's own scoring in at load means the dex tiles, the claim sheet, the
+  /// standings and the sightings feed all see the edited number without a
+  /// single one of them knowing the feature exists.
+  ///
+  /// Past drives are unaffected: a claim stores the points it scored at the
+  /// time, so a table edited in March cannot rewrite February.
+  Future<List<Species>> loadAll({
+    Map<String, int> housePoints = const <String, int>{},
+  }) async {
     final String raw = await rootBundle.loadString(_assetPath);
     final Map<String, dynamic> decoded =
         json.decode(raw) as Map<String, dynamic>;
@@ -23,6 +35,11 @@ class SpeciesRepository {
 
     final List<Species> species = entries
         .map((dynamic entry) => Species.fromJson(entry as Map<String, dynamic>))
+        .map(
+          (Species s) => housePoints.containsKey(s.id)
+              ? s.copyWith(housePoints: housePoints[s.id])
+              : s,
+        )
         .toList();
 
     // Dex order, like a field guide or a Pokédex. Rarity is still obvious at a

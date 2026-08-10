@@ -41,6 +41,7 @@ class SpeciesDetailScreen extends StatefulWidget {
     this.photoCredit,
     this.spotted = false,
     this.onToggleSpotted,
+    this.onSetPoints,
     super.key,
   });
 
@@ -91,6 +92,13 @@ class SpeciesDetailScreen extends StatefulWidget {
   /// somebody has spent years building.
   final VoidCallback? onToggleSpotted;
 
+  /// Revalue this animal for your own game, or pass null to put it back.
+  ///
+  /// Absent wherever the table is read-only — the sightings feed and the
+  /// scorecard both open this card, and neither is a place to be rewriting the
+  /// rules mid-drive.
+  final ValueChanged<int?>? onSetPoints;
+
   @override
   State<SpeciesDetailScreen> createState() => _SpeciesDetailScreenState();
 }
@@ -134,6 +142,7 @@ class _SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
               child: _Sheet(
                 species: widget.species,
                 spotted: _spotted,
+                onSetPoints: widget.onSetPoints,
                 onToggleSpotted: widget.onToggleSpotted == null
                     ? null
                     : _toggle,
@@ -428,11 +437,13 @@ class _Sheet extends StatelessWidget {
     required this.species,
     required this.spotted,
     this.onToggleSpotted,
+    this.onSetPoints,
   });
 
   final Species species;
   final bool spotted;
   final VoidCallback? onToggleSpotted;
+  final ValueChanged<int?>? onSetPoints;
 
   @override
   Widget build(BuildContext context) {
@@ -477,6 +488,7 @@ class _Sheet extends StatelessWidget {
                   species: species,
                   spotted: spotted,
                   onToggleSpotted: onToggleSpotted,
+                  onSetPoints: onSetPoints,
                 ),
                 _FieldNotesTab(species: species),
                 _WhereTab(species: species),
@@ -542,11 +554,13 @@ class _AboutTab extends StatelessWidget {
     required this.species,
     required this.spotted,
     this.onToggleSpotted,
+    this.onSetPoints,
   });
 
   final Species species;
   final bool spotted;
   final VoidCallback? onToggleSpotted;
+  final ValueChanged<int?>? onSetPoints;
 
   @override
   Widget build(BuildContext context) {
@@ -563,6 +577,10 @@ class _AboutTab extends StatelessWidget {
           const SizedBox(height: Space.lg),
         ],
         _PointsBanner(species: species),
+        if (onSetPoints != null) ...<Widget>[
+          const SizedBox(height: Space.sm),
+          _HouseRuleEditor(species: species, onSetPoints: onSetPoints!),
+        ],
         if (species.isSensitive) ...<Widget>[
           const SizedBox(height: Space.lg),
           const _SensitiveNotice(),
@@ -727,6 +745,189 @@ class _PointsBanner extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+/// Change what this animal is worth in your own game.
+///
+/// **The honest answer to a question we cannot answer.** Our table is one
+/// opinion taken nationally, and Kruger is not one place: sable and roan are
+/// the sighting of the trip in the south and a Tuesday in the far north. A car
+/// based at Punda Maria for a week is playing a different game from one at
+/// Berg-en-Dal, and no single table is right for both. Alex's idea, and better
+/// than arguing about the table.
+///
+/// A slider over fixed rungs rather than a number field, for two reasons. It is
+/// operated with a thumb in a moving vehicle, and free numbers would let
+/// somebody put an impala on 999 and quietly wreck their own game — the rungs
+/// are the same ones every animal in the catalogue already sits on.
+class _HouseRuleEditor extends StatefulWidget {
+  const _HouseRuleEditor({required this.species, required this.onSetPoints});
+
+  final Species species;
+  final ValueChanged<int?> onSetPoints;
+
+  @override
+  State<_HouseRuleEditor> createState() => _HouseRuleEditorState();
+}
+
+class _HouseRuleEditorState extends State<_HouseRuleEditor> {
+  static final List<int> _rungs = RarityTier.allRungs;
+
+  bool _open = false;
+  late int _value = widget.species.points;
+
+  @override
+  void didUpdateWidget(_HouseRuleEditor old) {
+    super.didUpdateWidget(old);
+    if (old.species.points != widget.species.points) {
+      _value = widget.species.points;
+    }
+  }
+
+  int get _index {
+    // Nearest rung, so a value stored by an older build with a different ladder
+    // still lands somewhere sensible instead of snapping to the bottom.
+    int best = 0;
+    for (int i = 1; i < _rungs.length; i++) {
+      if ((_rungs[i] - _value).abs() < (_rungs[best] - _value).abs()) {
+        best = i;
+      }
+    }
+    return best;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final Species s = widget.species;
+    final RarityStyle style = s.rarityTier.style;
+
+    if (!_open) {
+      return Align(
+        alignment: Alignment.centerLeft,
+        child: TextButton.icon(
+          onPressed: () => setState(() => _open = true),
+          icon: const Icon(Icons.tune_rounded, size: 17),
+          style: TextButton.styleFrom(foregroundColor: AppColors.textSecondary),
+          label: Text(
+            s.isHouseRule
+                ? 'You changed this from ${s.cataloguePoints}'
+                : 'Worth something else to you?',
+            style: AppText.caption.copyWith(
+              color: s.isHouseRule ? style.accent : AppColors.textSecondary,
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(
+        Space.screen,
+        Space.md,
+        Space.screen,
+        Space.sm,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceAlt,
+        borderRadius: BorderRadius.circular(Radii.card),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              // Expanded, not a Spacer after a fixed Text: at a large text
+              // scale the label and the number cannot both have their natural
+              // width, and something has to give. It should be the label.
+              Expanded(
+                child: Text(
+                  'WORTH IN YOUR GAME',
+                  style: AppText.overline.copyWith(color: AppColors.textMuted),
+                ),
+              ),
+              const SizedBox(width: Space.sm),
+              Text(
+                '$_value',
+                style: AppText.title2.copyWith(
+                  color: style.accent,
+                  fontFeatures: AppText.tabular,
+                  fontVariations: AppFonts.weight(800),
+                ),
+              ),
+            ],
+          ),
+          Slider(
+            value: _index.toDouble(),
+            max: (_rungs.length - 1).toDouble(),
+            divisions: _rungs.length - 1,
+            activeColor: style.accent,
+            label: '$_value',
+            onChanged: (double v) => setState(() => _value = _rungs[v.round()]),
+          ),
+          Text(
+            // Named so the number means something. Somebody sliding to 425 has
+            // no idea what 425 is until it says "as much as a serval".
+            _describe(_value),
+            style: AppText.caption,
+          ),
+          const SizedBox(height: Space.sm),
+          // Wrapped, not a Row. "Use this" beside "Reset to 425" overflows a
+          // 430pt card by 45 pixels before anybody touches the text scale.
+          Wrap(
+            spacing: Space.sm,
+            runSpacing: Space.xs,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: <Widget>[
+              FilledButton(
+                onPressed: () {
+                  widget.onSetPoints(
+                    // Back to the catalogue rather than storing a duplicate of
+                    // it: an override equal to the default would survive a
+                    // future revaluation and silently pin the old number.
+                    _value == s.cataloguePoints ? null : _value,
+                  );
+                  setState(() => _open = false);
+                },
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppColors.accent,
+                  foregroundColor: AppColors.accentInk,
+                ),
+                child: const Text('Use this'),
+              ),
+              if (s.isHouseRule)
+                TextButton(
+                  onPressed: () {
+                    widget.onSetPoints(null);
+                    setState(() {
+                      _value = s.cataloguePoints;
+                      _open = false;
+                    });
+                  },
+                  child: Text('Reset to ${s.cataloguePoints}'),
+                )
+              else
+                TextButton(
+                  onPressed: () => setState(() {
+                    _value = s.points;
+                    _open = false;
+                  }),
+                  child: const Text('Cancel'),
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _describe(int value) {
+    for (final RarityTier t in RarityTier.values) {
+      if (value <= t.high) {
+        return 'About as hard to find as a ${t.label.toLowerCase()} animal.';
+      }
+    }
+    return '';
   }
 }
 

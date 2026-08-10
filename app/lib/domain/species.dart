@@ -41,6 +41,37 @@ class WildCard {
   final WildCardScope scope;
 }
 
+/// Worth less once you have had a few of them today.
+///
+/// **Elephant and buffalo, and nothing else so far.** Both are Big Five, so
+/// neither can be capped — you should always be able to claim one, and a
+/// locked Big Five tile would read as a bug. But the fourteenth elephant is
+/// not the event the second one was.
+///
+/// A cap says "stop counting". This says "keep counting, it is worth less",
+/// which is both truer and less annoying. Alex's call, and the distinction is
+/// a good one.
+///
+/// A multiplier rather than a replacement value, so it still means something
+/// after the player has edited the base points.
+class SpeciesDecay {
+  const SpeciesDecay({required this.after, required this.multiplier});
+
+  factory SpeciesDecay.fromJson(Map<String, dynamic> json) => SpeciesDecay(
+    after: json['after'] as int,
+    multiplier: (json['multiplier'] as num).toDouble(),
+  );
+
+  /// How many pay full price. The third elephant is the first cheap one.
+  final int after;
+
+  final double multiplier;
+
+  /// What the `n`th sighting of the day is worth, `n` counting from one.
+  int applyTo(int points, int n) =>
+      n <= after ? points : (points * multiplier).ceil();
+}
+
 /// A version of an animal that is worth more than the animal.
 ///
 /// One species has one at the moment and it is the obvious one: **a male
@@ -113,6 +144,9 @@ class Species {
     this.variant,
     this.population,
     this.wildCard,
+    this.chancesPerDay,
+    this.decay,
+    this.housePoints,
     int? points,
   }) : _points = points;
 
@@ -177,6 +211,10 @@ class Species {
           ? null
           : WildCard.fromJson(json['wildCard']! as Map<String, dynamic>),
       points: json['points'] as int?,
+      chancesPerDay: json['chancesPerDay'] as int?,
+      decay: json['decay'] == null
+          ? null
+          : SpeciesDecay.fromJson(json['decay']! as Map<String, dynamic>),
     );
   }
 
@@ -239,7 +277,20 @@ class Species {
   /// scores something sensible instead of nothing.
   final int? _points;
 
-  int get points => _points ?? rarityTier.points;
+  /// What this car decided it is worth, overriding the catalogue.
+  ///
+  /// Null for almost everything, always, because it only holds what somebody
+  /// actually changed. Kept **beside** the catalogue value rather than
+  /// replacing it, so the card can say "you moved this" and offer to put it
+  /// back — an edit you cannot see or undo is a trap.
+  final int? housePoints;
+
+  bool get isHouseRule => housePoints != null;
+
+  /// The catalogue's own figure, whatever the player has since decided.
+  int get cataloguePoints => _points ?? rarityTier.points;
+
+  int get points => housePoints ?? cataloguePoints;
 
   /// What one sighting of this animal is worth, all in.
   ///
@@ -260,10 +311,16 @@ class Species {
     bool variantApplied = false,
     SightingContext context = SightingContext.normal,
     Set<SightingExtra> extras = const <SightingExtra>{},
+    int sightingsToday = 1,
   }) {
     double total =
         (wildCardBonusEarned && wildCard != null ? wildCard!.bonus : points)
             .toDouble();
+    // Before everything else, because a decayed elephant should still get the
+    // full benefit of a calf or an empty road.
+    if (decay != null && !wildCardBonusEarned) {
+      total = decay!.applyTo(total.round(), sightingsToday).toDouble();
+    }
     if (variantApplied && variant != null) {
       total *= variant!.multiplier;
     }
@@ -317,33 +374,21 @@ class Species {
 
   bool get isWildCard => wildCard != null;
 
-  /// How many times this can be claimed in a day. `null` is unlimited.
+  /// How many times this can be claimed in a day. **Null is unlimited, and
+  /// almost everything is null.**
   ///
-  /// Daily wild cards get four, because "the first one is worth more" says
-  /// nothing at all if there is only ever one.
+  /// Two species are capped: impala at two and vervet monkey at four. That is
+  /// the entire list. It used to be tier-wide — four a day for anything Common
+  /// or Frequent — which punished the wrong thing entirely: a real morning's
+  /// zebra sightings ran out, and so did elephant, in Kruger.
   ///
-  /// **A wild card can only ever raise the cap, never lower it.** Lion,
-  /// leopard and white rhino joined the wild cards and two of them sit in
-  /// uncapped tiers — so the override capped them at four, quietly making
-  /// "nothing rare is capped" a lie on the same screen that prints it. Six
-  /// leopards in a day is a story, not an exploit.
-  int? get chancesPerDay {
-    // Impala is its own case and always has been. It is the commonest animal in
-    // the park by a distance, so the tier's four would mean four shouts about
-    // impala — two is the point being made: the first one is the arrival
-    // moment and pays a bonus, the second is an ordinary impala, and then it is
-    // done for the day.
-    if (id == 'impala') {
-      return 2;
-    }
-    final int? tierCap = rarityTier.chancesPerDay;
-    if (tierCap == null) {
-      return null;
-    }
-    return isWildCard && wildCardScope == WildCardScope.day
-        ? (tierCap > 4 ? tierCap : 4)
-        : tierCap;
-  }
+  /// The cap exists so nobody taps every impala from Malelane to Satara. It
+  /// was never meant to ration a good day, and Alex is right that a car
+  /// counting a hundred giraffe is nobody's business but theirs.
+  final int? chancesPerDay;
+
+  /// Worth less once you have had a few. Null for almost everything.
+  final SpeciesDecay? decay;
 
   /// Whether the bonus resets daily or only once a trip.
   WildCardScope get wildCardScope => wildCard?.scope ?? WildCardScope.day;
@@ -363,7 +408,10 @@ class Species {
   /// Zero-padded for display: `001`, `042`, `071`.
   String get dexLabel => dexNumber.toString().padLeft(3, '0');
 
-  Species copyWith({bool? discovered}) {
+  /// [points] is how a player's own scoring reaches the rest of the app: the
+  /// repository applies overrides at load, so every screen, the claim sheet and
+  /// the feed all see the edited number without knowing anything about it.
+  Species copyWith({bool? discovered, int? housePoints}) {
     return Species(
       id: id,
       dexNumber: dexNumber,
@@ -388,6 +436,9 @@ class Species {
       population: population,
       wildCard: wildCard,
       points: _points,
+      chancesPerDay: chancesPerDay,
+      decay: decay,
+      housePoints: housePoints ?? this.housePoints,
     );
   }
 

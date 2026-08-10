@@ -125,10 +125,12 @@ void main() {
   testWidgets('a spent species cannot be claimed again', (
     WidgetTester tester,
   ) async {
-    // Greater Kudu is Common: four chances a day. Tapping it a fifth time must
-    // do nothing rather than quietly score again.
+    // Vervet monkey is one of only two capped species — four a day. Tapping
+    // it a fifth time must do nothing rather than quietly score again.
     //
-    // Deliberately not impala, which is its own case with two chances.
+    // Deliberately not impala, which is the other one and gets two. Nothing
+    // else in the catalogue is capped at all now: a car that wants to count a
+    // hundred giraffe is welcome to.
     Species? picked;
     await tester.binding.setSurfaceSize(const Size(430, 1400));
     addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -138,7 +140,7 @@ void main() {
     for (int i = 0; i < 4; i++) {
       spent = spent.withClaim(
         Claim(
-          speciesId: 'greater-kudu',
+          speciesId: 'vervet-monkey',
           playerId: card.players[0].id,
           at: DateTime(2026, 8, 2, 7 + i),
           points: 5,
@@ -167,9 +169,9 @@ void main() {
     await tester.tap(find.text('open'));
     await tester.pumpAndSettle();
 
-    await tester.enterText(find.byType(TextField), 'strepsiceros');
+    await tester.enterText(find.byType(TextField), 'pygerythrus');
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Greater Kudu'));
+    await tester.tap(find.text('Vervet Monkey'));
     await tester.pumpAndSettle();
 
     expect(picked, isNull, reason: 'the screen should still be open');

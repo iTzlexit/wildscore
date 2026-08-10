@@ -186,14 +186,33 @@ class RulesScreen extends StatelessWidget {
           ),
           const _Rule(
             icon: Icons.lock_clock_rounded,
-            title: 'Common animals have a daily limit',
+            title: 'Almost nothing runs out',
             body:
-                'To keep the game fun, common animals only score a limited '
-                'number of times each day.\n\n'
-                'Impala scores **twice** a day. Most common animals score up '
-                'to **four times**.\n\n'
-                '**Rare animals are never capped.** Spot six leopards and all '
-                'six count.',
+                'Only **impala** and **vervet monkey** have a daily limit — '
+                'two and four. Everything else is unlimited.\n\n'
+                'Count a hundred giraffe if you want to. It is your afternoon.',
+          ),
+          const _Rule(
+            icon: Icons.trending_down_rounded,
+            title: 'Elephant and buffalo taper off',
+            body:
+                'Never capped — they are Big Five, and you should always be '
+                'able to claim one.\n\n'
+                'But from the **third of the day** they score less. The '
+                'fourteenth elephant is not the event the second one was.',
+          ),
+          const SizedBox(height: Space.xl),
+
+          const _Section('YOUR GAME, YOUR RULES'),
+          const _Rule(
+            icon: Icons.tune_rounded,
+            title: 'Disagree with a score? Change it',
+            body:
+                'Our points are one opinion, and Kruger is not one place — '
+                'sable is the find of the trip down south and a Tuesday up '
+                'north.\n\n'
+                'Open any animal in the **Animal Dex** and set what it is '
+                'worth in your game. Everything else adjusts around it.',
           ),
           const SizedBox(height: Space.lg),
 
@@ -461,7 +480,6 @@ class _PointRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final RarityStyle style = tier.style;
-    final int? chances = tier.chancesPerDay;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
@@ -482,11 +500,6 @@ class _PointRow extends StatelessWidget {
               style: AppText.label.copyWith(color: AppColors.textPrimary),
             ),
           ),
-          Text(
-            chances == null ? 'unlimited' : '$chances a day',
-            style: AppText.caption.copyWith(fontSize: 11),
-          ),
-          const SizedBox(width: Space.md),
           SizedBox(
             // A range, because every animal in a tier no longer scores the
             // same — a leopard and a wild dog are both Rare and nobody thinks

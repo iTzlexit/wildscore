@@ -90,20 +90,38 @@ void main() {
     }
   });
 
-  testWidgets('the everyday cap is explained without jargon', (
+  testWidgets('the caps are stated as the exception they now are', (
     WidgetTester tester,
   ) async {
-    // The heading used to be "The common ones run out for the day", which
-    // meant nothing until you had already read the card. It now says what it
-    // is, and the two numbers a player actually needs are in the body.
-    await _pump(tester, size: const Size(390, 5200));
+    // Caps used to be tier-wide, and the card had to explain a system. Two
+    // species are capped now, so the card names them and stops.
+    await _pump(tester, size: const Size(390, 6000));
 
-    expect(find.text('Common animals have a daily limit'), findsOneWidget);
-    expect(find.textContaining('Impala scores'), findsOneWidget);
-    expect(
-      find.textContaining('Rare animals are never capped'),
-      findsOneWidget,
-    );
+    expect(find.text('Almost nothing runs out'), findsOneWidget);
+    expect(find.textContaining('vervet monkey'), findsOneWidget);
+    expect(find.textContaining('unlimited'), findsOneWidget);
+  });
+
+  testWidgets('the two Big Five that taper off say so', (
+    WidgetTester tester,
+  ) async {
+    // Never capped, because a locked Big Five tile reads as a bug — but the
+    // fourteenth elephant is not the event the second one was.
+    await _pump(tester, size: const Size(390, 6000));
+
+    expect(find.text('Elephant and buffalo taper off'), findsOneWidget);
+    expect(find.textContaining('third of the day'), findsOneWidget);
+  });
+
+  testWidgets('the player is told they can change the scores', (
+    WidgetTester tester,
+  ) async {
+    // The feature is worthless if nobody knows it is there, and the reason for
+    // it — that Kruger is not one place — is the interesting part.
+    await _pump(tester, size: const Size(390, 6000));
+
+    expect(find.text('YOUR GAME, YOUR RULES'), findsOneWidget);
+    expect(find.textContaining('Animal Dex'), findsOneWidget);
   });
 
   testWidgets('the two crowd outcomes are stated as scoring, not as advice', (

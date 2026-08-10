@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wildscore/domain/avatar_seed.dart';
-import 'package:wildscore/domain/rarity_tier.dart';
 import 'package:wildscore/domain/scorecard.dart';
 
 /// The scoring engine. This is the number people compete over, and a scoring
@@ -172,23 +171,11 @@ void main() {
   });
 
   group('chances', () {
-    test('the everyday animals get four claims a day', () {
-      // One each was far too tight. One elephant sighting a day, in Kruger, is
-      // not a rule anybody would accept — and the cap exists to stop the game
-      // becoming a data-entry job, not to ration the animals.
-      expect(RarityTier.common.chancesPerDay, 4);
-      expect(RarityTier.frequent.chancesPerDay, 4);
-    });
-
-    test('notable gets three', () {
-      expect(RarityTier.uncommon.chancesPerDay, 3);
-    });
-
-    test('rare and above are unlimited — every leopard counts', () {
-      expect(RarityTier.scarce.chancesPerDay, isNull);
-      expect(RarityTier.rare.chancesPerDay, isNull);
-      expect(RarityTier.legendary.chancesPerDay, isNull);
-    });
+    // Caps used to be tier-wide — four a day for anything Common or Frequent,
+    // three for Notable — and that punished the wrong thing entirely: a real
+    // morning's zebra ran out, and so did elephant, in Kruger. They are per
+    // species now and there are two of them. See species_data_test for the
+    // list; there is nothing left on RarityTier to test.
 
     test('timesClaimed counts per species', () {
       final Scorecard card = _card();

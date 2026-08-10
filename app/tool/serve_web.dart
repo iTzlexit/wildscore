@@ -30,9 +30,12 @@ Future<void> main(List<String> args) async {
   // pages want looking at before they go in front of anybody.
   final int rootFlag = args.indexOf('--root');
   final String rootPath = rootFlag == -1 ? 'build/web' : args[rootFlag + 1];
+  // Guarded on rootFlag rather than compared against it. Without the guard,
+  // `i != rootFlag + 1` is `i != 0` when the flag is absent — which silently
+  // ate the port argument, and `serve_web.dart 8096` quietly served on 8080.
   final List<String> rest = <String>[
     for (int i = 0; i < args.length; i++)
-      if (i != rootFlag && i != rootFlag + 1) args[i],
+      if (rootFlag == -1 || (i != rootFlag && i != rootFlag + 1)) args[i],
   ];
 
   final int port = rest.isEmpty ? 8080 : int.parse(rest.first);

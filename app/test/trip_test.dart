@@ -166,16 +166,12 @@ void main() {
     });
 
     test('a wild card has more than one chance, or the rule says nothing', () {
-      final Species zebra = _catalogue.firstWhere(
-        (Species s) => s.id == 'plains-zebra',
-      );
-
-      expect(zebra.chancesPerDay, 4);
-      expect(
-        zebra.chancesPerDay,
-        greaterThan(1),
-        reason: '"the first is worth more" says nothing if there is only one',
-      );
+      // Zebra is uncapped now, like almost everything. "The first is worth
+      // more" needs a second one to be possible, and unlimited is the most
+      // permissive answer there is.
+      for (final Species s in _catalogue.where((Species s) => s.isWildCard)) {
+        expect(s.chancesPerDay, anyOf(isNull, greaterThan(1)), reason: s.id);
+      }
     });
 
     test('the arrival animals are the wild cards', () {

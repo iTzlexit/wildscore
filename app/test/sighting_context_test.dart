@@ -68,9 +68,9 @@ void main() {
     test('a male is worth more than a lion', () {
       final Species lion = _byId('lion');
 
-      // Half again rather than a flat sixty. 115 becomes 173.
-      expect(lion.scoreFor(), 115);
-      expect(lion.scoreFor(variantApplied: true), 173);
+      // Half again rather than a flat sixty. 120 becomes 180.
+      expect(lion.scoreFor(), 120);
+      expect(lion.scoreFor(variantApplied: true), 180);
     });
 
     test('the bonus is ignored for a species with no variant', () {
@@ -81,23 +81,23 @@ void main() {
 
   group('the modifiers stack', () {
     test('a male lion found on an empty road', () {
-      // 115 × 1.5. The lone mark does not multiply, so this is simply what a
+      // 120 × 1.5. The lone mark does not multiply, so this is simply what a
       // male lion is worth.
       expect(
         _byId(
           'lion',
         ).scoreFor(variantApplied: true, context: SightingContext.alone),
-        173,
+        180,
       );
     });
 
     test('the same lion at a jam of eleven cars', () {
-      // 173 − 20%.
+      // 180 − 20%.
       expect(
         _byId(
           'lion',
         ).scoreFor(variantApplied: true, context: SightingContext.jam),
-        139,
+        144,
       );
     });
 
@@ -114,7 +114,7 @@ void main() {
       // trips produce one; the first is still the moment everybody remembers.
       final Species lion = _byId('lion');
 
-      expect(lion.points, 115);
+      expect(lion.points, 120);
       expect(lion.scoreFor(wildCardBonusEarned: true), 400);
       // And a male one, first thing, on an empty road.
       expect(
@@ -163,14 +163,14 @@ void main() {
     });
 
     test('turns a bushpig into a story', () {
-      // 305 becomes 763 — past the serval, and into the band above. That is
+      // 320 becomes 800 — past the serval, and into the band above. That is
       // the right size: it should feel like catching a different animal.
       final Species bushpig = _byId('bushpig');
 
-      expect(bushpig.points, 305);
+      expect(bushpig.points, 320);
       expect(
         bushpig.scoreFor(extras: <SightingExtra>{SightingExtra.inDaylight}),
-        763,
+        800,
       );
       expect(
         bushpig.scoreFor(extras: <SightingExtra>{SightingExtra.inDaylight}),

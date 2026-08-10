@@ -50,22 +50,42 @@ enum RarityTier {
   /// tomorrow scores something sensible before anybody has placed it.
   int get points => low + (high - low) ~/ 2;
 
-  /// How many times this species can be claimed in a day before the tile locks.
-  /// `null` is unlimited. Without this, forty impala means forty shouts.
+  /// The rungs inside this band.
   ///
-  /// **More chances the commoner the animal**, which sounds backwards until you
-  /// say it out loud: the cap exists so nobody taps every impala from Malelane
-  /// to Satara, not to ration the good stuff. Four is enough that a real
-  /// morning's zebra sightings all count, and few enough that it stops being a
-  /// chore.
+  /// **Every score in the game is one of these**, and so is every value a
+  /// player can choose when editing one. Ranking 190 animals produced 190
+  /// distinct numbers, which claims we can tell the seventeenth-hardest
+  /// Notable from the eighteenth. Nobody can. Snapping to a coarse ladder says
+  /// the true thing instead — these six are about as hard as each other, and
+  /// that lot are harder — and 190 animals collapse to 24 scores.
   ///
-  /// Common and Frequent were **one each**, which was far too tight — one
-  /// elephant sighting a day, in Kruger, is not a rule anybody would accept.
-  int? get chancesPerDay => switch (this) {
-    RarityTier.common => 4,
-    RarityTier.frequent => 4,
-    RarityTier.uncommon => 3,
-    // Nothing rare is capped. Find six leopards and all six count.
-    _ => null,
+  /// Ties are the feature, not a rounding artefact.
+  List<int> get rungs => switch (this) {
+    RarityTier.common => const <int>[5, 10, 15],
+    RarityTier.frequent => const <int>[20, 30, 40, 55],
+    RarityTier.uncommon => const <int>[60, 80, 100, 120, 140],
+    RarityTier.scarce => const <int>[150, 200, 250, 320],
+    RarityTier.rare => const <int>[350, 425, 500, 550],
+    RarityTier.legendary => const <int>[600, 750, 875, 1000],
   };
+
+  /// Every rung in the game, lowest first.
+  ///
+  /// The editor offers the whole ladder rather than only the species' own
+  /// band, because the case for editing at all is regional: sable and roan are
+  /// the sighting of the trip in the south and a Tuesday in the far north, and
+  /// a car based at Punda Maria needs to move them across a band, not within
+  /// one.
+  static List<int> get allRungs => <int>[
+    for (final RarityTier t in RarityTier.values) ...t.rungs,
+  ];
+
+  // Caps used to live here — four a day for Common and Frequent, three for
+  // Notable. They are per species now (`Species.chancesPerDay`) and there are
+  // exactly two of them, because a tier-wide cap punished the wrong thing: a
+  // real morning's zebra sightings ran out, and so did elephant.
+  //
+  // Alex's rule, and it is the right one: cap only what somebody would
+  // otherwise tap fifty times. If a car wants to count a hundred giraffe, that
+  // is their afternoon and not our business.
 }

@@ -27,7 +27,9 @@ class _InMemoryRepository implements SpeciesRepository {
   final List<Species> species;
 
   @override
-  Future<List<Species>> loadAll() async => species;
+  Future<List<Species>> loadAll({
+    Map<String, int> housePoints = const <String, int>{},
+  }) async => species;
 }
 
 late final List<Species> _catalogue;

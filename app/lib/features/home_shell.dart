@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../data/house_rules_repository.dart';
 import '../data/location_service.dart';
 import '../data/scorecard_repository.dart';
 import '../data/species_repository.dart';
@@ -62,10 +63,16 @@ class _HomeShellState extends State<HomeShell> {
   /// The day's game, or null when none is running.
   Scorecard? _card;
 
+  /// What this car has decided animals are worth, overriding the catalogue.
+  ///
+  /// Held here because it has to be folded into the catalogue at load, and the
+  /// catalogue is loaded here. Empty for almost everybody.
+  Map<String, int> _housePoints = const <String, int>{};
+
   @override
   void initState() {
     super.initState();
-    _speciesFuture = widget.repository.loadAll();
+    _speciesFuture = _loadSpecies();
     _spottedRepo.load().then((Set<String> ids) {
       if (mounted) {
         setState(() => _spotted = ids);
@@ -80,6 +87,33 @@ class _HomeShellState extends State<HomeShell> {
       if (mounted) {
         setState(() => _card = card);
       }
+    });
+  }
+
+  Future<List<Species>> _loadSpecies() async {
+    _housePoints = await const HouseRulesRepository().load();
+    return widget.repository.loadAll(housePoints: _housePoints);
+  }
+
+  /// One species revalued, or put back to the catalogue's figure.
+  ///
+  /// Reloads the whole catalogue rather than patching the one entry, because
+  /// the list is handed to four tabs and a dozen widgets — rebuilding it once
+  /// is cheaper than making every one of them aware that a number can change.
+  Future<void> _setHousePoints(String id, int? points) async {
+    final Map<String, int> next = <String, int>{..._housePoints};
+    if (points == null) {
+      next.remove(id);
+    } else {
+      next[id] = points;
+    }
+    await const HouseRulesRepository().save(next);
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      _housePoints = next;
+      _speciesFuture = widget.repository.loadAll(housePoints: next);
     });
   }
 
@@ -336,6 +370,10 @@ class _HomeShellState extends State<HomeShell> {
             variantApplied: details.variant,
             context: details.context,
             extras: details.extras,
+            // Which one of the day this is, counting from one. Only elephant
+            // and buffalo care: neither can be capped, being Big Five, but the
+            // fourteenth elephant is not the event the second one was.
+            sightingsToday: latest.timesClaimed(chosen.id) + 1,
           ),
           road: road,
           context: details.context,
@@ -400,6 +438,8 @@ class _HomeShellState extends State<HomeShell> {
                 repository: widget.repository,
                 caughtIds: _spotted,
                 onToggleSpotted: _toggleSpotted,
+                housePoints: _housePoints,
+                onSetPoints: _setHousePoints,
               ),
               SightingsScreen(visits: _visits, species: species, live: _card),
             ],

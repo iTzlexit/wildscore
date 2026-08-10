@@ -27,7 +27,7 @@
         "basis": "withheld",
         "note": "Not counted. Widespread across the park and almost never seen, so no survey has ever put a number on it."
       },
-      "points": 690
+      "points": 750
     },
     {
       "id": "aardwolf",
@@ -50,7 +50,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 820
+      "points": 875
     },
     {
       "id": "african-civet",
@@ -74,7 +74,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 175
+      "points": 150
     },
     {
       "id": "african-elephant",
@@ -103,7 +103,11 @@
         "year": 2023,
         "basis": "survey"
       },
-      "points": 55
+      "points": 55,
+      "decay": {
+        "after": 2,
+        "multiplier": 0.4
+      }
     },
     {
       "id": "african-wild-dog",
@@ -131,7 +135,7 @@
         "high": 360,
         "basis": "estimate"
       },
-      "points": 270
+      "points": 250
     },
     {
       "id": "african-wildcat",
@@ -156,7 +160,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 395
+      "points": 425
     },
     {
       "id": "banded-mongoose",
@@ -179,7 +183,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 50
+      "points": 55
     },
     {
       "id": "bat-eared-fox",
@@ -201,7 +205,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 645
+      "points": 600
     },
     {
       "id": "black-rhinoceros",
@@ -250,7 +254,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 50
+      "points": 55
     },
     {
       "id": "blue-wildebeest",
@@ -305,7 +309,7 @@
         "northern"
       ],
       "conservationStatus": "nearThreatened",
-      "points": 955
+      "points": 1000
     },
     {
       "id": "bushbuck",
@@ -333,7 +337,7 @@
         "high": 2200,
         "basis": "estimate"
       },
-      "points": 45
+      "points": 40
     },
     {
       "id": "bushpig",
@@ -356,7 +360,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 305
+      "points": 320
     },
     {
       "id": "cape-buffalo",
@@ -385,7 +389,11 @@
         "year": 2024,
         "basis": "survey"
       },
-      "points": 45
+      "points": 40,
+      "decay": {
+        "after": 2,
+        "multiplier": 0.4
+      }
     },
     {
       "id": "cape-porcupine",
@@ -408,7 +416,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 165
+      "points": 150
     },
     {
       "id": "caracal",
@@ -433,7 +441,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 735
+      "points": 750
     },
     {
       "id": "chacma-baboon",
@@ -481,7 +489,7 @@
         "high": 200,
         "basis": "estimate"
       },
-      "points": 290
+      "points": 320
     },
     {
       "id": "common-duiker",
@@ -504,7 +512,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 45
+      "points": 40
     },
     {
       "id": "eland",
@@ -532,7 +540,7 @@
         "year": 2024,
         "basis": "survey"
       },
-      "points": 310
+      "points": 320
     },
     {
       "id": "dwarf-mongoose",
@@ -578,7 +586,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 530
+      "points": 550
     },
     {
       "id": "giraffe",
@@ -715,7 +723,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 205
+      "points": 200
     },
     {
       "id": "impala",
@@ -749,7 +757,8 @@
       "wildCard": {
         "bonus": 100,
         "scope": "trip"
-      }
+      },
+      "chancesPerDay": 2
     },
     {
       "id": "klipspringer",
@@ -776,7 +785,7 @@
         "high": 700,
         "basis": "estimate"
       },
-      "points": 95
+      "points": 100
     },
     {
       "id": "large-spotted-genet",
@@ -800,7 +809,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 180
+      "points": 200
     },
     {
       "id": "leopard",
@@ -830,7 +839,7 @@
         "high": 2000,
         "basis": "estimate"
       },
-      "points": 265,
+      "points": 250,
       "wildCard": {
         "bonus": 550,
         "scope": "day"
@@ -857,7 +866,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 190
+      "points": 200
     },
     {
       "id": "lion",
@@ -892,7 +901,7 @@
         "high": 1700,
         "basis": "estimate"
       },
-      "points": 115,
+      "points": 120,
       "wildCard": {
         "bonus": 400,
         "scope": "day"
@@ -917,7 +926,7 @@
         "northern"
       ],
       "conservationStatus": "endangered",
-      "points": 485
+      "points": 500
     },
     {
       "id": "nyala",
@@ -944,7 +953,7 @@
         "high": 1200,
         "basis": "estimate"
       },
-      "points": 35
+      "points": 30
     },
     {
       "id": "plains-zebra",
@@ -1032,7 +1041,7 @@
         "year": 2023,
         "basis": "survey"
       },
-      "points": 370
+      "points": 350
     },
     {
       "id": "scrub-hare",
@@ -1077,7 +1086,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 460
+      "points": 425
     },
     {
       "id": "sharpes-grysbok",
@@ -1100,7 +1109,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 215
+      "points": 200
     },
     {
       "id": "slender-mongoose",
@@ -1150,7 +1159,7 @@
         "high": 250,
         "basis": "estimate"
       },
-      "points": 225
+      "points": 200
     },
     {
       "id": "spotted-hyena",
@@ -1178,7 +1187,7 @@
         "high": 3500,
         "basis": "estimate"
       },
-      "points": 25
+      "points": 20
     },
     {
       "id": "steenbok",
@@ -1222,7 +1231,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 780
+      "points": 750
     },
     {
       "id": "thick-tailed-bushbaby",
@@ -1313,7 +1322,8 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 5
+      "points": 5,
+      "chancesPerDay": 4
     },
     {
       "id": "warthog",
@@ -1394,7 +1404,7 @@
         "basis": "withheld",
         "note": "SANParks stopped publishing rhino numbers so that poachers cannot use them. What is public is the direction: sharply down."
       },
-      "points": 280,
+      "points": 250,
       "wildCard": {
         "bonus": 500,
         "scope": "day"
@@ -1422,7 +1432,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 70
+      "points": 60
     },
     {
       "id": "african-darter",
@@ -1510,7 +1520,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 230
+      "points": 250
     },
     {
       "id": "african-hoopoe",
@@ -1531,7 +1541,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 50
+      "points": 55
     },
     {
       "id": "african-jacana",
@@ -1552,7 +1562,7 @@
       ],
       "conservationStatus": "leastConcern",
       "dexNumber": 61,
-      "points": 50
+      "points": 55
     },
     {
       "id": "african-openbill",
@@ -1594,7 +1604,7 @@
       ],
       "conservationStatus": "leastConcern",
       "dexNumber": 63,
-      "points": 135
+      "points": 140
     },
     {
       "id": "bateleur",
@@ -1617,7 +1627,7 @@
         "northern"
       ],
       "conservationStatus": "endangered",
-      "points": 50
+      "points": 55
     },
     {
       "id": "black-headed-heron",
@@ -1638,7 +1648,7 @@
       ],
       "conservationStatus": "leastConcern",
       "dexNumber": 65,
-      "points": 45
+      "points": 40
     },
     {
       "id": "blacksmith-lapwing",
@@ -1682,7 +1692,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 110
+      "points": 100
     },
     {
       "id": "burchells-coucal",
@@ -1703,7 +1713,7 @@
       ],
       "conservationStatus": "leastConcern",
       "dexNumber": 68,
-      "points": 125
+      "points": 120
     },
     {
       "id": "cape-glossy-starling",
@@ -1834,7 +1844,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 115
+      "points": 120
     },
     {
       "id": "fork-tailed-drongo",
@@ -1876,7 +1886,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 110
+      "points": 100
     },
     {
       "id": "goliath-heron",
@@ -1897,7 +1907,7 @@
       ],
       "conservationStatus": "leastConcern",
       "dexNumber": 77,
-      "points": 105
+      "points": 100
     },
     {
       "id": "great-egret",
@@ -2002,7 +2012,7 @@
       ],
       "conservationStatus": "leastConcern",
       "dexNumber": 82,
-      "points": 35
+      "points": 30
     },
     {
       "id": "helmeted-guineafowl",
@@ -2092,7 +2102,7 @@
         "northern"
       ],
       "conservationStatus": "endangered",
-      "points": 245
+      "points": 250
     },
     {
       "id": "lilac-breasted-roller",
@@ -2134,7 +2144,7 @@
       ],
       "conservationStatus": "leastConcern",
       "dexNumber": 88,
-      "points": 35
+      "points": 30
     },
     {
       "id": "magpie-shrike",
@@ -2176,7 +2186,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 95
+      "points": 100
     },
     {
       "id": "marabou-stork",
@@ -2197,7 +2207,7 @@
       ],
       "conservationStatus": "leastConcern",
       "dexNumber": 91,
-      "points": 90
+      "points": 80
     },
     {
       "id": "martial-eagle",
@@ -2221,7 +2231,7 @@
         "northern"
       ],
       "conservationStatus": "endangered",
-      "points": 240
+      "points": 250
     },
     {
       "id": "pels-fishing-owl",
@@ -2244,7 +2254,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 865
+      "points": 875
     },
     {
       "id": "pied-kingfisher",
@@ -2265,7 +2275,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 35
+      "points": 30
     },
     {
       "id": "purple-crested-turaco",
@@ -2286,7 +2296,7 @@
       ],
       "conservationStatus": "leastConcern",
       "dexNumber": 95,
-      "points": 90
+      "points": 80
     },
     {
       "id": "red-billed-buffalo-weaver",
@@ -2309,7 +2319,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 35
+      "points": 30
     },
     {
       "id": "red-billed-oxpecker",
@@ -2397,7 +2407,7 @@
         "northern"
       ],
       "conservationStatus": "endangered",
-      "points": 255
+      "points": 250
     },
     {
       "id": "southern-carmine-bee-eater",
@@ -2418,7 +2428,7 @@
       ],
       "conservationStatus": "leastConcern",
       "dexNumber": 101,
-      "points": 85
+      "points": 80
     },
     {
       "id": "southern-ground-hornbill",
@@ -2549,7 +2559,7 @@
       ],
       "conservationStatus": "leastConcern",
       "dexNumber": 107,
-      "points": 25
+      "points": 20
     },
     {
       "id": "verreauxs-eagle-owl",
@@ -2573,7 +2583,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 75
+      "points": 80
     },
     {
       "id": "water-thick-knee",
@@ -2596,7 +2606,7 @@
       ],
       "conservationStatus": "leastConcern",
       "dexNumber": 109,
-      "points": 75
+      "points": 80
     },
     {
       "id": "western-barn-owl",
@@ -2620,7 +2630,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 70
+      "points": 60
     },
     {
       "id": "white-backed-vulture",
@@ -2643,7 +2653,7 @@
         "northern"
       ],
       "conservationStatus": "criticallyEndangered",
-      "points": 25
+      "points": 20
     },
     {
       "id": "white-fronted-bee-eater",
@@ -2664,7 +2674,7 @@
       ],
       "conservationStatus": "leastConcern",
       "dexNumber": 112,
-      "points": 25
+      "points": 20
     },
     {
       "id": "white-headed-vulture",
@@ -2686,7 +2696,7 @@
         "northern"
       ],
       "conservationStatus": "criticallyEndangered",
-      "points": 415
+      "points": 425
     },
     {
       "id": "woodland-kingfisher",
@@ -2728,7 +2738,7 @@
       ],
       "conservationStatus": "nearThreatened",
       "dexNumber": 115,
-      "points": 65
+      "points": 60
     },
     {
       "id": "yellow-billed-stork",
@@ -2773,7 +2783,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 440
+      "points": 425
     },
     {
       "id": "boomslang",
@@ -2796,7 +2806,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 295
+      "points": 320
     },
     {
       "id": "leopard-tortoise",
@@ -2819,7 +2829,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 35
+      "points": 30
     },
     {
       "id": "mozambique-spitting-cobra",
@@ -2865,7 +2875,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 35
+      "points": 30
     },
     {
       "id": "puff-adder",
@@ -2888,7 +2898,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 160
+      "points": 150
     },
     {
       "id": "african-rock-python",
@@ -2912,7 +2922,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 505
+      "points": 500
     },
     {
       "id": "water-monitor",
@@ -2935,7 +2945,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 25
+      "points": 20
     },
     {
       "id": "ant-lion",
@@ -2958,7 +2968,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 130
+      "points": 120
     },
     {
       "id": "rhinoceros-beetle",
@@ -3000,7 +3010,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 125
+      "points": 120
     },
     {
       "id": "lichtensteins-hartebeest",
@@ -3027,7 +3037,7 @@
         "year": 2023,
         "basis": "survey"
       },
-      "points": 910
+      "points": 875
     },
     {
       "id": "swainsons-spurfowl",
@@ -3110,7 +3120,7 @@
         "central"
       ],
       "conservationStatus": "leastConcern",
-      "points": 85
+      "points": 80
     },
     {
       "id": "pied-crow",
@@ -3152,7 +3162,7 @@
         "southern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 125
+      "points": 120
     },
     {
       "id": "red-crested-korhaan",
@@ -3215,7 +3225,7 @@
         "southern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 130
+      "points": 120
     },
     {
       "id": "african-sacred-ibis",
@@ -3236,7 +3246,7 @@
         "southern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 50
+      "points": 55
     },
     {
       "id": "white-faced-whistling-duck",
@@ -3257,7 +3267,7 @@
         "southern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 25
+      "points": 20
     },
     {
       "id": "black-crake",
@@ -3278,7 +3288,7 @@
         "southern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 50
+      "points": 55
     },
     {
       "id": "african-harrier-hawk",
@@ -3343,7 +3353,7 @@
         "southern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 35
+      "points": 30
     },
     {
       "id": "western-cattle-egret",
@@ -3387,7 +3397,7 @@
         "southern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 110
+      "points": 100
     },
     {
       "id": "pearl-spotted-owlet",
@@ -3411,7 +3421,7 @@
         "southern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 90
+      "points": 80
     },
     {
       "id": "african-scops-owl",
@@ -3435,7 +3445,7 @@
         "southern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 135
+      "points": 140
     },
     {
       "id": "trumpeter-hornbill",
@@ -3455,7 +3465,7 @@
         "central"
       ],
       "conservationStatus": "leastConcern",
-      "points": 75
+      "points": 80
     },
     {
       "id": "wire-tailed-swallow",
@@ -3559,7 +3569,7 @@
         "central"
       ],
       "conservationStatus": "leastConcern",
-      "points": 65
+      "points": 60
     },
     {
       "id": "black-backed-puffback",
@@ -3580,7 +3590,7 @@
         "southern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 50
+      "points": 55
     },
     {
       "id": "southern-black-tit",
@@ -3706,7 +3716,7 @@
         "southern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 45
+      "points": 40
     },
     {
       "id": "brown-hooded-kingfisher",
@@ -3727,7 +3737,7 @@
         "southern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 45
+      "points": 40
     },
     {
       "id": "european-bee-eater",
@@ -3853,7 +3863,7 @@
         "southern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 25
+      "points": 20
     },
     {
       "id": "black-collared-barbet",
@@ -3874,7 +3884,7 @@
         "southern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 45
+      "points": 40
     },
     {
       "id": "crested-barbet",
@@ -3895,7 +3905,7 @@
         "southern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 45
+      "points": 40
     },
     {
       "id": "grey-headed-bushshrike",
@@ -3918,7 +3928,7 @@
         "southern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 105
+      "points": 100
     },
     {
       "id": "black-headed-oriole",
@@ -3939,7 +3949,7 @@
         "southern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 45
+      "points": 40
     },
     {
       "id": "arrow-marked-babbler",
@@ -4023,7 +4033,7 @@
         "southern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 35
+      "points": 30
     },
     {
       "id": "long-billed-crombec",
@@ -4044,7 +4054,7 @@
         "southern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 35
+      "points": 30
     },
     {
       "id": "yellow-breasted-apalis",
@@ -4086,7 +4096,7 @@
         "southern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 50
+      "points": 55
     },
     {
       "id": "burchells-starling",
@@ -4128,7 +4138,7 @@
         "southern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 25
+      "points": 20
     },
     {
       "id": "african-pied-wagtail",
@@ -4149,7 +4159,7 @@
         "southern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 50
+      "points": 55
     },
     {
       "id": "white-winged-widowbird",
@@ -4170,7 +4180,7 @@
         "southern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 25
+      "points": 20
     },
     {
       "id": "village-weaver",
@@ -4233,7 +4243,7 @@
         "southern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 25
+      "points": 20
     },
     {
       "id": "scarlet-chested-sunbird",
