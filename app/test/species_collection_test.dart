@@ -6,6 +6,7 @@ import 'package:wildscore/domain/conservation_status.dart';
 import 'package:wildscore/domain/species.dart';
 import 'package:wildscore/domain/species_category.dart';
 import 'package:wildscore/domain/species_collection.dart';
+import 'package:wildscore/domain/species_tag.dart';
 
 /// The named sets are what people actually try to complete, so a set that is
 /// silently missing a member is a bug someone only finds at the gate.
@@ -188,6 +189,45 @@ void main() {
         lessThan(130),
         reason: 'past this it stops being a scorecard and becomes a field list',
       );
+    });
+  });
+
+  group('the wild cards', () {
+    test('are the 1st timers plus the three you always see', () {
+      final List<String> wild = <String>[
+        for (final Species s in _all)
+          if (s.isWildCard) s.commonName,
+      ]..sort();
+
+      expect(wild, <String>[
+        'Impala',
+        'Leopard',
+        'Lilac-breasted Roller',
+        'Lion',
+        'Southern Yellow-billed Hornbill',
+        'Tree Squirrel',
+        'Warthog',
+        'White Rhinoceros',
+      ]);
+    });
+
+    test('carry the tag, so the filter and the badge can find them', () {
+      // The tag and the wildCard object have to agree. They are set together
+      // and there is nothing but this test stopping them drifting.
+      for (final Species s in _all) {
+        expect(
+          s.tags.contains(SpeciesTag.wildCard),
+          s.isWildCard,
+          reason: s.commonName,
+        );
+      }
+    });
+
+    test('are filterable, now that there are eight of them', () {
+      // It was not a filter, on the grounds that it is a scoring rule rather
+      // than a group anybody browses. That stopped being true.
+      expect(SpeciesTag.wildCard.isFilter, isTrue);
+      expect(SpeciesTag.smallFive.isFilter, isTrue);
     });
   });
 

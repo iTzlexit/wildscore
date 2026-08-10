@@ -102,11 +102,21 @@ void main() {
     });
 
     test('the wild card replaces the card value rather than adding to it', () {
-      // The first zebra of the morning is worth 60, not 70.
-      final Species zebra = _byId('plains-zebra');
+      // The first warthog of the morning is worth 250, not 255.
+      final Species warthog = _byId('warthog');
 
-      expect(zebra.scoreFor(), 10);
-      expect(zebra.scoreFor(wildCardBonusEarned: true), 60);
+      expect(warthog.scoreFor(), 5);
+      expect(warthog.scoreFor(wildCardBonusEarned: true), 250);
+    });
+
+    test('a 1st timer is worth fifty warthogs, exactly once', () {
+      // The joke, stated as an assertion. A warthog is five points and there
+      // are several thousand of them; the *first* one is the first shout of
+      // the trip and pays like a leopard.
+      final Species warthog = _byId('warthog');
+
+      expect(warthog.wildCard!.bonus, 250);
+      expect(warthog.wildCard!.bonus ~/ warthog.points, 50);
     });
 
     test('the first lion of the day is the point of the whole mechanic', () {

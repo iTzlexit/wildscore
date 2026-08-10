@@ -124,7 +124,7 @@ void main() {
       // Yesterday's first zebra does not spend today's. "There's one!" is a
       // fresh moment every morning.
       final List<Visit> visits = <Visit>[
-        _drive(DateTime(2026, 8, 1), claimed: <String>['plains-zebra']),
+        _drive(DateTime(2026, 8, 1), claimed: <String>['warthog']),
       ];
 
       expect(
@@ -134,7 +134,7 @@ void main() {
           live: _card(const <String>[], DateTime(2026, 8, 2)),
           now: DateTime(2026, 8, 2),
         ),
-        isNot(contains('plains-zebra')),
+        isNot(contains('warthog')),
       );
     });
 
@@ -143,9 +143,9 @@ void main() {
         Trip.bonusesSpent(
           _catalogue,
           visits: const <Visit>[],
-          live: _card(<String>['plains-zebra'], DateTime(2026, 8, 2)),
+          live: _card(<String>['warthog'], DateTime(2026, 8, 2)),
         ),
-        contains('plains-zebra'),
+        contains('warthog'),
       );
     });
   });
@@ -157,7 +157,7 @@ void main() {
       );
 
       expect(impala.isWildCard, isTrue);
-      expect(impala.wildCard!.bonus, 100);
+      expect(impala.wildCard!.bonus, 250);
       expect(
         impala.points,
         10,
@@ -180,17 +180,21 @@ void main() {
           if (s.isWildCard) s.id,
       ]..sort();
 
-      // Lion, leopard and white rhino joined the herd animals. They are the
-      // case Alex named: seen often enough that rarity scores them modestly,
-      // and exciting every single time. Buffalo and elephant are deliberately
-      // absent — nobody's day is made by the fourteenth elephant.
+      // Two kinds of animal, sharing the mechanic for opposite reasons.
+      //
+      // The 1st timers are the ones you have stopped seeing by lunchtime on
+      // day one — Alex's set — and the first one pays 250 to make it the first
+      // shout of the trip. Lion, leopard and white rhino are the opposite: seen
+      // on most trips and thrilling every time, which is a fact rarity cannot
+      // price. Elephant and buffalo are deliberately absent.
       expect(wild, <String>[
-        'blue-wildebeest',
-        'giraffe',
         'impala',
         'leopard',
+        'lilac-breasted-roller',
         'lion',
-        'plains-zebra',
+        'southern-yellow-billed-hornbill',
+        'tree-squirrel',
+        'warthog',
         'white-rhinoceros',
       ]);
     });
@@ -201,22 +205,23 @@ void main() {
       }
     });
 
-    test('a herd-animal bonus cannot outrank a real find', () {
-      // Scoped to the everyday wild cards. Lion, leopard and white rhino are
-      // wild cards *because* the first one is a real find — theirs are meant
-      // to be big, and are checked separately in sighting_context_test.
-      final Species leopard = _catalogue.firstWhere(
-        (Species s) => s.id == 'leopard',
+    test('a 1st timer cannot outrank the genuinely rare', () {
+      // 250 is deliberately absurd for a warthog — that is the joke, and it is
+      // over after one sighting. It still must not beat the animals nobody
+      // gets: a first tree squirrel worth more than a serval would stop being
+      // funny about four minutes into the drive.
+      final Species serval = _catalogue.firstWhere(
+        (Species s) => s.id == 'serval',
       );
 
       for (final String id in <String>[
         'impala',
-        'plains-zebra',
-        'giraffe',
-        'blue-wildebeest',
+        'warthog',
+        'tree-squirrel',
+        'lilac-breasted-roller',
       ]) {
         final Species s = _catalogue.firstWhere((Species x) => x.id == id);
-        expect(s.wildCard!.bonus, lessThan(leopard.points), reason: id);
+        expect(s.wildCard!.bonus, lessThan(serval.points), reason: id);
       }
     });
   });

@@ -205,7 +205,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 600
+      "points": 1000
     },
     {
       "id": "black-rhinoceros",
@@ -265,8 +265,7 @@
       "category": "mammal",
       "rarityTier": "common",
       "tags": [
-        "antelope",
-        "wildCard"
+        "antelope"
       ],
       "isSensitive": false,
       "description": "Densest on the southern and central grasslands. Calving is tightly synchronised in the wet season, flooding predators with more prey than they can take.",
@@ -283,11 +282,7 @@
         "year": 2023,
         "basis": "survey"
       },
-      "points": 15,
-      "wildCard": {
-        "bonus": 60,
-        "scope": "day"
-      }
+      "points": 15
     },
     {
       "id": "brown-hyena",
@@ -596,9 +591,7 @@
       "afrikaansName": "Kameelperd",
       "category": "mammal",
       "rarityTier": "common",
-      "tags": [
-        "wildCard"
-      ],
+      "tags": [],
       "isSensitive": false,
       "description": "Browses above the reach of every other herbivore. Watch for the splayed-leg stance at water, the only moment it is genuinely vulnerable.",
       "habitat": "Acacia and mopane woodland",
@@ -614,11 +607,7 @@
         "high": 9000,
         "basis": "estimate"
       },
-      "points": 10,
-      "wildCard": {
-        "bonus": 80,
-        "scope": "day"
-      }
+      "points": 10
     },
     {
       "id": "greater-kudu",
@@ -754,11 +743,11 @@
         "basis": "survey"
       },
       "points": 10,
+      "chancesPerDay": 2,
       "wildCard": {
-        "bonus": 100,
+        "bonus": 250,
         "scope": "trip"
-      },
-      "chancesPerDay": 2
+      }
     },
     {
       "id": "klipspringer",
@@ -963,9 +952,7 @@
       "afrikaansName": "Bontsebra",
       "category": "mammal",
       "rarityTier": "common",
-      "tags": [
-        "wildCard"
-      ],
+      "tags": [],
       "isSensitive": false,
       "description": "Almost always found alongside wildebeest, which benefit from the zebra's better eyesight while the zebra benefits from their numbers.",
       "habitat": "Open grassland and savanna",
@@ -982,11 +969,7 @@
         "year": 2024,
         "basis": "survey"
       },
-      "points": 10,
-      "wildCard": {
-        "bonus": 60,
-        "scope": "day"
-      }
+      "points": 10
     },
     {
       "id": "roan-antelope",
@@ -1263,7 +1246,9 @@
       "afrikaansName": "Boomeekhoring",
       "category": "mammal",
       "rarityTier": "common",
-      "tags": [],
+      "tags": [
+        "wildCard"
+      ],
       "isSensitive": false,
       "description": "Also called the mopane squirrel. Flicks its tail and scolds loudly from a trunk, spiralling round to keep the wood between you and it.",
       "habitat": "Mopane and mixed woodland",
@@ -1274,7 +1259,11 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 5
+      "points": 5,
+      "wildCard": {
+        "bonus": 250,
+        "scope": "day"
+      }
     },
     {
       "id": "tsessebe",
@@ -1333,7 +1322,9 @@
       "afrikaansName": "Vlakvark",
       "category": "mammal",
       "rarityTier": "common",
-      "tags": [],
+      "tags": [
+        "wildCard"
+      ],
       "isSensitive": false,
       "description": "Runs with its tail held vertical like a flag. Reverses into abandoned aardvark burrows to sleep so it can face any intruder.",
       "habitat": "Open grassland and around rest camps",
@@ -1349,7 +1340,11 @@
         "high": 7000,
         "basis": "estimate"
       },
-      "points": 5
+      "points": 5,
+      "wildCard": {
+        "bonus": 250,
+        "scope": "day"
+      }
     },
     {
       "id": "waterbuck",
@@ -2112,7 +2107,9 @@
       "afrikaansName": "Gewone Troupant",
       "category": "bird",
       "rarityTier": "common",
-      "tags": [],
+      "tags": [
+        "wildCard"
+      ],
       "isSensitive": false,
       "description": "The most photographed bird in the park. Named for the tumbling aerial roll males perform in display flight.",
       "habitat": "Open woodland, perched on dead branches and posts",
@@ -2123,7 +2120,11 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 10
+      "points": 10,
+      "wildCard": {
+        "bonus": 250,
+        "scope": "day"
+      }
     },
     {
       "id": "little-bee-eater",
@@ -2504,7 +2505,9 @@
       "afrikaansName": "Geelbekneushoringvoël",
       "category": "bird",
       "rarityTier": "common",
-      "tags": [],
+      "tags": [
+        "wildCard"
+      ],
       "isSensitive": false,
       "description": "The bird Zazu was drawn from, and it knows it. Hops about the picnic sites at Tshokwane looking for your chips, and will take them off the table if you turn your back.",
       "habitat": "Woodland, camps and picnic sites",
@@ -2515,7 +2518,11 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 5
+      "points": 5,
+      "wildCard": {
+        "bonus": 250,
+        "scope": "day"
+      }
     },
     {
       "id": "tawny-eagle",

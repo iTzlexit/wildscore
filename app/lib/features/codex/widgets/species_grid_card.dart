@@ -174,6 +174,10 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
                             left: 6,
                             child: _BonusSpentBadge(),
                           ),
+                        // One corner, one badge, in this order. A tile carrying
+                        // three of them is a tile you cannot read at arm's
+                        // length — and an animal in the Big Five is not looking
+                        // for a second label.
                         if (species.tags.contains(SpeciesTag.bigFive))
                           const Positioned(
                             top: 6,
@@ -185,6 +189,18 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
                             top: 6,
                             right: 6,
                             child: _CornerBadge(label: 'BIG 6'),
+                          )
+                        else if (species.tags.contains(SpeciesTag.smallFive))
+                          const Positioned(
+                            top: 6,
+                            right: 6,
+                            child: _CornerBadge(label: 'SMALL 5'),
+                          )
+                        else if (species.isWildCard)
+                          const Positioned(
+                            top: 6,
+                            right: 6,
+                            child: _CornerBadge(label: 'WILD CARD'),
                           ),
                         // Spotted is a *status*, not a button. Adding from the
                         // tile is quick because in a moving car nobody opens a

@@ -128,15 +128,40 @@ void main() {
     expect(find.textContaining('House rules'), findsOneWidget);
   });
 
-  testWidgets('the two crowd outcomes are stated as scoring, not as advice', (
+  testWidgets(
+    'the jam is one rule, and it does not pretend to be enforceable',
+    (WidgetTester tester) async {
+      // "No asking at a jam" and "arriving costs 20%" were two cards saying two
+      // halves of one thing, and the first was a rule nobody can check phrased
+      // as though somebody could. Together they describe what actually happens.
+      await _pump(tester, size: const Size(390, 6000));
+
+      expect(find.text('Spot it yourself'), findsOneWidget);
+      expect(find.text('No asking at a jam'), findsNothing);
+      expect(find.textContaining('Try not to ask'), findsOneWidget);
+      expect(find.textContaining('race to call it first'), findsOneWidget);
+      expect(find.textContaining('20% fewer points'), findsOneWidget);
+    },
+  );
+
+  testWidgets('the 1st timers get their own section, impala included', (
     WidgetTester tester,
   ) async {
-    // Spotting it yourself pays what the card says and a jam pays a fifth
-    // less. Both halves have to be on this screen or the claim sheet is the
-    // first place anybody learns there is a penalty at all.
-    await _pump(tester, size: const Size(390, 5200));
+    await _pump(tester, size: const Size(390, 6000));
 
-    expect(find.textContaining('normal points'), findsOneWidget);
-    expect(find.textContaining('20% fewer points'), findsOneWidget);
+    expect(find.text('WILD CARDS'), findsOneWidget);
+    expect(find.text('The 1st timers'), findsOneWidget);
+    expect(find.text('Especially the impala'), findsOneWidget);
+    expect(find.textContaining('250'), findsWidgets);
+  });
+
+  testWidgets('a herd of elephants is not a breeding herd', (
+    WidgetTester tester,
+  ) async {
+    // Jargon. Everybody in the car knows what a herd is.
+    await _pump(tester, size: const Size(390, 6000));
+
+    expect(find.textContaining('breeding'), findsNothing);
+    expect(find.textContaining('A herd of elephants'), findsOneWidget);
   });
 }

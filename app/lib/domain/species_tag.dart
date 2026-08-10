@@ -28,16 +28,19 @@ enum SpeciesTag {
 
   nocturnal(label: 'Nocturnal', shortLabel: 'NIGHT', isFilter: true),
 
-  /// The first impala of the trip.
+  /// The 1st timers: the first one of these pays far more than the animal.
   ///
-  /// Being first through the gate and calling the first impala is a real moment
-  /// that a 5-point Common tile does nothing for. This makes it worth 50 — once
-  /// per trip, to one person, and then it is gone for good.
+  /// Two kinds of animal share the mechanic for opposite reasons. **Impala,
+  /// warthog, yellow-billed hornbill, lilac-breasted roller and tree squirrel**
+  /// are the ones you have stopped seeing by lunchtime on day one, and giving
+  /// the first one 250 turns the thing everybody ignores into the first shout
+  /// of the trip. **Lion, leopard and white rhino** are the opposite: seen on
+  /// most trips and thrilling every time, which is a fact rarity cannot price.
   ///
-  /// Per *trip*, not per day, on purpose: repeated every morning it would just
-  /// be a points tax on whoever wakes up first. Not a filter — it is a scoring
-  /// rule attached to one species, not a group anybody browses.
-  wildCard(label: 'Wild card', shortLabel: 'WILD CARD', isFilter: false);
+  /// **Filterable now.** It was not, on the grounds that it is a scoring rule
+  /// rather than a group anybody browses — which stopped being true the moment
+  /// there were eight of them and a car wanted to know which.
+  wildCard(label: 'Wild cards', shortLabel: 'WILD CARD', isFilter: true);
 
   const SpeciesTag({
     required this.label,

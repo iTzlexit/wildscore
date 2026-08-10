@@ -113,7 +113,7 @@ class RulesScreen extends StatelessWidget {
             icon: Icons.groups_rounded,
             title: 'Count one sighting, not every animal',
             body:
-                'A breeding herd of elephants is **one elephant sighting**.\n'
+                'A herd of elephants is **one elephant sighting**.\n'
                 'A pod of hippos is **one hippo sighting**.\n'
                 'A dam full of crocodiles is **one crocodile sighting**.',
           ),
@@ -124,43 +124,49 @@ class RulesScreen extends StatelessWidget {
                 'Driving back past that pride after lunch is the **same '
                 'pride** — lovely, and worth nothing.',
           ),
-          const _Rule(
-            icon: Icons.no_transfer_rounded,
-            title: 'No asking at a jam',
-            body:
-                'Cars stopped ahead means something good. **No winding down a '
-                'window to ask what it is.**',
-          ),
-          const SizedBox(height: Space.xl),
-
-          // Two sections, not one. They were merged under "WILD CARDS AND
-          // BONUSES" and the owner separated them, rightly: wild cards are
-          // about *how you spotted it* and bonuses are about *what it was
-          // doing*. Only the first changes with the crowd.
-          const _Section('WILD CARDS'),
-          const _Rule(
-            icon: Icons.groups_2_rounded,
-            title: 'Spot it yourself',
-            body: 'Score the **normal points** shown on the animal card.',
-          ),
+          // One rule, not two.
+          //
+          // "No asking at a jam" and "arriving at a jam costs 20%" were
+          // separate cards saying two halves of the same thing, and the first
+          // was a rule nobody can enforce phrased as though somebody could.
+          // Together they are what actually happens: try not to ask, and if
+          // you get told anyway, race to call it.
           const _Rule(
             icon: Icons.traffic_rounded,
-            title: 'Arrive at a traffic jam',
+            title: 'Spot it yourself',
             body:
-                'First in your vehicle to call it correctly still claims the '
-                'sighting — but scores **20% fewer points**. The jam was the '
-                'hint, not you.',
+                'Score the **full points** on the animal card.\n\n'
+                'Cars already stopped? **Try not to ask what it is** — but if '
+                'somebody tells you anyway, race to call it first. You still '
+                'claim it, for **20% fewer points**.',
           ),
           const SizedBox(height: Space.xl),
 
+          const _Section('WILD CARDS'),
           const _Rule(
             icon: Icons.bolt_rounded,
-            title: 'First one of the day pays big',
+            title: 'The 1st timers',
             body:
-                'A **lion**, **leopard** or **white rhino** is seen on most '
-                'trips — and it is the moment of the day every time.\n\n'
-                'So the **first one** pays far more than the card says. After '
-                'that they score normally.',
+                'A handful of animals pay **250 for the first one** and their '
+                'normal points ever after.\n\n'
+                'Look them up in Animals — they carry a **WILD CARD** tag.',
+          ),
+          const _Rule(
+            icon: Icons.favorite_rounded,
+            title: 'Especially the impala',
+            body:
+                'Nobody has looked properly at an impala since 1994.\n\n'
+                'So the **first impala of the trip is worth 250** — more love '
+                'than an impala has had in thirty years. The second one is '
+                'back to being an impala.',
+          ),
+          const _Rule(
+            icon: Icons.pets_rounded,
+            title: 'And the big ones you always see',
+            body:
+                'A **lion**, **leopard** or **white rhino** is the moment of '
+                'the day every time, however often you get one.\n\n'
+                'First of the day pays big. After that they score normally.',
           ),
           const SizedBox(height: Space.xl),
 
