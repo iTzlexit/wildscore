@@ -408,27 +408,33 @@ void main() {
       expect(find.text('BIRDS'), findsNothing);
     });
 
-    testWidgets('stays rarest-first even when the grid is sorted otherwise', (
+    testWidgets('follows the sort, like the grid does', (
       WidgetTester tester,
     ) async {
-      // Rarest-first is the only order in which a ranking means anything, so
-      // the list ignores the sort rather than quietly renumbering by name.
+      // It used to ignore it, on the grounds that rarest-first is the only
+      // order in which a ranking means anything. Arguable, and beside the
+      // point: the sort control sat directly above a list that never moved,
+      // and a control that visibly does nothing reads as a broken filter.
+      // Alex reported it as exactly that.
       await _pumpCodex(tester);
-      await tester.tap(find.text('Rarest first'));
-      await tester.pumpAndSettle();
-      expect(find.text('Dex order'), findsOneWidget);
-
       await tester.tap(find.byIcon(Icons.format_list_numbered));
       await tester.pumpAndSettle();
 
-      // Compared by position rather than by presence: the aardvark is
-      // Legendary, so it is near the top of the ranking too and an
-      // absence check would pass for the wrong reason. In dex order it would
-      // be number one.
+      // Rarest first: the pangolin is above the aardvark. Compared by position
+      // rather than presence, because the aardvark is a Ghost too and an
+      // absence check would pass for the wrong reason.
       expect(
         tester.getTopLeft(find.text('Ground Pangolin')).dy,
         lessThan(tester.getTopLeft(find.text('Aardvark')).dy),
       );
+
+      await tester.tap(find.text('Rarest first'));
+      await tester.pumpAndSettle();
+
+      // Dex order: the aardvark is 001 and always will be.
+      expect(find.text('Dex order'), findsOneWidget);
+      expect(find.text('Aardvark'), findsOneWidget);
+      expect(find.text('Ground Pangolin'), findsNothing);
     });
   });
 

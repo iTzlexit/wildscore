@@ -964,11 +964,12 @@ class _SlideQuiz extends StatelessWidget {
     return const _Slide(
       art: _QuizScene(),
       eyebrow: 'WHILE YOU DRIVE',
-      title: 'Score well, earn a question',
+      title: 'Every new animal earns a question',
       body:
-          'Every 400 points you score unlocks a question about Kruger and its '
-          'animals. A **?** appears beside your name — tap it.\n\n'
-          'Thirty points if you get it right. One guess, no going back.',
+          'Spot something you have not had yet today and a **QUIZ** badge '
+          'appears beside your name. One more goes to somebody in the car '
+          'every half hour.\n\n'
+          'Twenty points for an easy one, seventy for a hard one. One guess.',
     );
   }
 }

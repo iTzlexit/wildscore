@@ -86,6 +86,21 @@ enum RarityTier {
     RarityTier.legendary => const <int>[600, 750, 875, 1000],
   };
 
+  /// Which band a score belongs to.
+  ///
+  /// Used when a car reprices an animal: a sable moved to 700 is a Ghost from
+  /// that moment, in the filters and the collections as well as on the tile.
+  /// Clamped at both ends so a value from an older ladder still lands
+  /// somewhere.
+  static RarityTier forPoints(int points) {
+    for (final RarityTier t in values) {
+      if (points <= t.high) {
+        return t;
+      }
+    }
+    return legendary;
+  }
+
   /// Every rung in the game, lowest first.
   ///
   /// The editor offers the whole ladder rather than only the species' own

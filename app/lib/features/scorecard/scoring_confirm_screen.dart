@@ -21,8 +21,16 @@ class ScoringConfirmScreen extends StatefulWidget {
     required this.species,
     required this.players,
     required this.onSetPoints,
+    this.live = false,
     super.key,
   });
+
+  /// Opened from a game already in progress rather than on the way into one.
+  ///
+  /// Only changes what the screen says and what the button reads. Everything
+  /// claimed before now keeps the points it scored — a table edited at four
+  /// o'clock cannot rewrite the morning.
+  final bool live;
 
   /// The catalogue with the car's own prices already folded in.
   final List<Species> species;
@@ -39,6 +47,7 @@ class ScoringConfirmScreen extends StatefulWidget {
     required List<Species> species,
     required List<String> players,
     required void Function(String id, int? points) onSetPoints,
+    bool live = false,
   }) async {
     final bool? started = await Navigator.of(context).push<bool>(
       MaterialPageRoute<bool>(
@@ -46,6 +55,7 @@ class ScoringConfirmScreen extends StatefulWidget {
           species: species,
           players: players,
           onSetPoints: onSetPoints,
+          live: live,
         ),
       ),
     );
@@ -107,6 +117,48 @@ class _ScoringConfirmScreenState extends State<ScoringConfirmScreen> {
     widget.onSetPoints(s.id, value == s.cataloguePoints ? null : value);
   }
 
+  /// Hands the whole table back to the catalogue, after asking.
+  Future<void> _resetAll() async {
+    final List<Species> mine = <Species>[
+      for (final Species s in _ordered)
+        if (!_isOurs(s)) s,
+    ];
+    final bool? ok = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        title: Text('Use our prices?', style: AppText.title3),
+        content: Text(
+          'The ${mine.length} ${mine.length == 1 ? 'price' : 'prices'} you set '
+          'go back to ours. Nothing already scored changes.',
+          style: AppText.body,
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Keep mine'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: TextButton.styleFrom(foregroundColor: AppColors.danger),
+            child: const Text('Use yours'),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) {
+      return;
+    }
+    setState(() {
+      for (final Species s in mine) {
+        _edited[s.id] = s.cataloguePoints;
+      }
+    });
+    for (final Species s in mine) {
+      widget.onSetPoints(s.id, null);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final String query = _query.trim().toLowerCase();
@@ -143,12 +195,37 @@ class _ScoringConfirmScreenState extends State<ScoringConfirmScreen> {
                   style: AppText.body.copyWith(height: 1.5),
                 ),
                 const SizedBox(height: Space.xs),
-                Text(
-                  changed == 0
-                      ? 'Whatever you set is remembered for next time.'
-                      : 'You have your own price on $changed '
-                            '${changed == 1 ? 'animal' : 'animals'}.',
-                  style: AppText.caption,
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(
+                        changed == 0
+                            ? 'Whatever you set is remembered for next time.'
+                            : 'You have your own price on $changed '
+                                  '${changed == 1 ? 'animal' : 'animals'}.',
+                        style: AppText.caption,
+                      ),
+                    ),
+                    // Only once there is something to undo. A reset button on a
+                    // table nobody has touched is a button that can only do
+                    // harm.
+                    if (changed > 0)
+                      TextButton(
+                        onPressed: _resetAll,
+                        style: TextButton.styleFrom(
+                          foregroundColor: AppColors.danger,
+                          padding: EdgeInsets.zero,
+                          minimumSize: const Size(0, 32),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        child: Text(
+                          'Reset all',
+                          style: AppText.caption.copyWith(
+                            color: AppColors.danger,
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
                 const SizedBox(height: Space.md),
                 TextField(
@@ -240,7 +317,9 @@ class _ScoringConfirmScreenState extends State<ScoringConfirmScreen> {
                     ),
                   ),
                   child: Text(
-                    'Agreed  ·  start the day',
+                    widget.live
+                        ? 'Back to the drive'
+                        : 'Agreed  ·  start the day',
                     style: AppText.bodyStrong.copyWith(
                       color: AppColors.accentInk,
                     ),

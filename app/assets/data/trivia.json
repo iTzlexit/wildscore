@@ -2,85 +2,1253 @@
   "version": 1,
   "note": "Seventy to start with. Aimed at a car, not a pub quiz: a Kruger regular should get most of them and a first-timer should get a fair few by thinking. Replace freely — see docs/TRIVIA.md.",
   "questions": [
-    { "id": "collective-hippo", "question": "What do you call a group of hippos?", "answers": ["A bloat", "A wallow", "A pod", "A raft"], "correct": 0 },
-    { "id": "collective-giraffe", "question": "What do you call a group of giraffe?", "answers": ["A tower", "A stretch", "A canopy", "A troop"], "correct": 0 },
-    { "id": "collective-rhino", "question": "What do you call a group of rhino?", "answers": ["A crash", "A charge", "A herd", "A stampede"], "correct": 0 },
-    { "id": "collective-zebra", "question": "What do you call a group of zebra?", "answers": ["A dazzle", "A stripe", "A band", "A drove"], "correct": 0 },
-    { "id": "collective-baboon", "question": "What do you call a group of baboons?", "answers": ["A troop", "A congress", "A gang", "A clan"], "correct": 0 },
-    { "id": "collective-buffalo", "question": "What do you call a group of buffalo?", "answers": ["An obstinacy", "A stubbornness", "A siege", "A wall"], "correct": 0 },
-    { "id": "collective-leopard", "question": "What do you call a group of leopards?", "answers": ["A leap", "A prowl", "A stealth", "A shadow"], "correct": 0 },
-    { "id": "collective-crocodile", "question": "What do you call a group of crocodiles on a bank?", "answers": ["A bask", "A float", "A snap", "A raft"], "correct": 0 },
-    { "id": "collective-vulture-feeding", "question": "Vultures feeding on a carcass are called a…", "answers": ["Wake", "Committee", "Kettle", "Venue"], "correct": 0 },
-    { "id": "collective-vulture-flying", "question": "Vultures circling in the air are called a…", "answers": ["Kettle", "Wake", "Colony", "Spiral"], "correct": 0 },
-    { "id": "collective-mongoose", "question": "What do you call a group of mongooses?", "answers": ["A business", "A bustle", "A scurry", "A mob"], "correct": 0 },
-    { "id": "collective-hyena", "question": "What do you call a group of hyenas?", "answers": ["A clan", "A cackle", "A pack", "A howl"], "correct": 0 },
-    { "id": "collective-impala", "question": "What do you call a group of impala?", "answers": ["A herd", "A leap", "A rank", "A bound"], "correct": 0 },
-    { "id": "collective-elephant-lead", "question": "The elephant that leads a breeding herd is the…", "answers": ["Matriarch", "Patriarch", "Bull", "Dominant cow"], "correct": 0 },
-
-    { "id": "biggest-antelope", "question": "Which is the largest antelope in Kruger?", "answers": ["Eland", "Kudu", "Waterbuck", "Sable"], "correct": 0 },
-    { "id": "smallest-antelope", "question": "Which is the smallest antelope in Kruger?", "answers": ["Suni", "Steenbok", "Common duiker", "Sharpe's grysbok"], "correct": 0 },
-    { "id": "most-numerous", "question": "Which mammal is by far the most numerous in Kruger?", "answers": ["Impala", "Buffalo", "Zebra", "Blue wildebeest"], "correct": 0 },
-    { "id": "impala-count", "question": "Roughly how many impala are there in Kruger?", "answers": ["Around 150 000", "Around 15 000", "Around 500 000", "Around 40 000"], "correct": 0 },
-    { "id": "elephant-count", "question": "Roughly how many elephant are in Kruger?", "answers": ["Around 20 000", "Around 2 000", "Around 60 000", "Around 8 000"], "correct": 0 },
-    { "id": "lion-count", "question": "Roughly how many lion live in Kruger?", "answers": ["Around 1 600", "Around 400", "Around 6 000", "Around 150"], "correct": 0 },
-    { "id": "hartebeest-count", "question": "Lichtenstein's hartebeest is the rarest antelope in the park. Roughly how many are left?", "answers": ["Fewer than 100", "About 500", "About 2 000", "About 50 000"], "correct": 0 },
-    { "id": "wild-dog-count", "question": "Roughly how many African wild dogs are in Kruger?", "answers": ["A few hundred", "A few thousand", "Around fifty", "Around ten thousand"], "correct": 0 },
-    { "id": "bird-species", "question": "About how many bird species have been recorded in Kruger?", "answers": ["Over 500", "About 120", "About 250", "Over 1 500"], "correct": 0 },
-    { "id": "park-size", "question": "Kruger is roughly the size of which country?", "answers": ["Wales", "Belgium", "Luxembourg", "Ireland"], "correct": 0 },
-    { "id": "park-length", "question": "Roughly how far is it from Kruger's southern gate to its northern one?", "answers": ["About 350 km", "About 100 km", "About 800 km", "About 1 200 km"], "correct": 0 },
-
-    { "id": "skukuza-name", "question": "The camp Skukuza is named after which man?", "answers": ["James Stevenson-Hamilton", "Paul Kruger", "Piet Retief", "Louis Trichardt"], "correct": 0 },
-    { "id": "skukuza-meaning", "question": "\"Skukuza\" was the local name for Stevenson-Hamilton. Roughly what does it mean?", "answers": ["He who sweeps clean", "He who watches", "He who walks far", "He who speaks softly"], "correct": 0 },
-    { "id": "park-founded", "question": "Kruger became a national park in which year?", "answers": ["1926", "1898", "1948", "1902"], "correct": 0 },
-    { "id": "sabie-reserve", "question": "What was the reserve called before it became Kruger National Park?", "answers": ["Sabi Game Reserve", "Lowveld Reserve", "Transvaal Game Park", "Crocodile Reserve"], "correct": 0 },
-    { "id": "biggest-camp", "question": "Which is the largest rest camp in Kruger?", "answers": ["Skukuza", "Satara", "Lower Sabie", "Berg-en-Dal"], "correct": 0 },
-    { "id": "satara-cats", "question": "Satara sits in open grassland and is famous for which animal?", "answers": ["Lion", "Leopard", "Rhino", "Wild dog"], "correct": 0 },
-    { "id": "pafuri-where", "question": "Pafuri, famous for birds, is in which part of the park?", "answers": ["The far north", "The far south", "The centre", "The west"], "correct": 0 },
-    { "id": "border-country", "question": "Kruger shares its entire eastern boundary with which country?", "answers": ["Mozambique", "Zimbabwe", "Eswatini", "Botswana"], "correct": 0 },
-    { "id": "border-north", "question": "Which river forms Kruger's northern boundary?", "answers": ["The Limpopo", "The Sabie", "The Olifants", "The Crocodile"], "correct": 0 },
-    { "id": "gate-times", "question": "In midsummer, Kruger's gates open at roughly what time?", "answers": ["Half past four in the morning", "Six in the morning", "Seven in the morning", "Sunrise exactly"], "correct": 0 },
-    { "id": "speed-limit-tar", "question": "What is the speed limit on Kruger's tar roads?", "answers": ["50 km/h", "40 km/h", "60 km/h", "80 km/h"], "correct": 0 },
-
-    { "id": "big-five-origin", "question": "The \"Big Five\" originally described the five animals that were…", "answers": ["Most dangerous to hunt on foot", "Largest by weight", "Rarest to see", "Hardest to photograph"], "correct": 0 },
-    { "id": "big-five-member", "question": "Which of these is NOT one of the Big Five?", "answers": ["Cheetah", "Buffalo", "Leopard", "Rhino"], "correct": 0 },
-    { "id": "little-five-member", "question": "Which of these is one of the Little Five?", "answers": ["Elephant shrew", "Dwarf mongoose", "Tree squirrel", "Bushbaby"], "correct": 0 },
-    { "id": "secret-seven", "question": "Which of these is one of the \"Secret Seven\"?", "answers": ["Pangolin", "Sable antelope", "Kudu", "Ostrich"], "correct": 0 },
-    { "id": "big-six-birds", "question": "Which of these is one of the Big Six birds?", "answers": ["Saddle-billed stork", "Lilac-breasted roller", "Hamerkop", "Grey go-away-bird"], "correct": 0 },
-
-    { "id": "giraffe-vertebrae", "question": "How many neck vertebrae does a giraffe have?", "answers": ["Seven", "Fourteen", "Twenty", "Thirty-two"], "correct": 0 },
-    { "id": "cheetah-speed", "question": "A cheetah's top speed is roughly…", "answers": ["100 km/h", "60 km/h", "150 km/h", "45 km/h"], "correct": 0 },
-    { "id": "elephant-gestation", "question": "How long is an elephant pregnant?", "answers": ["About 22 months", "About 9 months", "About 12 months", "About 3 years"], "correct": 0 },
-    { "id": "elephant-eat", "question": "How much can a big bull elephant eat in a day?", "answers": ["Up to 300 kg", "Up to 30 kg", "Up to 1 000 kg", "Up to 80 kg"], "correct": 0 },
-    { "id": "hippo-danger", "question": "Which of these kills more people in Africa each year than the others?", "answers": ["Hippo", "Lion", "Leopard", "Crocodile"], "correct": 0 },
-    { "id": "hippo-sweat", "question": "A hippo's skin secretes a red fluid that acts as a…", "answers": ["Sunscreen", "Insect repellent", "Scent marker", "Coolant"], "correct": 0 },
-    { "id": "lion-sleep", "question": "Roughly how much of the day does a lion spend resting?", "answers": ["About 20 hours", "About 8 hours", "About 12 hours", "About 4 hours"], "correct": 0 },
-    { "id": "lion-mane", "question": "A darker mane on a male lion generally signals…", "answers": ["Higher testosterone and condition", "Older age only", "A different subspecies", "Poor health"], "correct": 0 },
-    { "id": "leopard-tree", "question": "Why does a leopard drag its kill up a tree?", "answers": ["To keep it from hyenas and lions", "To cool it down", "To let it age", "To reach a lookout"], "correct": 0 },
-    { "id": "spotted-hyena-lead", "question": "A spotted hyena clan is led by…", "answers": ["The dominant female", "The dominant male", "The oldest animal", "Nobody in particular"], "correct": 0 },
-    { "id": "wild-dog-success", "question": "African wild dogs are the most successful large predator by hunt success rate. Roughly what proportion of hunts succeed?", "answers": ["About 80%", "About 20%", "About 50%", "About 5%"], "correct": 0 },
-    { "id": "pangolin-diet", "question": "What does a pangolin eat?", "answers": ["Ants and termites", "Fruit and roots", "Small mammals", "Grass"], "correct": 0 },
-    { "id": "pangolin-scales", "question": "A pangolin's scales are made of the same material as…", "answers": ["Your fingernails", "Bone", "Tooth enamel", "Tortoise shell"], "correct": 0 },
-    { "id": "honey-badger-rep", "question": "The honey badger is famous for…", "answers": ["Fearlessness far beyond its size", "Its speed", "Living in huge groups", "Building dams"], "correct": 0 },
-    { "id": "oxpecker-food", "question": "What do red-billed oxpeckers eat off big game?", "answers": ["Ticks, blood and earwax", "Only grass seeds", "Loose hair", "Flies only"], "correct": 0 },
-    { "id": "zebra-stripes", "question": "Every plains zebra's stripe pattern is…", "answers": ["Unique to that animal", "Identical within a herd", "The same across the species", "Different only on males"], "correct": 0 },
-    { "id": "warthog-kneel", "question": "Why does a warthog kneel on its front legs?", "answers": ["To graze short grass and dig", "To rest", "To fight", "To cool off"], "correct": 0 },
-    { "id": "impala-glands", "question": "What are the black tufts on an impala's back legs?", "answers": ["Scent glands", "Ticks", "Muscle markings", "Scar tissue"], "correct": 0 },
-    { "id": "kudu-horns", "question": "Which sex of kudu carries the spiral horns?", "answers": ["Males only", "Females only", "Both", "Neither — they are ears"], "correct": 0 },
-    { "id": "giraffe-sleep", "question": "How long does a wild giraffe typically sleep in a day?", "answers": ["Under two hours", "About eight hours", "About twelve hours", "It does not sleep"], "correct": 0 },
-    { "id": "buffalo-dagga", "question": "What is a \"dagga boy\"?", "answers": ["An old bull buffalo out of the herd", "A young male lion", "A wild dog scout", "A bull elephant in musth"], "correct": 0 },
-    { "id": "elephant-musth", "question": "What is musth in a bull elephant?", "answers": ["A period of raised testosterone and aggression", "A skin condition", "A moulting season", "A feeding frenzy"], "correct": 0 },
-    { "id": "termite-mound", "question": "Termite mounds in Kruger are often used as dens by…", "answers": ["Warthog", "Leopard", "Buffalo", "Kudu"], "correct": 0 },
-    { "id": "aardvark-burrows", "question": "Aardvark burrows matter to the whole ecosystem because…", "answers": ["Dozens of other species shelter in them", "They store water", "They kill termites", "They mark territory"], "correct": 0 },
-    { "id": "baobab-age", "question": "A big baobab can be roughly how old?", "answers": ["Over a thousand years", "About a hundred years", "About three hundred years", "About fifty years"], "correct": 0 },
-    { "id": "marula-fruit", "question": "Which fruit is famously eaten by elephants and used in a South African liqueur?", "answers": ["Marula", "Mopane", "Jackalberry", "Sausage tree fruit"], "correct": 0 },
-    { "id": "mopane-worm", "question": "The mopane worm, eaten across southern Africa, is the caterpillar of a…", "answers": ["Emperor moth", "Butterfly", "Beetle", "Locust"], "correct": 0 },
-    { "id": "go-away-bird", "question": "The grey go-away-bird gets its name from…", "answers": ["Its call, which sounds like \"go away\"", "Its habit of fleeing cars", "A Zulu legend", "Its migration"], "correct": 0 },
-    { "id": "hornbill-nest", "question": "A female hornbill seals herself into a tree cavity to nest, leaving only…", "answers": ["A narrow slit for the male to feed her", "The entrance open", "A hole in the roof", "Nothing — she is fully sealed"], "correct": 0 },
-    { "id": "vulture-role", "question": "Vultures matter most to the veld because they…", "answers": ["Stop disease spreading from carcasses", "Kill sick animals", "Spread seeds", "Control rodent numbers"], "correct": 0 },
-    { "id": "fish-eagle-call", "question": "The African fish eagle's call is often described as…", "answers": ["The sound of Africa", "A hoot", "A whistle", "A bark"], "correct": 0 },
-    { "id": "nile-croc-teeth", "question": "A Nile crocodile replaces its teeth…", "answers": ["Continually, throughout life", "Once, as an adult", "Never", "Every year in winter"], "correct": 0 },
-    { "id": "black-mamba-name", "question": "The black mamba is named for the colour of its…", "answers": ["Mouth", "Skin", "Eyes", "Tail"], "correct": 0 },
-    { "id": "puff-adder-bites", "question": "The puff adder causes more serious snakebites in Africa than any other because it…", "answers": ["Lies still and is trodden on", "Chases people", "Is the most venomous", "Lives in houses"], "correct": 0 },
-    { "id": "tortoise-small-five", "question": "Which tortoise is one of the Small Five?", "answers": ["Leopard tortoise", "Hinged tortoise", "Padloper", "Angulate tortoise"], "correct": 0 }
+    {
+      "id": "collective-hippo",
+      "question": "What do you call a group of hippos?",
+      "answers": [
+        "A bloat",
+        "A wallow",
+        "A pod",
+        "A raft"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "collective-giraffe",
+      "question": "What do you call a group of giraffe?",
+      "answers": [
+        "A tower",
+        "A stretch",
+        "A canopy",
+        "A troop"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "collective-rhino",
+      "question": "What do you call a group of rhino?",
+      "answers": [
+        "A crash",
+        "A charge",
+        "A herd",
+        "A stampede"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "collective-zebra",
+      "question": "What do you call a group of zebra?",
+      "answers": [
+        "A dazzle",
+        "A stripe",
+        "A band",
+        "A drove"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "collective-baboon",
+      "question": "What do you call a group of baboons?",
+      "answers": [
+        "A troop",
+        "A congress",
+        "A gang",
+        "A clan"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "collective-buffalo",
+      "question": "What do you call a group of buffalo?",
+      "answers": [
+        "An obstinacy",
+        "A stubbornness",
+        "A siege",
+        "A wall"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "collective-leopard",
+      "question": "What do you call a group of leopards?",
+      "answers": [
+        "A leap",
+        "A prowl",
+        "A stealth",
+        "A shadow"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "collective-crocodile",
+      "question": "What do you call a group of crocodiles on a bank?",
+      "answers": [
+        "A bask",
+        "A float",
+        "A snap",
+        "A raft"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "collective-vulture-feeding",
+      "question": "Vultures feeding on a carcass are called a…",
+      "answers": [
+        "Wake",
+        "Committee",
+        "Kettle",
+        "Venue"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "collective-vulture-flying",
+      "question": "Vultures circling in the air are called a…",
+      "answers": [
+        "Kettle",
+        "Wake",
+        "Colony",
+        "Spiral"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "collective-mongoose",
+      "question": "What do you call a group of mongooses?",
+      "answers": [
+        "A business",
+        "A bustle",
+        "A scurry",
+        "A mob"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "collective-hyena",
+      "question": "What do you call a group of hyenas?",
+      "answers": [
+        "A clan",
+        "A cackle",
+        "A pack",
+        "A howl"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "collective-impala",
+      "question": "What do you call a group of impala?",
+      "answers": [
+        "A herd",
+        "A leap",
+        "A rank",
+        "A bound"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "collective-elephant-lead",
+      "question": "The elephant that leads a breeding herd is the…",
+      "answers": [
+        "Matriarch",
+        "Patriarch",
+        "Bull",
+        "Dominant cow"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "biggest-antelope",
+      "question": "Which is the largest antelope in Kruger?",
+      "answers": [
+        "Eland",
+        "Kudu",
+        "Waterbuck",
+        "Sable"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "smallest-antelope",
+      "question": "Which is the smallest antelope in Kruger?",
+      "answers": [
+        "Suni",
+        "Steenbok",
+        "Common duiker",
+        "Sharpe's grysbok"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "most-numerous",
+      "question": "Which mammal is by far the most numerous in Kruger?",
+      "answers": [
+        "Impala",
+        "Buffalo",
+        "Zebra",
+        "Blue wildebeest"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "impala-count",
+      "question": "Roughly how many impala are there in Kruger?",
+      "answers": [
+        "Around 150 000",
+        "Around 15 000",
+        "Around 500 000",
+        "Around 40 000"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "elephant-count",
+      "question": "Roughly how many elephant are in Kruger?",
+      "answers": [
+        "Around 20 000",
+        "Around 2 000",
+        "Around 60 000",
+        "Around 8 000"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "lion-count",
+      "question": "Roughly how many lion live in Kruger?",
+      "answers": [
+        "Around 1 600",
+        "Around 400",
+        "Around 6 000",
+        "Around 150"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "hartebeest-count",
+      "question": "Lichtenstein's hartebeest is the rarest antelope in the park. Roughly how many are left?",
+      "answers": [
+        "Fewer than 100",
+        "About 500",
+        "About 2 000",
+        "About 50 000"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "wild-dog-count",
+      "question": "Roughly how many African wild dogs are in Kruger?",
+      "answers": [
+        "A few hundred",
+        "A few thousand",
+        "Around fifty",
+        "Around ten thousand"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "bird-species",
+      "question": "About how many bird species have been recorded in Kruger?",
+      "answers": [
+        "Over 500",
+        "About 120",
+        "About 250",
+        "Over 1 500"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "park-size",
+      "question": "Kruger is roughly the size of which country?",
+      "answers": [
+        "Wales",
+        "Belgium",
+        "Luxembourg",
+        "Ireland"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "park-length",
+      "question": "Roughly how far is it from Kruger's southern gate to its northern one?",
+      "answers": [
+        "About 350 km",
+        "About 100 km",
+        "About 800 km",
+        "About 1 200 km"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "skukuza-name",
+      "question": "The camp Skukuza is named after which man?",
+      "answers": [
+        "James Stevenson-Hamilton",
+        "Paul Kruger",
+        "Piet Retief",
+        "Louis Trichardt"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "skukuza-meaning",
+      "question": "\"Skukuza\" was the local name for Stevenson-Hamilton. Roughly what does it mean?",
+      "answers": [
+        "He who sweeps clean",
+        "He who watches",
+        "He who walks far",
+        "He who speaks softly"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "park-founded",
+      "question": "Kruger became a national park in which year?",
+      "answers": [
+        "1926",
+        "1898",
+        "1948",
+        "1902"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "sabie-reserve",
+      "question": "What was the reserve called before it became Kruger National Park?",
+      "answers": [
+        "Sabi Game Reserve",
+        "Lowveld Reserve",
+        "Transvaal Game Park",
+        "Crocodile Reserve"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "biggest-camp",
+      "question": "Which is the largest rest camp in Kruger?",
+      "answers": [
+        "Skukuza",
+        "Satara",
+        "Lower Sabie",
+        "Berg-en-Dal"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "satara-cats",
+      "question": "Satara sits in open grassland and is famous for which animal?",
+      "answers": [
+        "Lion",
+        "Leopard",
+        "Rhino",
+        "Wild dog"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "pafuri-where",
+      "question": "Pafuri, famous for birds, is in which part of the park?",
+      "answers": [
+        "The far north",
+        "The far south",
+        "The centre",
+        "The west"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "border-country",
+      "question": "Kruger shares its entire eastern boundary with which country?",
+      "answers": [
+        "Mozambique",
+        "Zimbabwe",
+        "Eswatini",
+        "Botswana"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "border-north",
+      "question": "Which river forms Kruger's northern boundary?",
+      "answers": [
+        "The Limpopo",
+        "The Sabie",
+        "The Olifants",
+        "The Crocodile"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "gate-times",
+      "question": "In midsummer, Kruger's gates open at roughly what time?",
+      "answers": [
+        "Half past four in the morning",
+        "Six in the morning",
+        "Seven in the morning",
+        "Sunrise exactly"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "speed-limit-tar",
+      "question": "What is the speed limit on Kruger's tar roads?",
+      "answers": [
+        "50 km/h",
+        "40 km/h",
+        "60 km/h",
+        "80 km/h"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "big-five-origin",
+      "question": "The \"Big Five\" originally described the five animals that were…",
+      "answers": [
+        "Most dangerous to hunt on foot",
+        "Largest by weight",
+        "Rarest to see",
+        "Hardest to photograph"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "big-five-member",
+      "question": "Which of these is NOT one of the Big Five?",
+      "answers": [
+        "Cheetah",
+        "Buffalo",
+        "Leopard",
+        "Rhino"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "little-five-member",
+      "question": "Which of these is one of the Little Five?",
+      "answers": [
+        "Elephant shrew",
+        "Dwarf mongoose",
+        "Tree squirrel",
+        "Bushbaby"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "secret-seven",
+      "question": "Which of these is one of the \"Secret Seven\"?",
+      "answers": [
+        "Pangolin",
+        "Sable antelope",
+        "Kudu",
+        "Ostrich"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "big-six-birds",
+      "question": "Which of these is one of the Big Six birds?",
+      "answers": [
+        "Saddle-billed stork",
+        "Lilac-breasted roller",
+        "Hamerkop",
+        "Grey go-away-bird"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "giraffe-vertebrae",
+      "question": "How many neck vertebrae does a giraffe have?",
+      "answers": [
+        "Seven",
+        "Fourteen",
+        "Twenty",
+        "Thirty-two"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "cheetah-speed",
+      "question": "A cheetah's top speed is roughly…",
+      "answers": [
+        "100 km/h",
+        "60 km/h",
+        "150 km/h",
+        "45 km/h"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "elephant-gestation",
+      "question": "How long is an elephant pregnant?",
+      "answers": [
+        "About 22 months",
+        "About 9 months",
+        "About 12 months",
+        "About 3 years"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "elephant-eat",
+      "question": "How much can a big bull elephant eat in a day?",
+      "answers": [
+        "Up to 300 kg",
+        "Up to 30 kg",
+        "Up to 1 000 kg",
+        "Up to 80 kg"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "hippo-danger",
+      "question": "Which of these kills more people in Africa each year than the others?",
+      "answers": [
+        "Hippo",
+        "Lion",
+        "Leopard",
+        "Crocodile"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "hippo-sweat",
+      "question": "A hippo's skin secretes a red fluid that acts as a…",
+      "answers": [
+        "Sunscreen",
+        "Insect repellent",
+        "Scent marker",
+        "Coolant"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "lion-sleep",
+      "question": "Roughly how much of the day does a lion spend resting?",
+      "answers": [
+        "About 20 hours",
+        "About 8 hours",
+        "About 12 hours",
+        "About 4 hours"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "lion-mane",
+      "question": "A darker mane on a male lion generally signals…",
+      "answers": [
+        "Higher testosterone and condition",
+        "Older age only",
+        "A different subspecies",
+        "Poor health"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "leopard-tree",
+      "question": "Why does a leopard drag its kill up a tree?",
+      "answers": [
+        "To keep it from hyenas and lions",
+        "To cool it down",
+        "To let it age",
+        "To reach a lookout"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "spotted-hyena-lead",
+      "question": "A spotted hyena clan is led by…",
+      "answers": [
+        "The dominant female",
+        "The dominant male",
+        "The oldest animal",
+        "Nobody in particular"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "wild-dog-success",
+      "question": "African wild dogs are the most successful large predator by hunt success rate. Roughly what proportion of hunts succeed?",
+      "answers": [
+        "About 80%",
+        "About 20%",
+        "About 50%",
+        "About 5%"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "pangolin-diet",
+      "question": "What does a pangolin eat?",
+      "answers": [
+        "Ants and termites",
+        "Fruit and roots",
+        "Small mammals",
+        "Grass"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "pangolin-scales",
+      "question": "A pangolin's scales are made of the same material as…",
+      "answers": [
+        "Your fingernails",
+        "Bone",
+        "Tooth enamel",
+        "Tortoise shell"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "honey-badger-rep",
+      "question": "The honey badger is famous for…",
+      "answers": [
+        "Fearlessness far beyond its size",
+        "Its speed",
+        "Living in huge groups",
+        "Building dams"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "oxpecker-food",
+      "question": "What do red-billed oxpeckers eat off big game?",
+      "answers": [
+        "Ticks, blood and earwax",
+        "Only grass seeds",
+        "Loose hair",
+        "Flies only"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "zebra-stripes",
+      "question": "Every plains zebra's stripe pattern is…",
+      "answers": [
+        "Unique to that animal",
+        "Identical within a herd",
+        "The same across the species",
+        "Different only on males"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "warthog-kneel",
+      "question": "Why does a warthog kneel on its front legs?",
+      "answers": [
+        "To graze short grass and dig",
+        "To rest",
+        "To fight",
+        "To cool off"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "impala-glands",
+      "question": "What are the black tufts on an impala's back legs?",
+      "answers": [
+        "Scent glands",
+        "Ticks",
+        "Muscle markings",
+        "Scar tissue"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "kudu-horns",
+      "question": "Which sex of kudu carries the spiral horns?",
+      "answers": [
+        "Males only",
+        "Females only",
+        "Both",
+        "Neither — they are ears"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "giraffe-sleep",
+      "question": "How long does a wild giraffe typically sleep in a day?",
+      "answers": [
+        "Under two hours",
+        "About eight hours",
+        "About twelve hours",
+        "It does not sleep"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "buffalo-dagga",
+      "question": "What is a \"dagga boy\"?",
+      "answers": [
+        "An old bull buffalo out of the herd",
+        "A young male lion",
+        "A wild dog scout",
+        "A bull elephant in musth"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "elephant-musth",
+      "question": "What is musth in a bull elephant?",
+      "answers": [
+        "A period of raised testosterone and aggression",
+        "A skin condition",
+        "A moulting season",
+        "A feeding frenzy"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "termite-mound",
+      "question": "Termite mounds in Kruger are often used as dens by…",
+      "answers": [
+        "Warthog",
+        "Leopard",
+        "Buffalo",
+        "Kudu"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "aardvark-burrows",
+      "question": "Aardvark burrows matter to the whole ecosystem because…",
+      "answers": [
+        "Dozens of other species shelter in them",
+        "They store water",
+        "They kill termites",
+        "They mark territory"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "baobab-age",
+      "question": "A big baobab can be roughly how old?",
+      "answers": [
+        "Over a thousand years",
+        "About a hundred years",
+        "About three hundred years",
+        "About fifty years"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "marula-fruit",
+      "question": "Which fruit is famously eaten by elephants and used in a South African liqueur?",
+      "answers": [
+        "Marula",
+        "Mopane",
+        "Jackalberry",
+        "Sausage tree fruit"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "mopane-worm",
+      "question": "The mopane worm, eaten across southern Africa, is the caterpillar of a…",
+      "answers": [
+        "Emperor moth",
+        "Butterfly",
+        "Beetle",
+        "Locust"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "go-away-bird",
+      "question": "The grey go-away-bird gets its name from…",
+      "answers": [
+        "Its call, which sounds like \"go away\"",
+        "Its habit of fleeing cars",
+        "A Zulu legend",
+        "Its migration"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "hornbill-nest",
+      "question": "A female hornbill seals herself into a tree cavity to nest, leaving only…",
+      "answers": [
+        "A narrow slit for the male to feed her",
+        "The entrance open",
+        "A hole in the roof",
+        "Nothing — she is fully sealed"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "vulture-role",
+      "question": "Vultures matter most to the veld because they…",
+      "answers": [
+        "Stop disease spreading from carcasses",
+        "Kill sick animals",
+        "Spread seeds",
+        "Control rodent numbers"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "fish-eagle-call",
+      "question": "The African fish eagle's call is often described as…",
+      "answers": [
+        "The sound of Africa",
+        "A hoot",
+        "A whistle",
+        "A bark"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "nile-croc-teeth",
+      "question": "A Nile crocodile replaces its teeth…",
+      "answers": [
+        "Continually, throughout life",
+        "Once, as an adult",
+        "Never",
+        "Every year in winter"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "black-mamba-name",
+      "question": "The black mamba is named for the colour of its…",
+      "answers": [
+        "Mouth",
+        "Skin",
+        "Eyes",
+        "Tail"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "puff-adder-bites",
+      "question": "The puff adder causes more serious snakebites in Africa than any other because it…",
+      "answers": [
+        "Lies still and is trodden on",
+        "Chases people",
+        "Is the most venomous",
+        "Lives in houses"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "tortoise-small-five",
+      "question": "Which tortoise is one of the Small Five?",
+      "answers": [
+        "Leopard tortoise",
+        "Hinged tortoise",
+        "Padloper",
+        "Angulate tortoise"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "river-crocodile-south",
+      "question": "Which river forms most of Kruger's southern boundary?",
+      "answers": [
+        "The Crocodile",
+        "The Sabie",
+        "The Olifants",
+        "The Letaba"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "river-longest",
+      "question": "Which river cuts across the middle of Kruger, splitting north from south?",
+      "answers": [
+        "The Olifants",
+        "The Sabie",
+        "The Shingwedzi",
+        "The Luvuvhu"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "river-fever-trees",
+      "question": "The famous fever tree forest at Pafuri stands beside which river?",
+      "answers": [
+        "The Luvuvhu",
+        "The Limpopo",
+        "The Letaba",
+        "The Sabie"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "crooks-corner",
+      "question": "Crooks' Corner in the far north got its name because it sat where…",
+      "answers": [
+        "Three countries meet, so fugitives could hop borders",
+        "Poachers cornered elephant against the river",
+        "A crooked bend in the road killed several drivers",
+        "Ivory traders bent the scales"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "oldest-camp",
+      "question": "Which Kruger camp is the oldest, opened to visitors in the 1920s?",
+      "answers": [
+        "Pretoriuskop",
+        "Skukuza",
+        "Satara",
+        "Lower Sabie"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "kruger-named-after",
+      "question": "Kruger National Park is named after…",
+      "answers": [
+        "Paul Kruger, president of the South African Republic",
+        "The first warden of the park",
+        "The farmer who donated the land",
+        "A Voortrekker hunter"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "transfrontier",
+      "question": "Kruger is part of a transfrontier park joined with reserves in…",
+      "answers": [
+        "Mozambique and Zimbabwe",
+        "Botswana and Namibia",
+        "Zimbabwe and Zambia",
+        "Eswatini and Mozambique"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "northern-veg",
+      "question": "Most of the far north of Kruger is covered by which tree?",
+      "answers": [
+        "Mopane",
+        "Marula",
+        "Knobthorn",
+        "Jackalberry"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "granite-basalt",
+      "question": "Kruger's western half is granite and its eastern half basalt. The basalt side is better for game because it…",
+      "answers": [
+        "Grows richer grass",
+        "Holds more water",
+        "Has fewer predators",
+        "Is closer to the rivers"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "sable-vs-roan",
+      "question": "Which is the rarer sighting in Kruger?",
+      "answers": [
+        "Roan antelope",
+        "Sable antelope",
+        "Kudu",
+        "Waterbuck"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "waterbuck-ring",
+      "question": "The white ring on a waterbuck's backside is often nicknamed…",
+      "answers": [
+        "The toilet seat",
+        "The target",
+        "The moon",
+        "The saddle"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "nyala-sexes",
+      "question": "Male and female nyala look so different that people often take them for two species. The female is…",
+      "answers": [
+        "Bright chestnut with white stripes",
+        "Grey with a shaggy mane",
+        "Larger than the male",
+        "Horned, unlike the male"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "steenbok-toilet",
+      "question": "A steenbok is unusual among antelope because it…",
+      "answers": [
+        "Buries its droppings",
+        "Climbs rocks",
+        "Lives in herds of fifty",
+        "Feeds only at night"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "klipspringer-hooves",
+      "question": "A klipspringer walks on the tips of its hooves, which lets it…",
+      "answers": [
+        "Grip bare rock",
+        "Run faster on sand",
+        "Swim across rivers",
+        "Dig for roots"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "giraffe-fight",
+      "question": "Two male giraffe fighting by swinging their necks is called…",
+      "answers": [
+        "Necking",
+        "Sparring",
+        "Boxing",
+        "Bracing"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "hyena-bite",
+      "question": "A spotted hyena's jaws are strong enough to…",
+      "answers": [
+        "Crush and digest bone",
+        "Bite through a car tyre",
+        "Break a buffalo's leg in one bite",
+        "Cut wire fencing"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "cheetah-claws",
+      "question": "Unlike other cats, a cheetah's claws are…",
+      "answers": [
+        "Only half retractable, for grip",
+        "Fully retractable",
+        "Missing on the front feet",
+        "Blunt from birth"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "leopard-territory",
+      "question": "A male leopard's territory usually overlaps…",
+      "answers": [
+        "Several female territories",
+        "No other leopard at all",
+        "Only other males",
+        "The whole park"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "lion-hunt-who",
+      "question": "In a lion pride, most of the hunting is done by…",
+      "answers": [
+        "The lionesses",
+        "The dominant male",
+        "The sub-adult males",
+        "Whoever is hungriest"
+      ],
+      "correct": 0,
+      "difficulty": "easy"
+    },
+    {
+      "id": "wild-dog-vote",
+      "question": "African wild dogs decide when to set off hunting by…",
+      "answers": [
+        "Sneezing",
+        "Howling",
+        "Following the alpha only",
+        "Scratching the ground"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "buffalo-herd-size",
+      "question": "A big buffalo herd in Kruger can number around…",
+      "answers": [
+        "A thousand animals",
+        "Fifty animals",
+        "Ten thousand animals",
+        "A hundred thousand animals"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "rhino-difference",
+      "question": "The quickest way to tell a white rhino from a black rhino is…",
+      "answers": [
+        "The shape of the lip",
+        "The colour",
+        "The size of the horn",
+        "The length of the tail"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "white-rhino-name",
+      "question": "The \"white\" in white rhino probably comes from…",
+      "answers": [
+        "A Dutch word for wide, describing its mouth",
+        "The pale mud it wallows in",
+        "Its lighter skin",
+        "A hunter's surname"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "elephant-tusk-side",
+      "question": "Elephants favour one tusk over the other, which is why one is usually…",
+      "answers": [
+        "Shorter and more worn",
+        "Longer and thicker",
+        "Missing entirely",
+        "Darker in colour"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "hippo-under-water",
+      "question": "How long can a hippo stay under water?",
+      "answers": [
+        "About five minutes",
+        "About thirty seconds",
+        "About twenty minutes",
+        "An hour"
+      ],
+      "correct": 0,
+      "difficulty": "medium"
+    },
+    {
+      "id": "genet-not-cat",
+      "question": "A large-spotted genet is not a cat. It is most closely related to…",
+      "answers": [
+        "The mongoose and civet family",
+        "The domestic cat",
+        "The leopard",
+        "The meerkat only"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "honey-badger-snake",
+      "question": "A honey badger bitten by a puff adder will often…",
+      "answers": [
+        "Pass out, then wake and carry on eating it",
+        "Die within the hour",
+        "Be entirely unaffected",
+        "Vomit and flee"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    },
+    {
+      "id": "ground-hornbill-status",
+      "question": "The southern ground hornbill is in trouble partly because a breeding pair raises…",
+      "answers": [
+        "One chick every few years",
+        "Four chicks a year",
+        "Chicks only in drought years",
+        "Two broods every season"
+      ],
+      "correct": 0,
+      "difficulty": "hard"
+    }
   ]
 }

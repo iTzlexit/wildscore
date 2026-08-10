@@ -56,16 +56,17 @@ Three tabs — **Profile, Wild Score, Animals**. The Sightings feed is gone: it 
 - **The prices** — every game opens on the whole catalogue, rarest first, and
   the car confirms it. Anything can be repriced on the spot; what they set is
   saved, so the second morning is one tap.
-- **Trivia** — 76 questions, bundled. Unlocked by scoring 400 points of
-  sightings rather than by a timer; thirty points for a right answer, no second
-  guess.
+- **Trivia** — 104 questions, bundled, in three difficulties. Unlocked by every
+  *unique* animal a player spots, plus one handed round the car every half
+  hour. 20/40/70 points by difficulty, one guess, and closing the sheet keeps
+  the question rather than burning it.
 - **Profile** — lifetime points, collections (Big Five, Small Five, Under
   threat, Antelope, Predators, Snakes, Night shift), drive history with
   year/month filters and delete, backup/restore, credits.
 - **Backup** — a pasteable code. No server; see `docs/RISKS.md` for why it
   matters more than it looks.
 
-367 tests. `flutter analyze` is clean and must stay clean.
+379 tests. `flutter analyze` is clean and must stay clean.
 
 ## Decisions already made — do not relitigate
 

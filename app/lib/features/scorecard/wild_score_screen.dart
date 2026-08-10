@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../domain/scorecard.dart';
 import '../../domain/species.dart';
+import '../../domain/trivia.dart';
 import '../../shared/date_format.dart';
 import '../../shared/theme.dart';
 import '../../shared/widgets/app_header.dart';
@@ -25,6 +26,7 @@ class WildScoreScreen extends StatelessWidget {
     this.onRemoveClaim,
     this.onSpotFor,
     this.onQuizFor,
+    this.onOpenPrices,
     this.onOpenHistory,
     super.key,
   });
@@ -37,6 +39,9 @@ class WildScoreScreen extends StatelessWidget {
   final void Function(Player player, Species species)? onRemoveClaim;
   final ValueChanged<Player>? onSpotFor;
   final ValueChanged<Player>? onQuizFor;
+
+  /// Opens the price list mid-drive.
+  final VoidCallback? onOpenPrices;
 
   /// Past drives. They live on this tab because they are the game's history,
   /// not the player's — the profile is one person's record and a list of days
@@ -62,6 +67,19 @@ class WildScoreScreen extends StatelessWidget {
                       icon: const Icon(Icons.history_rounded),
                       color: AppColors.textSecondary,
                       tooltip: 'Past drives',
+                    ),
+                  // Prices, mid-drive.
+                  //
+                  // They used to be settable only before the game started,
+                  // which is the one moment nobody has an opinion yet: the
+                  // argument about what a sable is worth happens when somebody
+                  // finds a sable. Alex's ask, and obviously right.
+                  if (onOpenPrices != null)
+                    IconButton(
+                      onPressed: onOpenPrices,
+                      icon: const Icon(Icons.sell_outlined),
+                      color: AppColors.textSecondary,
+                      tooltip: 'Prices',
                     ),
                   IconButton(
                     onPressed: () => RulesScreen.open(context),
@@ -250,6 +268,16 @@ class _LiveGame extends StatelessWidget {
             ],
           ),
         ],
+        // The quiz, and what it has paid the car so far.
+        //
+        // Alex asked for the total to be visible, and it earns its space: the
+        // questions are worth real points now and a car that cannot see them
+        // adding up has no reason to care about the badge.
+        if (card.trivia.totalRight > 0) ...<Widget>[
+          const SizedBox(height: Space.md),
+          _TriviaTile(trivia: card.trivia),
+        ],
+
         // No empty state under the standings. There used to be a card saying
         // "nothing yet, tap the eye" — which is a whole panel telling a car
         // that has been playing for four minutes that it has not scored yet.
@@ -305,6 +333,60 @@ class _LiveGame extends StatelessWidget {
         // opens, which is where somebody is actually deciding. A paragraph
         // under the button explained it to everybody else all day long.
       ],
+    );
+  }
+}
+
+/// What the quiz has paid out today.
+///
+/// Only once somebody has got one right. A tile reading "0 points from 0
+/// questions" is an advertisement for a feature nobody has used yet, and this
+/// screen already has a badge doing that job better.
+class _TriviaTile extends StatelessWidget {
+  const _TriviaTile({required this.trivia});
+
+  final TriviaState trivia;
+
+  @override
+  Widget build(BuildContext context) {
+    final int right = trivia.totalRight;
+
+    return Container(
+      padding: const EdgeInsets.all(Space.lg),
+      decoration: BoxDecoration(
+        color: AppColors.accentWash,
+        borderRadius: BorderRadius.circular(Radii.card),
+        border: Border.all(color: AppColors.accent.withValues(alpha: 0.25)),
+      ),
+      child: Row(
+        children: <Widget>[
+          const Icon(Icons.quiz_rounded, size: 18, color: AppColors.accent),
+          const SizedBox(width: Space.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'FROM THE QUIZ',
+                  style: AppText.overline.copyWith(color: AppColors.accent),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  '$right ${right == 1 ? 'question' : 'questions'} right',
+                  style: AppText.caption,
+                ),
+              ],
+            ),
+          ),
+          Text(
+            '+${trivia.totalWon}',
+            style: AppText.title2.copyWith(
+              color: AppColors.accent,
+              fontFeatures: AppText.tabular,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

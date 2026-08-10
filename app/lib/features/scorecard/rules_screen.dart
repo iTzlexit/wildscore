@@ -159,7 +159,10 @@ class RulesScreen extends StatelessWidget {
             title: 'Trivia questions',
             body:
                 'Earn additional points by answering trivia questions about '
-                'Kruger and its animals during your game.',
+                'Kruger and its animals during your game.\n\n'
+                'Every **new animal** you spot earns you one, and one more is '
+                'handed to somebody in the car every half hour.\n\n'
+                'Easy **20**, tricky **40**, hard **70**. One guess each.',
           ),
           const SizedBox(height: Space.xl),
 

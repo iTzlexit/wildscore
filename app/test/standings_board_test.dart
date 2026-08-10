@@ -69,7 +69,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('View this animal'), findsOneWidget);
-    expect(find.text('Take it back off Sam'), findsOneWidget);
+    expect(find.text('Remove from Sam'), findsOneWidget);
   });
 
   testWidgets('choosing to view opens the species card', (
@@ -98,7 +98,7 @@ void main() {
 
     await tester.tap(find.text('Leopard'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Take it back off Sam'));
+    await tester.tap(find.text('Remove from Sam'));
     await tester.pumpAndSettle();
 
     expect(removed, <String>['Sam/leopard']);

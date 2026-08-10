@@ -206,7 +206,10 @@ class _ClaimDetailsSheetState extends State<ClaimDetailsSheet> {
               // animal — a puff adder is never asked whether it was on a kill.
               if (species.possibleExtras.isNotEmpty) ...<Widget>[
                 const Divider(height: 1, color: AppColors.outline),
-                const _Question(label: 'Anything special about it?'),
+                // "Anything special about it?" was the heading, which stopped
+                // making sense the moment one of the answers took points away.
+                // Being in a camp is not special, it is a discount.
+                const _Question(label: 'Bonus points and deductions'),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(
                     Space.lg,
@@ -221,7 +224,11 @@ class _ClaimDetailsSheetState extends State<ClaimDetailsSheet> {
                       for (final SightingExtra e in species.possibleExtras)
                         _Choice(
                           label: e.label,
-                          detail: '×1.5',
+                          // Read from the extra rather than typed. It said
+                          // ×1.5 on every chip, which was wrong for four of the
+                          // six and actively misleading on the one that takes
+                          // points away — "In camp ×1.5" reads as a bonus.
+                          detail: e.effect,
                           selected: _extras.contains(e),
                           onTap: () => setState(() {
                             if (!_extras.remove(e)) {

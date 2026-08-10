@@ -91,11 +91,14 @@ class _StandingsBoardState extends State<StandingsBoard> {
             onSpot: widget.onSpotFor == null
                 ? null
                 : () => widget.onSpotFor!(ranked[i]),
+            // A question is earned per *unique* animal this player has found,
+            // plus their share of the ones handed out for time passing.
             onQuiz:
                 widget.onQuizFor == null ||
                     !card.trivia.hasWaiting(
                       ranked[i].id,
-                      card.sightingPointsFor(ranked[i].id),
+                      card.uniqueSpotsFor(ranked[i].id),
+                      timed: card.timedQuestionsFor(ranked[i].id),
                     )
                 ? null
                 : () => widget.onQuizFor!(ranked[i]),
@@ -415,32 +418,83 @@ class _Row extends StatelessWidget {
 /// Only rendered when there is one, which is the whole design: the badge is
 /// the notification. A greyed-out quiz button on every row all morning would
 /// be four permanent advertisements for something nobody has earned yet.
-class _QuizButton extends StatelessWidget {
+///
+/// **It says QUIZ and it pulses.** A lone question mark was not enough — Alex's
+/// note, and watching somebody use it makes it obvious: a small "?" beside a
+/// name reads as a help button, not as *you have something to claim*. A word
+/// and a slow pulse say it from across the car.
+class _QuizButton extends StatefulWidget {
   const _QuizButton({required this.onTap, required this.name});
 
   final VoidCallback onTap;
   final String name;
 
   @override
+  State<_QuizButton> createState() => _QuizButtonState();
+}
+
+class _QuizButtonState extends State<_QuizButton>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _pulse = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1100),
+  )..repeat(reverse: true);
+
+  @override
+  void dispose() {
+    _pulse.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Semantics(
       button: true,
-      label: 'Answer a question for $name',
-      child: Material(
-        color: AppColors.accent,
-        borderRadius: BorderRadius.circular(9),
-        child: InkWell(
-          onTap: onTap,
+      label: 'A question is waiting for ${widget.name}',
+      child: AnimatedBuilder(
+        animation: _pulse,
+        builder: (BuildContext context, Widget? child) => DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(9),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: AppColors.accent.withValues(
+                  alpha: 0.20 + 0.35 * _pulse.value,
+                ),
+                blurRadius: 6 + 10 * _pulse.value,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
+          child: child,
+        ),
+        child: Material(
+          color: AppColors.accent,
           borderRadius: BorderRadius.circular(9),
-          child: Container(
-            width: 32,
-            height: 28,
-            alignment: Alignment.center,
-            child: Text(
-              '?',
-              style: AppText.bodyStrong.copyWith(
-                color: AppColors.accentInk,
-                fontSize: 16,
+          child: InkWell(
+            onTap: widget.onTap,
+            borderRadius: BorderRadius.circular(9),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              height: 28,
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const Icon(
+                    Icons.quiz_rounded,
+                    size: 13,
+                    color: AppColors.accentInk,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    'QUIZ',
+                    style: AppText.overline.copyWith(
+                      color: AppColors.accentInk,
+                      fontSize: 9.5,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -691,7 +745,7 @@ class _TagSheet extends StatelessWidget {
             const Divider(height: 1, color: AppColors.outline),
             _SheetRow(
               icon: Icons.undo_rounded,
-              label: 'Take it back off $player',
+              label: 'Remove from $player',
               danger: true,
               onTap: () => Navigator.of(context).pop(_TagAction.remove),
             ),

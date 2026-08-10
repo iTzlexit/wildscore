@@ -132,7 +132,7 @@ class Species {
     required this.scientificName,
     required this.afrikaansName,
     required this.category,
-    required this.rarityTier,
+    required this.catalogueTier,
     required this.tags,
     required this.isSensitive,
     required this.description,
@@ -173,7 +173,7 @@ class Species {
         'category',
         id,
       ),
-      rarityTier: _byName(
+      catalogueTier: _byName(
         RarityTier.values,
         json['rarityTier'] as String,
         'rarityTier',
@@ -234,7 +234,22 @@ class Species {
   final String scientificName;
   final String afrikaansName;
   final SpeciesCategory category;
-  final RarityTier rarityTier;
+
+  /// The band **we** put it in. Use [rarityTier] for what to show.
+  final RarityTier catalogueTier;
+
+  /// The band it is actually in, which follows the price.
+  ///
+  /// Alex's rule: *"if that animal's points get changed by the user then that
+  /// animal gets placed into that category as well."* Obviously right once you
+  /// say it out loud — a car that decides sable is worth 700 has decided sable
+  /// is a Ghost, and a tile reading "Cryptic · 700" beside a Ghost on 600 is
+  /// the app arguing with them.
+  ///
+  /// It moves the filters and the collections with it, which is the point.
+  RarityTier get rarityTier =>
+      housePoints == null ? catalogueTier : RarityTier.forPoints(housePoints!);
+
   final List<SpeciesTag> tags;
 
   /// Rhino and pangolin. Sightings of these species must never expose location
@@ -490,11 +505,23 @@ class Species {
   /// [points] is how a player's own scoring reaches the rest of the app: the
   /// repository applies overrides at load, so every screen, the claim sheet and
   /// the feed all see the edited number without knowing anything about it.
+  /// This animal at a price the player just chose, or back at ours when null.
+  ///
+  /// For a screen that is already open and holding its own copy: the catalogue
+  /// is rebuilt above it, but a pushed route keeps the species it was pushed
+  /// with, so without this an edit only shows up once you go back.
+  Species withHousePoints(int? points) =>
+      copyWith(housePoints: points, clearHousePoints: points == null);
+
   Species copyWith({
     bool? discovered,
     int? housePoints,
     SpeciesCap? houseCap,
     bool? houseCapSet,
+
+    /// Puts the animal back on the catalogue's number. Needed because a null
+    /// `housePoints` means "leave it alone" everywhere else.
+    bool clearHousePoints = false,
   }) {
     return Species(
       id: id,
@@ -503,7 +530,7 @@ class Species {
       scientificName: scientificName,
       afrikaansName: afrikaansName,
       category: category,
-      rarityTier: rarityTier,
+      catalogueTier: catalogueTier,
       tags: tags,
       isSensitive: isSensitive,
       photoVerified: photoVerified,
@@ -522,7 +549,7 @@ class Species {
       points: _points,
       chancesPerDay: chancesPerDay,
       decay: decay,
-      housePoints: housePoints ?? this.housePoints,
+      housePoints: clearHousePoints ? null : (housePoints ?? this.housePoints),
       houseCap: houseCap ?? this.houseCap,
       houseCapSet: houseCapSet ?? this.houseCapSet,
     );

@@ -187,6 +187,22 @@ enum SightingExtra {
   final String question;
   final double multiplier;
 
+  /// What this does to the score, in the two words a chip has room for.
+  ///
+  /// **Multipliers below 1 are written as a loss, not as a multiplication.**
+  /// "In camp ×0.35" is arithmetic; a car reads any × as a bonus and this one
+  /// is the opposite. It says −65%.
+  String get effect {
+    if (multiplier < 1) {
+      return '−${((1 - multiplier) * 100).round()}%';
+    }
+    // Trailing .0 dropped: ×2, not ×2.0.
+    final String m = multiplier == multiplier.roundToDouble()
+        ? '${multiplier.round()}'
+        : '$multiplier';
+    return '×$m';
+  }
+
   static SightingExtra? byName(String name) {
     for (final SightingExtra e in values) {
       if (e.name == name) {

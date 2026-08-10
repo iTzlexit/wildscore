@@ -341,16 +341,20 @@ class _CodexScreenState extends State<CodexScreen> {
     ];
   }
 
-  /// One line each, rarest first, numbered.
+  /// One line each, numbered.
   ///
   /// **Not the grid with smaller pictures.** The grid answers "what is in the
   /// park"; this answers "what is worth the most", which is the question a car
   /// asks at breakfast. So it ignores the Animals/Birds split — a ranking with
-  /// two separate number ones is not a ranking — and it ignores the sort,
-  /// because rarest-first is the only order in which it means anything.
+  /// two separate number ones is not a ranking.
+  ///
+  /// It does **not** ignore the sort any more. It used to be pinned to
+  /// rarest-first on the grounds that no other order means anything in a
+  /// ranking, which is arguable and was beside the point: the sort control sat
+  /// right above it doing visibly nothing, and a control that does nothing
+  /// reads as a broken filter. Alex reported exactly that.
   Widget _rankedSliver(List<Species> visible) {
-    final List<Species> ranked = <Species>[...visible]
-      ..sort(SpeciesSort.rarest.compare);
+    final List<Species> ranked = <Species>[...visible]..sort(_sort.compare);
 
     return SliverList.builder(
       itemCount: ranked.length,

@@ -119,12 +119,28 @@ class _SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
   /// supposed to do.
   late bool _spotted = widget.spotted;
 
+  /// The animal as this screen currently shows it.
+  ///
+  /// Same reason as `_spotted`. Changing a price rebuilds the catalogue in the
+  /// shell, but this route is holding the species it was pushed with, so the
+  /// banner went on showing the old number until you went back and reopened it
+  /// — which looks exactly like the edit not having worked.
+  late Species _species = widget.species;
+
   @override
   void didUpdateWidget(SpeciesDetailScreen old) {
     super.didUpdateWidget(old);
     if (old.spotted != widget.spotted) {
       _spotted = widget.spotted;
     }
+    if (old.species != widget.species) {
+      _species = widget.species;
+    }
+  }
+
+  void _setPoints(int? points) {
+    setState(() => _species = _species.withHousePoints(points));
+    widget.onSetPoints!(points);
   }
 
   void _toggle() {
@@ -134,22 +150,25 @@ class _SpeciesDetailScreenState extends State<SpeciesDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final RarityStyle style = widget.species.rarityTier.style;
+    // The tier follows the price: an animal a car has moved into the Ghost
+    // band should look like a Ghost while they are standing there looking at
+    // it, not on the next app launch.
+    final RarityStyle style = _species.rarityTier.style;
 
     return Scaffold(
       backgroundColor: style.headerInk,
       body: DefaultTabController(
         // Two tabs for rhino and pangolin. Where to find is not a tab they get
         // — see _Sheet.
-        length: widget.species.isSensitive ? 2 : 3,
+        length: _species.isSensitive ? 2 : 3,
         child: Column(
           children: <Widget>[
-            _Header(species: widget.species, credit: widget.photoCredit),
+            _Header(species: _species, credit: widget.photoCredit),
             Expanded(
               child: _Sheet(
-                species: widget.species,
+                species: _species,
                 spotted: _spotted,
-                onSetPoints: widget.onSetPoints,
+                onSetPoints: widget.onSetPoints == null ? null : _setPoints,
                 onSetCap: widget.onSetCap,
                 onToggleSpotted: widget.onToggleSpotted == null
                     ? null

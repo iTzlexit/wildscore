@@ -413,11 +413,19 @@ class _SpotsCard extends StatelessWidget {
           const SizedBox(height: Space.screen),
           Row(
             children: <Widget>[
-              Text(
-                '$percent% of the park spotted',
-                style: AppText.label.copyWith(color: AppColors.textPrimary),
+              // Expanded, not a bare Text before a Spacer: "0% of the park
+              // spotted" beside "0 / 197" overflows a 430pt card by 36 pixels
+              // before anybody touches the text scale. The label is the part
+              // that should give.
+              Expanded(
+                child: Text(
+                  '$percent% of the park spotted',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppText.label.copyWith(color: AppColors.textPrimary),
+                ),
               ),
-              const Spacer(),
+              const SizedBox(width: Space.sm),
               Text(
                 '$spotted / $total',
                 style: AppText.label.copyWith(
@@ -535,7 +543,7 @@ class _RarestTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  'RAREST YOU HAVE FOUND',
+                  'RAREST LIFETIME SIGHTING',
                   style: AppText.overline.copyWith(fontSize: 8.5),
                 ),
                 const SizedBox(height: 2),

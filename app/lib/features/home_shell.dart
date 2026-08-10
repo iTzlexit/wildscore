@@ -54,7 +54,13 @@ class _HomeShellState extends State<HomeShell> {
   static const VisitRepository _visitRepo = VisitRepository();
   static const LocationService _location = LocationService();
 
-  late final Future<List<Species>> _speciesFuture;
+  /// Not `late final`. It was, and that was the bug behind "I set my own price
+  /// and the game still used yours": the field is reassigned every time the
+  /// catalogue is rebuilt under a new house rule, and a second write to a
+  /// `late final` throws `LateInitializationError` from inside `setState`. The
+  /// save succeeded, the reload never happened, and every screen went on
+  /// showing the catalogue's number.
+  late Future<List<Species>> _speciesFuture;
   int _tab = 0;
 
   /// Held here rather than in either tab, because both read it — the Profile
@@ -107,14 +113,18 @@ class _HomeShellState extends State<HomeShell> {
   /// list is handed to four tabs and a dozen widgets — rebuilding it once is
   /// cheaper than making every one of them aware that a number can change.
   Future<void> _saveRules(HouseRules next) async {
-    await const HouseRulesRepository().save(next);
-    if (!mounted) {
-      return;
-    }
+    // State first, disk second.
+    //
+    // The other half of the same bug: every caller derives `next` from
+    // `_rules`, and a car going down the prices list changing three animals in
+    // ten seconds would have each edit read the value from before the one
+    // ahead of it — so the first two silently vanished. Updating synchronously
+    // means the second edit is built on the first.
     setState(() {
       _rules = next;
       _speciesFuture = widget.repository.loadAll(rules: next);
     });
+    await const HouseRulesRepository().save(next);
   }
 
   Future<void> _setHousePoints(String id, int? points) {
@@ -180,20 +190,32 @@ class _HomeShellState extends State<HomeShell> {
       return;
     }
 
-    await _updateCard(card.withTrivia(card.trivia.withAsked(player.id, q.id)));
+    // Held as pending, not spent. Closing the sheet leaves the badge where it
+    // was and brings the same question back — which is the anti-shopping rule
+    // the old "record it as asked immediately" was reaching for, without
+    // costing somebody a question for pressing back.
+    await _updateCard(
+      card.withTrivia(card.trivia.withPending(player.id, q.id)),
+    );
     if (!mounted) {
       return;
     }
-    final bool right = await TriviaSheet.ask(
+    final int? won = await TriviaSheet.ask(
       context,
       player: player,
       question: q,
     );
     final Scorecard? latest = _card;
-    if (!right || latest == null) {
+    // Null is "closed without answering": the question stays pending, the badge
+    // stays put, and the same question comes back.
+    if (won == null ||
+        latest == null ||
+        latest.trivia.pendingFor(player.id) != q.id) {
       return;
     }
-    await _updateCard(latest.withTrivia(latest.trivia.withCorrect(player.id)));
+    await _updateCard(
+      latest.withTrivia(latest.trivia.withAnswer(player.id, points: won)),
+    );
   }
 
   /// Who is in the car, then what everything is worth, then go.
@@ -303,7 +325,7 @@ class _HomeShellState extends State<HomeShell> {
       }
     }
     final bool ok = await _confirm(
-      title: 'Take it back?',
+      title: 'Remove this sighting?',
       message:
           'Removes one ${species.commonName} from ${player.name} '
           '— ${claim?.points ?? species.points} points.',
@@ -506,6 +528,20 @@ class _HomeShellState extends State<HomeShell> {
                 onRemoveClaim: _removeClaim,
                 onSpotFor: (Player p) => _spotFor(p, species),
                 onQuizFor: _askQuestion,
+                // Mid-drive repricing. A claim already made keeps the points it
+                // scored — a table edited at four o'clock cannot rewrite the
+                // morning, which is the same rule that stops an app update
+                // rewriting somebody's history.
+                onOpenPrices: () => ScoringConfirmScreen.show(
+                  context,
+                  species: species,
+                  players: <String>[
+                    for (final Player p in _card?.players ?? const <Player>[])
+                      p.name,
+                  ],
+                  onSetPoints: _setHousePoints,
+                  live: true,
+                ),
                 onOpenHistory: () => VisitHistoryScreen.open(
                   context,
                   visits: _visits,

@@ -6,33 +6,40 @@ import '../../domain/scorecard.dart';
 import '../../domain/trivia.dart';
 import '../../shared/theme.dart';
 
-/// One question, four answers, thirty points.
+/// One question, four answers, and whatever the question is worth.
 ///
-/// **No second guess and no going back.** A quiz you can retry is a quiz
-/// everybody scores full marks on, and the whole reason this pays anything is
-/// that getting it wrong costs you the points.
+/// **No second guess.** A quiz you can retry is a quiz everybody scores full
+/// marks on, and the whole reason this pays anything is that getting it wrong
+/// costs you the points.
+///
+/// **Closing it, on the other hand, costs nothing.** It used to: the question
+/// was recorded as asked the moment the sheet opened, so pressing back burned
+/// it and the badge disappeared. The question is now held as *pending* and
+/// handed straight back next time, which stops anybody shopping for an easier
+/// one without punishing a mis-tap.
 class TriviaSheet extends StatefulWidget {
   const TriviaSheet({required this.player, required this.question, super.key});
 
   final Player player;
   final TriviaQuestion question;
 
-  /// Returns true when they got it right.
-  static Future<bool> ask(
+  /// The points won — zero for a wrong answer.
+  ///
+  /// **Null means they closed it without answering**, which is a different
+  /// thing entirely: the question goes back in the pocket rather than being
+  /// spent. Returning zero for both was the bug Alex found in about a minute.
+  static Future<int?> ask(
     BuildContext context, {
     required Player player,
     required TriviaQuestion question,
-  }) async {
-    final bool? right = await showModalBottomSheet<bool>(
+  }) {
+    return showModalBottomSheet<int>(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      isDismissible: false,
-      enableDrag: false,
       builder: (BuildContext context) =>
           TriviaSheet(player: player, question: question),
     );
-    return right ?? false;
   }
 
   @override
@@ -82,7 +89,10 @@ class _TriviaSheetState extends State<TriviaSheet> {
                 const SizedBox(width: Space.sm),
                 Expanded(
                   child: Text(
-                    '${widget.player.name}, for ${TriviaState.reward} points',
+                    // Difficulty is named, because a hard question pays more
+                    // and somebody who gets one should know they earned it.
+                    '${widget.player.name} · ${q.difficulty.label.toUpperCase()}'
+                    ' · ${q.reward} POINTS',
                     style: AppText.overline.copyWith(color: AppColors.accent),
                   ),
                 ),
@@ -111,8 +121,7 @@ class _TriviaSheetState extends State<TriviaSheet> {
               const SizedBox(height: Space.sm),
               Text(
                 q.isCorrect(_chosen!)
-                    ? 'Right — ${TriviaState.reward} points to '
-                          '${widget.player.name}.'
+                    ? 'Right — ${q.reward} points to ${widget.player.name}.'
                     : 'Not this time. It was ${q.answer}.',
                 style: AppText.body.copyWith(
                   color: q.isCorrect(_chosen!)
@@ -124,8 +133,9 @@ class _TriviaSheetState extends State<TriviaSheet> {
               SizedBox(
                 height: 50,
                 child: FilledButton(
-                  onPressed: () =>
-                      Navigator.of(context).pop(q.isCorrect(_chosen!)),
+                  onPressed: () => Navigator.of(
+                    context,
+                  ).pop(q.isCorrect(_chosen!) ? q.reward : 0),
                   style: FilledButton.styleFrom(
                     backgroundColor: AppColors.accent,
                     foregroundColor: AppColors.accentInk,

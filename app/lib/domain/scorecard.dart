@@ -229,6 +229,39 @@ class Scorecard {
 
   int get totalPoints => claims.fold(0, (int s, Claim c) => s + c.points);
 
+  /// How many *different* animals this player has claimed today.
+  ///
+  /// What a question costs. Alex's rule and the right one: it pays for the
+  /// thing the game is about — finding something you have not found yet — and
+  /// it cannot be farmed, because the twentieth impala adds nothing to it.
+  int uniqueSpotsFor(String playerId) => <String>{
+    for (final Claim c in claims)
+      if (c.playerId == playerId) c.speciesId,
+  }.length;
+
+  /// Questions handed out for time passing, per player.
+  ///
+  /// One every half hour, going round the car in turn. A car can spend thirty
+  /// minutes on the H1-2 seeing nothing at all — that is real Kruger, and it
+  /// should not be a dead half hour in the game.
+  ///
+  /// Derived from the clock rather than scheduled, so nothing has to run in the
+  /// background and closing the app cannot cost anybody a question.
+  int timedQuestionsFor(String playerId, {DateTime? now}) {
+    if (players.isEmpty) {
+      return 0;
+    }
+    final int elapsed = (now ?? DateTime.now()).difference(startedAt).inMinutes;
+    final int handedOut = elapsed ~/ TriviaState.timedQuestion.inMinutes;
+    final int seat = players.indexWhere((Player p) => p.id == playerId);
+    if (seat < 0) {
+      return 0;
+    }
+    // Round-robin from the first seat: with three players and four grants, the
+    // first player has had two and the others one each.
+    return (handedOut - seat + players.length - 1) ~/ players.length;
+  }
+
   int timesClaimed(String speciesId) =>
       claims.where((Claim c) => c.speciesId == speciesId).length;
 
