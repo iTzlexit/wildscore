@@ -11,7 +11,6 @@ import '../domain/house_rules.dart';
 import '../domain/scorecard.dart';
 import '../domain/species.dart';
 import '../domain/tracker_profile.dart';
-import '../domain/trip.dart';
 import '../domain/trivia.dart';
 import '../domain/visit.dart';
 import '../shared/theme.dart';
@@ -415,26 +414,15 @@ class _HomeShellState extends State<HomeShell> {
     if (card == null) {
       return;
     }
-    final Set<String> spent = Trip.bonusesSpent(
-      species,
-      visits: _visits,
-      live: card,
-    );
     final Species? chosen = await SpotPickerScreen.open(
       context,
       player: player,
       species: species,
       card: card,
-      wildCardsSpent: spent,
     );
     if (chosen == null || !mounted) {
       return;
     }
-
-    // The first zebra of the morning pays 50; the second pays 5 like any other
-    // zebra. The bonus is decided here, once, and then stored on the claim —
-    // so a day scored months ago stays explicable even if the rule changes.
-    final bool earnsBonus = chosen.isWildCard && !spent.contains(chosen.id);
 
     // Was it a male, and was anybody else there. Only asked about animals
     // where the answer changes something, so an impala never sees this.
@@ -467,14 +455,9 @@ class _HomeShellState extends State<HomeShell> {
           playerId: player.id,
           at: DateTime.now(),
           points: chosen.scoreFor(
-            wildCardBonusEarned: earnsBonus,
             variantsApplied: details.variants,
             context: details.context,
             extras: details.extras,
-            // Which one of the day this is, counting from one. Only elephant
-            // and buffalo care: neither can be capped, being Big Five, but the
-            // fourteenth elephant is not the event the second one was.
-            sightingsToday: latest.timesClaimed(chosen.id) + 1,
             jamMultiplier: _rules.jamMultiplier,
           ),
           road: road,

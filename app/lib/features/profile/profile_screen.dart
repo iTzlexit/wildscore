@@ -7,7 +7,6 @@ import '../../domain/species_collection.dart';
 import '../../domain/tracker_profile.dart';
 import '../../domain/visit.dart';
 import '../../shared/theme.dart';
-import '../../shared/widgets/app_header.dart';
 import '../../shared/widgets/avatar_badge.dart';
 import '../codex/collection_screen.dart';
 import 'backup_screen.dart';
@@ -120,7 +119,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         bottom: false,
         child: Column(
           children: <Widget>[
-            const AppHeader(),
+            // No app header here. It says "Wild Score · Kruger National Park"
+            // on the two tabs either side of this one; a third copy over
+            // somebody's own name and face is the app introducing itself to a
+            // person who is already looking at their own profile.
+            const SizedBox(height: Space.md),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(
@@ -183,6 +186,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onTap: () => HouseRulesScreen.open(
                         context,
                         rules: widget.rules,
+                        species: widget.species,
                         onChanged: (HouseRules next) {
                           widget.onRulesChanged!(next);
                           Navigator.of(context).pop();
@@ -392,21 +396,10 @@ class _SpotsCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: Space.xs),
-                Row(
-                  children: <Widget>[
-                    Text('LIFETIME SPOTS', style: AppText.overline),
-                    const SizedBox(width: 6),
-                    const _Explainer(
-                      title: 'What counts as a spot',
-                      body:
-                          'Every animal you have ever spotted, counted once — '
-                          'not once per sighting.\n\n'
-                          'It takes everything the whole car saw on a drive, '
-                          'because you were there and you saw it, plus '
-                          'anything you tick off yourself in Animals.',
-                    ),
-                  ],
-                ),
+                // No little **i** here any more. "Lifetime spots" is two words
+                // that explain themselves, and a help icon on a self-evident
+                // label makes the label look harder than it is.
+                Text('LIFETIME SPOTS', style: AppText.overline),
               ],
             ),
           ),
@@ -792,55 +785,5 @@ class _SectionLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(text, style: AppText.overline);
-  }
-}
-
-/// A small "i" that opens an explanation.
-///
-/// Not a tooltip. A Material tooltip needs a long-press to appear on a phone,
-/// which nobody discovers, and it vanishes while you are still reading it. A
-/// tap that opens something you dismiss yourself is the version that works on a
-/// touch screen.
-class _Explainer extends StatelessWidget {
-  const _Explainer({required this.title, required this.body});
-
-  final String title;
-  final String body;
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      label: title,
-      child: InkWell(
-        onTap: () => showDialog<void>(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-            backgroundColor: AppColors.surface,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(Radii.card),
-            ),
-            title: Text(title, style: AppText.title3),
-            content: Text(body, style: AppText.body.copyWith(height: 1.55)),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                style: TextButton.styleFrom(foregroundColor: AppColors.accent),
-                child: const Text('Got it'),
-              ),
-            ],
-          ),
-        ),
-        borderRadius: BorderRadius.circular(20),
-        child: const Padding(
-          padding: EdgeInsets.all(3),
-          child: Icon(
-            Icons.info_outline_rounded,
-            size: 15,
-            color: AppColors.textMuted,
-          ),
-        ),
-      ),
-    );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wildscore/data/house_rules_repository.dart';
@@ -144,51 +146,36 @@ void main() {
     });
   });
 
-  group('decay', () {
-    test('elephant and buffalo are worth less after the second', () async {
+  group('the taper that is gone', () {
+    test('an elephant is worth the same all day', () async {
+      // Elephant and buffalo used to be worth less from the third of the day.
+      // Removed on 11 August 2026: "that doesn't make sense" — and it is a
+      // rule nobody asked for that everybody had to be told. A car that thinks
+      // the fourteenth elephant is worth less can price elephant lower.
       final List<Species> all = await const SpeciesRepository().loadAll();
       final Species elephant = all.firstWhere(
         (Species s) => s.id == 'african-elephant',
       );
 
-      expect(elephant.scoreFor(sightingsToday: 1), elephant.points);
-      expect(elephant.scoreFor(sightingsToday: 2), elephant.points);
-      expect(
-        elephant.scoreFor(sightingsToday: 3),
-        lessThan(elephant.points),
-        reason: 'the fourteenth elephant is not the second one',
-      );
+      expect(elephant.scoreFor(), elephant.points);
     });
 
-    test('neither is capped — a Big Five tile must never lock', () async {
-      final List<Species> all = await const SpeciesRepository().loadAll();
+    test('nothing in the catalogue carries a taper any more', () async {
+      final String raw = await File('assets/data/species.json').readAsString();
 
-      for (final Species s in all.where((Species s) => s.isBigFive)) {
-        expect(s.chancesPerDay, isNull, reason: s.id);
-      }
+      expect(raw.contains('decay'), isFalse);
     });
 
-    test('follows an edited score rather than a fixed number', () async {
-      final List<Species> all = await const SpeciesRepository().loadAll(
-        rules: const HouseRules(points: <String, int>{'african-elephant': 200}),
-      );
-      final Species elephant = all.firstWhere(
-        (Species s) => s.id == 'african-elephant',
-      );
+    test(
+      'no Big Five animal is capped — a Big Five tile must never lock',
+      () async {
+        final List<Species> all = await const SpeciesRepository().loadAll();
 
-      expect(elephant.scoreFor(sightingsToday: 1), 200);
-      expect(elephant.scoreFor(sightingsToday: 3), 80);
-    });
-
-    test('almost nothing decays', () async {
-      final List<Species> all = await const SpeciesRepository().loadAll();
-      final List<String> decaying = <String>[
-        for (final Species s in all)
-          if (s.decay != null) s.id,
-      ]..sort();
-
-      expect(decaying, <String>['african-elephant', 'cape-buffalo']);
-    });
+        for (final Species s in all.where((Species s) => s.isBigFive)) {
+          expect(s.chancesPerDay, isNull, reason: s.id);
+        }
+      },
+    );
   });
 
   group('caps', () {

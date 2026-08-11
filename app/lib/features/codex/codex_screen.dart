@@ -277,13 +277,12 @@ class _CodexScreenState extends State<CodexScreen> {
                                   _rankedSliver(visible)
                                 else
                                   ..._groupedSlivers(visible),
-                                // The park boundary, stated once, at the point
-                                // where someone has just scrolled the whole
-                                // catalogue and might reasonably wonder where
-                                // the rest of Africa is.
-                                const SliverToBoxAdapter(
-                                  child: ComingSoonParks(),
-                                ),
+                                // The "Kruger only, for now" footer used to
+                                // sit here. Alex cut it: somebody who has just
+                                // scrolled 197 Kruger animals in a Kruger app
+                                // does not need telling which park they are in,
+                                // and a roadmap note is not what the bottom of
+                                // a field guide is for.
                                 const SliverToBoxAdapter(
                                   child: SizedBox(height: 110),
                                 ),

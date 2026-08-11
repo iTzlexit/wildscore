@@ -110,48 +110,16 @@ void main() {
       );
     });
 
-    test('the wild card replaces the card value rather than adding to it', () {
-      // The first warthog of the morning is worth 100, not 105.
+    test('an animal is worth what its card says, every time', () {
+      // First-spot bonuses are gone, on Alex's call on 11 August 2026. The
+      // first warthog of the trip used to pay 100 and the rest paid 5, which
+      // meant the number on the tile was not the number you were about to get
+      // — and it was a figure a car could not edit, in a game where every
+      // other number is theirs.
       final Species warthog = _byId('warthog');
 
+      expect(warthog.scoreFor(), warthog.points);
       expect(warthog.scoreFor(), 5);
-      expect(warthog.scoreFor(wildCardBonusEarned: true), 100);
-    });
-
-    test('a 1st timer is worth twenty warthogs, exactly once', () {
-      // The joke, stated as an assertion. A warthog is five points and there
-      // are several thousand of them; the *first* one is the first shout of
-      // the trip and pays just under a lion.
-      final Species warthog = _byId('warthog');
-
-      expect(warthog.wildCard!.bonus, 100);
-      expect(warthog.wildCard!.bonus ~/ warthog.points, 20);
-    });
-
-    test('the first lion of the day is the point of the whole mechanic', () {
-      // Alex's ask, in one assertion. Rarity puts a lion at 115 because most
-      // trips produce one; the first is still the moment everybody remembers.
-      final Species lion = _byId('lion');
-
-      expect(lion.points, 120);
-      // 300, down from 550. A first leopard was most of a Very rare animal for
-      // something a good trip produces anyway.
-      expect(lion.scoreFor(wildCardBonusEarned: true), 300);
-      // And a male one, first thing, on an empty road.
-      expect(
-        lion.scoreFor(
-          wildCardBonusEarned: true,
-          variantsApplied: const <String>{'Male'},
-        ),
-        450,
-      );
-    });
-
-    test('elephant and buffalo get no first-sighting bonus', () {
-      // Deliberate. A bonus on something you pass every hour is a bigger
-      // number for the same event.
-      expect(_byId('african-elephant').isWildCard, isFalse);
-      expect(_byId('cape-buffalo').isWildCard, isFalse);
     });
   });
 

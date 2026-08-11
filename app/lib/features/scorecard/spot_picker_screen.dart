@@ -25,7 +25,6 @@ class SpotPickerScreen extends StatefulWidget {
     required this.player,
     required this.species,
     required this.card,
-    this.wildCardsSpent = const <String>{},
     super.key,
   });
 
@@ -33,26 +32,17 @@ class SpotPickerScreen extends StatefulWidget {
   final List<Species> species;
   final Scorecard card;
 
-  /// Wild-card species whose first-sighting bonus has already gone. They are
-  /// still claimable — they just pay their ordinary value now.
-  final Set<String> wildCardsSpent;
-
   /// Returns the chosen species, or null if dismissed.
   static Future<Species?> open(
     BuildContext context, {
     required Player player,
     required List<Species> species,
     required Scorecard card,
-    Set<String> wildCardsSpent = const <String>{},
   }) {
     return Navigator.of(context).push<Species>(
       MaterialPageRoute<Species>(
-        builder: (BuildContext context) => SpotPickerScreen(
-          player: player,
-          species: species,
-          card: card,
-          wildCardsSpent: wildCardsSpent,
-        ),
+        builder: (BuildContext context) =>
+            SpotPickerScreen(player: player, species: species, card: card),
       ),
     );
   }
@@ -82,10 +72,6 @@ class _SpotPickerScreenState extends State<SpotPickerScreen> {
         .clamp(0, total)
         .toInt();
   }
-
-  /// Whether this claim would pay the first-sighting bonus.
-  bool _bonusAvailable(Species species) =>
-      species.isWildCard && !widget.wildCardsSpent.contains(species.id);
 
   List<Species> get _visible {
     final List<Species> matched = <Species>[
@@ -206,10 +192,6 @@ class _SpotPickerScreenState extends State<SpotPickerScreen> {
                         final int? left = _chancesLeft(s);
                         return SpeciesGridCard(
                           species: s,
-                          bonusPoints: _bonusAvailable(s)
-                              ? s.wildCard?.bonus
-                              : null,
-                          bonusSpent: s.isWildCard && !_bonusAvailable(s),
                           // Coloured by what the car has claimed today, not by
                           // the lifetime record — the question here is "have we
                           // got it yet", and it is a different question.

@@ -113,18 +113,6 @@ void main() {
     expect(find.text('Aardvark'), findsOneWidget);
   });
 
-  testWidgets('the park boundary is stated at the foot of the dex', (
-    WidgetTester tester,
-  ) async {
-    await _pumpCodex(tester);
-    // Filtered to one tile so the footer is on screen without scrolling 70
-    // cards.
-    await _search(tester, 'Smutsia');
-
-    expect(find.text('Kruger only, for now'), findsOneWidget);
-    expect(find.textContaining('Okavango Delta'), findsOneWidget);
-  });
-
   testWidgets('every tile shows a dex number, tier name and points', (
     WidgetTester tester,
   ) async {

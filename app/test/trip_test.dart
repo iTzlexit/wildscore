@@ -1,16 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:wildscore/data/species_repository.dart';
 import 'package:wildscore/domain/scorecard.dart';
-import 'package:wildscore/domain/species.dart';
-import 'package:wildscore/domain/species_category.dart';
 import 'package:wildscore/domain/trip.dart';
 import 'package:wildscore/domain/visit.dart';
 
 /// A trip is derived from the gaps between drives rather than declared, so the
-/// gap arithmetic is the whole feature. Get it wrong and the wild card either
-/// pays out every morning or never pays out again.
-late final List<Species> _catalogue;
-
+/// gap arithmetic is the whole feature.
+///
+/// It used to carry the first-spot bonuses as well — whether this impala was
+/// the first of the holiday. That mechanic is gone, and the tests for it with
+/// it; what is left is the definition of a trip, which the drive history still
+/// groups by.
 Scorecard _card(List<String> claimed, DateTime day) {
   final Scorecard card = Scorecard.start(
     <String>['Alex'],
@@ -30,11 +29,6 @@ Visit _drive(DateTime ended, {List<String> claimed = const <String>[]}) =>
     Visit.from(_card(claimed, ended), endedAt: ended);
 
 void main() {
-  setUpAll(() async {
-    TestWidgetsFlutterBinding.ensureInitialized();
-    _catalogue = await const SpeciesRepository().loadAll();
-  });
-
   group('working out the current trip', () {
     test('no drives means no trip', () {
       expect(Trip.current(const <Visit>[]), isEmpty);
@@ -82,152 +76,6 @@ void main() {
         ], now: DateTime(2026, 8, 1)),
         isEmpty,
       );
-    });
-  });
-
-  group('the trip-scoped bonus', () {
-    test('impala is spent once taken earlier in the trip', () {
-      // Yesterday's impala used the bonus. Today's impala is worth 5.
-      final List<Visit> visits = <Visit>[
-        _drive(DateTime(2026, 8, 1), claimed: <String>['impala']),
-      ];
-
-      expect(
-        Trip.bonusesSpent(
-          _catalogue,
-          visits: visits,
-          now: DateTime(2026, 8, 2),
-        ),
-        contains('impala'),
-      );
-    });
-
-    test('comes back on a new trip', () {
-      // The point is the first impala of a *holiday*. Two months later that is
-      // a different holiday and a different first impala.
-      final List<Visit> visits = <Visit>[
-        _drive(DateTime(2026, 6, 1), claimed: <String>['impala']),
-      ];
-
-      expect(
-        Trip.bonusesSpent(
-          _catalogue,
-          visits: visits,
-          now: DateTime(2026, 8, 1),
-        ),
-        isNot(contains('impala')),
-      );
-    });
-  });
-
-  group('the day-scoped bonus', () {
-    test('zebra resets overnight', () {
-      // Yesterday's first zebra does not spend today's. "There's one!" is a
-      // fresh moment every morning.
-      final List<Visit> visits = <Visit>[
-        _drive(DateTime(2026, 8, 1), claimed: <String>['warthog']),
-      ];
-
-      expect(
-        Trip.bonusesSpent(
-          _catalogue,
-          visits: visits,
-          live: _card(const <String>[], DateTime(2026, 8, 2)),
-          now: DateTime(2026, 8, 2),
-        ),
-        isNot(contains('warthog')),
-      );
-    });
-
-    test('but is gone once taken today', () {
-      expect(
-        Trip.bonusesSpent(
-          _catalogue,
-          visits: const <Visit>[],
-          live: _card(<String>['warthog'], DateTime(2026, 8, 2)),
-        ),
-        contains('warthog'),
-      );
-    });
-  });
-
-  group('what a wild card is worth', () {
-    test('the bonus is a bonus, not the species value', () {
-      final Species impala = _catalogue.firstWhere(
-        (Species s) => s.id == 'impala',
-      );
-
-      expect(impala.isWildCard, isTrue);
-      expect(impala.wildCard!.bonus, 100);
-      expect(
-        impala.points,
-        10,
-        reason: 'the second impala of the day is an ordinary impala',
-      );
-    });
-
-    test('a mammal wild card has more than one chance', () {
-      // "The first is worth more" needs a second one to be possible — for a
-      // mammal. Birds are capped at one a day now, so a bird wild card pays
-      // its bonus and that is the whole of it: the same rule read from the
-      // other end rather than a contradiction of it.
-      for (final Species s in _catalogue.where(
-        (Species s) => s.isWildCard && s.category != SpeciesCategory.bird,
-      )) {
-        expect(s.chancesPerDay, anyOf(isNull, greaterThan(1)), reason: s.id);
-      }
-    });
-
-    test('the arrival animals are the wild cards', () {
-      final List<String> wild = <String>[
-        for (final Species s in _catalogue)
-          if (s.isWildCard) s.id,
-      ]..sort();
-
-      // Two kinds of animal, sharing the mechanic for opposite reasons.
-      //
-      // The 1st timers are the ones you have stopped seeing by lunchtime on
-      // day one — Alex's set — and the first one pays 100, just under a lion,
-      // to make it the first shout of the trip. Lion, leopard and white rhino are the opposite: seen
-      // on most trips and thrilling every time, which is a fact rarity cannot
-      // price. Elephant and buffalo are deliberately absent.
-      expect(wild, <String>[
-        'impala',
-        'leopard',
-        'lilac-breasted-roller',
-        'lion',
-        'southern-yellow-billed-hornbill',
-        'tree-squirrel',
-        'warthog',
-        'white-rhinoceros',
-      ]);
-    });
-
-    test('a wild card always pays more first time than it does after', () {
-      for (final Species s in _catalogue.where((Species s) => s.isWildCard)) {
-        expect(s.wildCard!.bonus, greaterThan(s.points), reason: s.id);
-      }
-    });
-
-    test('a 1st timer cannot outrank the genuinely rare', () {
-      // 100 is still absurd for a warthog — that is the joke, and it is over
-      // after one sighting. It was 250, which turned out to be most of a
-      // leopard for an animal there are several thousand of. It still must not beat the animals nobody
-      // gets: a first tree squirrel worth more than a serval would stop being
-      // funny about four minutes into the drive.
-      final Species serval = _catalogue.firstWhere(
-        (Species s) => s.id == 'serval',
-      );
-
-      for (final String id in <String>[
-        'impala',
-        'warthog',
-        'tree-squirrel',
-        'lilac-breasted-roller',
-      ]) {
-        final Species s = _catalogue.firstWhere((Species x) => x.id == id);
-        expect(s.wildCard!.bonus, lessThan(serval.points), reason: id);
-      }
     });
   });
 }

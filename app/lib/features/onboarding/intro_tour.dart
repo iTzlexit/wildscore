@@ -963,13 +963,16 @@ class _SlideQuiz extends StatelessWidget {
   Widget build(BuildContext context) {
     return const _Slide(
       art: _QuizScene(),
-      eyebrow: 'WHILE YOU DRIVE',
-      title: 'Every new animal earns a question',
+      eyebrow: 'ON THE TOUR',
+      title: 'Earn points with Trivia 🎯',
       body:
-          'Spot something you have not had yet today and a **QUIZ** badge '
-          'appears beside your name. One more goes to somebody in the car '
-          'every half hour.\n\n'
-          'Twenty points for an easy one, seventy for a hard one. One guess.',
+          'Keep your eyes open — spotting animals is not the only way to score '
+          'points.\n\n'
+          'When a new animal is spotted, a trivia question may pop up for '
+          'somebody in the car.\n\n'
+          'Easy question: **20 points**\n'
+          'Hard question: **70 points**\n\n'
+          'You get one guess, so choose wisely! 🧠',
     );
   }
 }
@@ -1011,7 +1014,7 @@ class _QuizScene extends StatelessWidget {
               ),
               const SizedBox(height: Space.lg),
               Text(
-                'What is a group of giraffe called?',
+                'What is a group of giraffes called?',
                 style: AppText.bodyStrong,
                 textAlign: TextAlign.center,
               ),

@@ -7,72 +7,6 @@ import 'species_category.dart';
 import 'sighting_context.dart';
 import 'species_tag.dart';
 
-/// How often a wild-card bonus comes back.
-enum WildCardScope { day, trip }
-
-/// What the *first* one is worth, and how often that comes back.
-///
-/// **The mechanic Alex asked for by name.** A lion is seen on most trips, so
-/// rarity scores it in the Notable band — and it is the most exciting thing
-/// that happens on a game drive, every single time. Those two facts cannot
-/// both live in one number. So the first lion of the day pays 400 and the
-/// third pays what the card says.
-///
-/// Per species, because a flat bonus cannot serve both a lion and an impala.
-/// It used to be one constant of 40 for everything, which was eight times an
-/// impala and a third of a leopard.
-///
-/// Deliberately **not** on buffalo or elephant. Nobody's day is made by the
-/// fourteenth elephant, and a bonus on something you pass every hour is just
-/// a bigger number for the same event.
-class WildCard {
-  const WildCard({required this.bonus, required this.scope});
-
-  factory WildCard.fromJson(Map<String, dynamic> json) => WildCard(
-    bonus: json['bonus'] as int,
-    scope: json['scope'] == 'trip' ? WildCardScope.trip : WildCardScope.day,
-  );
-
-  /// Replaces the card value on the first sighting. Never added to it — the
-  /// first zebra is worth 60, not 70.
-  final int bonus;
-
-  /// Impala is the trip one: it is *the* arrival animal, and paying out every
-  /// morning would make it a tax on whoever wakes up first.
-  final WildCardScope scope;
-}
-
-/// Worth less once you have had a few of them today.
-///
-/// **Elephant and buffalo, and nothing else so far.** Both are Big Five, so
-/// neither can be capped — you should always be able to claim one, and a
-/// locked Big Five tile would read as a bug. But the fourteenth elephant is
-/// not the event the second one was.
-///
-/// A cap says "stop counting". This says "keep counting, it is worth less",
-/// which is both truer and less annoying. Alex's call, and the distinction is
-/// a good one.
-///
-/// A multiplier rather than a replacement value, so it still means something
-/// after the player has edited the base points.
-class SpeciesDecay {
-  const SpeciesDecay({required this.after, required this.multiplier});
-
-  factory SpeciesDecay.fromJson(Map<String, dynamic> json) => SpeciesDecay(
-    after: json['after'] as int,
-    multiplier: (json['multiplier'] as num).toDouble(),
-  );
-
-  /// How many pay full price. The third elephant is the first cheap one.
-  final int after;
-
-  final double multiplier;
-
-  /// What the `n`th sighting of the day is worth, `n` counting from one.
-  int applyTo(int points, int n) =>
-      n <= after ? points : (points * multiplier).ceil();
-}
-
 /// A version of an animal that is worth more than the animal.
 ///
 /// One species has one at the moment and it is the obvious one: **a male
@@ -144,9 +78,7 @@ class Species {
     this.discovered = true,
     this.variants = const <SpeciesVariant>[],
     this.population,
-    this.wildCard,
     this.chancesPerDay,
-    this.decay,
     this.housePoints,
     this.houseCap,
     this.houseCapSet = false,
@@ -212,14 +144,8 @@ class Species {
       population: json['population'] == null
           ? null
           : Population.fromJson(json['population']! as Map<String, dynamic>),
-      wildCard: json['wildCard'] == null
-          ? null
-          : WildCard.fromJson(json['wildCard']! as Map<String, dynamic>),
       points: json['points'] as int?,
       chancesPerDay: json['chancesPerDay'] as int?,
-      decay: json['decay'] == null
-          ? null
-          : SpeciesDecay.fromJson(json['decay']! as Map<String, dynamic>),
     );
   }
 
@@ -351,30 +277,33 @@ class Species {
   /// the call site, which was fine with one modifier and would not have stayed
   /// fine with three.
   ///
-  /// Order matters and is deliberate. The wild-card bonus **replaces** the card
-  /// value rather than adding to it — the first lion of the day is worth 400,
-  /// not 510 — and then everything else multiplies what is left.
+  /// Every modifier is a proportion. That is the whole point: the male lion
+  /// used to be a flat +60 and the scale moved out from under it twice. A male
+  /// lion is 120 × 1.5 = 180; the same lion at a jam is 144.
   ///
-  /// Every modifier is now a proportion. That is the whole point: the male lion
-  /// used to be a flat +60 and the scale moved out from under it twice. A first
-  /// male lion of the day, alone, is 400 × 1.5 = 600; the same lion at a jam is
-  /// 480.
+  /// **Two mechanics were removed on 11 August 2026, on Alex's call.**
+  ///
+  /// *First-spot bonuses* — the wild cards — paid a fixed sum for the first
+  /// impala of the trip or the first lion of the day. They were a second
+  /// scoring system bolted to the side of this one: a number that was not on
+  /// the animal's card, could not be edited by a car that prices its own
+  /// animals, and needed the whole trip's history loaded to work out what a
+  /// sighting was worth.
+  ///
+  /// *The elephant and buffalo taper* went the same way and for the same
+  /// reason. "This animal is worth less the more you see it" is a rule nobody
+  /// asked for and everybody had to be told, and a car that thinks the
+  /// fourteenth elephant is worth less can simply price elephant lower.
+  ///
+  /// What survives is what a car actually argues about: the animal's price,
+  /// who else was there, and what it was doing.
   int scoreFor({
-    bool wildCardBonusEarned = false,
     Set<String> variantsApplied = const <String>{},
     SightingContext context = SightingContext.normal,
     Set<SightingExtra> extras = const <SightingExtra>{},
-    int sightingsToday = 1,
     double? jamMultiplier,
   }) {
-    double total =
-        (wildCardBonusEarned && wildCard != null ? wildCard!.bonus : points)
-            .toDouble();
-    // Before everything else, because a decayed elephant should still get the
-    // full benefit of a calf or an empty road.
-    if (decay != null && !wildCardBonusEarned) {
-      total = decay!.applyTo(total.round(), sightingsToday).toDouble();
-    }
+    double total = points.toDouble();
     for (final SpeciesVariant v in variants) {
       if (variantsApplied.contains(v.label)) {
         total *= v.multiplier;
@@ -463,16 +392,11 @@ class Species {
   bool get crowdMatters =>
       points >= RarityTier.scarce.low || tags.contains(SpeciesTag.bigFive);
 
-  /// What the first sighting pays, on the seven species that have one.
-  final WildCard? wildCard;
-
-  bool get isWildCard => wildCard != null;
-
   /// How many times this can be claimed in a day. **Null is unlimited, and
   /// almost everything is null.**
   ///
-  /// Two species are capped: impala at two and vervet monkey at four. That is
-  /// the entire list. It used to be tier-wide — four a day for anything Common
+  /// Impala at two, vervet monkey at four, and every bird at one. A car can
+  /// change or lift any of them from House rules. It used to be tier-wide — four a day for anything Common
   /// or Frequent — which punished the wrong thing entirely: a real morning's
   /// zebra sightings ran out, and so did elephant, in Kruger.
   ///
@@ -480,12 +404,6 @@ class Species {
   /// was never meant to ration a good day, and Alex is right that a car
   /// counting a hundred giraffe is nobody's business but theirs.
   final int? chancesPerDay;
-
-  /// Worth less once you have had a few. Null for almost everything.
-  final SpeciesDecay? decay;
-
-  /// Whether the bonus resets daily or only once a trip.
-  WildCardScope get wildCardScope => wildCard?.scope ?? WildCardScope.day;
 
   /// Photographs live at `assets/species/<id>.jpg`. Missing files fall back to
   /// a generated placeholder, so the app runs before any art exists.
@@ -545,10 +463,8 @@ class Species {
       // bonus is a scoring bug lying in wait for whoever uses it next.
       variants: variants,
       population: population,
-      wildCard: wildCard,
       points: _points,
       chancesPerDay: chancesPerDay,
-      decay: decay,
       housePoints: clearHousePoints ? null : (housePoints ?? this.housePoints),
       houseCap: houseCap ?? this.houseCap,
       houseCapSet: houseCapSet ?? this.houseCapSet,

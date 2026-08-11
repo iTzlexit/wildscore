@@ -59,7 +59,7 @@ void main() {
     await tester.pumpAndSettle();
     // The quiz, taught rather than discovered: without this slide the first
     // reaction to a badge appearing on a name is "what is that".
-    expect(find.text('Every new animal earns a question'), findsOneWidget);
+    expect(find.text('Earn points with Trivia 🎯'), findsOneWidget);
 
     await tester.tap(find.text('Next'));
     await tester.pumpAndSettle();

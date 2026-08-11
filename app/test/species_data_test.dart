@@ -110,46 +110,29 @@ void main() {
     }
   });
 
-  test('a wild card in an uncapped tier stays uncapped', () {
-    // Leopard and white rhino became wild cards, and the override used to cap
-    // them at four — making "nothing rare is capped" false on the same screen
-    // that prints it.
-    for (final String id in <String>['leopard', 'white-rhinoceros']) {
-      final Species s = species.firstWhere((Species x) => x.id == id);
-      expect(s.isWildCard, isTrue, reason: id);
-      expect(s.chancesPerDay, isNull, reason: id);
+  test('only the animals the rules name carry a limit', () {
+    // The rules page lists exactly three: impala twice a day, vervet
+    // monkey four times, every bird once. Anything else with a limit is
+    // either a bug or a rule nobody has been told about.
+    //
+    // The kill in a tree is the one exception, and it is not an animal —
+    // it is one leopard's larder.
+    for (final Species s in species) {
+      if (s.chancesPerDay == null) {
+        continue;
+      }
+      expect(
+        s.category == SpeciesCategory.bird ||
+            const <String>[
+              'impala',
+              'vervet-monkey',
+              'kill-in-a-tree',
+            ].contains(s.id),
+        isTrue,
+        reason: '${s.commonName} is capped and the rules never say so',
+      );
     }
   });
-
-  test(
-    'a daily wild card is claimable more than once, unless it is a bird',
-    () {
-      // Otherwise "the first one is worth more" says nothing, because there is
-      // only ever one. Birds are the deliberate exception: capped at one a day,
-      // so a bird wild card pays its bonus and that is the whole of it.
-      for (final Species s in species.where(
-        (Species s) =>
-            s.isWildCard &&
-            s.wildCardScope == WildCardScope.day &&
-            s.category != SpeciesCategory.bird,
-      )) {
-        expect(
-          s.chancesPerDay,
-          anyOf(isNull, greaterThanOrEqualTo(4)),
-          reason: s.commonName,
-        );
-      }
-
-      // Impala is its own case. The commonest animal in the park by a distance,
-      // so it gets two: the first is the arrival moment and pays the bonus, the
-      // second is an ordinary impala, and then it is done for the day.
-      final Species impala = species.firstWhere(
-        (Species s) => s.id == 'impala',
-      );
-      expect(impala.chancesPerDay, 2);
-    },
-  );
-
   test('every species occurs in at least one park region', () {
     for (final Species s in species) {
       expect(s.parkRegions, isNotEmpty, reason: s.commonName);

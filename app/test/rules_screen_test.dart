@@ -54,7 +54,7 @@ void main() {
     for (final String section in <String>[
       'THE RULES',
       'SPECIAL RULES',
-      'BONUS SIGHTS',
+      'BONUS ANIMALS',
       'POINTS',
       "CHANGE AN ANIMAL'S VALUE",
     ]) {
@@ -74,6 +74,9 @@ void main() {
       find.textContaining('does not create a new sighting'),
       findsOneWidget,
     );
+    // Examples only. The sentence that used to sit above them said the
+    // same thing in longer words.
+    expect(find.textContaining('no matter how many'), findsNothing);
     // Jargon. Everybody in the car knows what a herd is.
     expect(find.textContaining('breeding'), findsNothing);
   });
@@ -100,29 +103,6 @@ void main() {
     expect(find.textContaining('Vervet monkey: 4 per day'), findsOneWidget);
     expect(find.textContaining('Every bird: once a day'), findsOneWidget);
     expect(find.textContaining('unlimited'), findsOneWidget);
-  });
-
-  testWidgets('the two Big Five that taper off say so', (
-    WidgetTester tester,
-  ) async {
-    // Never capped, because a locked Big Five tile reads as a bug — but the
-    // fourteenth elephant is not the event the second one was.
-    await _pump(tester, size: const Size(390, 6000));
-
-    expect(find.text('Elephant and buffalo taper off'), findsOneWidget);
-    expect(find.textContaining('third of the day'), findsOneWidget);
-  });
-
-  testWidgets('the first impala is 100, not 250 and not 60', (
-    WidgetTester tester,
-  ) async {
-    // 250 was most of a leopard for an animal there are several thousand of.
-    // Alex's call: just under a lion.
-    await _pump(tester, size: const Size(390, 6000));
-
-    expect(find.text('First impala'), findsOneWidget);
-    expect(find.textContaining('worth 100 points'), findsOneWidget);
-    expect(find.textContaining('250'), findsNothing);
   });
 
   testWidgets('the quiz is explained here too', (WidgetTester tester) async {
@@ -155,7 +135,8 @@ void main() {
     expect(find.textContaining('the prices'), findsOneWidget);
     // And that it sticks, which is the half people do not assume.
     expect(find.textContaining('We remember it'), findsOneWidget);
-    expect(find.textContaining('House rules'), findsOneWidget);
+    // Twice: the jam tax and the daily limits both live there.
+    expect(find.textContaining('House rules'), findsWidgets);
   });
 
   testWidgets('nothing overflows on a small screen at 1.5x text', (

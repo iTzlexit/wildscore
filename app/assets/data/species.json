@@ -104,10 +104,6 @@
         "basis": "survey"
       },
       "points": 55,
-      "decay": {
-        "after": 2,
-        "multiplier": 0.4
-      },
       "variants": [
         {
           "label": "Big tusker",
@@ -402,10 +398,6 @@
         "basis": "survey"
       },
       "points": 40,
-      "decay": {
-        "after": 2,
-        "multiplier": 0.4
-      },
       "variants": [
         {
           "label": "Dagga boy",
@@ -754,8 +746,7 @@
       "category": "mammal",
       "rarityTier": "common",
       "tags": [
-        "antelope",
-        "wildCard"
+        "antelope"
       ],
       "isSensitive": false,
       "description": "The most abundant antelope in the park and the staple prey of almost every predator in it. Herds scatter in explosive leaps when alarmed.",
@@ -774,11 +765,7 @@
         "basis": "survey"
       },
       "points": 10,
-      "chancesPerDay": 2,
-      "wildCard": {
-        "bonus": 100,
-        "scope": "trip"
-      }
+      "chancesPerDay": 2
     },
     {
       "id": "klipspringer",
@@ -841,8 +828,7 @@
       "rarityTier": "scarce",
       "tags": [
         "bigFive",
-        "predator",
-        "wildCard"
+        "predator"
       ],
       "isSensitive": false,
       "description": "Solitary, largely nocturnal, and hauls kills into trees to keep them from hyena. The hardest of the Big Five to find on your own.",
@@ -860,10 +846,6 @@
         "basis": "estimate"
       },
       "points": 250,
-      "wildCard": {
-        "bonus": 300,
-        "scope": "day"
-      },
       "variants": [
         {
           "label": "In a tree",
@@ -905,8 +887,7 @@
       "rarityTier": "uncommon",
       "tags": [
         "bigFive",
-        "predator",
-        "wildCard"
+        "predator"
       ],
       "isSensitive": false,
       "description": "Sleeps up to twenty hours a day, which is why most sightings are of a flat cat under a bush. Prides are held by coalitions of related males.",
@@ -924,10 +905,6 @@
         "basis": "estimate"
       },
       "points": 120,
-      "wildCard": {
-        "bonus": 300,
-        "scope": "day"
-      },
       "variants": [
         {
           "label": "Male",
@@ -1291,9 +1268,7 @@
       "afrikaansName": "Boomeekhoring",
       "category": "mammal",
       "rarityTier": "common",
-      "tags": [
-        "wildCard"
-      ],
+      "tags": [],
       "isSensitive": false,
       "description": "Also called the mopane squirrel. Flicks its tail and scolds loudly from a trunk, spiralling round to keep the wood between you and it.",
       "habitat": "Mopane and mixed woodland",
@@ -1304,11 +1279,7 @@
         "northern"
       ],
       "conservationStatus": "leastConcern",
-      "points": 5,
-      "wildCard": {
-        "bonus": 100,
-        "scope": "day"
-      }
+      "points": 5
     },
     {
       "id": "tsessebe",
@@ -1367,9 +1338,7 @@
       "afrikaansName": "Vlakvark",
       "category": "mammal",
       "rarityTier": "common",
-      "tags": [
-        "wildCard"
-      ],
+      "tags": [],
       "isSensitive": false,
       "description": "Runs with its tail held vertical like a flag. Reverses into abandoned aardvark burrows to sleep so it can face any intruder.",
       "habitat": "Open grassland and around rest camps",
@@ -1385,11 +1354,7 @@
         "high": 7000,
         "basis": "estimate"
       },
-      "points": 5,
-      "wildCard": {
-        "bonus": 100,
-        "scope": "day"
-      }
+      "points": 5
     },
     {
       "id": "waterbuck",
@@ -1428,8 +1393,7 @@
       "category": "mammal",
       "rarityTier": "scarce",
       "tags": [
-        "bigFive",
-        "wildCard"
+        "bigFive"
       ],
       "isSensitive": true,
       "description": "A grazer with a broad square lip — the name is a corruption of the Dutch for wide, not a colour. Concentrated in the south.",
@@ -1444,11 +1408,7 @@
         "basis": "withheld",
         "note": "SANParks stopped publishing rhino numbers so that poachers cannot use them. What is public is the direction: sharply down."
       },
-      "points": 250,
-      "wildCard": {
-        "bonus": 300,
-        "scope": "day"
-      }
+      "points": 250
     },
     {
       "id": "white-tailed-mongoose",
@@ -2183,9 +2143,7 @@
       "afrikaansName": "Gewone Troupant",
       "category": "bird",
       "rarityTier": "common",
-      "tags": [
-        "wildCard"
-      ],
+      "tags": [],
       "isSensitive": false,
       "description": "The most photographed bird in the park. Named for the tumbling aerial roll males perform in display flight.",
       "habitat": "Open woodland, perched on dead branches and posts",
@@ -2197,10 +2155,6 @@
       ],
       "conservationStatus": "leastConcern",
       "points": 10,
-      "wildCard": {
-        "bonus": 100,
-        "scope": "day"
-      },
       "chancesPerDay": 1
     },
     {
@@ -2599,9 +2553,7 @@
       "afrikaansName": "Geelbekneushoringvoël",
       "category": "bird",
       "rarityTier": "common",
-      "tags": [
-        "wildCard"
-      ],
+      "tags": [],
       "isSensitive": false,
       "description": "The bird Zazu was drawn from, and it knows it. Hops about the picnic sites at Tshokwane looking for your chips, and will take them off the table if you turn your back.",
       "habitat": "Woodland, camps and picnic sites",
@@ -2613,10 +2565,6 @@
       ],
       "conservationStatus": "leastConcern",
       "points": 5,
-      "wildCard": {
-        "bonus": 100,
-        "scope": "day"
-      },
       "chancesPerDay": 1
     },
     {

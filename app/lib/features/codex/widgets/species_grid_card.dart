@@ -22,20 +22,8 @@ class SpeciesGridCard extends StatefulWidget {
     this.onToggleSpotted,
     this.onLongPress,
     this.chancesLeft,
-    this.bonusPoints,
-    this.bonusSpent = false,
     super.key,
   });
-
-  /// The first-sighting bonus, when this claim would earn it. Shown instead of
-  /// the tier value, because the number on the tile has to be the number the
-  /// player is about to get.
-  final int? bonusPoints;
-
-  /// A wild card whose bonus has already gone. Still claimable, just ordinary
-  /// now — and worth saying so, because somebody who saw 50 on this tile an
-  /// hour ago will want to know where it went.
-  final bool bonusSpent;
 
   /// Marks the species seen from the tile. Null hides the control.
   final VoidCallback? onToggleSpotted;
@@ -157,23 +145,8 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
                         Positioned(
                           top: 6,
                           left: 6,
-                          child: _PointsBadge(
-                            species: species,
-                            bonus: widget.bonusPoints,
-                          ),
+                          child: _PointsBadge(species: species),
                         ),
-                        if (widget.bonusPoints != null)
-                          const Positioned(
-                            bottom: 6,
-                            left: 6,
-                            child: _WildCardBadge(),
-                          )
-                        else if (widget.bonusSpent)
-                          const Positioned(
-                            bottom: 6,
-                            left: 6,
-                            child: _BonusSpentBadge(),
-                          ),
                         // One corner, one badge, in this order. A tile carrying
                         // three of them is a tile you cannot read at arm's
                         // length — and an animal in the Big Five is not looking
@@ -195,12 +168,6 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
                             top: 6,
                             right: 6,
                             child: _CornerBadge(label: 'SMALL 5'),
-                          )
-                        else if (species.isWildCard)
-                          const Positioned(
-                            top: 6,
-                            right: 6,
-                            child: _CornerBadge(label: 'WILD CARD'),
                           ),
                         // Spotted is a *status*, not a button. Adding from the
                         // tile is quick because in a moving car nobody opens a
@@ -442,16 +409,9 @@ class _Label extends StatelessWidget {
 }
 
 class _PointsBadge extends StatelessWidget {
-  const _PointsBadge({required this.species, this.bonus});
+  const _PointsBadge({required this.species});
 
   final Species species;
-
-  /// Wins over the tier value when a first-sighting bonus is on offer.
-  ///
-  /// Not named `override` — a field by that name shadows the `@override`
-  /// annotation for the whole class, and the compiler reports it against a
-  /// line that has nothing to do with the cause.
-  final int? bonus;
 
   @override
   Widget build(BuildContext context) {
@@ -460,11 +420,11 @@ class _PointsBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: bonus == null ? style.accent : AppColors.accent,
+        color: style.accent,
         borderRadius: BorderRadius.circular(Radii.chip),
       ),
       child: Text(
-        '${bonus ?? species.points}',
+        '${species.points}',
         style: AppText.caption.copyWith(
           color: Colors.white,
           fontSize: 11.5,
@@ -472,66 +432,6 @@ class _PointsBadge extends StatelessWidget {
           fontVariations: AppFonts.weight(800),
           fontFeatures: AppText.tabular,
         ),
-      ),
-    );
-  }
-}
-
-/// "This one is worth extra, right now."
-///
-/// Only ever visible while the bonus is unclaimed, which is what makes it worth
-/// shouting about — a badge that is always there is wallpaper.
-class _WildCardBadge extends StatelessWidget {
-  const _WildCardBadge();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
-      decoration: BoxDecoration(
-        color: AppColors.accent,
-        borderRadius: BorderRadius.circular(Radii.chip - 4),
-        border: Border.all(color: Colors.white, width: 1.4),
-      ),
-      child: Text(
-        'FIRST ONE',
-        style: AppText.overline.copyWith(
-          fontSize: 8,
-          letterSpacing: 0.7,
-          color: Colors.white,
-        ),
-      ),
-    );
-  }
-}
-
-/// The bonus on this species is gone. Padlocked rather than hidden, because a
-/// badge that simply disappears looks like a bug to somebody who saw it earlier.
-class _BonusSpentBadge extends StatelessWidget {
-  const _BonusSpentBadge();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-      decoration: BoxDecoration(
-        color: const Color(0xCC161C19),
-        borderRadius: BorderRadius.circular(Radii.chip - 4),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          const Icon(Icons.lock_rounded, size: 10, color: Color(0xB3FFFFFF)),
-          const SizedBox(width: 3),
-          Text(
-            'BONUS GONE',
-            style: AppText.overline.copyWith(
-              fontSize: 8,
-              letterSpacing: 0.6,
-              color: const Color(0xB3FFFFFF),
-            ),
-          ),
-        ],
       ),
     );
   }

@@ -26,21 +26,10 @@ enum SpeciesTag {
   /// technically carnivorous.
   predator(label: 'Predators', shortLabel: 'PREDATOR', isFilter: true),
 
-  nocturnal(label: 'Nocturnal', shortLabel: 'NIGHT', isFilter: true),
-
-  /// The 1st timers: the first one of these pays far more than the animal.
-  ///
-  /// Two kinds of animal share the mechanic for opposite reasons. **Impala,
-  /// warthog, yellow-billed hornbill, lilac-breasted roller and tree squirrel**
-  /// are the ones you have stopped seeing by lunchtime on day one, and giving
-  /// the first one 250 turns the thing everybody ignores into the first shout
-  /// of the trip. **Lion, leopard and white rhino** are the opposite: seen on
-  /// most trips and thrilling every time, which is a fact rarity cannot price.
-  ///
-  /// **Filterable now.** It was not, on the grounds that it is a scoring rule
-  /// rather than a group anybody browses — which stopped being true the moment
-  /// there were eight of them and a car wanted to know which.
-  wildCard(label: 'Wild cards', shortLabel: 'WILD CARD', isFilter: true);
+  // The wildCard tag lived here — the '1st timers' whose first sighting paid
+  // far more than the animal. The whole mechanic was removed on 11 August
+  // 2026: it was a second scoring system with numbers a car could not edit.
+  nocturnal(label: 'Nocturnal', shortLabel: 'NIGHT', isFilter: true);
 
   const SpeciesTag({
     required this.label,

@@ -68,15 +68,21 @@ class RulesScreen extends StatelessWidget {
           const SizedBox(height: Space.xl),
 
           const _Section('THE RULES'),
+          // The paragraph explaining this is gone — Alex's note, and he is
+          // right: the examples *are* the explanation, and the sentence above
+          // them said the same thing in longer words.
           const _Rule(
             icon: Icons.groups_rounded,
             title: 'A group counts as one sighting',
             body:
-                'A herd of elephants, pod of hippos, or pride of lions counts '
-                'as one sighting, no matter how many animals are in it.\n\n'
                 'Herd of elephants = **1 sighting**\n'
                 'Pod of hippos = **1 sighting**\n'
-                'Pride of lions = **1 sighting**',
+                'Pride of lions = **1 sighting**\n'
+                'Dazzle of zebra = **1 sighting**\n'
+                'Tower of giraffe = **1 sighting**\n'
+                'Troop of baboons = **1 sighting**\n'
+                'Crash of rhino = **1 sighting**\n'
+                'Obstinacy of buffalo = **1 sighting**',
           ),
           const _Rule(
             icon: Icons.u_turn_left_rounded,
@@ -105,46 +111,33 @@ class RulesScreen extends StatelessWidget {
                 'Impala: **2 per day**\n'
                 'Vervet monkey: **4 per day**\n'
                 'Every bird: **once a day**\n\n'
-                'All other animals are unlimited.',
-          ),
-          const _Rule(
-            icon: Icons.trending_down_rounded,
-            title: 'Elephant and buffalo taper off',
-            body:
-                'Never capped — they are Big Five, and you should always be '
-                'able to claim one.\n\n'
-                'But from the **third of the day** they score less. The '
-                'fourteenth elephant is not the event the second one was.',
+                'All other animals are unlimited — and you can change or lift '
+                'any of these in **House rules** on your profile.',
           ),
           const SizedBox(height: Space.xl),
 
-          const _Section('BONUS SIGHTS'),
-          const _Rule(
-            icon: Icons.favorite_rounded,
-            title: 'First impala',
-            body:
-                'The first impala you spot is worth **100 points**.\n\n'
-                'Keep your eyes open as you enter the park. 😉\n\n'
-                'Warthog, tree squirrel, lilac-breasted roller and southern '
-                'yellow-billed hornbill do the same.',
-          ),
-          const _Rule(
-            icon: Icons.pets_rounded,
-            title: 'First lion, leopard or white rhino of the day',
-            body:
-                'The moment of the day, every time, however often you get '
-                'one.\n\n'
-                'The first of each pays **300**. After that they score '
-                'normally.',
-          ),
+          // One section, not five.
+          //
+          // There used to be a card for the first impala, another for the first
+          // lion of the day, and separate entries for each bonus — a page of
+          // special cases, most of them about one animal. Alex cut the lot:
+          // *"we don't need a separate block for impala and every animal below
+          // it."* The first-spot bonuses are gone from the game entirely, and
+          // what is left is one list of things that pay more.
+          const _Section('BONUS ANIMALS'),
           const _Rule(
             icon: Icons.auto_awesome_rounded,
-            title: 'Worth more',
+            title: 'Worth more than the animal',
             body:
-                'Some sightings are worth more than their normal points:\n\n'
+                'Some sightings pay more than the number on the card:\n\n'
                 'Male lion\n'
                 'Mother with young\n'
-                'Predator with a kill',
+                'Predator with a kill\n'
+                'A kill up a tree\n'
+                'A mating pair\n'
+                'An elephant bull in musth\n'
+                'A lone bull, or an old dagga boy\n'
+                'A big tusker',
           ),
           const _Rule(
             icon: Icons.wb_sunny_rounded,

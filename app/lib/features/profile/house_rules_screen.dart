@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../domain/house_rules.dart';
+import '../../domain/species.dart';
+import '../../domain/species_category.dart';
 import '../../shared/emphasis.dart';
 import '../../shared/theme.dart';
 
@@ -20,6 +22,7 @@ class HouseRulesScreen extends StatelessWidget {
   const HouseRulesScreen({
     required this.rules,
     required this.onChanged,
+    this.species = const <Species>[],
     super.key,
   });
 
@@ -27,17 +30,56 @@ class HouseRulesScreen extends StatelessWidget {
     BuildContext context, {
     required HouseRules rules,
     required ValueChanged<HouseRules> onChanged,
+    List<Species> species = const <Species>[],
   }) {
     return Navigator.of(context).push<void>(
       MaterialPageRoute<void>(
-        builder: (BuildContext context) =>
-            HouseRulesScreen(rules: rules, onChanged: onChanged),
+        builder: (BuildContext context) => HouseRulesScreen(
+          rules: rules,
+          onChanged: onChanged,
+          species: species,
+        ),
       ),
     );
   }
 
   final HouseRules rules;
   final ValueChanged<HouseRules> onChanged;
+
+  /// The catalogue, so this screen knows which species are birds and what the
+  /// default limit on each of them is.
+  final List<Species> species;
+
+  List<String> get _birdIds => <String>[
+    for (final Species s in species)
+      if (s.category == SpeciesCategory.bird) s.id,
+  ];
+
+  /// The limit in force on one species: a number, or null for no limit.
+  int? _capFor(String id) {
+    for (final Species s in species) {
+      if (s.id == id) {
+        return s.cap?.times;
+      }
+    }
+    return null;
+  }
+
+  /// Sets — or lifts — the limit on a set of species at once.
+  ///
+  /// "No limit" is stored as a present key holding null rather than as a
+  /// missing key, because those are different things: one is a car that has
+  /// decided, the other is a car that has not been asked. Our default can still
+  /// move under the second and must not move under the first.
+  void _setCap(List<String> ids, int? times) {
+    final Map<String, SpeciesCap?> next = <String, SpeciesCap?>{...rules.caps};
+    for (final String id in ids) {
+      next[id] = times == null
+          ? null
+          : SpeciesCap(times: times, scope: CapScope.day);
+    }
+    onChanged(rules.copyWith(caps: next));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,6 +166,58 @@ class HouseRulesScreen extends StatelessWidget {
           ),
           const SizedBox(height: Space.xl),
 
+          // The three caps in the game, adjustable from one place.
+          //
+          // They were only settable on each animal's own page, which is fine
+          // when you are standing on that page and useless when the question is
+          // "what is limited, and can I turn it off". Alex asked for exactly
+          // that: somewhere to disable or adjust the caps on impala, vervet and
+          // the birds.
+          const _Section('DAILY LIMITS'),
+          Container(
+            padding: const EdgeInsets.all(Space.lg),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(Radii.card),
+              border: Border.all(color: AppColors.outline),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                emphasised(
+                  'Three animals run out; everything else is unlimited. '
+                  '**Turn any of them off if you would rather count them all.**',
+                  style: AppText.body,
+                ),
+                const SizedBox(height: Space.lg),
+                _CapRow(
+                  label: 'Impala',
+                  current: _capFor('impala'),
+                  choices: const <int?>[2, 4, null],
+                  onPick: (int? times) => _setCap(<String>['impala'], times),
+                ),
+                const SizedBox(height: Space.md),
+                _CapRow(
+                  label: 'Vervet monkey',
+                  current: _capFor('vervet-monkey'),
+                  choices: const <int?>[4, 8, null],
+                  onPick: (int? times) =>
+                      _setCap(<String>['vervet-monkey'], times),
+                ),
+                if (_birdIds.isNotEmpty) ...<Widget>[
+                  const SizedBox(height: Space.md),
+                  _CapRow(
+                    label: 'Every bird',
+                    current: _capFor(_birdIds.first),
+                    choices: const <int?>[1, 2, null],
+                    onPick: (int? times) => _setCap(_birdIds, times),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          const SizedBox(height: Space.xl),
+
           const _Section('POINTS AND LIMITS'),
           Container(
             padding: const EdgeInsets.all(Space.lg),
@@ -203,6 +297,65 @@ class HouseRulesScreen extends StatelessWidget {
       ),
     );
     return ok ?? false;
+  }
+}
+
+/// One animal's daily limit, as a row of choices.
+///
+/// Fixed choices rather than a number field. "How many a day" is not a question
+/// anybody has a considered answer to beyond *a couple*, *a few*, or *stop
+/// counting them* — and this is operated with a thumb.
+class _CapRow extends StatelessWidget {
+  const _CapRow({
+    required this.label,
+    required this.current,
+    required this.choices,
+    required this.onPick,
+  });
+
+  final String label;
+
+  /// The limit in force. Null means no limit.
+  final int? current;
+
+  /// Offered limits, with null for "no limit" last.
+  final List<int?> choices;
+  final ValueChanged<int?> onPick;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(label, style: AppText.bodyStrong),
+        const SizedBox(height: Space.sm),
+        Wrap(
+          spacing: Space.sm,
+          runSpacing: Space.xs,
+          children: <Widget>[
+            for (final int? times in choices)
+              ChoiceChip(
+                label: Text(
+                  times == null
+                      ? 'No limit'
+                      : times == 1
+                      ? 'Once a day'
+                      : '$times a day',
+                ),
+                selected: current == times,
+                labelStyle: AppText.caption,
+                selectedColor: AppColors.accentWash,
+                side: BorderSide(
+                  color: current == times
+                      ? AppColors.accent
+                      : AppColors.outline,
+                ),
+                onSelected: (_) => onPick(times),
+              ),
+          ],
+        ),
+      ],
+    );
   }
 }
 

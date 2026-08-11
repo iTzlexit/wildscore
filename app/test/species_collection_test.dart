@@ -198,43 +198,15 @@ void main() {
     });
   });
 
-  group('the wild cards', () {
-    test('are the 1st timers plus the three you always see', () {
-      final List<String> wild = <String>[
-        for (final Species s in _all)
-          if (s.isWildCard) s.commonName,
-      ]..sort();
-
-      expect(wild, <String>[
-        'Impala',
-        'Leopard',
-        'Lilac-breasted Roller',
-        'Lion',
-        'Southern Yellow-billed Hornbill',
-        'Tree Squirrel',
-        'Warthog',
-        'White Rhinoceros',
-      ]);
-    });
-
-    test('carry the tag, so the filter and the badge can find them', () {
-      // The tag and the wildCard object have to agree. They are set together
-      // and there is nothing but this test stopping them drifting.
-      for (final Species s in _all) {
-        expect(
-          s.tags.contains(SpeciesTag.wildCard),
-          s.isWildCard,
-          reason: s.commonName,
-        );
-      }
-    });
-
-    test('are filterable, now that there are eight of them', () {
-      // It was not a filter, on the grounds that it is a scoring rule rather
-      // than a group anybody browses. That stopped being true.
-      expect(SpeciesTag.wildCard.isFilter, isTrue);
-      expect(SpeciesTag.smallFive.isFilter, isTrue);
-    });
+  test('nothing carries a first-spot bonus any more', () {
+    // The wild cards — impala, warthog, tree squirrel, the roller, the
+    // hornbill, and the first lion, leopard or white rhino of the day —
+    // were deprecated on 11 August 2026: a second scoring system, with
+    // numbers that were not on the card and could not be edited.
+    expect(
+      SpeciesTag.values.map((SpeciesTag t) => t.name),
+      isNot(contains('wildCard')),
+    );
   });
 
   test('every collection has at least one member', () {

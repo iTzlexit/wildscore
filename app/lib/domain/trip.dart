@@ -1,8 +1,11 @@
-import 'scorecard.dart';
-import 'species.dart';
 import 'visit.dart';
 
 /// A run of drives that belong to the same visit to the park.
+///
+/// It used to carry `bonusesSpent`, which worked out whether a species had
+/// already paid its first-sighting bonus this trip. That whole mechanic is
+/// gone — see the note on [Species.scoreFor] — and with it the need to load a
+/// fortnight of history before scoring one impala.
 ///
 /// **Derived, never declared.** Making somebody press "Start trip" on top of
 /// "Start drive" doubles the ceremony for a family at a gate, and they would
@@ -38,33 +41,5 @@ abstract final class Trip {
       run.add(sorted[i]);
     }
     return run;
-  }
-
-  /// Wild-card species whose bonus has already been claimed.
-  ///
-  /// A bonus, not a lock: a species in this set still scores its normal value,
-  /// it just no longer pays the extra. Scope decides how far back to look —
-  /// day-scoped bonuses only care about the drive in progress, trip-scoped ones
-  /// look across the whole run of days.
-  static Set<String> bonusesSpent(
-    List<Species> species, {
-    required List<Visit> visits,
-    Scorecard? live,
-    DateTime? now,
-  }) {
-    final Set<String> today = live?.claimedSpecies ?? const <String>{};
-    final Set<String> thisTrip = <String>{
-      for (final Visit v in current(visits, now: now)) ...v.claimedSpecies,
-      ...today,
-    };
-
-    return <String>{
-      for (final Species s in species)
-        if (s.isWildCard)
-          if (s.wildCardScope == WildCardScope.trip
-              ? thisTrip.contains(s.id)
-              : today.contains(s.id))
-            s.id,
-    };
   }
 }
