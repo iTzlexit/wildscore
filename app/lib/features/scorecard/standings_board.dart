@@ -7,11 +7,15 @@ import '../../shared/theme.dart';
 import '../../shared/widgets/avatar_badge.dart';
 import '../codex/species_detail_screen.dart';
 
-/// Live standings — one row per player, bar proportional to the leader.
+/// Live standings — one row per player, each with a tally of their day.
 ///
 /// A bar rather than a number alone because the interesting question in a car
 /// is never "how many points do I have", it is "am I winning". A bar answers
 /// that at a glance from the passenger seat.
+///
+/// It was drawn as a fraction of the leader's score, which meant the leader was
+/// always exactly full — one impala to nothing looked like a finished game. It
+/// is now a tally against a benchmark: see [_TallyBar] and `_benchmark`.
 class StandingsBoard extends StatefulWidget {
   const StandingsBoard({
     required this.card,
@@ -69,6 +73,18 @@ class _StandingsBoardState extends State<StandingsBoard> {
     final List<Player> ranked = card.standings;
     final int leader = ranked.isEmpty ? 0 : card.pointsFor(ranked.first.id);
 
+    // What a full bar means.
+    //
+    // It used to mean "whoever is winning", so the first impala of the day
+    // filled somebody's bar completely and the game looked over before it
+    // started. Alex spotted that immediately.
+    //
+    // Two changes. There is a floor, so an early lead is a small bar on a long
+    // road rather than a finished one; and the leader is held at about 87% of
+    // the track, so the bar always reads as *still climbing*. Nobody is ever
+    // full, which is the honest picture of a day that has not ended.
+    final double benchmark = _benchmark(leader);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -77,8 +93,8 @@ class _StandingsBoardState extends State<StandingsBoard> {
             rank: i + 1,
             player: ranked[i],
             points: card.pointsFor(ranked[i].id),
-            // Everyone on zero gets an empty bar rather than a full one.
-            fraction: leader == 0 ? 0 : card.pointsFor(ranked[i].id) / leader,
+            fraction: card.pointsFor(ranked[i].id) / benchmark,
+            tally: _tallyFor(ranked[i].id),
             leading: i == 0 && leader > 0,
             expanded: widget.expanded || _open == ranked[i].id,
             roomy: widget.expanded,
@@ -108,6 +124,37 @@ class _StandingsBoardState extends State<StandingsBoard> {
           ),
       ],
     );
+  }
+
+  /// How long the road is, in points.
+  ///
+  /// A floor of 600 — about a lion and a couple of good antelope, which is a
+  /// respectable morning — so the first sighting of the day moves the bar a
+  /// little rather than filling it. Past that the leader sets the pace, held
+  /// short of the end so there is always somewhere left to go.
+  static double _benchmark(int leader) =>
+      leader * 1.15 < 600 ? 600 : leader * 1.15;
+
+  /// Every sighting this player has made, in the order they made them.
+  ///
+  /// **The bar is a tally, not a percentage.** Alex asked for a score that
+  /// visibly adds up, and this is the honest way to draw it: each spot is its
+  /// own block, as wide as it was worth and coloured by what it was, so a
+  /// morning of impala looks like a morning of impala and one leopard looks
+  /// like one leopard.
+  List<_Tally> _tallyFor(String playerId) {
+    final Map<String, Species> byId = <String, Species>{
+      for (final Species s in widget.species) s.id: s,
+    };
+    return <_Tally>[
+      for (final Claim c in widget.card.claims)
+        if (c.playerId == playerId)
+          _Tally(
+            points: c.points,
+            colour:
+                byId[c.speciesId]?.rarityTier.style.accent ?? AppColors.accent,
+          ),
+    ];
   }
 
   /// What this player claimed today: counts and points banked, rarest first.
@@ -210,12 +257,114 @@ class _Haul {
   final int points;
 }
 
+/// One sighting, as it appears on the tally bar.
+class _Tally {
+  const _Tally({required this.points, required this.colour});
+
+  final int points;
+  final Color colour;
+}
+
+/// The day, drawn as blocks.
+///
+/// **Replaces a plain progress bar that read "whoever is winning is finished".**
+/// It filled completely for the leader, so the first impala of the morning gave
+/// somebody a full bar — which is both wrong and deflating, and Alex called it
+/// out on the first drive.
+///
+/// What it draws now is a tally: one block per sighting, as wide as that
+/// sighting was worth, coloured by what the animal was. A morning of impala is
+/// a row of small grey-green blocks; one leopard is a single wide gold one. You
+/// can see the shape of somebody's day from across the car without reading a
+/// number, which is the thing a scorecard is for.
+class _TallyBar extends StatelessWidget {
+  const _TallyBar({
+    required this.tally,
+    required this.fraction,
+    required this.fallback,
+  });
+
+  final List<_Tally> tally;
+
+  /// How far along the road they are — see `_StandingsBoardState._benchmark`.
+  final double fraction;
+
+  /// Used when there is nothing to draw blocks from yet.
+  final Color fallback;
+
+  /// Past this many, the gaps between blocks cost more than they say.
+  ///
+  /// A good day is thirty-plus sightings and a one-pixel gap between each is
+  /// visual noise, so a long day merges into bands of colour instead.
+  static const int _maxBlocks = 18;
+
+  @override
+  Widget build(BuildContext context) {
+    final int total = tally.fold(0, (int sum, _Tally t) => sum + t.points);
+
+    return SizedBox(
+      height: 8,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(4),
+        child: Stack(
+          children: <Widget>[
+            // The road, full width, and it has to be visible or the blocks
+            // look like they are floating on the card with nothing to run
+            // along. `surfaceAlt` on white is not a colour anybody can see.
+            const Positioned.fill(child: ColoredBox(color: AppColors.outline)),
+            TweenAnimationBuilder<double>(
+              // Animated so a claim visibly moves the bar. That movement is
+              // the feedback the game runs on.
+              tween: Tween<double>(end: fraction.clamp(0, 1)),
+              duration: const Duration(milliseconds: 650),
+              curve: Motion.standard,
+              builder: (BuildContext context, double value, _) =>
+                  FractionallySizedBox(
+                    widthFactor: value == 0 ? 0.0001 : value,
+                    // Both factors. Without `heightFactor` the box takes its
+                    // height from the child, and a `ColoredBox` has no size of
+                    // its own — so every block painted eight pixels of
+                    // nothing, which is exactly as visible as it sounds.
+                    heightFactor: 1,
+                    child: total <= 0
+                        ? ColoredBox(color: fallback)
+                        : Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: _blocks(total),
+                          ),
+                  ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _blocks(int total) {
+    final bool separate = tally.length <= _maxBlocks;
+    return <Widget>[
+      for (int i = 0; i < tally.length; i++) ...<Widget>[
+        Expanded(
+          // Flex has to be an int, so points are the flex — which is exactly
+          // the proportion wanted. A five-point warthog next to a 250-point
+          // leopard is a sliver next to a slab, and that is the truth of it.
+          flex: tally[i].points < 1 ? 1 : tally[i].points,
+          child: ColoredBox(color: tally[i].colour),
+        ),
+        if (separate && i != tally.length - 1)
+          const SizedBox(width: 1.5, child: ColoredBox(color: Colors.white)),
+      ],
+    ];
+  }
+}
+
 class _Row extends StatelessWidget {
   const _Row({
     required this.rank,
     required this.player,
     required this.points,
     required this.fraction,
+    required this.tally,
     required this.leading,
     required this.expanded,
     required this.roomy,
@@ -232,6 +381,9 @@ class _Row extends StatelessWidget {
   final Player player;
   final int points;
   final double fraction;
+
+  /// Each sighting, oldest first. Drawn as its own block on the bar.
+  final List<_Tally> tally;
   final bool leading;
   final bool expanded;
   final bool roomy;
@@ -336,13 +488,26 @@ class _Row extends StatelessWidget {
                         color: AppColors.textMuted,
                       ),
                     const SizedBox(width: Space.xs),
-                    Text(
-                      '$points',
-                      style: AppText.title3.copyWith(
-                        color: leading
-                            ? AppColors.accent
-                            : AppColors.textPrimary,
-                        fontFeatures: AppText.tabular,
+                    // Counts up rather than jumping.
+                    //
+                    // Alex asked for a score that is visibly *tallied* after
+                    // each spot, and this is the half of it people feel: a
+                    // leopard is 250 points arriving one at a time, which is
+                    // worth watching. It reads from the previous value on its
+                    // own — TweenAnimationBuilder animates from wherever it
+                    // had got to when the end changes.
+                    TweenAnimationBuilder<double>(
+                      tween: Tween<double>(end: points.toDouble()),
+                      duration: const Duration(milliseconds: 650),
+                      curve: Motion.standard,
+                      builder: (BuildContext context, double value, _) => Text(
+                        '${value.round()}',
+                        style: AppText.title3.copyWith(
+                          color: leading
+                              ? AppColors.accent
+                              : AppColors.textPrimary,
+                          fontFeatures: AppText.tabular,
+                        ),
                       ),
                     ),
                     if (onQuiz != null) ...<Widget>[
@@ -360,22 +525,10 @@ class _Row extends StatelessWidget {
                   // Rank column + avatar + gap, so the bar starts under the
                   // name rather than under the face.
                   padding: const EdgeInsets.only(left: 58),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: TweenAnimationBuilder<double>(
-                      // Animated so a claim visibly moves the bar. That
-                      // movement is the feedback the game runs on.
-                      tween: Tween<double>(begin: 0, end: fraction.clamp(0, 1)),
-                      duration: const Duration(milliseconds: 420),
-                      curve: Motion.standard,
-                      builder: (BuildContext context, double value, _) =>
-                          LinearProgressIndicator(
-                            value: value,
-                            minHeight: 7,
-                            backgroundColor: AppColors.surfaceAlt,
-                            valueColor: AlwaysStoppedAnimation<Color>(bar),
-                          ),
-                    ),
+                  child: _TallyBar(
+                    tally: tally,
+                    fraction: fraction,
+                    fallback: bar,
                   ),
                 ),
               ],
