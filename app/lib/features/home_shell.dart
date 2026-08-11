@@ -15,6 +15,7 @@ import '../domain/trivia.dart';
 import '../domain/visit.dart';
 import '../shared/theme.dart';
 import 'codex/codex_screen.dart';
+import 'profile/house_rules_screen.dart';
 import 'profile/profile_screen.dart';
 import 'profile/visit_history_screen.dart';
 import 'scorecard/claim_details_sheet.dart';
@@ -499,8 +500,6 @@ class _HomeShellState extends State<HomeShell> {
                 onDeleteVisit: _deleteVisit,
                 onRestored: _reload,
                 onToggleSpotted: _toggleSpotted,
-                rules: _rules,
-                onRulesChanged: _saveRules,
               ),
               WildScoreScreen(
                 species: species,
@@ -524,6 +523,16 @@ class _HomeShellState extends State<HomeShell> {
                   ],
                   onSetPoints: _setHousePoints,
                   live: true,
+                ),
+                onOpenSettings: () => HouseRulesScreen.open(
+                  context,
+                  rules: _rules,
+                  species: species,
+                  onChanged: _saveRules,
+                  onOpenAnimals: () {
+                    Navigator.of(context).pop();
+                    setState(() => _tab = 2);
+                  },
                 ),
                 onOpenHistory: () => VisitHistoryScreen.open(
                   context,

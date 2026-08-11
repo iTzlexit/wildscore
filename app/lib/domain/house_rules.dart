@@ -146,4 +146,38 @@ class HouseRules {
       },
     if (jamPenalty != null) 'jamPenalty': jamPenalty,
   };
+
+  /// By value, because the settings screen holds a draft and has to be able to
+  /// ask whether anything has actually changed. Comparing identity would light
+  /// up Save the moment somebody tapped the setting they were already on.
+  ///
+  /// Compared through the serialised form: the maps nest, `Map` equality is by
+  /// identity, and hand-rolling a deep compare for a shape that already has a
+  /// canonical string is work with nothing to show for it.
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is HouseRules && _signature(other.toJson()) == _signature(toJson());
+
+  @override
+  int get hashCode => _signature(toJson()).hashCode;
+
+  /// Order-independent, so two identical tables written in a different order
+  /// still compare equal.
+  static String _signature(Map<String, dynamic> json) {
+    final List<String> parts = <String>[];
+    void walk(String prefix, Object? value) {
+      if (value is Map<String, dynamic>) {
+        final List<String> keys = value.keys.toList()..sort();
+        for (final String k in keys) {
+          walk('$prefix/$k', value[k]);
+        }
+      } else {
+        parts.add('$prefix=$value');
+      }
+    }
+
+    walk('', json);
+    return parts.join('&');
+  }
 }

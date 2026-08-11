@@ -66,7 +66,7 @@ Three tabs — **Profile, Wild Score, Animals**. The Sightings feed is gone: it 
 - **Backup** — a pasteable code. No server; see `docs/RISKS.md` for why it
   matters more than it looks.
 
-385 tests. `flutter analyze` is clean and must stay clean.
+371 tests. `flutter analyze` is clean and must stay clean.
 
 ## Decisions already made — do not relitigate
 

@@ -161,9 +161,20 @@ void main() {
   });
 
   group('the screen', () {
-    Future<HouseRules?> pump(WidgetTester tester, HouseRules rules) async {
-      HouseRules? saved;
-      await tester.binding.setSurfaceSize(const Size(430, 1200));
+    late List<Species> catalogue;
+
+    setUpAll(() async {
+      catalogue = await const SpeciesRepository().loadAll();
+    });
+
+    /// What the screen has saved. Null until Save is pressed, which is the
+    /// whole point of the draft.
+    HouseRules? saved;
+
+    setUp(() => saved = null);
+
+    Future<void> pump(WidgetTester tester, HouseRules rules) async {
+      await tester.binding.setSurfaceSize(const Size(430, 1400));
       addTearDown(() => tester.binding.setSurfaceSize(null));
 
       await tester.pumpWidget(
@@ -171,19 +182,37 @@ void main() {
           theme: buildAppTheme(),
           home: HouseRulesScreen(
             rules: rules,
+            species: catalogue,
             onChanged: (HouseRules r) => saved = r,
           ),
         ),
       );
       await tester.pumpAndSettle();
-      return saved;
     }
 
-    testWidgets('offers switching the tax off', (WidgetTester tester) async {
+    testWidgets('is called Wild Score settings', (WidgetTester tester) async {
+      // It moved off the profile and onto the game's own tab, behind a gear.
+      // The jam tax is not part of anybody's personal record.
       await pump(tester, HouseRules.none);
-      expect(find.text('No tax'), findsOneWidget);
-      expect(find.text('−20%'), findsOneWidget);
-      expect(find.text('−50%'), findsOneWidget);
+
+      expect(find.text('Wild Score settings'), findsOneWidget);
+      expect(find.text('Your game, your rules'), findsOneWidget);
+      expect(find.text('Safe to change'), findsOneWidget);
+    });
+
+    testWidgets('offers the six jam settings', (WidgetTester tester) async {
+      await pump(tester, HouseRules.none);
+
+      for (final String label in <String>[
+        'No tax',
+        '−10%',
+        '−20%',
+        '−30%',
+        '−40%',
+        '−50%',
+      ]) {
+        expect(find.text(label), findsOneWidget, reason: label);
+      }
     });
 
     testWidgets('shows the sum rather than the setting', (
@@ -191,7 +220,40 @@ void main() {
     ) async {
       // A percentage is a rule; "a 100-point leopard pays 80" is the game.
       await pump(tester, HouseRules.none);
+
       expect(find.textContaining('pays 80'), findsOneWidget);
+    });
+
+    testWidgets('holds changes until Save is pressed', (
+      WidgetTester tester,
+    ) async {
+      // Everything else in the app applies the moment you touch it, and for a
+      // price on one animal that is right — you are looking at the animal. A
+      // settings screen is where somebody tries numbers out.
+      await pump(tester, HouseRules.none);
+
+      await tester.tap(find.text('−50%'));
+      await tester.pumpAndSettle();
+
+      expect(saved, isNull, reason: 'nothing saved yet');
+      // The sum updates as you go, so you can see what you are choosing.
+      expect(find.textContaining('pays 50'), findsOneWidget);
+
+      await tester.tap(find.text('Save changes'));
+      await tester.pumpAndSettle();
+
+      expect(saved?.jamPenalty, 0.5);
+    });
+
+    testWidgets('cannot be saved until something has changed', (
+      WidgetTester tester,
+    ) async {
+      await pump(tester, HouseRules.none);
+
+      final FilledButton save = tester.widget<FilledButton>(
+        find.widgetWithText(FilledButton, 'Save changes'),
+      );
+      expect(save.onPressed, isNull);
     });
 
     testWidgets('choosing our own number clears the setting', (
@@ -199,33 +261,56 @@ void main() {
     ) async {
       // Otherwise a car that agreed with us in August is pinned to that number
       // when we change our minds in September.
-      HouseRules? saved;
-      await tester.binding.setSurfaceSize(const Size(430, 1200));
-      addTearDown(() => tester.binding.setSurfaceSize(null));
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: buildAppTheme(),
-          home: HouseRulesScreen(
-            rules: const HouseRules(jamPenalty: 0.5),
-            onChanged: (HouseRules r) => saved = r,
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
+      await pump(tester, const HouseRules(jamPenalty: 0.5));
 
       await tester.tap(find.text('−20%'));
       await tester.pumpAndSettle();
+      await tester.tap(find.text('Save changes'));
+      await tester.pumpAndSettle();
 
-      expect(saved?.jamPenalty, isNull);
-      expect(saved?.isDefault, isTrue);
+      final HouseRules? result = saved;
+      expect(result?.jamPenalty, isNull);
+      expect(result?.isDefault, isTrue);
     });
 
-    testWidgets('owns up to how much has been changed', (
+    testWidgets('the three caps can be lifted from here', (
+      WidgetTester tester,
+    ) async {
+      // Alex asked for exactly this: somewhere to disable or adjust the caps on
+      // impala, vervet monkey and the birds.
+      await pump(tester, HouseRules.none);
+
+      expect(find.text('Impala'), findsOneWidget);
+      expect(find.text('Vervet monkey'), findsOneWidget);
+      expect(find.text('Every bird'), findsOneWidget);
+
+      // The impala's row is the first of the three.
+      await tester.tap(find.text('No limit').first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Save changes'));
+      await tester.pumpAndSettle();
+
+      final HouseRules? result = saved;
+      expect(result?.caps.containsKey('impala'), isTrue);
+      expect(
+        result?.caps['impala'],
+        isNull,
+        reason: 'a present key holding null is "no limit", not "no opinion"',
+      );
+    });
+
+    testWidgets('reset is offered only when there is something to reset', (
       WidgetTester tester,
     ) async {
       await pump(tester, HouseRules.none);
-      expect(find.text('You have not changed anything yet.'), findsOneWidget);
-      expect(find.text('Put everything back'), findsNothing);
+      expect(
+        tester
+            .widget<TextButton>(
+              find.widgetWithText(TextButton, 'Reset to default'),
+            )
+            .onPressed,
+        isNull,
+      );
 
       await tester.pumpWidget(
         MaterialApp(
@@ -235,14 +320,44 @@ void main() {
               points: <String, int>{'sable-antelope': 150},
               jamPenalty: 0,
             ),
+            species: catalogue,
             onChanged: (HouseRules _) {},
           ),
         ),
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('You have changed 2 things.'), findsOneWidget);
-      expect(find.text('Put everything back'), findsOneWidget);
+      expect(
+        tester
+            .widget<TextButton>(
+              find.widgetWithText(TextButton, 'Reset to default'),
+            )
+            .onPressed,
+        isNotNull,
+      );
+    });
+
+    testWidgets('resetting asks first, and then clears everything', (
+      WidgetTester tester,
+    ) async {
+      await pump(
+        tester,
+        const HouseRules(
+          points: <String, int>{'sable-antelope': 150},
+          jamPenalty: 0,
+        ),
+      );
+
+      await tester.tap(find.text('Reset to default'));
+      await tester.pumpAndSettle();
+      expect(find.text('Back to our rules?'), findsOneWidget);
+
+      await tester.tap(find.text('Reset'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Save changes'));
+      await tester.pumpAndSettle();
+
+      expect(saved?.isDefault, isTrue);
     });
   });
 }

@@ -27,6 +27,7 @@ class WildScoreScreen extends StatelessWidget {
     this.onSpotFor,
     this.onQuizFor,
     this.onOpenPrices,
+    this.onOpenSettings,
     this.onOpenHistory,
     super.key,
   });
@@ -42,6 +43,10 @@ class WildScoreScreen extends StatelessWidget {
 
   /// Opens the price list mid-drive.
   final VoidCallback? onOpenPrices;
+
+  /// Wild Score settings. They used to sit on the profile, which is one
+  /// person's record — the jam tax is not.
+  final VoidCallback? onOpenSettings;
 
   /// Past drives. They live on this tab because they are the game's history,
   /// not the player's — the profile is one person's record and a list of days
@@ -87,6 +92,13 @@ class WildScoreScreen extends StatelessWidget {
                     color: AppColors.textSecondary,
                     tooltip: 'Rules',
                   ),
+                  if (onOpenSettings != null)
+                    IconButton(
+                      onPressed: onOpenSettings,
+                      icon: const Icon(Icons.settings_outlined),
+                      color: AppColors.textSecondary,
+                      tooltip: 'Settings',
+                    ),
                 ],
               ),
             ),
