@@ -107,14 +107,12 @@ class _StandingsBoardState extends State<StandingsBoard> {
             onSpot: widget.onSpotFor == null
                 ? null
                 : () => widget.onSpotFor!(ranked[i]),
-            // A question is earned per *unique* animal this player has found,
-            // plus their share of the ones handed out for time passing.
+            // One question per two *new* animals this player has found.
             onQuiz:
                 widget.onQuizFor == null ||
                     !card.trivia.hasWaiting(
                       ranked[i].id,
                       card.uniqueSpotsFor(ranked[i].id),
-                      timed: card.timedQuestionsFor(ranked[i].id),
                     )
                 ? null
                 : () => widget.onQuizFor!(ranked[i]),

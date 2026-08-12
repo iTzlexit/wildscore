@@ -83,20 +83,17 @@ class HouseRules {
 
   static const HouseRules none = HouseRules();
 
-  /// What the jam tax is by default. Twenty per cent, because it is the sum
-  /// anybody can do in their head at a gate: 100 becomes 80.
-  static const double defaultJamPenalty = 0.2;
+  /// What the jam tax is by default.
+  ///
+  /// **A tenth, down from a fifth on 12 August 2026.** Alex cut the range to
+  /// nothing / 5 / 10 / 15: a heavy tax is a rule people lie to avoid, and you
+  /// did see the animal. Ten per cent is a nudge, which is all it was ever
+  /// meant to be.
+  static const double defaultJamPenalty = 0.1;
 
   /// What the editor offers. Zero is a real choice — some cars will decide a
   /// sighting is a sighting.
-  static const List<double> jamPenaltyChoices = <double>[
-    0,
-    0.1,
-    0.2,
-    0.3,
-    0.4,
-    0.5,
-  ];
+  static const List<double> jamPenaltyChoices = <double>[0, 0.05, 0.1, 0.15];
 
   /// Species id to points. Empty for almost everybody.
   final Map<String, int> points;

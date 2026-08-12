@@ -114,20 +114,13 @@ void main() {
     // The rules page lists exactly three: impala twice a day, vervet
     // monkey four times, every bird once. Anything else with a limit is
     // either a bug or a rule nobody has been told about.
-    //
-    // The kill in a tree is the one exception, and it is not an animal —
-    // it is one leopard's larder.
     for (final Species s in species) {
       if (s.chancesPerDay == null) {
         continue;
       }
       expect(
         s.category == SpeciesCategory.bird ||
-            const <String>[
-              'impala',
-              'vervet-monkey',
-              'kill-in-a-tree',
-            ].contains(s.id),
+            const <String>['impala', 'vervet-monkey'].contains(s.id),
         isTrue,
         reason: '${s.commonName} is capped and the rules never say so',
       );

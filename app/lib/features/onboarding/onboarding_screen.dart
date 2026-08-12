@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../../domain/tracker_profile.dart';
 import '../../shared/theme.dart';
-import '../scorecard/rules_screen.dart';
+import '../../shared/widgets/spirit_of_the_game.dart';
 import 'intro_tour.dart';
 
 /// First run: see what the game is, name yourself, and you are a tracker.

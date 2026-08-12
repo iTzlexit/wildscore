@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:wildscore/features/scorecard/rules_screen.dart';
+import 'package:wildscore/domain/house_rules.dart';
+import 'package:wildscore/features/profile/house_rules_screen.dart';
 import 'package:wildscore/shared/emphasis.dart';
 import 'package:wildscore/shared/theme.dart';
 
@@ -66,14 +67,23 @@ void main() {
     });
   });
 
-  testWidgets('the rules screen shows no asterisks anywhere', (
+  testWidgets('no asterisks leak onto a screen that uses them', (
     WidgetTester tester,
   ) async {
-    await tester.binding.setSurfaceSize(const Size(390, 5200));
+    // The rules screen used to be the canary here. It is gone — the tour
+    // teaches the game now — so the settings screen takes the job: it is the
+    // heaviest user of emphasised copy left.
+    await tester.binding.setSurfaceSize(const Size(390, 2000));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
     await tester.pumpWidget(
-      MaterialApp(theme: buildAppTheme(), home: const RulesScreen()),
+      MaterialApp(
+        theme: buildAppTheme(),
+        home: HouseRulesScreen(
+          rules: HouseRules.none,
+          onChanged: (HouseRules _) {},
+        ),
+      ),
     );
     await tester.pumpAndSettle();
 
@@ -83,19 +93,5 @@ void main() {
         .where((String s) => s.contains('**'));
 
     expect(withMarkers, isEmpty, reason: 'markers leaked to the screen');
-  });
-
-  testWidgets('the jam penalty is actually emphasised', (
-    WidgetTester tester,
-  ) async {
-    await tester.binding.setSurfaceSize(const Size(390, 5200));
-    addTearDown(() => tester.binding.setSurfaceSize(null));
-
-    await tester.pumpWidget(
-      MaterialApp(theme: buildAppTheme(), home: const RulesScreen()),
-    );
-    await tester.pumpAndSettle();
-
-    expect(find.textContaining('20% fewer points'), findsOneWidget);
   });
 }

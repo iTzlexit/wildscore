@@ -17,9 +17,13 @@ void main() {
   setUp(() => SharedPreferences.setMockInitialValues(<String, Object>{}));
 
   group('the jam tax', () {
-    test('is a fifth unless the car says otherwise', () {
-      expect(HouseRules.none.effectiveJamPenalty, 0.2);
-      expect(HouseRules.none.jamMultiplier, closeTo(0.8, 0.0001));
+    test('is a tenth unless the car says otherwise', () {
+      // Down from a fifth on 12 August 2026, with the range cut to nothing /
+      // 5 / 10 / 15. A heavy tax is a rule people lie to avoid, and you did
+      // see the animal.
+      expect(HouseRules.none.effectiveJamPenalty, 0.1);
+      expect(HouseRules.none.jamMultiplier, closeTo(0.9, 0.0001));
+      expect(HouseRules.jamPenaltyChoices, <double>[0, 0.05, 0.1, 0.15]);
     });
 
     test('can be switched off entirely', () {
@@ -37,14 +41,14 @@ void main() {
     test('reaches the score', () async {
       final List<Species> all = await const SpeciesRepository().loadAll();
       final Species leopard = all.firstWhere((Species s) => s.id == 'leopard');
-      const HouseRules harsh = HouseRules(jamPenalty: 0.5);
+      const HouseRules harsh = HouseRules(jamPenalty: 0.15);
 
       expect(
         leopard.scoreFor(
           context: SightingContext.jam,
           jamMultiplier: harsh.jamMultiplier,
         ),
-        (leopard.points * 0.5).ceil(),
+        (leopard.points * 0.85).ceil(),
       );
     });
 
@@ -200,19 +204,18 @@ void main() {
       expect(find.text('Safe to change'), findsOneWidget);
     });
 
-    testWidgets('offers the six jam settings', (WidgetTester tester) async {
+    testWidgets('is titled Jam Tax and offers four settings', (
+      WidgetTester tester,
+    ) async {
       await pump(tester, HouseRules.none);
 
-      for (final String label in <String>[
-        'No tax',
-        '−10%',
-        '−20%',
-        '−30%',
-        '−40%',
-        '−50%',
-      ]) {
+      expect(find.text('JAM TAX'), findsOneWidget);
+      for (final String label in <String>['No tax', '−5%', '−10%', '−15%']) {
         expect(find.text(label), findsOneWidget, reason: label);
       }
+      // The heavy end is gone, and so is the row pointing at the Dex.
+      expect(find.text('−50%'), findsNothing);
+      expect(find.text('Animal scores & limits'), findsNothing);
     });
 
     testWidgets('shows the sum rather than the setting', (
@@ -221,7 +224,7 @@ void main() {
       // A percentage is a rule; "a 100-point leopard pays 80" is the game.
       await pump(tester, HouseRules.none);
 
-      expect(find.textContaining('pays 80'), findsOneWidget);
+      expect(find.textContaining('pays 90'), findsOneWidget);
     });
 
     testWidgets('holds changes until Save is pressed', (
@@ -232,17 +235,17 @@ void main() {
       // settings screen is where somebody tries numbers out.
       await pump(tester, HouseRules.none);
 
-      await tester.tap(find.text('−50%'));
+      await tester.tap(find.text('−15%'));
       await tester.pumpAndSettle();
 
       expect(saved, isNull, reason: 'nothing saved yet');
       // The sum updates as you go, so you can see what you are choosing.
-      expect(find.textContaining('pays 50'), findsOneWidget);
+      expect(find.textContaining('pays 85'), findsOneWidget);
 
       await tester.tap(find.text('Save changes'));
       await tester.pumpAndSettle();
 
-      expect(saved?.jamPenalty, 0.5);
+      expect(saved?.jamPenalty, 0.15);
     });
 
     testWidgets('cannot be saved until something has changed', (
@@ -261,9 +264,9 @@ void main() {
     ) async {
       // Otherwise a car that agreed with us in August is pinned to that number
       // when we change our minds in September.
-      await pump(tester, const HouseRules(jamPenalty: 0.5));
+      await pump(tester, const HouseRules(jamPenalty: 0.15));
 
-      await tester.tap(find.text('−20%'));
+      await tester.tap(find.text('−10%'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Save changes'));
       await tester.pumpAndSettle();

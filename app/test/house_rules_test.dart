@@ -204,9 +204,7 @@ void main() {
               .toList()
             ..sort();
 
-      // The kill in a tree is once a day too — it is one leopard's larder, not
-      // a species you keep bumping into.
-      expect(notBirds, <String>['impala', 'kill-in-a-tree', 'vervet-monkey']);
+      expect(notBirds, <String>['impala', 'vervet-monkey']);
     });
   });
 }

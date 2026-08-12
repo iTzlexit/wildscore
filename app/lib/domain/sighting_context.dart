@@ -130,18 +130,10 @@ enum SightingExtra {
     multiplier: 1.5,
   ),
 
-  /// A kill hauled into a tree.
-  ///
-  /// The leopard sighting everybody wants and most people never get — and
-  /// worth marking separately from a kill on the ground, which is a lion
-  /// thing and far more common.
-  killInATree(
-    label: 'Kill in a tree',
-    short: 'TREE KILL',
-    question: 'Was the kill up a tree?',
-    multiplier: 2,
-  ),
-
+  // A "kill in a tree" extra lived here, and a `kill-in-a-tree` entry in the
+  // catalogue beside it. Both removed on 12 August 2026 — the catalogue
+  // entry was a sighting pretending to be an animal, down to borrowing the
+  // leopard's photograph. "On a kill" covers what people actually score.
   /// Two of them, at it.
   ///
   /// Rare enough to be a story for almost everything and genuinely

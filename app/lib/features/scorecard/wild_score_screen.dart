@@ -6,7 +6,7 @@ import '../../domain/trivia.dart';
 import '../../shared/date_format.dart';
 import '../../shared/theme.dart';
 import '../../shared/widgets/app_header.dart';
-import 'rules_screen.dart';
+import '../onboarding/intro_tour.dart';
 import 'standings_board.dart';
 
 /// The game, on its own tab.
@@ -86,11 +86,14 @@ class WildScoreScreen extends StatelessWidget {
                       color: AppColors.textSecondary,
                       tooltip: 'Prices',
                     ),
+                  // The tour, where the rules page used to point. It is the
+                  // only place the game is explained now, which is one place
+                  // more than nothing and two fewer than before.
                   IconButton(
-                    onPressed: () => RulesScreen.open(context),
+                    onPressed: () => IntroTour.open(context),
                     icon: const Icon(Icons.help_outline_rounded),
                     color: AppColors.textSecondary,
-                    tooltip: 'Rules',
+                    tooltip: 'Quick tour',
                   ),
                   if (onOpenSettings != null)
                     IconButton(
@@ -199,10 +202,10 @@ class _Invitation extends StatelessWidget {
         // and this screen's one job is to start a drive.
         Center(
           child: TextButton.icon(
-            onPressed: () => RulesScreen.open(context),
-            icon: const Icon(Icons.menu_book_rounded, size: 18),
+            onPressed: () => IntroTour.open(context),
+            icon: const Icon(Icons.slideshow_rounded, size: 18),
             label: Text(
-              'Rules',
+              'Quick tour',
               style: AppText.label.copyWith(
                 color: AppColors.accent,
                 fontVariations: AppFonts.weight(700),

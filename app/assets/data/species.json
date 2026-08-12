@@ -4558,29 +4558,6 @@
       "conservationStatus": "leastConcern"
     },
     {
-      "id": "kill-in-a-tree",
-      "dexNumber": 195,
-      "commonName": "Kill in a Tree",
-      "scientificName": "Panthera pardus (prey cache)",
-      "afrikaansName": "Prooi in ’n boom",
-      "category": "mammal",
-      "rarityTier": "rare",
-      "points": 350,
-      "tags": [],
-      "isSensitive": false,
-      "photoVerified": false,
-      "description": "An impala folded over a branch six metres up, and no leopard in sight. It is the surest sign in the park that one is close, and it counts on its own — you found the evidence even if the cat never showed.",
-      "habitat": "Big riverine trees along the Sabie, Olifants and Luvuvhu",
-      "bestTimeToSpot": "Scan the forks of every marula and jackalberry you pass",
-      "parkRegions": [
-        "northern",
-        "central",
-        "southern"
-      ],
-      "conservationStatus": "leastConcern",
-      "chancesPerDay": 1
-    },
-    {
       "id": "marsh-terrapin",
       "dexNumber": 196,
       "commonName": "Marsh Terrapin",
@@ -4603,7 +4580,7 @@
     },
     {
       "id": "african-barred-owlet",
-      "dexNumber": 197,
+      "dexNumber": 195,
       "commonName": "African Barred Owlet",
       "scientificName": "Glaucidium capense",
       "afrikaansName": "Gebande Uil",

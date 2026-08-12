@@ -30,7 +30,6 @@ class HouseRulesScreen extends StatefulWidget {
     required this.rules,
     required this.onChanged,
     this.species = const <Species>[],
-    this.onOpenAnimals,
     super.key,
   });
 
@@ -39,7 +38,6 @@ class HouseRulesScreen extends StatefulWidget {
     required HouseRules rules,
     required ValueChanged<HouseRules> onChanged,
     List<Species> species = const <Species>[],
-    VoidCallback? onOpenAnimals,
   }) {
     return Navigator.of(context).push<void>(
       MaterialPageRoute<void>(
@@ -47,7 +45,6 @@ class HouseRulesScreen extends StatefulWidget {
           rules: rules,
           onChanged: onChanged,
           species: species,
-          onOpenAnimals: onOpenAnimals,
         ),
       ),
     );
@@ -59,10 +56,6 @@ class HouseRulesScreen extends StatefulWidget {
   /// The catalogue, so the limits section knows which species are birds and
   /// what is in force on each.
   final List<Species> species;
-
-  /// Closes this screen and opens the Animals tab. Null leaves the row as a
-  /// signpost rather than a door.
-  final VoidCallback? onOpenAnimals;
 
   @override
   State<HouseRulesScreen> createState() => _HouseRulesScreenState();
@@ -222,7 +215,7 @@ class _HouseRulesScreenState extends State<HouseRulesScreen> {
             ),
             const SizedBox(height: Space.xl),
 
-            const _Section('ARRIVING AT A JAM'),
+            const _Section('JAM TAX'),
             _Card(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -318,28 +311,9 @@ class _HouseRulesScreenState extends State<HouseRulesScreen> {
             ),
             const SizedBox(height: Space.xl),
 
-            const _Section('POINTS & LIMITS'),
-            _Card(
-              onTap: widget.onOpenAnimals == null
-                  ? null
-                  : () async {
-                      if (await _confirmDiscard() && mounted) {
-                        widget.onOpenAnimals!();
-                      }
-                    },
-              child: _CardHead(
-                icon: Icons.pets_rounded,
-                title: 'Animal scores & limits',
-                subtitle:
-                    'Set what any animal is worth on its own page in Animals, '
-                    'or on the prices screen when a game starts.',
-                trailing: widget.onOpenAnimals == null
-                    ? null
-                    : Icons.chevron_right_rounded,
-              ),
-            ),
-            const SizedBox(height: Space.xl),
-
+            // A row pointing at the Animal Dex used to sit here. Cut: a
+            // settings screen whose middle entry is "go somewhere else" is
+            // a signpost pretending to be a control.
             const _Section('HOW CHANGES WORK'),
             const _Banner(
               icon: Icons.verified_user_outlined,
@@ -450,19 +424,17 @@ class _Banner extends StatelessWidget {
 }
 
 class _Card extends StatelessWidget {
-  const _Card({required this.child, this.onTap});
+  const _Card({required this.child});
 
   final Widget child;
-  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     return Material(
       color: AppColors.surface,
       borderRadius: BorderRadius.circular(Radii.card),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(Radii.card),
+      child: Padding(
+        padding: EdgeInsets.zero,
         child: Container(
           padding: const EdgeInsets.all(Space.lg),
           decoration: BoxDecoration(
@@ -483,7 +455,6 @@ class _CardHead extends StatelessWidget {
     required this.title,
     required this.subtitle,
     this.hint,
-    this.trailing,
   });
 
   final IconData icon;
@@ -493,7 +464,6 @@ class _CardHead extends StatelessWidget {
   /// Behind a small **i**. For the one thing on this screen that has a reason
   /// rather than just a value.
   final String? hint;
-  final IconData? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -540,8 +510,6 @@ class _CardHead extends StatelessWidget {
               ),
             ),
           ),
-        if (trailing != null)
-          Icon(trailing, size: 20, color: AppColors.textMuted),
       ],
     );
   }

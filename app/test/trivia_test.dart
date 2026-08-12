@@ -13,7 +13,8 @@ import 'package:wildscore/shared/theme.dart';
 /// **Unlocked by finding new animals**, which is Alex's third and best rule for
 /// it: a question per *unique* spot rewards the thing the game is about and
 /// cannot be farmed by tapping the same impala twenty times. One more is handed
-/// out every half hour so a quiet stretch of road still produces something.
+/// out every *two* new animals, so it stays a surprise rather than a badge on
+/// every claim.
 late final List<TriviaQuestion> _bank;
 
 Scorecard _card({List<String> players = const <String>['Alex']}) =>
@@ -76,14 +77,27 @@ void main() {
   });
 
   group('unlocking', () {
-    test('nothing is waiting until a player has found something new', () {
+    test('takes two new animals, not one', () {
+      // It was one, which put a badge on nearly every claim — and a thing that
+      // happens every time is not a surprise, it is an interruption.
       const TriviaState s = TriviaState.empty;
 
       expect(s.hasWaiting('p1', 0), isFalse);
-      expect(s.hasWaiting('p1', 1), isTrue);
+      expect(s.hasWaiting('p1', 1), isFalse);
+      expect(s.hasWaiting('p1', 2), isTrue);
     });
 
-    test('a second question needs a second *different* animal', () {
+    test('four new animals is two questions', () {
+      final TriviaState afterOne = TriviaState.empty
+          .withPending('p1', 'q1')
+          .withAnswer('p1', points: 20);
+
+      expect(afterOne.hasWaiting('p1', 2), isFalse, reason: 'spent it');
+      expect(afterOne.hasWaiting('p1', 3), isFalse);
+      expect(afterOne.hasWaiting('p1', 4), isTrue);
+    });
+
+    test('a second sighting of the same animal is not a new animal', () {
       final Scorecard card = _card();
       final String alex = card.players.first.id;
       final Scorecard twoImpala = card
@@ -110,49 +124,6 @@ void main() {
 
       expect(scored.uniqueSpotsFor(alex), 0);
       expect(scored.uniqueSpotsFor(sam), 1);
-    });
-
-    test('one question is handed out every half hour, going round the car', () {
-      // A car can spend thirty minutes on the H1-2 seeing nothing at all. That
-      // is real Kruger and should not be a dead half hour in the game.
-      final Scorecard card = _card(players: <String>['Alex', 'Sam']);
-      final String alex = card.players.first.id;
-      final String sam = card.players[1].id;
-      final DateTime start = DateTime(2026, 8, 10, 6);
-
-      expect(
-        card.timedQuestionsFor(
-          alex,
-          now: start.add(const Duration(minutes: 29)),
-        ),
-        0,
-      );
-      expect(
-        card.timedQuestionsFor(
-          alex,
-          now: start.add(const Duration(minutes: 30)),
-        ),
-        1,
-      );
-      // The second half hour goes to the next seat, not to the same person.
-      expect(
-        card.timedQuestionsFor(
-          sam,
-          now: start.add(const Duration(minutes: 30)),
-        ),
-        0,
-      );
-      expect(
-        card.timedQuestionsFor(
-          sam,
-          now: start.add(const Duration(minutes: 60)),
-        ),
-        1,
-      );
-      expect(
-        card.timedQuestionsFor(alex, now: start.add(const Duration(hours: 2))),
-        2,
-      );
     });
 
     test('unlocking counts spots, never the points they were worth', () {

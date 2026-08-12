@@ -397,11 +397,23 @@ class _HomeShellState extends State<HomeShell> {
     return ok ?? false;
   }
 
+  /// State first, disk second.
+  ///
+  /// **This was the quiz's worst bug and it was never really about the quiz.**
+  /// Every caller reads `_card`, works on it, and hands the result back here —
+  /// so while a save was in flight, `_card` still held the version from before
+  /// it. Two things happening close together (answer a question, claim an
+  /// animal; two people claiming at once) meant the second read the stale card
+  /// and the first one's work vanished on write.
+  ///
+  /// Setting state synchronously closes the window: the next read sees it.
   Future<void> _updateCard(Scorecard next) async {
-    await _cardRepo.save(next);
     if (mounted) {
       setState(() => _card = next);
+    } else {
+      _card = next;
     }
+    await _cardRepo.save(next);
   }
 
   /// "Sam spotted something" — the picker, opened from Sam's row.
@@ -529,10 +541,6 @@ class _HomeShellState extends State<HomeShell> {
                   rules: _rules,
                   species: species,
                   onChanged: _saveRules,
-                  onOpenAnimals: () {
-                    Navigator.of(context).pop();
-                    setState(() => _tab = 2);
-                  },
                 ),
                 onOpenHistory: () => VisitHistoryScreen.open(
                   context,

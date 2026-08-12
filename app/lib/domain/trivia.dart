@@ -142,25 +142,30 @@ class TriviaState {
   /// is worth what the question was worth and the bank is not in scope here.
   final Map<String, int> won;
 
-  /// How long a drive runs before it hands somebody a question anyway.
+  /// How many new animals a player finds between questions.
   ///
-  /// A car can go half an hour on the H1-2 without seeing a thing. That is real
-  /// Kruger and it should not be a dead half hour in the game.
-  static const Duration timedQuestion = Duration(minutes: 30);
+  /// **Two, on Alex's call.** It was one, which meant a badge on nearly every
+  /// claim — and a thing that happens every time is not a surprise, it is an
+  /// interruption. Four new animals, two questions.
+  static const int spotsPerQuestion = 2;
 
   /// Legacy: the old bank paid a flat thirty for any question.
   static const int reward = 30;
 
   /// Questions this player has earned in total.
-  ///
-  /// One per unique spot, plus their share of the timed ones.
-  static int earnedBy(int uniqueSpots, {int timed = 0}) => uniqueSpots + timed;
+  static int earnedBy(int uniqueSpots) => uniqueSpots ~/ spotsPerQuestion;
 
   /// Whether a question is waiting — either already opened and abandoned, or
   /// newly earned.
-  bool hasWaiting(String playerId, int uniqueSpots, {int timed = 0}) =>
+  ///
+  /// A question handed out every half hour used to be counted here as well. It
+  /// is gone: it was derived from the clock at build time, so it only ever
+  /// appeared when something *else* rebuilt the screen — a car sitting quietly
+  /// at a waterhole, which is exactly the case it existed for, would never see
+  /// it. A promise the app cannot keep is worse than no promise.
+  bool hasWaiting(String playerId, int uniqueSpots) =>
       pending.containsKey(playerId) ||
-      earnedBy(uniqueSpots, timed: timed) > seenBy(playerId).length;
+      earnedBy(uniqueSpots) > seenBy(playerId).length;
 
   List<String> seenBy(String playerId) => asked[playerId] ?? const <String>[];
 

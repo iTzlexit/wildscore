@@ -26,7 +26,7 @@ serve the web build: `dart run tool/serve_web.dart 8080` from `app/`.
 
 ## What the app is
 
-A field guide to 197 Kruger species, a lifetime collection, and **a scorecard
+A field guide to 196 Kruger species, a lifetime collection, and **a scorecard
 game played by a car full of people on a game drive**. The game is the
 differentiator; the collection is the reason anyone still has it in March.
 
@@ -66,7 +66,7 @@ Three tabs — **Profile, Wild Score, Animals**. The Sightings feed is gone: it 
 - **Backup** — a pasteable code. No server; see `docs/RISKS.md` for why it
   matters more than it looks.
 
-371 tests. `flutter analyze` is clean and must stay clean.
+361 tests. `flutter analyze` is clean and must stay clean.
 
 ## Decisions already made — do not relitigate
 
