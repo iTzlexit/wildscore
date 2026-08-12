@@ -14,7 +14,7 @@
         "nocturnal"
       ],
       "isSensitive": false,
-      "description": "Widespread, and almost nobody ever sees one. The burrows it digs are later taken over by warthog, porcupine, hyena and a dozen other species.",
+      "description": "Pig-like body, tubular snout, donkey ears, arched back — but almost always after dark. Opens termite mounds with 20cm claws and laps up ants with a sticky tongue. A confirmed daytime sighting is one of Kruger's rarest events.",
       "habitat": "Woodland and grassland with termite mounds",
       "bestTimeToSpot": "Late on a night drive, well after dark",
       "parkRegions": [
@@ -42,7 +42,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "A hyena that eats almost nothing but harvester termites — a quarter of a million in a night, licked up with a long sticky tongue.",
+      "description": "Small striped hyena on stilt legs, mane raised along the spine when alarmed. Nocturnal termite specialist — laps up around 200,000 harvester termites in a single night. Rarely seen; night drives on open grassland give the best odds.",
       "habitat": "Open grassland and sparse savanna",
       "bestTimeToSpot": "Night drives on open ground",
       "parkRegions": [
@@ -65,7 +65,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Heavy-set and blotched, with a black crest it raises along the spine. Leaves its droppings in one spot: a communal latrine called a civetry.",
+      "description": "Nocturnal — dog-sized, hunched, dense black-and-cream spotting, black bandit mask. Trots along roads at night with head lowered. Never seen by day; night drives out of Olifants or Skukuza are your only real shot.",
       "habitat": "Woodland and riverine bush",
       "bestTimeToSpot": "Night drives, walking roads",
       "parkRegions": [
@@ -88,7 +88,7 @@
         "bigFive"
       ],
       "isSensitive": false,
-      "description": "Kruger holds well over ten thousand. A breeding herd follows its oldest female, who remembers where the water is in a drought.",
+      "description": "Grey giants with fan-shaped ears and heavy tusks — herds crossing the road, calves in the middle. Kruger holds around 20,000, one of the densest populations in Africa. Back off any bull that fans his ears and shakes his head.",
       "habitat": "Everywhere, concentrating near rivers in the dry season",
       "bestTimeToSpot": "Late afternoon near water",
       "parkRegions": [
@@ -134,7 +134,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Around three hundred in the whole park, ranging so far each day that a sighting is luck rather than knowledge. Hunts in packs, and rarely fails.",
+      "description": "Blotched brown, black and white coats — no two dogs alike. Packs sprint in a moving swarm, then collapse in a heap on cool tar. Around 250 left in Kruger, listed Endangered. Never follow at speed; sightings are prized.",
       "habitat": "Open woodland; ranges enormously",
       "bestTimeToSpot": "First light, hunting on roads",
       "parkRegions": [
@@ -164,7 +164,7 @@
       ],
       "isSensitive": false,
       "photoVerified": false,
-      "description": "The ancestor of every domestic cat. Told from one by the rust-red backs of the ears, longer legs, and a very upright sit.",
+      "description": "Looks like a lean tabby with longer legs, upright ears and rich rufous behind the ears. Almost always nocturnal; the resident cat around Satara camp is the easiest bet. Interbreeds with feral cats — pure wild ones are getting scarce.",
       "habitat": "Woodland and scrub",
       "bestTimeToSpot": "Night drives",
       "parkRegions": [
@@ -187,7 +187,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Travels in noisy packs of twenty or more, chattering constantly to keep track of each other while they turn over the leaf litter.",
+      "description": "Troops of 15-30 charging across the road nose-to-tail, dark bands across a grizzled back. Constant twittering as they forage. Common throughout the park, often around Skukuza and Berg-en-Dal camps.",
       "habitat": "Woodland, often near termite mounds",
       "bestTimeToSpot": "Mid-morning",
       "parkRegions": [
@@ -210,7 +210,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Enormous ears, held to the ground to listen for termites moving under it. Common in the Kalahari and genuinely scarce here.",
+      "description": "Silver-grey with a black face-mask and disc-like ears — small enough to fit in a hat. Very rare in Kruger, mainly on the central basalt plains around Satara. Lowers those ears to the ground to listen for termites underfoot.",
       "habitat": "Short open grassland",
       "bestTimeToSpot": "Dusk and early morning",
       "parkRegions": [
@@ -232,7 +232,7 @@
         "bigFive"
       ],
       "isSensitive": true,
-      "description": "A browser, with a hooked lip that works like a finger. Smaller, shorter-tempered and far rarer than the white rhino.",
+      "description": "Hook-lipped browser in thick bush, not the open plains — smaller than white rhino, ears rotating alertly. Just a few hundred left in Kruger after poaching. If it charges the car, stay in the vehicle and let it hit.",
       "habitat": "Dense thicket and thornveld",
       "bestTimeToSpot": "Dusk, in thick bush",
       "parkRegions": [
@@ -258,7 +258,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Pairs bond for life and hold a territory together. The rising, wavering call at dusk is one of the definitive sounds of the bushveld.",
+      "description": "Fox-sized, russet flanks with a distinctive black saddle streaked silver. Trotting alone or in pairs at dawn and dusk; yipping howls carry across the veld after dark. Common throughout Kruger's open country.",
       "habitat": "Open grassland and woodland edges",
       "bestTimeToSpot": "Dawn and dusk",
       "parkRegions": [
@@ -281,7 +281,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Calves all drop within a few weeks of each other, giving the predators more prey than they could possibly take. Densest on the southern grasslands.",
+      "description": "Dark grey with a shaggy beard and forward-hooked horns, usually mixed with zebra on open plains. Central grasslands from Satara to Orpen are the stronghold. Nasal snorts carry a surprising distance in still air.",
       "habitat": "Open grassland with nearby water",
       "bestTimeToSpot": "Morning and late afternoon",
       "parkRegions": [
@@ -310,7 +310,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "A handful of records in the entire park, all in the far north. Shaggy, long-coated and solitary — nothing like a spotted hyena.",
+      "description": "Shaggier and darker than spotted hyena, long mane over the shoulders, pointed ears. Extremely rare in Kruger — mostly the far north; scavenges alone at night. A daylight sighting is almost unheard of.",
       "habitat": "Arid northern woodland",
       "bestTimeToSpot": "Deep night, far north — essentially chance",
       "parkRegions": [
@@ -331,7 +331,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Shy, solitary and never far from cover. A single sharp bark is usually the only sign there was one there at all.",
+      "description": "Chestnut-brown, faint white spots and stripes, straight spiral horns on the male only. Solitary in dense riverine bush — Letaba and Sabie forests are the easiest spots. Bounds off with a sharp dog-like bark.",
       "habitat": "Riverine thicket and dense undergrowth",
       "bestTimeToSpot": "Dawn and dusk along rivers",
       "parkRegions": [
@@ -359,7 +359,7 @@
         "nocturnal"
       ],
       "isSensitive": false,
-      "description": "Hairy, nocturnal and bad-tempered — everything the warthog is not. Keeps to dense bush and is seldom out in daylight.",
+      "description": "Reddish-brown pig with a pale mane and pointed ear tufts. Nocturnal and secretive along dense riverine bush. No facial warts, no daytime trotting — a pig seen in the day is almost certainly a warthog, not this.",
       "habitat": "Dense riverine thicket",
       "bestTimeToSpot": "Night drives",
       "parkRegions": [
@@ -382,7 +382,7 @@
         "bigFive"
       ],
       "isSensitive": false,
-      "description": "Herds run to several hundred. The old bulls that drop out of them — dagga boys, caked in mud — are unpredictable, and account for the reputation.",
+      "description": "Massive black bulk, sweeping horns fused across the forehead in a heavy boss. Big herds churn watersides; solitary 'dagga boys' are unpredictable and cause more injuries than lions. Around 40,000 in Kruger.",
       "habitat": "Grassland and woodland near permanent water",
       "bestTimeToSpot": "Morning, moving to water",
       "parkRegions": [
@@ -418,7 +418,7 @@
         "nocturnal"
       ],
       "isSensitive": false,
-      "description": "Africa's largest rodent. Charges backwards to drive its quills home; they detach on contact, and no porcupine has ever shot one.",
+      "description": "Black-and-white banded quills up to 30cm long — rustling at night around camps. Africa's largest rodent. Never seen by day; try Skukuza and Olifants after dark. Quills detach on contact — they aren't fired.",
       "habitat": "Widespread; shelters in caves and burrows",
       "bestTimeToSpot": "Night drives",
       "parkRegions": [
@@ -443,7 +443,7 @@
       ],
       "isSensitive": false,
       "photoVerified": false,
-      "description": "Black ear tufts, and a vertical leap that takes birds out of the air. Secretive, mostly nocturnal, and very seldom seen.",
+      "description": "Rufous cat with pointed black ear tufts, powerful hindquarters, no spots. Nocturnal and shy — seen from a car only a handful of times in a lifetime of visits. Can leap over 3m to swat a bird from mid-air.",
       "habitat": "Scrub, koppies and open woodland",
       "bestTimeToSpot": "Night drives",
       "parkRegions": [
@@ -464,7 +464,7 @@
       "rarityTier": "common",
       "tags": [],
       "isSensitive": false,
-      "description": "Troops of up to a hundred with a strict pecking order. Never leave a window open near them — they know exactly what a cooler box is.",
+      "description": "Big dog-faced primate in troops of 30-plus, walking on all fours along the roadside. The 'wah-hoo' alarm bark warns of a leopard nearby. Keep windows shut — they raid vehicles and snatch food off laps.",
       "habitat": "Everywhere, especially near camps and koppies",
       "bestTimeToSpot": "Daylight — roosts in trees at night",
       "parkRegions": [
@@ -487,7 +487,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Needs open ground to run, and loses so many kills to lion and hyena that numbers stay low. Best chances on the central grasslands.",
+      "description": "Slim, small-headed cat with black tear-lines, spotted rather than rosetted. Usually on open plains, often on a termite mound. About 150 in the park, most between the Sabie and Crocodile rivers. Rarely near thick bush.",
       "habitat": "Open plains and sparse savanna",
       "bestTimeToSpot": "Mid-morning — hunts later than other cats",
       "parkRegions": [
@@ -521,7 +521,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Named for the way it dives into cover. The only small antelope here that takes meat — insects, birds, even carrion — when it gets the chance.",
+      "description": "Small grey-brown antelope alone in the roadside grass — thin straight horns on the male, dark stripe down the muzzle. Bolts in a zig-zag rather than running straight. Present throughout Kruger but often overlooked.",
       "habitat": "Bush and woodland with good cover",
       "bestTimeToSpot": "Dusk and early night",
       "parkRegions": [
@@ -544,7 +544,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "The largest antelope on earth, and shy out of all proportion to its size. Tendons in the legs click audibly as a herd walks past.",
+      "description": "Africa's largest antelope — huge cattle-like body, dewlap swinging under the throat, spiral horns on both sexes. Uncommon in Kruger; small herds mostly in the south. Knees make a distinct clicking sound as they walk.",
       "habitat": "Open woodland and grassland",
       "bestTimeToSpot": "Early morning in the north",
       "parkRegions": [
@@ -572,7 +572,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Africa's smallest carnivore, and it lives inside termite mounds. One stands sentry on the top while the rest of the group forages.",
+      "description": "Smallest African carnivore — russet-brown, size of a squirrel, standing sentry on a termite mound. Groups of 8-15, coordinated by high-pitched contact calls. Often nests inside disused termitaria.",
       "habitat": "Termite mounds in open woodland",
       "bestTimeToSpot": "Mid-morning, sunning on mounds",
       "parkRegions": [
@@ -595,7 +595,7 @@
         "smallFive"
       ],
       "isSensitive": false,
-      "description": "Not a shrew at all — its nearest living relatives are elephants, aardvarks and hyraxes. Bolts between rocks on trails it sweeps clear of leaf litter.",
+      "description": "Tiny rufous-grey mammal with a long trunk-like nose, darting between boulders on rocky koppies. Usually just a blur across a rock ledge. One of Africa's 'Small Five'; closer to elephants and aardvarks than to true shrews.",
       "habitat": "Rocky outcrops and boulder-strewn koppies",
       "bestTimeToSpot": "Early morning on rocks, before the heat",
       "parkRegions": [
@@ -616,7 +616,7 @@
       "rarityTier": "common",
       "tags": [],
       "isSensitive": false,
-      "description": "Feeds above the reach of everything else in the park. Watch for the splayed front legs at water: the one moment it is genuinely vulnerable.",
+      "description": "Head above the acacias, legs and neck out of proportion — usually silent, chewing at 5m up. Kruger holds several thousand and they browse over 60 tree species. Bulls stand with tails drooped; cows tuck into a canopy.",
       "habitat": "Acacia and mopane woodland",
       "bestTimeToSpot": "Any time — visible from a distance",
       "parkRegions": [
@@ -644,7 +644,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Bulls carry spiralled horns over a metre long, and still vanish into thick bush the moment they stop moving.",
+      "description": "Grey-brown with vertical white stripes; bulls carry corkscrew horns close to 2m along the curl. Bounds across the road with tail flared white. Wooded thickets throughout Kruger; commoner than the size suggests.",
       "habitat": "Dense woodland and thicket",
       "bestTimeToSpot": "Early morning and dusk",
       "parkRegions": [
@@ -672,7 +672,7 @@
         "nocturnal"
       ],
       "isSensitive": true,
-      "description": "The most trafficked mammal on earth, and the sighting of a lifetime. Rolls into an armoured ball — which is exactly why a poacher can pick it up.",
+      "description": "Armour-plated body, bipedal walk with tail dragged, curls into a scaled ball when alarmed. The world's most trafficked mammal. A daytime road sighting is a once-a-decade Kruger event; report it to a ranger.",
       "habitat": "Sandy woodland and savanna",
       "bestTimeToSpot": "Night drives — a handful of sightings a year",
       "parkRegions": [
@@ -697,7 +697,7 @@
       "rarityTier": "common",
       "tags": [],
       "isSensitive": false,
-      "description": "Submerged all day, out grazing at night, often kilometres from the water. Kills more people in Africa than any other large animal.",
+      "description": "Massive shapes half-submerged in permanent pools — Sunset Dam, Olifants, Sabie. Only eyes, ears and nostrils show by day; grazing on land at night. Kills more people than any other African mammal. Never block a hippo's path to water.",
       "habitat": "Perennial rivers and large dams",
       "bestTimeToSpot": "Midday at river viewpoints",
       "parkRegions": [
@@ -726,7 +726,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Its skin is loose enough to turn round inside and bite whatever has hold of it. Known to drive lions off a kill by sheer refusal to leave.",
+      "description": "Low, stocky body, jet-black underneath with a bold silver-white saddle. Trots along at dawn and dusk ignoring almost everything. Tackles snakes, hives and even young lions — the reputation for fearlessness is earned.",
       "habitat": "Widespread; mostly nocturnal but active at dusk",
       "bestTimeToSpot": "Dusk and night drives",
       "parkRegions": [
@@ -749,7 +749,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "The most numerous antelope in the park and the staple prey of nearly everything that hunts. A startled herd scatters in enormous leaps.",
+      "description": "Kruger's most abundant antelope, over 100,000 head — russet coat, black 'M' below the tail, lyre-shaped horns on the male. Explosive high leaps when spooked. Rutting males roar like a small lion through autumn.",
       "habitat": "Open woodland and the edges of riverine bush",
       "bestTimeToSpot": "Any time of day, year round",
       "parkRegions": [
@@ -779,7 +779,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Walks on the very tips of its hooves and is found nowhere but rock. Pairs are near-inseparable, one always watching while the other feeds.",
+      "description": "Small rock-antelope on tiptoes, standing motionless on a boulder along the Lebombo hills or a rocky koppie. Fur is hollow-tipped and springs back — dries fast after rain. Pairs mate for life.",
       "habitat": "Koppies, gorges and rocky outcrops",
       "bestTimeToSpot": "Morning, silhouetted on rocks",
       "parkRegions": [
@@ -807,7 +807,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Cat-like, and not a cat — its relatives are the civets and mongooses. Habituated ones patrol the rafters of several rest camps after dark.",
+      "description": "Nocturnal — slender, cat-shaped, long ringed tail, big rosetted spots. Comes into camps like Skukuza and Letaba for scraps; look for eyeshine along the fence at night. Not a cat at all — related to civets.",
       "habitat": "Riverine woodland and rest camps",
       "bestTimeToSpot": "After dark in camp, or on night drives",
       "parkRegions": [
@@ -831,7 +831,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Solitary, largely nocturnal, and hauls its kills into trees out of reach of hyena. The hardest of the Big Five to find on your own.",
+      "description": "Rosetted coat draped along a low branch, thick tail hanging. Most active dusk to dawn in riverine bush along the Sabie, Sand and Timbavati. Around 1,000 in the park; more common than sightings suggest. Look up when scanning trees.",
       "habitat": "Riverine bush, drainage lines and rocky ground",
       "bestTimeToSpot": "First and last light, on riverine roads",
       "parkRegions": [
@@ -866,7 +866,7 @@
         "nocturnal"
       ],
       "isSensitive": false,
-      "description": "Tiny, huge-eyed, and able to leap several metres between branches. The first sign is almost always eyeshine in a torch beam.",
+      "description": "Never seen by day — golden torch-eyes reflecting, then a leap of 4m through the canopy. Baby-like wailing calls after dark are diagnostic. Common in acacia woodland; try the trees at camp fences after nightfall.",
       "habitat": "Acacia woodland",
       "bestTimeToSpot": "Night drives and camp perimeters",
       "parkRegions": [
@@ -890,7 +890,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Rests up to twenty hours a day, which is why most sightings are of a flat cat under a bush. Prides are held by coalitions of males.",
+      "description": "Straw-coloured cats sprawled in shade, or a pride crossing at first light. Distant roars carry 8km before dawn. Around 1,600 in Kruger; best odds on central plains around Satara and along the Sabie.",
       "habitat": "Open woodland and grassland near prey concentrations",
       "bestTimeToSpot": "First hour after gate opening",
       "parkRegions": [
@@ -930,7 +930,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Confined to a few rocky hillsides in the north of the park. Small and grey, and easily taken for a common reedbuck at any distance.",
+      "description": "Small grey-fawn antelope on rocky slopes — short forward-curving horns on the male, black scent-gland patch below the ear. Very few in Kruger; try the ridges above Berg-en-Dal. Sharp whistle when startled, then bounds off.",
       "habitat": "Grassy slopes on rocky hills",
       "bestTimeToSpot": "Early morning on northern koppies",
       "parkRegions": [
@@ -951,7 +951,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Bulls and ewes look like two different species — shaggy slate-grey against bright chestnut. Tied closely to dense riverine bush.",
+      "description": "Rusty-slate males with white leg-stripes and lyre-tipped horns; females look like a different species — bright chestnut, unhorned, boldly striped. Dense riverine bush in the north — Letaba and Pafuri. Herd looks like two different animals.",
       "habitat": "Dense riverine thicket",
       "bestTimeToSpot": "Early morning near rivers",
       "parkRegions": [
@@ -976,7 +976,7 @@
       "rarityTier": "common",
       "tags": [],
       "isSensitive": false,
-      "description": "Usually found among wildebeest: the zebra has the better eyesight, the wildebeest have the numbers, and both do better for it.",
+      "description": "Black-and-white striped horses in mixed herds with wildebeest — no two zebra share a stripe pattern. Loud yelping bark when alarmed. Common on central plains from Satara to Lower Sabie.",
       "habitat": "Open grassland and savanna",
       "bestTimeToSpot": "Early morning near waterholes",
       "parkRegions": [
@@ -1005,7 +1005,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "One of the rarest large antelope in Kruger — a few dozen animals in the far northern sandveld. A trophy sighting in every sense.",
+      "description": "Big, red-tan antelope with a black-and-white face-mask and scimitar horns; both sexes horned. Fewer than 100 remain in Kruger — try the far north around Shingwedzi. Second-largest African antelope after eland.",
       "habitat": "Northern sandveld and open woodland",
       "bestTimeToSpot": "Morning, far north only",
       "parkRegions": [
@@ -1032,7 +1032,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Jet-black bulls with horns swept back over the shoulders like scimitars. The park population is small and concentrated in the north.",
+      "description": "Bulls jet-black with white belly and long scimitar horns swept back over the shoulders; cows chestnut. Small herds around Pretoriuskop and the western mopaneveld near Phalaborwa. Around 500 in the park — uncommon and localised.",
       "habitat": "Open woodland on well-drained soils",
       "bestTimeToSpot": "Morning, near dry-season water",
       "parkRegions": [
@@ -1060,7 +1060,7 @@
         "nocturnal"
       ],
       "isSensitive": false,
-      "description": "Lies up motionless all day and bolts at the last possible second. Usually the first thing anybody sees on a night drive.",
+      "description": "Bounds across the road at night, long black-tipped ears, white belly flashing. Common everywhere but crepuscular — dawn, dusk and night drives. Sits tight until you nearly stand on it, then breaks with a big zig-zag.",
       "habitat": "Grassland and open scrub",
       "bestTimeToSpot": "Night drives",
       "parkRegions": [
@@ -1083,7 +1083,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Long legs, huge ears, and hunts by sound alone — fixes a rodent in long grass and lands on it from above. Tied to wet ground.",
+      "description": "Long-legged spotted cat with huge upright ears, roughly Labrador height — much taller than caracal. Very rare from a car; try wet grasslands around Nsemani Dam and Satara. Leaps to pounce on rodents through grass by ear alone.",
       "habitat": "Tall grass and reedbeds near water",
       "bestTimeToSpot": "Dawn and dusk in marshy areas",
       "parkRegions": [
@@ -1106,7 +1106,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Small, grizzled and almost entirely nocturnal, which is why it is so seldom recorded despite being reasonably common.",
+      "description": "Small rufous-brown antelope speckled with white hairs on the back, hunched rump. Only in dense bush in the north — Shingwedzi and Punda Maria. Male has tiny straight horns; female none. Solitary and nocturnal.",
       "habitat": "Thick scrub, often near koppies",
       "bestTimeToSpot": "Night drives",
       "parkRegions": [
@@ -1128,7 +1128,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Solitary and quick. The giveaway is the black tail tip, flicked upward as it crosses the road in front of you.",
+      "description": "Rich rust-brown, long body low to the ground, tail with a black tip held up like a flag when running. Solitary. Bolts across the road with an unmistakable straight tail-flick.",
       "habitat": "Woodland and scrub",
       "bestTimeToSpot": "Daylight, crossing roads",
       "parkRegions": [
@@ -1151,7 +1151,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Goes off with a shrill whistle and a rocking-horse bound, flashing the white underside of its tail as it goes.",
+      "description": "Sandy-fawn antelope in tall reeds and grass near water; males have short forward-curving horns and a dark facial stripe. Small population around Mopani and Shingwedzi. High-pitched whistle when alarmed, then a bounding retreat.",
       "habitat": "Tall grass and reedbeds near water",
       "bestTimeToSpot": "Dawn and dusk in wetland areas",
       "parkRegions": [
@@ -1178,7 +1178,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "A hunter far more than a scavenger — a clan kills most of what it eats. Females are larger than the males and outrank every one of them.",
+      "description": "Barrel body, sloped back, dark spots on tan flanks, head lowered as it trots. Whooping calls at night are diagnostic. Clans of 20-plus around den sites, often under road culverts. Around 2,000 in Kruger — commoner than lion.",
       "habitat": "Widespread; dens in culverts and drainage lines",
       "bestTimeToSpot": "Just after gate opening or before closing",
       "parkRegions": [
@@ -1206,7 +1206,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Small, rufous, and seen alone or in pairs. Flattens itself into the grass when threatened rather than running for it.",
+      "description": "Small rusty antelope, upright ears out of proportion, no belly stripe. Male has straight vertical horns; female none. Bolts a short way then freezes and looks back. Common in open country throughout the park.",
       "habitat": "Open grassland and scrub",
       "bestTimeToSpot": "Early morning and late afternoon",
       "parkRegions": [
@@ -1229,7 +1229,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "One of Africa's smallest antelope, barely 35cm at the shoulder. In Kruger it is restricted to the sand forest around Pafuri.",
+      "description": "Tiniest antelope in Kruger — reddish-brown, back speckled with white, tail whipping side to side when moving. Only in the Pafuri sand forest in the far north. Nocturnal and near-invisible; a daytime sighting is genuinely exceptional.",
       "habitat": "Dense sand forest and thicket in the far north",
       "bestTimeToSpot": "Dawn and dusk, Pafuri only",
       "parkRegions": [
@@ -1250,7 +1250,7 @@
         "nocturnal"
       ],
       "isSensitive": false,
-      "description": "Far larger than the lesser bushbaby, with a wailing call that sounds unnervingly like a child. Keeps to tall riverine forest.",
+      "description": "Larger than lesser bushbaby, silver-grey with a bushy tail longer than the body. Piercing 'crying baby' scream at night around northern camps — Letaba, Punda Maria. Torch-eyes reflect a deep amber.",
       "habitat": "Riverine forest, especially in the north",
       "bestTimeToSpot": "After dark, by call",
       "parkRegions": [
@@ -1270,7 +1270,7 @@
       "rarityTier": "common",
       "tags": [],
       "isSensitive": false,
-      "description": "The mopane squirrel. Scolds loudly from a trunk with its tail flicking, spiralling round to keep the wood between you and it.",
+      "description": "Small grey-brown squirrel flicking its tail on an acacia branch, chattering an alarm at everything. All over the park — often the first thing you hear at camp. Called the 'bushveld sentinel' for good reason.",
       "habitat": "Mopane and mixed woodland",
       "bestTimeToSpot": "Daylight hours",
       "parkRegions": [
@@ -1293,7 +1293,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "The fastest antelope in southern Africa. Uncommon in Kruger and largely confined to the northern grasslands.",
+      "description": "Dark chestnut with a sloping back and glossy purple-blue patches on the thigh and shoulder. Africa's fastest antelope, capable of over 80km/h. Around 200 in the park; northern basalt plains near Mopani. Often up on a termite mound.",
       "habitat": "Open grassland and floodplain",
       "bestTimeToSpot": "Morning on northern plains",
       "parkRegions": [
@@ -1318,7 +1318,7 @@
       "rarityTier": "common",
       "tags": [],
       "isSensitive": false,
-      "description": "Has separate alarm calls for leopard, eagle and snake, and other species listen in. One of the few genuine animal vocabularies.",
+      "description": "Silver-grey with a black face and white brow; males show an unmistakable turquoise-blue scrotum. Troops around picnic sites and camps will grab food from a car window. Common throughout the park.",
       "habitat": "Riverine woodland and rest camps",
       "bestTimeToSpot": "Daylight hours",
       "parkRegions": [
@@ -1340,7 +1340,7 @@
       "rarityTier": "common",
       "tags": [],
       "isSensitive": false,
-      "description": "Runs with its tail straight up like a flag. Reverses into an old aardvark burrow to sleep, so it comes out facing whatever is waiting.",
+      "description": "Grey with wart-like facial pads, tail held straight up like an antenna when trotting off. Often kneels to feed on grass roots — the calluses on the wrists are permanent. Common in open country everywhere.",
       "habitat": "Open grassland and around rest camps",
       "bestTimeToSpot": "Daylight hours — strictly diurnal",
       "parkRegions": [
@@ -1368,7 +1368,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "The white ring on the rump has launched a thousand jokes about wet paint. Never strays far from permanent water.",
+      "description": "Shaggy grey-brown with a bright white 'toilet-seat' ring on the rump — impossible to miss. Bulls carry heavy, ridged, forward-curving horns. Always within a kilometre of water; try Letaba and Olifants riverbanks.",
       "habitat": "Riverine grassland within a few kilometres of water",
       "bestTimeToSpot": "Morning along river roads",
       "parkRegions": [
@@ -1396,7 +1396,7 @@
         "bigFive"
       ],
       "isSensitive": true,
-      "description": "A grazer, with a broad square lip built for cropping short grass. Nobody knows where the 'white' comes from — but it is not the colour.",
+      "description": "Wide square lip and a heavy shoulder hump for grazing, calf usually walking ahead of the mother. Numbers collapsed under poaching — around 2,000 left in the park, down from over 10,000 in 2010.",
       "habitat": "Open grassland",
       "bestTimeToSpot": "Early morning and late afternoon",
       "parkRegions": [
@@ -1423,7 +1423,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Africa's largest mongoose, and strictly nocturnal. The bushy white tail picks up a spotlight from a long way off.",
+      "description": "Nocturnal, long-legged, dog-sized mongoose with a striking bushy white tail. Trots along roads in headlight beams. Largest African mongoose. Almost never seen by day; best on night drives from Skukuza, Satara or Olifants.",
       "habitat": "Woodland and grassland",
       "bestTimeToSpot": "Night drives",
       "parkRegions": [
@@ -2835,7 +2835,7 @@
         "snake"
       ],
       "isSensitive": false,
-      "description": "Named for the ink-black mouth it opens when cornered, not the body, which is gunmetal grey. Fast, alert, and far keener to leave than to fight.",
+      "description": "Slate-grey to olive rather than black — the inside of the mouth is jet-black, hence the name. Up to 3m and among the world's fastest snakes. Shelters in termite mounds and hollow trees. Untreated bites are almost always fatal.",
       "habitat": "Woodland, termite mounds and rocky ground",
       "bestTimeToSpot": "Warm mornings — observe from the vehicle only",
       "parkRegions": [
@@ -2858,7 +2858,7 @@
         "snake"
       ],
       "isSensitive": false,
-      "description": "A huge eye, a short blunt head and a tail that goes on forever. Males green, females brown. It lives in the canopy and flees upwards, so almost every sighting is a shape moving away through leaves.",
+      "description": "Slim tree snake, males emerald green, females olive-brown, with an outsized eye. Draped motionless along a branch. Rear-fanged; venom is highly dangerous but slow-acting, and the snake is calm — bites are rare.",
       "habitat": "Trees, especially along rivers",
       "bestTimeToSpot": "Midday, moving through the canopy",
       "parkRegions": [
@@ -2881,7 +2881,7 @@
         "smallFive"
       ],
       "isSensitive": false,
-      "description": "The largest tortoise in the park, and one that cannot pull its head straight back — it folds the neck sideways under the shell.",
+      "description": "Domed shell blotched black on yellow — named after the cat. The largest tortoise in southern Africa and one of the 'Small Five'. Often ambling across the road; drive round it, never lift or move one. Easily lives 80 years.",
       "habitat": "Grassland and open savanna",
       "bestTimeToSpot": "After summer rain, crossing roads",
       "parkRegions": [
@@ -2904,7 +2904,7 @@
         "snake"
       ],
       "isSensitive": false,
-      "description": "Rears, spreads a narrow hood and sprays venom at the eyes from two metres. Salmon-pink underneath with black throat bars. Common around camps and hardly ever seen.",
+      "description": "Grey-brown with pink-and-black throat bands visible when hooded. Sprays venom over 2m into the eyes, aimed at anything moving. Common around camps at night. If it hoods up, back away — do not throw anything.",
       "habitat": "Camps, rocky ground, near water",
       "bestTimeToSpot": "Warm evenings, near buildings",
       "parkRegions": [
@@ -2927,7 +2927,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "The big ones in the Olifants and Luvuvhu pass four metres. It lies with its mouth open to shed heat, which is cooling itself, not threatening you.",
+      "description": "Log-shape at the water's edge — often only eyes and nostrils showing, or a whole 4m body on a sandbank at midday. Explosively fast into water. Common in every permanent river; Sabie and Olifants are the best.",
       "habitat": "Rivers, dams and pools",
       "bestTimeToSpot": "Midday, basking on sandbanks",
       "parkRegions": [
@@ -2950,7 +2950,7 @@
         "snake"
       ],
       "isSensitive": false,
-      "description": "Thick, short and beautifully marked in chevrons. It will not move for you, which is why it bites more people in Africa than any other snake — and on a warm road at dusk it looks exactly like a stick.",
+      "description": "Thick, sluggish body patterned in grey-brown chevrons, arrow-shaped head. Lies motionless on roads and paths — the reason it accounts for more African snake bites than any other. Never step off a road onto grass without looking.",
       "habitat": "Everywhere; often on warm roads at dusk",
       "bestTimeToSpot": "Late afternoon, on tar still holding the day’s heat",
       "parkRegions": [
@@ -2974,7 +2974,7 @@
         "snake"
       ],
       "isSensitive": false,
-      "description": "Africa's largest snake, reaching five metres. The female coils around her eggs and stays with the hatchlings, which very few snakes do.",
+      "description": "Africa's largest snake — up to 5m, patterned brown and cream, non-venomous. Kills by constriction and will take small antelope. Often crossing roads warmed by tar. Protected inside Kruger.",
       "habitat": "Riverine bush, rocky outcrops and dense cover",
       "bestTimeToSpot": "Warm mornings, basking",
       "parkRegions": [
@@ -2997,7 +2997,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Africa's largest lizard, up to two metres. Raids crocodile nests, and swims with the tail alone, legs folded flat against the body.",
+      "description": "Big grey-black lizard up to 2m, forked tongue flicking, laterally flattened tail for swimming. Along rivers and dams — often at Sunset Dam. Swims well and climbs trees. Bite is nasty; keep clear.",
       "habitat": "River banks and dams",
       "bestTimeToSpot": "Warm mornings near water",
       "parkRegions": [
@@ -3020,7 +3020,7 @@
         "smallFive"
       ],
       "isSensitive": false,
-      "description": "The conical pits in soft sand at every picnic site are its traps: the larva waits buried at the bottom and flicks sand at whatever slides in. The adult, pictured, looks like a slender dragonfly and comes to lights at night.",
+      "description": "Look for tiny funnel-shaped pits in soft sand under thatch and along paths in rest camps — the larva waits at the bottom. Drop a grain of sand in and the trap-jaws will flick. Adult resembles a small, dull dragonfly. One of Africa's 'Small Five'.",
       "habitat": "Fine dry sand under trees, out of the rain",
       "bestTimeToSpot": "Any picnic site — look down before you look up",
       "parkRegions": [
@@ -3043,7 +3043,7 @@
         "smallFive"
       ],
       "isSensitive": false,
-      "description": "Carries many times its own weight, and the males shove each other with the horn. Turns up at camp lights on humid summer nights, which is very nearly the only time anyone sees one.",
+      "description": "Chunky black or dark-brown beetle, males with a curved horn on the head — one of Africa's 'Small Five'. Buzzes into camp lights at night, especially in summer. Sluggish and harmless; grip strength is astonishing for the size.",
       "habitat": "Woodland; larvae develop in rotting wood and dung",
       "bestTimeToSpot": "Summer nights, at camp lights after rain",
       "parkRegions": [
@@ -3064,7 +3064,7 @@
       "rarityTier": "uncommon",
       "tags": [],
       "isSensitive": false,
-      "description": "Not an animal, and worth stopping for anyway. Bare most of the year, which is why the story says it was planted upside down with its roots in the air. Some in the far north were standing before Van Riebeeck landed.",
+      "description": "Massive smooth-barked trunk with stubby branches like roots pointed at the sky — the 'upside-down tree'. Only in the far north, from Punda Maria up to Pafuri. Some individuals over 1,000 years old; hollow trunks store thousands of litres of water.",
       "habitat": "Hot, dry country north of the Olifants",
       "bestTimeToSpot": "North of Mopani, impossible to miss",
       "parkRegions": [
@@ -3085,7 +3085,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Shot out of Kruger entirely by the 1940s and brought back from Malawi in the 1980s. The reintroduction never really took: what is left is a handful of animals in the far north, fewer than the wild dogs and fewer than the cheetah.",
+      "description": "Tan coat with darker shoulders and lyre-shaped horns bent tight, often standing on a termite mound. Reintroduced to the far north around Punda Maria in the 1980s after local extinction. A sighting anywhere in Kruger is exceptional.",
       "habitat": "Open sandveld and grassy woodland in the far north",
       "bestTimeToSpot": "Early morning on the Nwambiya sandveld, and mostly luck",
       "parkRegions": [
@@ -4486,7 +4486,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Barely holding on — a few survive on the grassy plains of the far south-west, and most guides go a whole career without one. Stands up on its hind legs in long grass and gives a sharp whistle before it goes.",
+      "description": "Slender, upright fawn antelope with black glands below the ear and thin straight horns on the male. Very rare in Kruger — a handful only, mostly grasslands near Pretoriuskop. Bounces off with stiff-legged 'stotting' when flushed.",
       "habitat": "Open short grassland, far south-west",
       "bestTimeToSpot": "Early morning on the Pretoriuskop grasslands, and mostly luck",
       "parkRegions": [
@@ -4507,7 +4507,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "A metre and a half of otter, hunting crabs in the shallows. Present in every big river in the park and seen by almost nobody: they work at first and last light and are gone the moment a car door shuts.",
+      "description": "Sleek dark-brown swimmer with a pale throat, usually in family groups along the Sabie, Olifants and Letaba rivers. Uses hands, not teeth, to grab crabs from under rocks. Check low-water bridges early in the morning.",
       "habitat": "Rivers, dams and rocky pools",
       "bestTimeToSpot": "First light at a low-water crossing, sitting very still",
       "parkRegions": [
@@ -4549,7 +4549,7 @@
       "points": 320,
       "tags": [],
       "isSensitive": false,
-      "description": "Darker, shyer and far scarcer than a vervet, and it stays up in the canopy rather than raiding your breakfast. Confined to the tall riverine forest of the far north.",
+      "description": "Dark grey with a black face and pale throat — distinct from the vervet's silver-grey and black face. Found only in the Pafuri and Punda Maria riverine forest. Loud booming male call carries from the treetops at dawn.",
       "habitat": "Tall riverine forest, Pafuri and the Luvuvhu",
       "bestTimeToSpot": "Morning, high in the trees — listen for the branches",
       "parkRegions": [
@@ -4567,7 +4567,7 @@
       "rarityTier": "frequent",
       "tags": [],
       "isSensitive": false,
-      "description": "A flat, mud-coloured water tortoise that folds its neck sideways under the shell. Buries itself when the pan dries and waits — sometimes for years — for the next rain.",
+      "description": "Flat olive-brown shell, long neck tucked sideways not backwards. Basking on logs and rocks in seasonal pans and mud pools. When a pan dries it buries into cracked mud and waits, sometimes years, for the next rains.",
       "habitat": "Seasonal pans, dams and slow water",
       "bestTimeToSpot": "After summer rain, walking between pans",
       "parkRegions": [
