@@ -3,7 +3,7 @@
 > **Written for a fresh conversation with no history.** Read this file and you
 > should be able to pick up work without anyone re-explaining anything.
 >
-> Last updated: 10 August 2026.
+> Last updated: 12 August 2026.
 
 ## The machine
 

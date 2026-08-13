@@ -1443,7 +1443,7 @@
       "rarityTier": "frequent",
       "tags": [],
       "isSensitive": false,
-      "description": "Swims with only a kinked neck above the surface, which is how it got the name snakebird. Spears fish rather than grabbing them, then sits with its wings spread to dry.",
+      "description": "Snake-like neck held above the water with body submerged — nicknamed 'snakebird'. Straight dagger bill separates it from cormorants' hooked one. Dries wings spread on branches over dams and rivers throughout Kruger.",
       "habitat": "Deep pools and dams",
       "bestTimeToSpot": "Midday, wings out on a dead branch",
       "parkRegions": [
@@ -1468,7 +1468,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Snow-white head and chest over chestnut and black, and the ringing call thrown back over its shoulder is the sound most people associate with African water, whether or not they know the bird.",
+      "description": "White head, chest and tail with chestnut belly and black wings, perched high over water. The far-carrying yodel — head thrown back — is the signature sound of African rivers. Any permanent water in Kruger.",
       "habitat": "Rivers, dams and floodplains",
       "bestTimeToSpot": "Morning, perched over water",
       "parkRegions": [
@@ -1489,7 +1489,7 @@
       "rarityTier": "frequent",
       "tags": [],
       "isSensitive": false,
-      "description": "Dark grey and slimmer than the other hornbills, with a bill like a scythe. Flies in a deep swooping bound and whistles a plaintive, rising *phee-phee-phee*.",
+      "description": "Slim grey hornbill with a plain dark curved bill — no casque, no bright colours. Piercing 'pee-pee-pee' whistle with the head lifted; undulating flap-flap-glide flight. Common throughout wooded Kruger.",
       "habitat": "Broadleaved woodland",
       "bestTimeToSpot": "Morning, calling from a bare branch",
       "parkRegions": [
@@ -1514,7 +1514,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Black above, white below with heavy black streaks, and fast — it hunts francolin and guineafowl in a flat charge through the trees rather than a stoop from height.",
+      "description": "Black above, white underparts heavily streaked black — much smaller and more contrasted than Martial Eagle. Hunts in pairs from cover, often taking guineafowl and francolin; ringing 'klu-klu-kluee' call. Widespread woodland resident.",
       "habitat": "Riverine woodland and broken hills",
       "bestTimeToSpot": "Morning, hunting low through woodland",
       "parkRegions": [
@@ -1536,7 +1536,7 @@
       "rarityTier": "frequent",
       "tags": [],
       "isSensitive": false,
-      "description": "Cinnamon, with a black-and-white barred back and a crest it raises like a fan when it lands. Probes the ground with a long curved bill. Named for the call, which is exactly hoop-hoop-hoop.",
+      "description": "Rufous body with bold black-and-white wings and a fanned crest that flares like a mohawk. Probes lawns and short grass with the down-curved bill; soft 'hoop-hoop-hoop' call. Common around all camps.",
       "habitat": "Open woodland, lawns, camp grounds",
       "bestTimeToSpot": "Morning, feeding on the ground",
       "parkRegions": [
@@ -1557,7 +1557,7 @@
       "rarityTier": "frequent",
       "tags": [],
       "isSensitive": false,
-      "description": "Chestnut, with a blue frontal shield and preposterous toes that let it walk across floating lilies as though on solid ground. The male carries the chicks tucked under his wings.",
+      "description": "Chestnut waterbird walking on lily pads with impossibly long toes, pale blue frontal shield above the bill. Females lay the eggs then leave the male to raise the chicks. Try any lily-covered dam or pan.",
       "habitat": "Lily-covered dams and backwaters",
       "bestTimeToSpot": "Morning, walking on the lilies",
       "parkRegions": [
@@ -1579,7 +1579,7 @@
       "rarityTier": "uncommon",
       "tags": [],
       "isSensitive": false,
-      "description": "Glossy black, with a bill that does not close — the gap is a tool for holding water snails while it cuts them out of the shell. Nothing else in the park looks like it.",
+      "description": "All-dark stork with an obvious gap between the closed mandibles — the openbill. Feeds on aquatic snails and freshwater mussels, using the bill as a nutcracker. Often in flocks at wetlands after rain.",
       "habitat": "Floodplains and shallow pans",
       "bestTimeToSpot": "Morning, wading in loose flocks",
       "parkRegions": [
@@ -1601,7 +1601,7 @@
       "rarityTier": "uncommon",
       "tags": [],
       "isSensitive": false,
-      "description": "White, with red legs and a face like a mask, and a grey bill flattened into a spatula that it sweeps side to side through the water.",
+      "description": "All-white waterbird with an unmistakable spatulate bill sweeping side to side through shallow water — red bill and legs. Not to be confused with Great Egret; check the bill shape. Try Sunset Dam and Nsemani.",
       "habitat": "Shallow dams and floodplains",
       "bestTimeToSpot": "Morning, sweeping the shallows",
       "parkRegions": [
@@ -1626,7 +1626,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Black, with a chestnut back and a scarlet face, and almost no tail at all. Rocks side to side in flight like a tightrope walker, which is what the French name means.",
+      "description": "Adults have a black body, chestnut back and tail so short the feet stick out behind in flight, and bright red face and legs. Rocks side to side as it flies — the 'acrobat'. Kruger stronghold.",
       "habitat": "Open savanna, hunting on the wing",
       "bestTimeToSpot": "Mid-morning once thermals build",
       "parkRegions": [
@@ -1647,7 +1647,7 @@
       "rarityTier": "frequent",
       "tags": [],
       "isSensitive": false,
-      "description": "The heron that hunts away from water — stalking mice and frogs across open grass, well away from any river, which surprises everybody the first time.",
+      "description": "Grey heron with a completely black cap and nape — Grey Heron has only a black eye-stripe. Often hunts far from water in dry grassland, taking rodents and lizards. Widespread in Kruger.",
       "habitat": "Open grassland, often nowhere near water",
       "bestTimeToSpot": "Morning, walking through short grass",
       "parkRegions": [
@@ -1669,7 +1669,7 @@
       "rarityTier": "common",
       "tags": [],
       "isSensitive": false,
-      "description": "Black, white and grey in bold blocks, with a call like a hammer on an anvil — which is exactly where the name comes from. Nests on open ground and will dive at anything that comes near.",
+      "description": "Bold pied plover — black, white and grey plumage; red eye, black legs. Metallic 'tink-tink-tink' alarm sounds like a blacksmith's hammer on anvil. Any dam or waterhole edge in the park.",
       "habitat": "Dam edges, floodplains, short grass",
       "bestTimeToSpot": "All day, near water",
       "parkRegions": [
@@ -1694,7 +1694,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Plain chocolate brown with startling yellow eyes and bare legs — the bare legs are the point, because it hunts snakes and scales stop fangs. Sits bolt upright on a dead tree for hours.",
+      "description": "Solid chocolate-brown eagle with a large staring yellow eye and unfeathered pale legs — Tawny Eagle has feathered legs. Perches high and motionless, then drops on a snake. Widespread but scattered in Kruger.",
       "habitat": "Open woodland, on prominent perches",
       "bestTimeToSpot": "Midday, perched on a dead tree",
       "parkRegions": [
@@ -1715,7 +1715,7 @@
       "rarityTier": "uncommon",
       "tags": [],
       "isSensitive": false,
-      "description": "Heavy, skulking and copper-backed, with a black cap and a red eye. Its call is a descending bubble of notes that sounds like water pouring from a bottle, and it means rain is coming.",
+      "description": "Big skulking cuckoo-relative — chestnut back and wings, cream underparts, red eye. The 'water bottle' call: liquid bubbling descending scale, often before rain. Dense thickets and reedbeds park-wide.",
       "habitat": "Thick riverine scrub and reeds",
       "bestTimeToSpot": "Before rain, calling from cover",
       "parkRegions": [
@@ -1738,7 +1738,7 @@
       "rarityTier": "common",
       "tags": [],
       "isSensitive": false,
-      "description": "Every camp has them and everybody photographs them anyway. Looks black until the light catches it, then goes electric blue-green with a bright orange eye.",
+      "description": "Uniform blue-green iridescent starling with a striking bright orange eye — smaller than Burchell's Starling. Everywhere at camps, picnic sites and hides, hopping under tables for crumbs. Whistled multi-note song.",
       "habitat": "Camps, picnic sites, open woodland",
       "bestTimeToSpot": "All day, on the table next to you",
       "parkRegions": [
@@ -1762,7 +1762,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Bigger and creamier than the white-backed, with a bare blue throat patch and dark eyes. It breeds on cliffs outside the park and only visits, so one here is genuine luck.",
+      "description": "Larger and paler-bodied than the common White-backed Vulture, with a honey-coloured eye. Occasional in Kruger, mostly wanderers from Blyde River escarpment cliffs where they breed. IUCN Vulnerable.",
       "habitat": "Ranges widely; breeds on cliffs elsewhere",
       "bestTimeToSpot": "At a large carcass, among White-backed Vultures",
       "parkRegions": [
@@ -1783,7 +1783,7 @@
       "rarityTier": "uncommon",
       "tags": [],
       "isSensitive": false,
-      "description": "The largest bird alive and the fastest thing on two legs. In Kruger it keeps to the open southern and central grasslands, so it is a sighting you drive to rather than one that finds you.",
+      "description": "World's largest bird — flightless, 2m+ tall; males black-and-white, females plain brown. Very few in Kruger, mostly the far south around Malelane and Berg-en-Dal. Runs at 70km/h and kicks forward with a lethal claw.",
       "habitat": "Open short grassland and sparse savanna",
       "bestTimeToSpot": "Mid-morning on open plains",
       "parkRegions": [
@@ -1808,7 +1808,7 @@
       "rarityTier": "frequent",
       "tags": [],
       "isSensitive": false,
-      "description": "Sandy brown with a black cap ringed in white and long red legs. Lives on burnt ground and short grass well away from water, and screams at you for driving past.",
+      "description": "Black cap encircled by a bright white ring — the 'crown'. Long red legs, mostly on dry short grassland — Blacksmith Lapwing prefers water edges. Loud 'kreep' alarm running around your car.",
       "habitat": "Short grass and recently burnt veld",
       "bestTimeToSpot": "All day, on open ground",
       "parkRegions": [
@@ -3154,7 +3154,7 @@
       "rarityTier": "common",
       "tags": [],
       "isSensitive": false,
-      "description": "Carries its tail cocked like a bantam, which no other francolin here does. The pale eyebrow stripe runs the length of the head.",
+      "description": "Small francolin with a dark cap, bold white eyebrow and short tail held cocked up like a bantam. Grating 'beer-and-cognac' duet at dawn. Common in mixed woodland — often on camp lawns.",
       "habitat": "Dry thornveld and thicket edges",
       "bestTimeToSpot": "Early morning, walking the road",
       "parkRegions": [
@@ -3219,7 +3219,7 @@
       "rarityTier": "uncommon",
       "tags": [],
       "isSensitive": false,
-      "description": "A long-necked bustard on tall grass plains. The male throws his head back and makes a sound like a cork being pulled, then a swallow.",
+      "description": "Slender bustard with a very thin snake-like neck — nothing like the heavy Kori. Male has black belly stripe and gives a strange 'pop-and-whistle' display call with head thrown back. Open bushveld in the north.",
       "habitat": "Tall open grassland",
       "bestTimeToSpot": "Summer mornings, males calling from a rise",
       "parkRegions": [
@@ -3285,7 +3285,7 @@
       "rarityTier": "uncommon",
       "tags": [],
       "isSensitive": false,
-      "description": "The biggest of the lapwings, with yellow face wattles and a streaked throat. Noisy on damp ground near rivers and pans.",
+      "description": "Yellow wattles hanging from the face and yellow legs — separates it from other Kruger lapwings. Longer-legged and taller than Crowned or Blacksmith; loud 'kip-kip' alarm. Wet grasslands and floodplain fringes.",
       "habitat": "Damp grassland beside rivers and pans",
       "bestTimeToSpot": "Early morning near water",
       "parkRegions": [
@@ -3307,7 +3307,7 @@
       "rarityTier": "frequent",
       "tags": [],
       "isSensitive": false,
-      "description": "White body, bare black head and neck, and a heavy curved bill. Mummified by the ancient Egyptians in their hundreds of thousands — some catacombs hold millions of them.",
+      "description": "White ibis with a bald black head and neck and a curved black bill; black wingtips visible in flight. The bird ancient Egyptians mummified in the millions. Wetlands and open ground throughout Kruger.",
       "habitat": "Rivers, pans and floodplain",
       "bestTimeToSpot": "Any time, at water",
       "parkRegions": [
@@ -3351,7 +3351,7 @@
       "rarityTier": "frequent",
       "tags": [],
       "isSensitive": false,
-      "description": "All black with a yellow bill and startling red legs. Bolder than any other crake — walks out onto lily pads in the open.",
+      "description": "Small jet-black waterbird with a bright yellow bill, red eye and pink-red legs — no other Kruger rail looks like this. Walks on floating vegetation at pans and dam edges. Duet of croaks and clucks from the reeds.",
       "habitat": "Reeds and floating vegetation on quiet water",
       "bestTimeToSpot": "Early morning at a dam wall",
       "parkRegions": [
@@ -3375,7 +3375,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Grey, with a bare yellow face that flushes red when it is excited. Its legs bend both ways at the joint, which lets it reach into tree holes after nestlings.",
+      "description": "Bare yellow face that flushes red when excited, long grey body, long tail with a single broad white bar. Double-jointed legs reach into weaver nests and tree holes for chicks. Also called 'Gymnogene'.",
       "habitat": "Riverine forest and tall woodland",
       "bestTimeToSpot": "Mid-morning, working along a tree line",
       "parkRegions": [
@@ -3515,7 +3515,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "A grey scrap of bark the size of a fist. Almost impossible to see and easy to hear: one soft frog-like \"prrrup\" every few seconds, all night, in every camp.",
+      "description": "Tiny grey owl with pointed ear tufts, patterned like bark — you'll walk past it on a tree trunk. Soft frog-like 'prrrup' repeated every few seconds through the night. Try Skukuza staff-quarters trees.",
       "habitat": "Camp trees and dry woodland",
       "bestTimeToSpot": "After dark, torch on the call",
       "parkRegions": [
@@ -3580,7 +3580,7 @@
       "rarityTier": "common",
       "tags": [],
       "isSensitive": false,
-      "description": "Here from September to April, having flown from Europe to do it. Hunts low over the road in front of the car.",
+      "description": "Deep steel-blue back, rusty throat, long forked tail with white spots. Palearctic summer migrant to Kruger from October to April — the swallows over your car came from Europe. Perches on wires along tar roads.",
       "habitat": "Open country, everywhere, in summer",
       "bestTimeToSpot": "Summer afternoons, low over the road",
       "parkRegions": [
@@ -3624,7 +3624,7 @@
       "rarityTier": "common",
       "tags": [],
       "isSensitive": false,
-      "description": "Thin, grey and scythe-winged, always near palms. Glues its eggs to a vertical palm frond and hangs on while incubating.",
+      "description": "Slim pale-brown swift with a long deeply forked tail — always seen near palm trees, especially the fronds where it nests. Never lands on the ground. Try camps with palms — Skukuza, Lower Sabie.",
       "habitat": "Wherever there are palms",
       "bestTimeToSpot": "All day, above the palms",
       "parkRegions": [
@@ -3667,7 +3667,7 @@
       "rarityTier": "frequent",
       "tags": [],
       "isSensitive": false,
-      "description": "The male puffs the white feathers of his rump into a ball the size of the rest of him. A loud clicking \"chick-weeu\" from the canopy.",
+      "description": "Small black bush-shrike with a red eye. Male puffs the white back feathers into a cotton-ball above the tail in display — that's the diagnostic; repeated 'chick-weeeu' whistle from the canopy. Common in wooded thickets.",
       "habitat": "Woodland and riverine canopy",
       "bestTimeToSpot": "Morning, high in the trees",
       "parkRegions": [
@@ -3711,7 +3711,7 @@
       "rarityTier": "frequent",
       "tags": [],
       "isSensitive": false,
-      "description": "Named after its own call — \"dee-dee-dee-deederik\" — which runs all summer. Lays in weaver and bishop nests and leaves them to it.",
+      "description": "Bronze-green upperparts with bold white spots on the wings, cream underparts. Named for its ringing 'dee-dee-dee-derik' call, repeated all summer. Intra-African migrant, September to April; parasitises weavers.",
       "habitat": "Woodland and near weaver colonies",
       "bestTimeToSpot": "Summer, calling from an exposed perch",
       "parkRegions": [
@@ -3799,7 +3799,7 @@
       "rarityTier": "frequent",
       "tags": [],
       "isSensitive": false,
-      "description": "Green with a dull brown head and a flash of yellow under the wing in flight. Screeches overhead in pairs, usually going somewhere in a hurry.",
+      "description": "Small green parrot with a dull brown head — no yellow shoulder patches, unlike Meyer's Parrot. Screeching flocks streaking overhead at treetop height, especially in mopane. Feeds on marula and other fruits.",
       "habitat": "Woodland with big trees, near water",
       "bestTimeToSpot": "Early morning, flying to feed",
       "parkRegions": [
@@ -3821,7 +3821,7 @@
       "rarityTier": "frequent",
       "tags": [],
       "isSensitive": false,
-      "description": "A kingfisher that mostly ignores fish. Sits on a low branch watching the ground and drops on grasshoppers and lizards.",
+      "description": "Brown head, brown back with black streaks, turquoise wings, red bill. Hunts insects and lizards from a low perch — not tied to water despite the name. Common in mixed woodland throughout Kruger.",
       "habitat": "Woodland and camp gardens, often away from water",
       "bestTimeToSpot": "Any time, on a low perch",
       "parkRegions": [
@@ -3865,7 +3865,7 @@
       "rarityTier": "frequent",
       "tags": [],
       "isSensitive": false,
-      "description": "Bright green, and invisible in a fruiting fig until it moves. Hangs upside down to reach fruit and gets drunk on the fermenting ones.",
+      "description": "Yellow-green pigeon clambering parrot-style through fig-tree branches — often only the shaking leaves give it away. Red base to the bill, yellow legs; guttural chuckles from the canopy. Try riverine figs at Skukuza or Letaba.",
       "habitat": "Fruiting figs and riverine forest",
       "bestTimeToSpot": "When the figs are ripe",
       "parkRegions": [
@@ -3909,7 +3909,7 @@
       "rarityTier": "common",
       "tags": [],
       "isSensitive": false,
-      "description": "The bird behind the sound of the whole bushveld: \"work harder, work harder\", from before sunrise until well after dark.",
+      "description": "Pale grey-fawn dove with a thin black half-collar and a black eye. Three-note call rendered locally as 'work HARD-er, work HARD-er'. Also known as the Ring-necked Dove — Kruger's most common dove.",
       "habitat": "Everywhere, park-wide",
       "bestTimeToSpot": "All day, every day",
       "parkRegions": [
@@ -3975,7 +3975,7 @@
       "rarityTier": "frequent",
       "tags": [],
       "isSensitive": false,
-      "description": "Scarlet face inside a heavy black collar. A pair sit side by side and duet so precisely that it sounds like one bird.",
+      "description": "Bright scarlet face and throat with a thick black collar — nothing else in Kruger looks like this. Duetting pair sings 'too-poodly, too-poodly' in perfect sync. Common around camps and picnic sites.",
       "habitat": "Woodland, riverine trees and camps",
       "bestTimeToSpot": "Morning, duetting from a bare branch",
       "parkRegions": [
@@ -3997,7 +3997,7 @@
       "rarityTier": "frequent",
       "tags": [],
       "isSensitive": false,
-      "description": "Yellow, red and speckled, like something assembled from spare parts. The call is a long unbroken trill that sounds like an alarm clock.",
+      "description": "Yellow-and-red spotty little tank with a shaggy black crest and speckled black wings. Continuous alarm-clock trill — 'trrrrrrrrrrr' — is the diagnostic sound. Common in camp gardens throughout Kruger.",
       "habitat": "Camps, woodland and gardens",
       "bestTimeToSpot": "All day, trilling",
       "parkRegions": [
@@ -4043,7 +4043,7 @@
       "rarityTier": "frequent",
       "tags": [],
       "isSensitive": false,
-      "description": "Brilliant yellow with a clean black hood and a coral bill. The liquid whistled \"pooodleoo\" is one of the best sounds in the canopy.",
+      "description": "Bright golden-yellow body with a jet-black head and a coral-pink bill. Liquid 'pooo-lyow' whistle from the canopy — often heard before seen. Common in tall trees around camps.",
       "habitat": "Woodland and riverine canopy",
       "bestTimeToSpot": "Morning, high up",
       "parkRegions": [
@@ -4065,7 +4065,7 @@
       "rarityTier": "common",
       "tags": [],
       "isSensitive": false,
-      "description": "Never alone and never quiet. The whole group works itself into a babbling chorus, then crashes off through the undergrowth together.",
+      "description": "Brown babbler with distinctive white arrow-shaped streaks across the throat and chest, and a pale yellow eye. Loud collective chattering as parties of 6-12 crash through camp bush. Common around Skukuza and Letaba.",
       "habitat": "Thicket and riverine undergrowth",
       "bestTimeToSpot": "Any time — follow the noise",
       "parkRegions": [
@@ -4087,7 +4087,7 @@
       "rarityTier": "common",
       "tags": [],
       "isSensitive": false,
-      "description": "Yellow under the tail, dark peaked cap, and the first bird calling in every camp. Cheerful to the point of being a nuisance at breakfast.",
+      "description": "Brown bulbul with a black-brown cap and a bright yellow vent — the yellow rump patch under the tail is the giveaway. Loud liquid 'sweet-potato' morning song from every camp fence. Common park-wide.",
       "habitat": "Everywhere, especially camps",
       "bestTimeToSpot": "First light onwards",
       "parkRegions": [
@@ -4197,7 +4197,7 @@
       "rarityTier": "frequent",
       "tags": [],
       "isSensitive": false,
-      "description": "The male trails a chestnut tail twice his own length through the shade of a riverine tree. A blue eye-ring and bill to match.",
+      "description": "Rufous back and tail, steel-blue head; the breeding male grows two central tail feathers longer than his body. Zigzagging sallies from riverine bush. Common October to April, scarcer in winter.",
       "habitat": "Riverine forest and shaded thicket",
       "bestTimeToSpot": "Summer mornings, low in the shade",
       "parkRegions": [
@@ -4219,7 +4219,7 @@
       "rarityTier": "common",
       "tags": [],
       "isSensitive": false,
-      "description": "The big long-tailed glossy starling, duller and more purple than the cape glossy, and much heavier on the wing.",
+      "description": "Big violet-blue glossy starling with a long tail, walking on the ground — clearly larger and longer-tailed than Cape Glossy Starling. Gruff chirping calls. Try mopane country in the north around Punda Maria.",
       "habitat": "Open woodland and picnic sites",
       "bestTimeToSpot": "All day, often on the ground",
       "parkRegions": [
@@ -4263,7 +4263,7 @@
       "rarityTier": "frequent",
       "tags": [],
       "isSensitive": false,
-      "description": "Black and white, walking the wet rocks below a bridge with its tail going the whole time. Tame around low-water crossings.",
+      "description": "Bold black-and-white wagtail — much more contrasted than the Cape Wagtail. Runs along rocks at rivers and dams, tail pumping constantly; sings a musical warble at dawn. Try low-water bridges.",
       "habitat": "River edges, rocks and low-water crossings",
       "bestTimeToSpot": "Any time, at a river crossing",
       "parkRegions": [
@@ -4439,7 +4439,7 @@
       "rarityTier": "common",
       "tags": [],
       "isSensitive": false,
-      "description": "Powder blue face, breast and tail on a fawn back. Feeds on bare ground in small parties and is the first thing at a camp bird bath.",
+      "description": "Sky-blue face, breast and belly with fawn back — a small seedeater flitting under acacias, often at camp bird tables. High squeaky call. Common everywhere in mixed woodland.",
       "habitat": "Thornveld, camps and bare ground",
       "bestTimeToSpot": "All day, on the ground",
       "parkRegions": [
@@ -4591,7 +4591,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "A small owl barred across the head and chest, where its pearl-spotted cousin is spotted. Hunts at dusk from a low perch and will call in broad daylight.",
+      "description": "Finely barred grey head and breast — the barring separates it from Pearl-spotted Owlet's spots and false 'eyes' on the nape. Rapid 'kroo-kroo-kroo' trill at dusk. Try mopane woodland in the north.",
       "habitat": "Riverine forest and dense woodland",
       "bestTimeToSpot": "Dusk, along the Luvuvhu and Sabie rivers",
       "parkRegions": [
