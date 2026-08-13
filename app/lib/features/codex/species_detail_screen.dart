@@ -725,16 +725,16 @@ class _PointsBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final RarityStyle style = species.rarityTier.style;
 
+    // Same treatment as the tiles: a hairline and a soft neutral shadow rather
+    // than a tier-coloured frame and a coloured glow. The colour is still here
+    // where it belongs — the tier name and the number are in it, and the panel
+    // is washed with it.
     return DecoratedBox(
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(Radii.card),
-        border: Border.all(color: style.border, width: style.borderWidth),
-        boxShadow: style.glow == null
-            ? null
-            : <BoxShadow>[
-                BoxShadow(color: style.glow!, blurRadius: 24, spreadRadius: -6),
-              ],
+        border: Border.all(color: AppColors.outline),
+        boxShadow: AppColors.shadowSm,
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(Radii.card - 1),

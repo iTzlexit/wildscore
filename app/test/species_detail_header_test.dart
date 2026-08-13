@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wildscore/data/species_repository.dart';
@@ -12,6 +15,22 @@ import 'package:wildscore/shared/widgets/species_image.dart';
 late final List<Species> _catalogue;
 
 Species _byId(String id) => _catalogue.firstWhere((Species s) => s.id == id);
+
+/// The same species, with its photograph declared untrustworthy.
+///
+/// Read back from the bundled JSON because the flag is not something the model
+/// lets you flip — it is a fact about the asset, not a setting.
+late final Map<String, dynamic> _raw;
+
+Species _unverified(String id) {
+  final Map<String, dynamic> entry = <String, dynamic>{
+    ...(_raw['species'] as List<dynamic>)
+        .cast<Map<String, dynamic>>()
+        .firstWhere((Map<String, dynamic> s) => s['id'] == id),
+    'photoVerified': false,
+  };
+  return Species.fromJson(entry);
+}
 
 Future<void> _pump(
   WidgetTester tester,
@@ -34,6 +53,9 @@ void main() {
   setUpAll(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
     _catalogue = await const SpeciesRepository().loadAll();
+    _raw =
+        json.decode(await File('assets/data/species.json').readAsString())
+            as Map<String, dynamic>;
   });
 
   /// The sharp, contained copy — not the blurred one filling the box behind it.
@@ -122,11 +144,17 @@ void main() {
   testWidgets('a species with no usable photo still fills the header', (
     WidgetTester tester,
   ) async {
-    // Caracal and African wildcat fall back to a PhyloPic silhouette. On the
-    // dark header that must not become a pale rectangle punched into the
-    // colour — see SpeciesImage.onDark.
-    final Species caracal = _byId('caracal');
-    expect(caracal.photoVerified, isFalse, reason: 'fixture assumption');
+    // The silhouette fallback, which nothing in the catalogue uses any more —
+    // the caracal and the African wildcat were the last two, and both got a
+    // photograph picked by eye on 13 August 2026.
+    //
+    // Tested on a species built for the purpose rather than on whichever one
+    // happens to be flagged today. The fallback has to keep working for the
+    // next animal we cannot find an honest picture of, and a test that depends
+    // on the catalogue having a broken entry stops testing anything the moment
+    // somebody fixes it.
+    final Species caracal = _unverified('caracal');
+    expect(caracal.photoVerified, isFalse);
 
     await _pump(tester, caracal);
 

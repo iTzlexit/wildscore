@@ -62,26 +62,26 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
     // in full colour either way — see SpeciesImage for why.
     final bool spotted = !widget.locked;
     final RarityStyle style = species.rarityTier.style;
-    final Color frame = style.border;
-    final double frameWidth = style.borderWidth;
 
     /// Chances used up — claimed as many times as it can be today.
     final bool spent = widget.chancesLeft == 0;
 
-    // A card that dips under the thumb feels like an object you picked up.
-    // Cheap, and it does more for the "collectible" feeling than any amount
-    // of decoration.
-    // Notched corners from Rare upward — one of the five redundant channels
-    // rarity escalates across, so the frame is distinguishable in greyscale
-    // and in direct sun where hue washes out.
-    final BorderRadius radius = style.notched
-        ? const BorderRadius.only(
-            topLeft: Radius.circular(Radii.card),
-            topRight: Radius.circular(Space.xs),
-            bottomLeft: Radius.circular(Space.xs),
-            bottomRight: Radius.circular(Radii.card),
-          )
-        : BorderRadius.circular(Radii.card);
+    // **One card, one shape, no jewellery.**
+    //
+    // This used to wear the tier: a coloured frame that thickened as rarity
+    // rose, corners notched from Rare upward, and a coloured glow behind the
+    // top two bands. Five redundant channels was the argument, and it was the
+    // wrong argument. A grid of two hundred photographs with a different frame
+    // colour, frame weight and corner shape on each is *busy* — the eye reads
+    // the furniture before the animal, and the animal is the product.
+    //
+    // Alex, 13 August 2026, on seeing it in the sun: "not sure what's up with
+    // the box shape borders and glow effect".
+    //
+    // Rarity is still said twice, which is enough: the points badge carries
+    // the tier colour, and the tier is named in words on the label. What is
+    // gone is everything that changed the *shape* of the card.
+    final BorderRadius radius = BorderRadius.circular(Radii.card);
 
     return AnimatedScale(
       scale: _pressed ? 0.96 : 1,
@@ -91,17 +91,11 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: radius,
-          border: Border.all(color: frame, width: frameWidth),
-          boxShadow: style.glow == null
-              ? null
-              : <BoxShadow>[
-                  BoxShadow(
-                    color: style.glow!,
-                    blurRadius: 16,
-                    spreadRadius: -4,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
+          // A hairline in the outline grey rather than the tier colour, and a
+          // soft neutral shadow. The card lifts off the page instead of being
+          // outlined on it.
+          border: Border.all(color: AppColors.outline),
+          boxShadow: AppColors.shadowSm,
         ),
         child: ClipRRect(
           borderRadius: radius,
@@ -121,20 +115,15 @@ class _SpeciesGridCardState extends State<SpeciesGridCard> {
                       fit: StackFit.expand,
                       children: <Widget>[
                         SpeciesImage(species: species),
-                        // Softens the join between photo and label strip so the
-                        // tile reads as one object rather than two stacked.
-                        const DecoratedBox(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.center,
-                              end: Alignment.bottomCenter,
-                              colors: <Color>[
-                                Colors.transparent,
-                                Color(0x99161C19),
-                              ],
-                            ),
-                          ),
-                        ),
+                        // The dark gradient over the foot of the photograph is
+                        // gone with the tinted label it was blending into. A
+                        // scrim between a photo and a *white* strip darkens the
+                        // one thing on the tile anybody came to look at, to
+                        // soften a join that no longer needs softening.
+                        //
+                        // The badges that sit down there carry their own
+                        // backgrounds, so they are still legible on a bright
+                        // photograph without it.
                         // No foil sheen. There used to be a diagonal gloss over
                         // the rare tiers — the oldest trading-card trick there
                         // is, and wrong here. This is a field guide first: the
@@ -341,16 +330,14 @@ class _Label extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Plain white under the photograph. The tinted wash that used to sit here
+    // gave every tile a different coloured foot, which is the same problem the
+    // frame had: two hundred of them at once is a colour chart, not a guide.
+    // The tier still has its name and the badge still has its colour.
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: <Color>[style.fill, Colors.transparent],
-        ),
-      ),
+      color: AppColors.surface,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,

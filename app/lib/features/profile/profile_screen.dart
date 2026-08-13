@@ -501,7 +501,7 @@ class _RarestTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: style.fill,
         borderRadius: BorderRadius.circular(Radii.card),
-        border: Border.all(color: style.accent, width: style.borderWidth),
+        border: Border.all(color: style.accent),
       ),
       child: Row(
         children: <Widget>[

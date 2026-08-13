@@ -120,25 +120,22 @@ void main() {
   });
 
   group('the photo guard', () {
-    test('flags the species whose photograph cannot be trusted', () {
-      // The sourcing API cannot tell a caracal from a serval, or an African
-      // wildcat from somebody's tabby. A misidentified photograph in a field
-      // guide teaches the wrong animal, which is worse than showing none.
+    test('every species now has a photograph we stand behind', () {
+      // The caracal and the African wildcat were flagged for two years, and
+      // rightly: the sourcing API cannot tell a caracal from a serval or a
+      // wildcat from somebody's tabby, and a misidentified photograph in a
+      // field guide teaches the wrong animal.
+      //
+      // Both were picked by eye on 13 August 2026 out of sixteen candidates —
+      // among which were two night camera-traps with the timestamp burnt in, a
+      // tabby in a garden, a cat on a tiled patio, a white-pawed hybrid and a
+      // skeleton. The flag stays in the model for the next time.
       final List<String> unverified = <String>[
         for (final Species s in _all)
           if (!s.photoVerified) s.id,
       ]..sort();
 
-      expect(unverified, <String>['african-wildcat', 'caracal']);
-    });
-
-    test('everything else is trusted by default', () {
-      // Absence of the field means trusted, so a new species is never silently
-      // hidden by one somebody forgot to add.
-      expect(
-        _all.where((Species s) => s.photoVerified).length,
-        _all.length - 2,
-      );
+      expect(unverified, isEmpty);
     });
 
     test('the flagged ones have a silhouette to fall back to', () async {

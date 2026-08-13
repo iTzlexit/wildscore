@@ -141,32 +141,25 @@ abstract final class Radii {
 
 /// How one rarity tier is drawn.
 ///
-/// Rarity escalates across colour, border, wash, glow and frame shape — five
-/// redundant channels, because colour alone fails for the ~8% of men with
-/// colour vision deficiency and washes out in direct sun.
+/// **Colour and words, and nothing that changes the shape of a card.**
+///
+/// This used to escalate across five channels: colour, frame weight, wash,
+/// glow and a notched corner. The concern behind it was sound — colour alone
+/// fails for the ~8% of men with colour vision deficiency, and washes out in
+/// direct sun — but the answer was wrong for a grid of two hundred
+/// photographs, which came out looking like a box of assorted stationery.
+///
+/// The redundancy that matters survives: the tier is written out in words on
+/// every tile and every card, and words beat a glow in sunlight and in
+/// greyscale alike.
 class RarityStyle {
-  const RarityStyle({
-    required this.accent,
-    required this.fill,
-    required this.borderWidth,
-    required this.glow,
-    required this.notched,
-  });
+  const RarityStyle({required this.accent, required this.fill});
 
   /// Text, badges, the header field. Tuned for contrast on near-white.
   final Color accent;
 
   /// Wash behind a card label.
   final Color fill;
-
-  final double borderWidth;
-
-  /// Only Very rare and above. Glow is never decoration.
-  final Color? glow;
-
-  final bool notched;
-
-  bool get isExalted => glow != null;
 
   Color get border => accent;
 
@@ -185,48 +178,30 @@ extension RarityTierStyling on RarityTier {
     RarityTier.common => const RarityStyle(
       accent: Color(0xFF77817A),
       fill: Color(0x0F77817A),
-      borderWidth: 1,
-      glow: null,
-      notched: false,
     ),
     RarityTier.frequent => const RarityStyle(
       accent: Color(0xFF2E8B57),
       fill: Color(0x142E8B57),
-      borderWidth: 1,
-      glow: null,
-      notched: false,
     ),
     // → Notable
     RarityTier.uncommon => const RarityStyle(
       accent: Color(0xFF2372A8),
       fill: Color(0x1A2372A8),
-      borderWidth: 1.3,
-      glow: null,
-      notched: false,
     ),
     // → Rare
     RarityTier.scarce => const RarityStyle(
       accent: Color(0xFF6B47C0),
       fill: Color(0x1F6B47C0),
-      borderWidth: 1.5,
-      glow: null,
-      notched: true,
     ),
     // → Very rare. Takes the old Exceptional crimson: with one fewer tier
     // above it, this is now the last step before the top and needs to look it.
     RarityTier.rare => const RarityStyle(
       accent: Color(0xFFC0392B),
       fill: Color(0x2BC0392B),
-      borderWidth: 2,
-      glow: Color(0x38C0392B),
-      notched: true,
     ),
     RarityTier.legendary => const RarityStyle(
       accent: Color(0xFF9C6B10),
       fill: Color(0x2E9C6B10),
-      borderWidth: 2.4,
-      glow: Color(0x479C6B10),
-      notched: true,
     ),
   };
 }
