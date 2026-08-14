@@ -73,13 +73,21 @@ Roughly in the order they need starting.
 
 ## Worth doing before launch
 
-- [ ] **Rules screen rewrite** — the screen we like least. Part of the copy pass.
-- [ ] **Better photographs** — ostrich (head down in grass, near useless),
-      caracal and African wildcat (both fall back to silhouettes)
+- [x] **Rules screen rewrite** — settled a different way: the screen was deleted
+      on 13 Aug and the tour absorbed it
+- [ ] **Better photographs** — ostrich (head down in grass, near useless). The
+      caracal and African wildcat were fixed on 13 Aug; the rest of the set is
+      worth re-checking against the full-bleed header, which hides nothing.
+- [ ] **About text for the other 137 entries** — 125 birds, 9 reptiles, 2
+      invertebrates, the baobab. Mammals were redone at 100 words on 14 Aug;
+      the method is in `docs/WRITING-STYLE.md` and matters more than it looks.
 - [ ] More species — birds especially. The pipeline makes this cheap now.
-- [ ] Big Five / Big Six bonuses, First Call double — designed in
-      `docs/SCORECARD.md`, not built
-- [ ] House rules screen — let a family add their own
+- [ ] Big Five / Big Six bonuses — designed in `docs/SCORECARD.md`, not built.
+      **Not First Call** — that was the wild card, deleted on purpose on 12 Aug.
+- [ ] **A carcass as an *extra*** ("on a carcass" on a leopard or lion claim),
+      not a species. Kill-in-a-tree came out for exactly this reason.
+- [x] House rules screen — shipped as **Wild Score settings**, behind the gear
+      on the Wild Score page: Jam Tax and daily limits
 
 ---
 

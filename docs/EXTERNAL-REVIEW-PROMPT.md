@@ -129,9 +129,13 @@ and what the illustrations should show instead if they are wrong. The
 illustrations are drawn in code, so "a photo of a real family" is not available
 to me — but any drawable scene is.
 
-**The rules screen.** Full current text below. It is the screen I am least happy
-with. I want it scannable, obviously ordered, and short enough that somebody
-actually reads it at a park gate with the engine running.
+**The rules screen.** Full current text below.
+
+> **Stale as of 13 August 2026 — do not send this section as it stands.** The
+> rules screen was deleted and the tour absorbed it, so the text quoted below
+> is no longer in the app and `rules_screen.dart` no longer exists. Either cut
+> this section and let the tour above carry the question, or re-quote the tour's
+> current text from `intro_tour.dart` before sending the brief to anyone.
 
 ---
 

@@ -3,7 +3,7 @@
 > **Written for a fresh conversation with no history.** Read this file and you
 > should be able to pick up work without anyone re-explaining anything.
 >
-> Last updated: 12 August 2026.
+> Last updated: 14 August 2026.
 
 ## The machine
 
@@ -39,7 +39,8 @@ Three tabs — **Profile, Wild Score, Animals**. The Sightings feed is gone: it 
 
 - **Onboarding** — a three-slide picture tour of the game (car scene, scoring
   with the live rarity table, the Ultimate Spotter), then a name. No account.
-  Replayable from How to play.
+  **There is no Rules page any more** — the tour absorbed it and is replayable
+  from the Wild Score page, which is where somebody stands when they need it.
 - **Animals** — 197 species (60 mammals, 125 birds, 9 reptiles, 2
   invertebrates, and the baobab), **grouped into Animals then Birds**, search,
   filters, rarity sort, detail cards.
@@ -47,26 +48,51 @@ Three tabs — **Profile, Wild Score, Animals**. The Sightings feed is gone: it 
   aerial-survey ranges where SANParks flies them, published estimates where
   nobody does, and "Not published" for rhino and pangolin. Sources are on the
   credits screen.
-  Photos are CC0/CC-BY from iNaturalist; caracal and African wildcat fall back
-  to silhouettes because the photos could not be trusted.
+  Photos are CC0/CC-BY from iNaturalist. **Every species now has one** — the
+  caracal and the African wildcat were the last two silhouettes and both were
+  picked by eye on 13 August. The silhouette fallback still exists for the next
+  animal we cannot find an honest picture of.
+  **About text.** All 59 mammals carry ~100-word text (avg 85), written to
+  sources by a second chat and applied verbatim except where a claim did not
+  survive checking. Everything else — 125 birds, 9 reptiles, 2 invertebrates,
+  the baobab — is still on the older ~50-word style. Alex's call, 14 August:
+  "for now, let's just do the animals". `docs/WRITING-STYLE.md` has the prompt
+  and the method.
+  The tiles are deliberately plain: one border, one shadow, one radius, no
+  glow and no notches (13 August — the tier-coloured glow was shouting).
 - **Wild Score** — add the car, agree the prices, then tap the eye by a
   player's name to claim an animal for them. Standings with per-player hauls,
   restart, end day. Claims on notable animals ask who else was there (a jam
   costs a fifth) and whether a lion was male (×1.5).
 - **The prices** — every game opens on the whole catalogue, rarest first, and
-  the car confirms it. Anything can be repriced on the spot; what they set is
-  saved, so the second morning is one tap.
-- **Trivia** — 104 questions, bundled, in three difficulties. Unlocked by every
-  *unique* animal a player spots, plus one handed round the car every half
-  hour. 20/40/70 points by difficulty, one guess, and closing the sheet keeps
-  the question rather than burning it.
-- **Profile** — lifetime points, collections (Big Five, Small Five, Under
-  threat, Antelope, Predators, Snakes, Night shift), drive history with
-  year/month filters and delete, backup/restore, credits.
+  the car confirms it. Anything can be repriced on the spot **and mid-game**;
+  what they set is saved, so the second morning is one tap. A repriced animal
+  moves tier with its new price (`RarityTier.forPoints`).
+- **Wild Score settings** — behind the gear on the Wild Score page, not in
+  Profile. Two sections: **Jam Tax** (No tax / 5% / 10% / 15%) and **Daily
+  limits** (impala, vervet, all birds — each editable or switchable off).
+  Edits are a draft until Save. Animal scores are *not* here; they live on the
+  prices screen where the game starts.
+- **Trivia** — 104 questions, bundled, in three difficulties. **One per two
+  unique animals a player spots**, nothing else. 20/40/70 points by difficulty,
+  one guess, and closing the sheet keeps the question rather than burning it.
+  The half-hourly question was **deleted, not disabled**: it was derived from
+  the clock at build time, so a stationary car could sit there and never get
+  one. Do not reintroduce a timer without a ticker to drive it.
+- **Profile** — lifetime **spots** and rarest lifetime sighting (the lifetime
+  *points* panel is gone), collections (Big Five, Small Five, Under threat,
+  Antelope, Predators, Snakes, Night shift), drive history with year/month
+  filters and delete, backup/restore, credits.
 - **Backup** — a pasteable code. No server; see `docs/RISKS.md` for why it
   matters more than it looks.
 
-361 tests. `flutter analyze` is clean and must stay clean.
+360 tests. `flutter analyze` is clean and must stay clean.
+
+**The bug class that keeps coming back: state first, disk second.** Three
+separate screens have shipped `await repo.save(next)` before `setState`, and
+each time an edit made mid-game was lost or a stale value kept being read.
+House rules, the scorecard, and the live prices screen have all had it. If a
+change "doesn't apply until I restart", look here first.
 
 ## Decisions already made — do not relitigate
 
@@ -80,13 +106,16 @@ Three tabs — **Profile, Wild Score, Animals**. The Sightings feed is gone: it 
 | Crowd: spotting it yourself pays the card value, a jam pays 20% less | `docs/HOW-TO-PLAY.md` |
 | **Points are per species, not per tier** — a tier is a band. 5–1000 | `tools/rank-list.html`, Alex 10 Aug 2026 |
 | Every score is a rung on one shared ladder — 190 species, 24 scores, ties on purpose | `RarityTier.rungs` |
+| Tiers, rarest first: **Ghost · Mirage · Cryptic · Prize · Bush Icons · Bush Staples** | Alex, 10 Aug 2026 |
 | **Players can revalue any animal** in the Dex, on the same rungs | `docs/HOUSE-RULES.md` |
-| Players set their own caps, and their own jam tax (0–50%) | `docs/HOUSE-RULES.md` |
+| Jam tax is one of four choices — none, 5%, 10%, 15% | Alex, 13 Aug 2026 |
 | The Dex has two views: grid to browse, ranked list to compare | `docs/HOUSE-RULES.md` |
-| Caps only on impala and vervet monkey; elephant and buffalo taper instead | Alex, 10 Aug 2026 |
-| Lion, leopard, white rhino are wild cards: first of the day pays big | Alex, 10 Aug 2026 |
+| Caps only on impala, vervet monkey and birds — all three editable, or off | Alex, 12 Aug 2026 |
+| **Elephant and buffalo taper: deleted.** Not hidden — gone | Alex, 12 Aug 2026 |
+| **Wild cards / first-of-the-day: deleted**, tags and all | Alex, 12 Aug 2026 |
 | A night animal seen in daylight pays 2.5x | Alex, 10 Aug 2026 |
-| Daily caps: common and frequent 4, notable 3, impala 2, rare+ unlimited | `docs/HOW-TO-PLAY.md` |
+| Bonuses live under one **Bonus Animals** section | Alex, 12 Aug 2026 |
+| No kill-in-a-tree and no tree kill — a carcass is an *extra*, not a species | Alex, 13 Aug 2026 |
 | Rhino and pangolin never get a location, ever | `docs/MAPS.md`, `docs/SIGHTINGS-FEED.md` |
 | Rhino and pangolin never get a population number either | `test/population_test.dart` |
 | Light theme, single typeface, colour reserved for rarity | `docs/DESIGN-DIRECTION.md` |
@@ -152,9 +181,20 @@ Three tabs — **Profile, Wild Score, Animals**. The Sightings feed is gone: it 
   source, but nobody here has opened the primary document. Worth doing before
   launch.
 
-- Big Five / Big Six bonuses, First Call double (designed in `docs/SCORECARD.md`)
-- House rules screen
-- Better caracal and African wildcat photographs (they fall back to silhouettes)
+- Big Five / Big Six bonuses (designed in `docs/SCORECARD.md`). **Not First
+  Call** — that is the wild card, and it was deleted on purpose.
+- **About text for the other 137 entries** — 125 birds, 9 reptiles, 2
+  invertebrates, the baobab. The mammals were redone at ~100 words on 14
+  August; these are still the older ~50-word text and read thinner beside them.
+  The working method, which took three rounds to settle: give Alex the exact
+  species list plus a prompt, he runs it in a second chat that can search, he
+  pastes the result back, and it goes in **verbatim** — except claims that do
+  not survive checking, which get fixed and flagged to him. Do not compress
+  this into "write it yourself"; he has said twice that rushing it is what
+  went wrong.
+- **A carcass as an *extra*, not a species.** Kill-in-a-tree came out because a
+  carcass is not an animal you spot. "On a carcass" as a modifier on a leopard
+  or lion claim is the shape that works. Designed, not built.
 - **A better ostrich photograph.** The current one is a foraging bird with its
   head down in the grass, which is close to useless for identifying one. The
   full-bleed detail header made it obvious — the old medallion hid weak photos
