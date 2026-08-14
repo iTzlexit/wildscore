@@ -614,7 +614,7 @@
       "rarityTier": "common",
       "tags": [],
       "isSensitive": false,
-      "description": "Head above the acacias, legs and neck out of proportion — usually silent, chewing at 5m up. Kruger holds several thousand and they browse over 60 tree species. Bulls stand with tails drooped; cows tuck into a canopy.",
+      "description": "Head above the acacia canopy, legs and neck out of proportion, chewing quietly at 5m up — usually the first giveaway from the car. Kruger holds several thousand, and they browse over 60 tree species, working around thorns with a 45cm blackish-purple tongue. Bulls stand with the tail hanging straight; cows tuck into a canopy to feed. Silent to human ears but produce infrasonic calls too low for us to hear. Give birth standing up — the calf drops nearly 2m to the ground, which apparently shocks its heart into action.",
       "habitat": "Acacia and mopane woodland",
       "bestTimeToSpot": "Any time — visible from a distance",
       "parkRegions": [
@@ -642,7 +642,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Grey-brown with vertical white stripes; bulls carry corkscrew horns close to 2m along the curl. Bounds across the road with tail flared white. Wooded thickets throughout Kruger; commoner than the size suggests.",
+      "description": "Grey-brown with vertical white flank stripes and a fringed dewlap; bulls carry corkscrew horns that reach nearly 2m along the curl. Bounds across the road with tail flared white on the underside — that flash is the alarm signal, both to you and to other kudu. Wooded thickets throughout Kruger; commoner than the size suggests. Herds are usually cows and calves, with bulls separate except during the winter rut. Second-tallest antelope after eland. Powerlines and fences take a heavy toll on those horns each year.",
       "habitat": "Dense woodland and thicket",
       "bestTimeToSpot": "Early morning and dusk",
       "parkRegions": [
@@ -670,7 +670,7 @@
         "nocturnal"
       ],
       "isSensitive": true,
-      "description": "Armour-plated body, bipedal walk with tail dragged, curls into a scaled ball when alarmed. The world's most trafficked mammal. A daytime road sighting is a once-a-decade Kruger event; report it to a ranger.",
+      "description": "Armour-plated body of overlapping brown scales, walking upright on the hind legs with the tail dragged behind — curls into a scaled ball when alarmed and even a lion cannot get through it. The world's most trafficked mammal, scales sold in Chinese medicine markets for fabricated ailments. A daytime road sighting in Kruger is a once-a-decade event and should be reported to any ranger straight away — SANParks tracks every individual seen. Feeds only on ants and termites, using a tongue longer than the animal's own body.",
       "habitat": "Sandy woodland and savanna",
       "bestTimeToSpot": "Night drives — a handful of sightings a year",
       "parkRegions": [
@@ -695,7 +695,7 @@
       "rarityTier": "common",
       "tags": [],
       "isSensitive": false,
-      "description": "Massive shapes half-submerged in permanent pools — Sunset Dam, Olifants, Sabie. Only eyes, ears and nostrils show by day; grazing on land at night. Kills more people than any other African mammal. Never block a hippo's path to water.",
+      "description": "Massive dark shapes half-submerged in permanent pools — try Sunset Dam near Lower Sabie, the Olifants low-water bridge, or almost any bend of the Sabie River. Only eyes, ears and nostrils show by day; leaves the water at nightfall to graze up to 6km inland, following well-worn paths. Kills more people than any other African mammal by a wide margin. Never park between a hippo and its water, and never get out at a bridge where hippos have hauled out — a running hippo is faster than you think.",
       "habitat": "Perennial rivers and large dams",
       "bestTimeToSpot": "Midday at river viewpoints",
       "parkRegions": [
@@ -724,7 +724,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Low, stocky body, jet-black underneath with a bold silver-white saddle. Trots along at dawn and dusk ignoring almost everything. Tackles snakes, hives and even young lions — the reputation for fearlessness is earned.",
+      "description": "Low, stocky body, jet-black underneath with a bold silver-white saddle from crown to tail. Trots along at dawn and dusk almost oblivious to whatever's around, and will happily raid a beehive, dig out a puff adder, or steal a leopard's kill. Skin is loose and thick enough to survive porcupine quills and bee stings, and to twist inside if grabbed. Not seen every day in Kruger but common enough throughout — pay attention to jackal-sized dark shapes moving with real purpose in open country early or late.",
       "habitat": "Widespread; mostly nocturnal but active at dusk",
       "bestTimeToSpot": "Dusk and night drives",
       "parkRegions": [
@@ -747,7 +747,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Kruger's most abundant antelope, over 100,000 head — russet coat, black 'M' below the tail, lyre-shaped horns on the male. Explosive high leaps when spooked. Rutting males roar like a small lion through autumn.",
+      "description": "Kruger's most abundant antelope, well over 100,000 head — russet-tan coat, black 'M' below the tail, and the male carries elegant lyre-shaped horns. Explosive high leaps when spooked, sometimes 3m up and 10m across, mostly to confuse a predator's timing. During the autumn rut the males roar like small lions and thunder around chasing females and rivals. Almost every predator in Kruger relies on them, which is why the population stays roughly the same year after year despite the losses.",
       "habitat": "Open woodland and the edges of riverine bush",
       "bestTimeToSpot": "Any time of day, year round",
       "parkRegions": [
@@ -777,7 +777,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Small rock-antelope on tiptoes, standing motionless on a boulder along the Lebombo hills or a rocky koppie. Fur is hollow-tipped and springs back — dries fast after rain. Pairs mate for life.",
+      "description": "Small rock-antelope standing on tiptoes atop a boulder along the Lebombo hills or any rocky koppie — always in pairs, never solitary. Coat is hollow-tipped and springs back into place after a downpour, drying the animal quickly. Pairs mate for life and share a tiny territory; when one is feeding, the other is on watch, and they take it in turns. The whole weight sits on hoof-tips the diameter of a five-rand coin, giving grip on rock that no predator's paw can match.",
       "habitat": "Koppies, gorges and rocky outcrops",
       "bestTimeToSpot": "Morning, silhouetted on rocks",
       "parkRegions": [
@@ -805,7 +805,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Nocturnal — slender, cat-shaped, long ringed tail, big rosetted spots. Comes into camps like Skukuza and Letaba for scraps; look for eyeshine along the fence at night. Not a cat at all — related to civets.",
+      "description": "Nocturnal — slender, cat-shaped, long ringed tail and large rosetted spots down the back and flanks. Comes into rest camps like Skukuza, Letaba and Olifants for scraps, and you'll see one along the fence line if you sit quietly with a torch after dinner. Not a cat at all despite the look — genets are viverrids, more closely related to civets and mongooses. Climbs like a squirrel, and hunts everything from insects to birds to small rodents. Common but almost never seen in daylight.",
       "habitat": "Riverine woodland and rest camps",
       "bestTimeToSpot": "After dark in camp, or on night drives",
       "parkRegions": [
@@ -829,7 +829,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Rosetted coat draped along a low branch, thick tail hanging. Most active dusk to dawn in riverine bush along the Sabie, Sand and Timbavati. Around 1,000 in the park; more common than sightings suggest. Look up when scanning trees.",
+      "description": "Rosetted golden coat draped along a low branch, thick tail hanging — usually the shape of the tail against the sky is what gives one away. Most active dusk to dawn in riverine bush along the Sabie, Sand and Timbavati; around 1,000 in the park, and much commoner than sightings suggest. Solitary and territorial, but with overlapping ranges — a big male's territory can hold several females. Hauls kills into trees to keep them from lions and hyenas. Look up when scanning marulas and sausage trees.",
       "habitat": "Riverine bush, drainage lines and rocky ground",
       "bestTimeToSpot": "First and last light, on riverine roads",
       "parkRegions": [
@@ -864,7 +864,7 @@
         "nocturnal"
       ],
       "isSensitive": false,
-      "description": "Never seen by day — golden torch-eyes reflecting, then a leap of 4m through the canopy. Baby-like wailing calls after dark are diagnostic. Common in acacia woodland; try the trees at camp fences after nightfall.",
+      "description": "Never seen by day. Golden torch-eyes reflecting back at you from the trees around camp, then a 4m leap through the canopy on legs that fold like springs. Baby-like wailing calls after dark are diagnostic; once you know the call you'll hear them at almost every camp. Common in acacia and thorn woodland throughout Kruger. Wets its own hands and feet with urine to scent-mark trails, which means one bushbaby's night route is scented like a slug trail for others to follow.",
       "habitat": "Acacia woodland",
       "bestTimeToSpot": "Night drives and camp perimeters",
       "parkRegions": [
@@ -888,7 +888,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Straw-coloured cats sprawled in shade, or a pride crossing at first light. Distant roars carry 8km before dawn. Around 1,600 in Kruger; best odds on central plains around Satara and along the Sabie.",
+      "description": "Straw-coloured cats sprawled in shade, or a pride crossing at first light. Distant roaring carries 8km before dawn and is one of the sounds every Kruger visitor remembers. Around 1,600 in the park; best odds are the central plains around Satara and along the Sabie between Skukuza and Lower Sabie. Prides average 4-6 adult females with cubs, plus a coalition of one to four related males. Cubs are killed by any new male taking over the pride — the hard fact of pride succession.",
       "habitat": "Open woodland and grassland near prey concentrations",
       "bestTimeToSpot": "First hour after gate opening",
       "parkRegions": [
@@ -928,7 +928,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Small grey-fawn antelope on rocky slopes — short forward-curving horns on the male, black scent-gland patch below the ear. Very few in Kruger; try the ridges above Berg-en-Dal. Sharp whistle when startled, then bounds off.",
+      "description": "Small grey-fawn antelope on rocky slopes — short forward-curving horns on the male, a distinctive black scent-gland patch below the ear. Very few in Kruger; try the ridges above Berg-en-Dal in the south. Sharp whistle when startled, then bounds away with a tail-flash. Grazes short grass on hillsides that the bigger antelope cannot be bothered with. Kruger sits at the eastern edge of the species' range, which is why they're localised here — the stronghold is the Drakensberg and further west.",
       "habitat": "Grassy slopes on rocky hills",
       "bestTimeToSpot": "Early morning on northern koppies",
       "parkRegions": [
@@ -949,7 +949,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Rusty-slate males with white leg-stripes and lyre-tipped horns; females look like a different species — bright chestnut, unhorned, boldly striped. Dense riverine bush in the north — Letaba and Pafuri. Herd looks like two different animals.",
+      "description": "Rusty-slate males with narrow vertical white flank-stripes and lyre-tipped horns; females look like a different species entirely — bright chestnut, unhorned, boldly striped. Dense riverine bush in the north — Letaba camp is the reliable spot, and the boardwalks put you within metres of tame ones. A mixed herd of ten nyala can look like two species until you realise. The largest bulls carry a spinal crest of raised hair from head to rump, which stands up in threat display.",
       "habitat": "Dense riverine thicket",
       "bestTimeToSpot": "Early morning near rivers",
       "parkRegions": [
@@ -974,7 +974,7 @@
       "rarityTier": "common",
       "tags": [],
       "isSensitive": false,
-      "description": "Black-and-white striped horses in mixed herds with wildebeest — no two zebra share a stripe pattern. Loud yelping bark when alarmed. Common on central plains from Satara to Lower Sabie.",
+      "description": "Black-and-white striped horses in mixed herds with wildebeest — no two individuals share a stripe pattern, and foals recognise their mother by hers within days of birth. Loud yelping bark when alarmed, quite unlike a horse's neigh. Common on the central plains from Satara to Lower Sabie. A stallion holds a harem of two to six mares plus their foals for several years at a time. What the stripes are actually for is still debated — thermoregulation and biting-fly deterrence are the leading theories.",
       "habitat": "Open grassland and savanna",
       "bestTimeToSpot": "Early morning near waterholes",
       "parkRegions": [
@@ -1003,7 +1003,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Big, red-tan antelope with a black-and-white face-mask and scimitar horns; both sexes horned. Fewer than 100 remain in Kruger — try the far north around Shingwedzi. Second-largest African antelope after eland.",
+      "description": "Big, red-tan antelope with a striking black-and-white face-mask and long scimitar horns swept back over the shoulders — both sexes carry the horns. Fewer than 100 left in Kruger; try the far north around Shingwedzi and Mopani. Second-largest African antelope after eland. Very territorial and aggressive when cornered — the horns have killed pursuing lions. Herds are small and highly sensitive to disturbance, which is one of the reasons the Kruger population never recovered from the 1980s crash.",
       "habitat": "Northern sandveld and open woodland",
       "bestTimeToSpot": "Morning, far north only",
       "parkRegions": [
@@ -1030,7 +1030,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Bulls jet-black with white belly and long scimitar horns swept back over the shoulders; cows chestnut. Small herds around Pretoriuskop and the western mopaneveld near Phalaborwa. Around 500 in the park — uncommon and localised.",
+      "description": "Bulls jet-black with a clean white belly, white face-mask and long scimitar horns swept back over the shoulders; cows and calves chestnut-brown. Small herds around Pretoriuskop and the western mopaneveld near Phalaborwa. Around 500 in the park — uncommon and localised. Fights between bulls involve dropping to the knees and clashing those horns, and they will genuinely kill each other. Considered by many old-guard hunters the most handsome antelope in Africa, which is a subjective claim but explains the trophy-room popularity.",
       "habitat": "Open woodland on well-drained soils",
       "bestTimeToSpot": "Morning, near dry-season water",
       "parkRegions": [
@@ -1058,7 +1058,7 @@
         "nocturnal"
       ],
       "isSensitive": false,
-      "description": "Bounds across the road at night, long black-tipped ears, white belly flashing. Common everywhere but crepuscular — dawn, dusk and night drives. Sits tight until you nearly stand on it, then breaks with a big zig-zag.",
+      "description": "Bounding at speed across the road in headlight beams, long black-tipped ears laid flat and the white belly flashing on each leap. Common everywhere in Kruger but crepuscular — dawn, dusk and night drives are the realistic chances. Sits absolutely still in the grass until you nearly stand on it, then breaks in a big zig-zag that would exhaust a serval. Doesn't dig a burrow; rests in a 'form' — a shallow scrape under a bush — even in heavy rain.",
       "habitat": "Grassland and open scrub",
       "bestTimeToSpot": "Night drives",
       "parkRegions": [
@@ -1081,7 +1081,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Long-legged spotted cat with huge upright ears, roughly Labrador height — much taller than caracal. Very rare from a car; try wet grasslands around Nsemani Dam and Satara. Leaps to pounce on rodents through grass by ear alone.",
+      "description": "Long-legged spotted cat with huge upright ears, roughly Labrador-height at the shoulder — much taller than a caracal, and quite unlike a small leopard on the ground. Very rare from a car; try wet grasslands around Nsemani Dam and the roads near Satara at first light. Leaps to pounce on rodents through long grass by ear alone, sometimes vertically 2m before dropping onto the target. Needs grass tall enough to hide the body but let the ears work — the ears do the hunting.",
       "habitat": "Tall grass and reedbeds near water",
       "bestTimeToSpot": "Dawn and dusk in marshy areas",
       "parkRegions": [
@@ -1104,7 +1104,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Small rufous-brown antelope speckled with white hairs on the back, hunched rump. Only in dense bush in the north — Shingwedzi and Punda Maria. Male has tiny straight horns; female none. Solitary and nocturnal.",
+      "description": "Small rufous-brown antelope speckled with white hairs on the back, giving the coat a grizzled look; the rump appears hunched. Only in dense bush in the north — Shingwedzi and Punda Maria are the best chances. Male has tiny straight horns; female none. Solitary and largely nocturnal, which is why almost every sighting is at dusk. Distinguish from the very similar Cape Grysbok by range — Cape Grysbok doesn't reach Kruger at all. Feeds on leaves and fallen fruit near the ground.",
       "habitat": "Thick scrub, often near koppies",
       "bestTimeToSpot": "Night drives",
       "parkRegions": [
@@ -1126,7 +1126,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Rich rust-brown, long body low to the ground, tail with a black tip held up like a flag when running. Solitary. Bolts across the road with an unmistakable straight tail-flick.",
+      "description": "Rich rust-brown, long body low to the ground, tail held horizontally with a distinctive black tip flicked upright when running. Solitary — quite unlike the sociable Banded and Dwarf Mongooses. Bolts across the road with the unmistakable straight-out tail-flick, which is the giveaway even when you barely glimpse the animal. Common in mixed woodland throughout Kruger, and often around camp gardens. Takes small snakes, lizards, rodents and insects, and will occasionally raid a bird's nest at ground level.",
       "habitat": "Woodland and scrub",
       "bestTimeToSpot": "Daylight, crossing roads",
       "parkRegions": [
@@ -1149,7 +1149,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Sandy-fawn antelope in tall reeds and grass near water; males have short forward-curving horns and a dark facial stripe. Small population around Mopani and Shingwedzi. High-pitched whistle when alarmed, then a bounding retreat.",
+      "description": "Sandy-fawn antelope in tall reeds and grass near water; males have short forward-curving horns and a dark facial stripe. Small population in Kruger, mostly around Mopani and Shingwedzi where reedbeds and floodplain fringe survive. High-pitched whistle when alarmed, then a bounding retreat with a distinctive rocking-horse gait. Sits tight in tall grass until you're almost on top of it, then breaks with the whistle — surprises many first-time visitors. Grazes at night, rests hidden in dense cover by day.",
       "habitat": "Tall grass and reedbeds near water",
       "bestTimeToSpot": "Dawn and dusk in wetland areas",
       "parkRegions": [
@@ -1176,7 +1176,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Barrel body, sloped back, dark spots on tan flanks, head lowered as it trots. Whooping calls at night are diagnostic. Clans of 20-plus around den sites, often under road culverts. Around 2,000 in Kruger — commoner than lion.",
+      "description": "Barrel body, sloped back, dark spots on tan flanks, head lowered as it trots. Around 2,000 in Kruger — commoner than lion, and their whooping calls carry through the night. Clans of 20-plus around den sites, often under road culverts, and cubs come out to play at dusk if you sit quietly. Females are larger than males and rank higher; a hyena clan is a matriarchy. Take carcasses off lions when the numbers tip — a clan of fifteen can drive four lionesses off a kill.",
       "habitat": "Widespread; dens in culverts and drainage lines",
       "bestTimeToSpot": "Just after gate opening or before closing",
       "parkRegions": [
@@ -1204,7 +1204,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Small rusty antelope, upright ears out of proportion, no belly stripe. Male has straight vertical horns; female none. Bolts a short way then freezes and looks back. Common in open country throughout the park.",
+      "description": "Small rusty antelope, upright ears out of proportion to the tiny body, no belly stripe. Male has straight vertical horns; female has none. Common in open country throughout the park; often the antelope you see standing alone by the roadside. Bolts a short distance then freezes and looks back — a habit that has killed a great many of them, since a cheetah takes the second chance every time. Territorial pairs share a tiny range but sleep separately. Buries its dung to reduce scent.",
       "habitat": "Open grassland and scrub",
       "bestTimeToSpot": "Early morning and late afternoon",
       "parkRegions": [
@@ -1227,7 +1227,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Tiniest antelope in Kruger — reddish-brown, back speckled with white, tail whipping side to side when moving. Only in the Pafuri sand forest in the far north. Nocturnal and near-invisible; a daytime sighting is genuinely exceptional.",
+      "description": "Tiniest antelope in Kruger — reddish-brown, back speckled with white hairs, tail whipping side to side when moving. Restricted to the Pafuri sand forest in the far north; if you're anywhere else in Kruger, it isn't one. Strictly nocturnal and near-invisible in leaf-litter camouflage; a daytime sighting is genuinely exceptional. Adults weigh around 5kg — smaller than a big scrub hare. Feeds on fallen leaves and fruit under dense canopy, moving in the very dim understorey light before dawn and after dusk.",
       "habitat": "Dense sand forest and thicket in the far north",
       "bestTimeToSpot": "Dawn and dusk, Pafuri only",
       "parkRegions": [
@@ -1248,7 +1248,7 @@
         "nocturnal"
       ],
       "isSensitive": false,
-      "description": "Larger than lesser bushbaby, silver-grey with a bushy tail longer than the body. Piercing 'crying baby' scream at night around northern camps — Letaba, Punda Maria. Torch-eyes reflect a deep amber.",
+      "description": "Larger than the lesser bushbaby, silver-grey with a bushy tail longer than the body. The piercing 'crying baby' scream at night around northern camps — Letaba, Punda Maria — is the diagnostic sound. Torch-eyes reflect a deep amber, not the lesser's gold. Common in tall riverine woodland along the Luvuvhu and Limpopo. Moves more slowly and heavily than the lesser bushbaby, climbing rather than leaping between branches. Wets its own hands and feet with urine to scent-mark routes across the canopy.",
       "habitat": "Riverine forest, especially in the north",
       "bestTimeToSpot": "After dark, by call",
       "parkRegions": [
@@ -1268,7 +1268,7 @@
       "rarityTier": "common",
       "tags": [],
       "isSensitive": false,
-      "description": "Small grey-brown squirrel flicking its tail on an acacia branch, chattering an alarm at everything. All over the park — often the first thing you hear at camp. Called the 'bushveld sentinel' for good reason.",
+      "description": "Small grey-brown squirrel flicking a bushy tail on an acacia branch, chattering an alarm at anything larger than itself — often the first thing you hear at camp. All over the park in mixed woodland, and the loud 'chuk-chuk' scolding is a reliable predator-warning that other animals attend to. Nests in tree hollows in small family groups. Called the 'bushveld sentinel' for good reason — a persistent tree squirrel alarm above your head usually means something the size of a leopard is nearby.",
       "habitat": "Mopane and mixed woodland",
       "bestTimeToSpot": "Daylight hours",
       "parkRegions": [
@@ -1291,7 +1291,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Dark chestnut with a sloping back and glossy purple-blue patches on the thigh and shoulder. Africa's fastest antelope, capable of over 80km/h. Around 200 in the park; northern basalt plains near Mopani. Often up on a termite mound.",
+      "description": "Dark chestnut with a sloping back, and glossy purple-blue patches on the thigh and shoulder that catch the light — a good diagnostic when the head is hidden. Africa's fastest antelope, clocked at over 80km/h in level pursuit. Around 200 in the park, mostly the northern basalt plains near Mopani. Often standing high on a termite mound to scan for predators. Bulls mark territory with the pre-orbital gland pressed against grass stems, which is why you sometimes see one apparently kissing the ground.",
       "habitat": "Open grassland and floodplain",
       "bestTimeToSpot": "Morning on northern plains",
       "parkRegions": [
@@ -1316,7 +1316,7 @@
       "rarityTier": "common",
       "tags": [],
       "isSensitive": false,
-      "description": "Silver-grey with a black face and white brow; males show an unmistakable turquoise-blue scrotum. Troops around picnic sites and camps will grab food from a car window. Common throughout the park.",
+      "description": "Silver-grey coat, black face and white brow; males show an unmistakable turquoise-blue scrotum that a whole generation of biologists has written papers about. Troops of 20-30 around picnic sites and camps will grab food from a car window if you leave one open. Common throughout the park. Have distinct alarm calls for different predators — one for leopard, one for eagle, one for snake — and the troop responds differently to each. Never feed them; a fed vervet becomes a stealing vervet, and stealing vervets get shot.",
       "habitat": "Riverine woodland and rest camps",
       "bestTimeToSpot": "Daylight hours",
       "parkRegions": [
@@ -1338,7 +1338,7 @@
       "rarityTier": "common",
       "tags": [],
       "isSensitive": false,
-      "description": "Grey with wart-like facial pads, tail held straight up like an antenna when trotting off. Often kneels to feed on grass roots — the calluses on the wrists are permanent. Common in open country everywhere.",
+      "description": "Grey pig with wart-like facial pads and a tail held straight up like an antenna when trotting off — never mistake the tail flag. Often kneels on padded wrists to feed on grass roots. Sleeps in disused aardvark burrows, reversing in so the head and tusks face the entrance. Common in open country everywhere in Kruger. Only pig in daylight in open savanna, which makes a daytime pig almost certainly this. The upper tusks curl impressively but do very little damage; the lower ones do all the cutting.",
       "habitat": "Open grassland and around rest camps",
       "bestTimeToSpot": "Daylight hours — strictly diurnal",
       "parkRegions": [
@@ -1366,7 +1366,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Shaggy grey-brown with a bright white 'toilet-seat' ring on the rump — impossible to miss. Bulls carry heavy, ridged, forward-curving horns. Always within a kilometre of water; try Letaba and Olifants riverbanks.",
+      "description": "Shaggy grey-brown coat with a bright white 'toilet-seat' ring encircling the rump — you cannot miss it, and no other antelope carries anything like it. Bulls carry heavy, ridged, forward-curving horns; cows are hornless. Always within a kilometre of permanent water, especially along the Letaba, Olifants and Sabie. The oily coat has a strong musky smell, long said to put predators off — lions take them regularly all the same. Takes to water when pursued, and can almost fully submerge in a pool.",
       "habitat": "Riverine grassland within a few kilometres of water",
       "bestTimeToSpot": "Morning along river roads",
       "parkRegions": [
@@ -1394,7 +1394,7 @@
         "bigFive"
       ],
       "isSensitive": true,
-      "description": "Wide square lip and a heavy shoulder hump for grazing, calf usually walking ahead of the mother. Numbers collapsed under poaching — around 2,000 left in the park, down from over 10,000 in 2010.",
+      "description": "Wide square lip and a heavy shoulder hump for grazing, calf usually walking ahead of the mother. Numbers collapsed under poaching — around 2,000 left in the park, down from over 10,000 in 2010. Distinguish from Black Rhino by the square lip, larger size, and open-country grazing rather than bush-browsing. The 'white' is often explained as a mistranslation of the Dutch for wide, after that lip, but there is no evidence for it and the real origin is unknown — both rhinos are grey. Southern and central Kruger give the best odds; sit quietly at a dry-season waterhole.",
       "habitat": "Open grassland",
       "bestTimeToSpot": "Early morning and late afternoon",
       "parkRegions": [
@@ -1421,7 +1421,7 @@
         "predator"
       ],
       "isSensitive": false,
-      "description": "Nocturnal, long-legged, dog-sized mongoose with a striking bushy white tail. Trots along roads in headlight beams. Largest African mongoose. Almost never seen by day; best on night drives from Skukuza, Satara or Olifants.",
+      "description": "Nocturnal, long-legged and dog-sized, with a striking bushy pure-white tail that lights up in a torch beam. Largest African mongoose. Trots along tar roads in headlight beams, especially in the central section — Satara and Olifants night drives give the realistic chance. Solitary, quite unlike the sociable smaller mongooses. Feeds mostly on insects and small rodents, and will follow a herd of buffalo to snap up disturbed dung beetles. Almost never seen by day, so give up on self-drive and book a night drive.",
       "habitat": "Woodland and grassland",
       "bestTimeToSpot": "Night drives",
       "parkRegions": [
@@ -3083,7 +3083,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Tan coat with darker shoulders and lyre-shaped horns bent tight, often standing on a termite mound. Reintroduced to the far north around Punda Maria in the 1980s after local extinction. A sighting anywhere in Kruger is exceptional.",
+      "description": "Tan coat with darker shoulders, a sloping back and lyre-shaped horns bent tight — often standing atop a termite mound scanning the plain. Reintroduced to the far north around Punda Maria in the 1980s after local extinction; a sighting anywhere in Kruger is a genuine piece of luck. Herds move slowly through open savanna near watercourses. Bulls are very territorial and will hold the same low ridge for years. Distinguish from Red Hartebeest by the flatter horn shape and browner tone.",
       "habitat": "Open sandveld and grassy woodland in the far north",
       "bestTimeToSpot": "Early morning on the Nwambiya sandveld, and mostly luck",
       "parkRegions": [
@@ -4484,7 +4484,7 @@
         "antelope"
       ],
       "isSensitive": false,
-      "description": "Slender, upright fawn antelope with black glands below the ear and thin straight horns on the male. Very rare in Kruger — a handful only, mostly grasslands near Pretoriuskop. Bounces off with stiff-legged 'stotting' when flushed.",
+      "description": "Slender, upright fawn antelope with a black scent-gland patch below the ear and thin straight horns on the male. Very rare in Kruger — only a handful survive, mostly on the grasslands around Pretoriuskop in the south-west. Bounces off with stiff-legged 'stotting' when flushed, showing the black tail-tip. Prefers short grass with taller cover nearby, a habitat that's shrunk everywhere in South Africa. If you see one, note the exact location and mention it at camp reception — sightings feed a conservation register.",
       "habitat": "Open short grassland, far south-west",
       "bestTimeToSpot": "Early morning on the Pretoriuskop grasslands, and mostly luck",
       "parkRegions": [
@@ -4547,7 +4547,7 @@
       "points": 320,
       "tags": [],
       "isSensitive": false,
-      "description": "Dark grey with a black face and pale throat — distinct from the vervet's silver-grey and black face. Found only in the Pafuri and Punda Maria riverine forest. Loud booming male call carries from the treetops at dawn.",
+      "description": "Dark grey with a black face and pale throat — distinct from the vervet's silvery grey and darker face-mask. Found only in the tall riverine and sand forest of Pafuri and Punda Maria in the far north; you won't see them anywhere else in Kruger. Loud booming male call carries from the canopy at dawn, deeper than a vervet's call. Troops of 15-30 stay in the trees more than vervets do. Kruger holds the southernmost population of a subspecies that ranges up into East Africa.",
       "habitat": "Tall riverine forest, Pafuri and the Luvuvhu",
       "bestTimeToSpot": "Morning, high in the trees — listen for the branches",
       "parkRegions": [

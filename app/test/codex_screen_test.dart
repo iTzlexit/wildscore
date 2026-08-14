@@ -298,14 +298,17 @@ void main() {
     expect(find.text('Where to find'), findsNothing);
     expect(find.text('Field notes'), findsOneWidget);
 
+    // Everything below here needs scrolling. The About tab is a lazy ListView
+    // and the description is a hundred words now, so the population card and
+    // the Afrikaans name are both well below the fold on a phone.
+    await tester.drag(find.byType(ListView).first, const Offset(0, -300));
+    await tester.pumpAndSettle();
+
     // Pangolin is one of the four species with no published number, and the
     // card says so rather than leaving a gap.
     expect(find.text('Not published'), findsOneWidget);
 
-    // Scrolled last, because the About tab is a ListView: the population card
-    // pushes the Afrikaans name below the fold on a phone, and dragging takes
-    // the points banner off the top.
-    await tester.drag(find.byType(ListView).first, const Offset(0, -320));
+    await tester.drag(find.byType(ListView).first, const Offset(0, -400));
     await tester.pumpAndSettle();
     expect(find.text('Ietermagog'), findsOneWidget);
   });
@@ -466,6 +469,11 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.textContaining('never record a location'), findsNothing);
+
+    // Same scroll as the pangolin case: the Afrikaans name sits under a
+    // hundred-word description now.
+    await tester.drag(find.byType(ListView).first, const Offset(0, -700));
+    await tester.pumpAndSettle();
     expect(find.text('Rooibok'), findsOneWidget);
   });
 }
